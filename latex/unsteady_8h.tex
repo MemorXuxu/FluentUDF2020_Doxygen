@@ -1,0 +1,393 @@
+\doxysection{fluent20.1.0/src/pbns/unsteady.h File Reference}
+\hypertarget{unsteady_8h}{}\label{unsteady_8h}\index{fluent20.1.0/src/pbns/unsteady.h@{fluent20.1.0/src/pbns/unsteady.h}}
+{\ttfamily \#include "{}global.\+h"{}}\newline
+{\ttfamily \#include "{}mem.\+h"{}}\newline
+{\ttfamily \#include "{}storage.\+h"{}}\newline
+{\ttfamily \#include "{}dll.\+h"{}}\newline
+{\ttfamily \#include "{}cxbool.\+h"{}}\newline
+{\ttfamily \#include "{}seem.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_uns_stat_cff_data}{Uns\+Stat\+Cff\+Data}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{unsteady_8h_ad81c922ce10bc302ad65553805cd786e}{CFF\+\_\+\+NAME\+\_\+\+MAX\+\_\+\+SIZE}}~256
+\item 
+\#define \mbox{\hyperlink{unsteady_8h_a0cab69e4e7fcec1f196fb8ea14e3323e}{SV\+\_\+\+CFF\+\_\+\+MEAN}}(i)~((\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}})((SV\+\_\+\+CFF\+\_\+0\+\_\+\+MEAN+(i)\texorpdfstring{$\ast$}{*}(SV\+\_\+\+CFF\+\_\+1\+\_\+\+MEAN-\/SV\+\_\+\+CFF\+\_\+0\+\_\+\+MEAN))))
+\item 
+\#define \mbox{\hyperlink{unsteady_8h_a581a0bd741f8081e6487110cb1f79486}{SV\+\_\+\+CFF\+\_\+\+RMS}}(i)~((\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}})((SV\+\_\+\+CFF\+\_\+0\+\_\+\+RMS+(i)\texorpdfstring{$\ast$}{*}(SV\+\_\+\+CFF\+\_\+1\+\_\+\+RMS-\/SV\+\_\+\+CFF\+\_\+0\+\_\+\+RMS))))
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031b}{Temporal\+\_\+\+Extraploations}} \{ \newline
+\mbox{\hyperlink{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031ba6443e837b1faddbc2988291e820d3805}{CONSTANT\+\_\+\+EXTRAPOLATION}}
+, \mbox{\hyperlink{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031bade136a0fde4015606b8139bf24dbc694}{FIRST\+\_\+\+ORDER\+\_\+\+LINEAR\+\_\+\+EXTRAPOLATION}}
+, \mbox{\hyperlink{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031ba7ea86a3dc0897c9476ffa68ffc5d36ac}{SECOND\+\_\+\+ORDER\+\_\+\+LINEAR\+\_\+\+EXTRAPOLATION}}
+, \mbox{\hyperlink{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031baaf7a17755eae83ca66f977d4f8082a27}{QUADRATIC\+\_\+\+EXTRAPOLATION}}
+, \newline
+\mbox{\hyperlink{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031baa9a74da93886cc46654f34d480cf4ecf}{LEGACY\+\_\+\+EXTRAPOLATION}}
+ \}
+\item 
+enum \mbox{\hyperlink{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007}{Time\+\_\+\+Step\+\_\+\+Size\+\_\+\+Methods}} \{ \newline
+\mbox{\hyperlink{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007ac3277af6f15579b1b3b2061b9d5b248b}{FIXED\+\_\+\+DT}}
+, \mbox{\hyperlink{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a3d2b59cd610eb85cd9e99f8bdef4467a}{ADAPTIVE\+\_\+\+UDF\+\_\+\+BASED\+\_\+\+DT}}
+, \mbox{\hyperlink{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a1a70323dd7942a8f144e009eef37fcdf}{ADAPTIVE\+\_\+\+CFL\+\_\+\+BASED\+\_\+\+DT}}
+, \mbox{\hyperlink{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a4509af2d74508e57d49ae8c2aa176e0f}{ADAPTIVE\+\_\+\+ERROR\+\_\+\+BASED\+\_\+\+DT}}
+, \newline
+\mbox{\hyperlink{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a7af07b2bb98e8317a08b16bf99ed6a34}{ADAPTIVE\+\_\+\+MULTIPHASE\+\_\+\+SPECIFIC\+\_\+\+DT}}
+ \}
+\item 
+enum \mbox{\hyperlink{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012f}{Time\+\_\+\+Step\+\_\+\+Size\+\_\+\+CFL\+\_\+\+TYPES}} \{ \newline
+\mbox{\hyperlink{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa45fe28b0b4ed9c80d5a882aafdb6f2ba}{ACOUSTIC\+\_\+\+CFL}}
+, \mbox{\hyperlink{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa9b26c53ad856e4f289e3415baab2deb8}{FLUX\+\_\+\+BASED\+\_\+\+CFL}}
+, \mbox{\hyperlink{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa10b5c6d6da26c87d2509d78c56309570}{CONVECTIVE\+\_\+\+CFL}}
+, \mbox{\hyperlink{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fadf0d5ec2b4bc0a8d4e2af9c04487ca3d}{VISCOUS\+\_\+\+CFL}}
+, \newline
+\mbox{\hyperlink{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa948af360c352dbcd6f329109f8c9221d}{FLOW\+\_\+\+BASED\+\_\+\+CFL}}
+ \}
+\item 
+enum \mbox{\hyperlink{unsteady_8h_adb6dd1e1efed947287d44c13eecff654}{Time\+\_\+\+Step\+\_\+\+Size\+\_\+\+Options}} \{ \mbox{\hyperlink{unsteady_8h_adb6dd1e1efed947287d44c13eecff654aa295fd97cac2061c066f5c77817bf78a}{MIN\+\_\+\+ALLOWED\+\_\+\+DT}}
+, \mbox{\hyperlink{unsteady_8h_adb6dd1e1efed947287d44c13eecff654a6c2102f6a8ca12ffe8c8fdd5403448fb}{WEIGHTED\+\_\+\+AVERAGE\+\_\+\+DT}}
+, \mbox{\hyperlink{unsteady_8h_adb6dd1e1efed947287d44c13eecff654a9c2124cd5a881c4523883d45d7fa259a}{MAX\+\_\+\+ALLOWED\+\_\+\+DT}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_ab122133a8dd88a66669cc69b59096aa1}{unsteady\+\_\+statistics}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain, int flag)
+\begin{DoxyCompactList}\small\item\em External API. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_a2390205144f896c12c0cf64e6c70ae57}{Assign\+CFFUnsteady}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_ac0d87624136b4883e724dbcf5731ae84}{Accumulate\+\_\+\+Statistics}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_a5059fbde26dc3c4c5f70941ac95e47c9}{Accumulate\+\_\+\+Statistics\+\_\+\+Each\+\_\+\+CFF}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{unsteady_8h_a5d09c60843f49a243f8aef8c385d8da8}{Compute\+\_\+\+Fluid\+\_\+\+Timestep\+\_\+\+Size}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{unsteady_8h_a5a4a66ef19e04276aaf8192a1e9eec44}{Compute\+\_\+\+Fluid\+\_\+\+Timestep\+\_\+\+Size\+\_\+\+Based\+\_\+on\+\_\+\+CFL}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{unsteady_8h_aa978d726c3cdc5f1cc19f06286b44e36}{Compute\+\_\+dt\+\_\+increment}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{unsteady_8h_a3ea7d52435f4c7bdb26f9079d31ed00e}{Compute\+\_\+dt\+\_\+increment\+\_\+mp\+\_\+mfluid}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_a0186f0e5cf1ae7ad013a4edc3d51a935}{Convert\+\_\+\+Unsteady\+\_\+\+Statistics}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_ab97cee0c3681e4ee7740e670a1881443}{Fill\+\_\+\+Unsteady\+\_\+\+Stat\+\_\+\+CFF\+\_\+\+Data}} (\mbox{\hyperlink{seem_8h_add6656cd05b5c4631a94620cb7781317}{Pointer}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_a66d2ba9e991dfccdfce38602900d51fc}{Init\+\_\+\+Free\+\_\+\+Unsteady\+\_\+\+Stat\+\_\+\+CFF\+\_\+\+Storage}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_a0ccf74d026b0e4068c4f5dce4c06bb8a}{Initialize\+\_\+\+Statistics}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_aef126c10eb03f01a97b11a5673ac054b}{Patch\+\_\+\+Old\+\_\+\+Time\+\_\+\+Levels}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_ac91a1c11542b8affce840e6a382406d3}{Previous\+\_\+\+Time\+\_\+\+Level\+\_\+\+Svars}} (\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} sv, \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} \texorpdfstring{$\ast$}{*}sv\+\_\+m1, \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} \texorpdfstring{$\ast$}{*}sv\+\_\+m2)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{src_2storage_2storage_8h_a3aa68c068d0db52b485abcadedce670e}{SV\+\_\+\+Store\+\_\+\+Type}} \mbox{\hyperlink{unsteady_8h_ab6f825c1e5a26a5f9513f314be018d6c}{store\+\_\+cff}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} n)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_a2adcf914023845887590cb44935f14a5}{Update\+\_\+\+Old\+\_\+\+Time\+\_\+\+Levels}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_a34a8942fe3e0d02c8df6ba6b24409d54}{Time\+\_\+\+Extrapolate\+\_\+\+Coeff}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}coeff\+\_\+\+PHI\+\_\+n, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}coeff\+\_\+\+PHI\+\_\+m1, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}coeff\+\_\+\+PHI\+\_\+m2, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} highorder\+\_\+p)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{unsteady_8h_a97af672b5cbf53f87840fc1eb56d002e}{Set\+\_\+\+Delta\+\_\+\+Time\+\_\+\+Sampled}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} time\+\_\+sampled)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{unsteady_8h_a614a5f28e2dd345563a4de8bbc47d22a}{dt\+\_\+factor}}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{unsteady_8h_a074f44d957e1d420e972605cf01ca4dc}{dt\+\_\+factor\+\_\+n}}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{unsteady_8h_ab829639fb0c069c58344b38286915d26}{dt\+\_\+factor\+\_\+\+M1}}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{unsteady_8h_a555aa3a529a8f19a1b6bf4ea6bd0aacb}{dt\+\_\+factor\+\_\+\+M2}}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{struct_uns_stat_cff_data}{Uns\+Stat\+Cff\+Data}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{unsteady_8h_a3776570a58892a3a07288161d7cb072e}{cff\+Map}}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int \mbox{\hyperlink{unsteady_8h_ad3fa9187d99fd3a412700f811a13e832}{cff\+Name\+Index\+Len}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{unsteady_8h_ad81c922ce10bc302ad65553805cd786e}\label{unsteady_8h_ad81c922ce10bc302ad65553805cd786e} 
+\index{unsteady.h@{unsteady.h}!CFF\_NAME\_MAX\_SIZE@{CFF\_NAME\_MAX\_SIZE}}
+\index{CFF\_NAME\_MAX\_SIZE@{CFF\_NAME\_MAX\_SIZE}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{CFF\_NAME\_MAX\_SIZE}{CFF\_NAME\_MAX\_SIZE}}
+{\footnotesize\ttfamily \#define CFF\+\_\+\+NAME\+\_\+\+MAX\+\_\+\+SIZE~256}
+
+\Hypertarget{unsteady_8h_a0cab69e4e7fcec1f196fb8ea14e3323e}\label{unsteady_8h_a0cab69e4e7fcec1f196fb8ea14e3323e} 
+\index{unsteady.h@{unsteady.h}!SV\_CFF\_MEAN@{SV\_CFF\_MEAN}}
+\index{SV\_CFF\_MEAN@{SV\_CFF\_MEAN}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{SV\_CFF\_MEAN}{SV\_CFF\_MEAN}}
+{\footnotesize\ttfamily \#define SV\+\_\+\+CFF\+\_\+\+MEAN(\begin{DoxyParamCaption}\item[{}]{i }\end{DoxyParamCaption})~((\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}})((SV\+\_\+\+CFF\+\_\+0\+\_\+\+MEAN+(i)\texorpdfstring{$\ast$}{*}(SV\+\_\+\+CFF\+\_\+1\+\_\+\+MEAN-\/SV\+\_\+\+CFF\+\_\+0\+\_\+\+MEAN))))}
+
+\Hypertarget{unsteady_8h_a581a0bd741f8081e6487110cb1f79486}\label{unsteady_8h_a581a0bd741f8081e6487110cb1f79486} 
+\index{unsteady.h@{unsteady.h}!SV\_CFF\_RMS@{SV\_CFF\_RMS}}
+\index{SV\_CFF\_RMS@{SV\_CFF\_RMS}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{SV\_CFF\_RMS}{SV\_CFF\_RMS}}
+{\footnotesize\ttfamily \#define SV\+\_\+\+CFF\+\_\+\+RMS(\begin{DoxyParamCaption}\item[{}]{i }\end{DoxyParamCaption})~((\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}})((SV\+\_\+\+CFF\+\_\+0\+\_\+\+RMS+(i)\texorpdfstring{$\ast$}{*}(SV\+\_\+\+CFF\+\_\+1\+\_\+\+RMS-\/SV\+\_\+\+CFF\+\_\+0\+\_\+\+RMS))))}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031b}\label{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031b} 
+\index{unsteady.h@{unsteady.h}!Temporal\_Extraploations@{Temporal\_Extraploations}}
+\index{Temporal\_Extraploations@{Temporal\_Extraploations}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Temporal\_Extraploations}{Temporal\_Extraploations}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031b}{Temporal\+\_\+\+Extraploations}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CONSTANT\_EXTRAPOLATION@{CONSTANT\_EXTRAPOLATION}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!CONSTANT\_EXTRAPOLATION@{CONSTANT\_EXTRAPOLATION}}}\Hypertarget{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031ba6443e837b1faddbc2988291e820d3805}\label{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031ba6443e837b1faddbc2988291e820d3805} 
+CONSTANT\+\_\+\+EXTRAPOLATION&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FIRST\_ORDER\_LINEAR\_EXTRAPOLATION@{FIRST\_ORDER\_LINEAR\_EXTRAPOLATION}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!FIRST\_ORDER\_LINEAR\_EXTRAPOLATION@{FIRST\_ORDER\_LINEAR\_EXTRAPOLATION}}}\Hypertarget{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031bade136a0fde4015606b8139bf24dbc694}\label{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031bade136a0fde4015606b8139bf24dbc694} 
+FIRST\+\_\+\+ORDER\+\_\+\+LINEAR\+\_\+\+EXTRAPOLATION&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SECOND\_ORDER\_LINEAR\_EXTRAPOLATION@{SECOND\_ORDER\_LINEAR\_EXTRAPOLATION}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!SECOND\_ORDER\_LINEAR\_EXTRAPOLATION@{SECOND\_ORDER\_LINEAR\_EXTRAPOLATION}}}\Hypertarget{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031ba7ea86a3dc0897c9476ffa68ffc5d36ac}\label{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031ba7ea86a3dc0897c9476ffa68ffc5d36ac} 
+SECOND\+\_\+\+ORDER\+\_\+\+LINEAR\+\_\+\+EXTRAPOLATION&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{QUADRATIC\_EXTRAPOLATION@{QUADRATIC\_EXTRAPOLATION}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!QUADRATIC\_EXTRAPOLATION@{QUADRATIC\_EXTRAPOLATION}}}\Hypertarget{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031baaf7a17755eae83ca66f977d4f8082a27}\label{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031baaf7a17755eae83ca66f977d4f8082a27} 
+QUADRATIC\+\_\+\+EXTRAPOLATION&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LEGACY\_EXTRAPOLATION@{LEGACY\_EXTRAPOLATION}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!LEGACY\_EXTRAPOLATION@{LEGACY\_EXTRAPOLATION}}}\Hypertarget{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031baa9a74da93886cc46654f34d480cf4ecf}\label{unsteady_8h_a6a01c36c6ed5bae70f2a85263641031baa9a74da93886cc46654f34d480cf4ecf} 
+LEGACY\+\_\+\+EXTRAPOLATION&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012f}\label{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012f} 
+\index{unsteady.h@{unsteady.h}!Time\_Step\_Size\_CFL\_TYPES@{Time\_Step\_Size\_CFL\_TYPES}}
+\index{Time\_Step\_Size\_CFL\_TYPES@{Time\_Step\_Size\_CFL\_TYPES}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Time\_Step\_Size\_CFL\_TYPES}{Time\_Step\_Size\_CFL\_TYPES}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012f}{Time\+\_\+\+Step\+\_\+\+Size\+\_\+\+CFL\+\_\+\+TYPES}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ACOUSTIC\_CFL@{ACOUSTIC\_CFL}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!ACOUSTIC\_CFL@{ACOUSTIC\_CFL}}}\Hypertarget{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa45fe28b0b4ed9c80d5a882aafdb6f2ba}\label{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa45fe28b0b4ed9c80d5a882aafdb6f2ba} 
+ACOUSTIC\+\_\+\+CFL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FLUX\_BASED\_CFL@{FLUX\_BASED\_CFL}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!FLUX\_BASED\_CFL@{FLUX\_BASED\_CFL}}}\Hypertarget{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa9b26c53ad856e4f289e3415baab2deb8}\label{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa9b26c53ad856e4f289e3415baab2deb8} 
+FLUX\+\_\+\+BASED\+\_\+\+CFL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CONVECTIVE\_CFL@{CONVECTIVE\_CFL}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!CONVECTIVE\_CFL@{CONVECTIVE\_CFL}}}\Hypertarget{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa10b5c6d6da26c87d2509d78c56309570}\label{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa10b5c6d6da26c87d2509d78c56309570} 
+CONVECTIVE\+\_\+\+CFL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{VISCOUS\_CFL@{VISCOUS\_CFL}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!VISCOUS\_CFL@{VISCOUS\_CFL}}}\Hypertarget{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fadf0d5ec2b4bc0a8d4e2af9c04487ca3d}\label{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fadf0d5ec2b4bc0a8d4e2af9c04487ca3d} 
+VISCOUS\+\_\+\+CFL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FLOW\_BASED\_CFL@{FLOW\_BASED\_CFL}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!FLOW\_BASED\_CFL@{FLOW\_BASED\_CFL}}}\Hypertarget{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa948af360c352dbcd6f329109f8c9221d}\label{unsteady_8h_a8d3d2706e921fab4601bbd5f9b34012fa948af360c352dbcd6f329109f8c9221d} 
+FLOW\+\_\+\+BASED\+\_\+\+CFL&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007}\label{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007} 
+\index{unsteady.h@{unsteady.h}!Time\_Step\_Size\_Methods@{Time\_Step\_Size\_Methods}}
+\index{Time\_Step\_Size\_Methods@{Time\_Step\_Size\_Methods}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Time\_Step\_Size\_Methods}{Time\_Step\_Size\_Methods}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007}{Time\+\_\+\+Step\+\_\+\+Size\+\_\+\+Methods}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FIXED\_DT@{FIXED\_DT}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!FIXED\_DT@{FIXED\_DT}}}\Hypertarget{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007ac3277af6f15579b1b3b2061b9d5b248b}\label{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007ac3277af6f15579b1b3b2061b9d5b248b} 
+FIXED\+\_\+\+DT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPTIVE\_UDF\_BASED\_DT@{ADAPTIVE\_UDF\_BASED\_DT}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!ADAPTIVE\_UDF\_BASED\_DT@{ADAPTIVE\_UDF\_BASED\_DT}}}\Hypertarget{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a3d2b59cd610eb85cd9e99f8bdef4467a}\label{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a3d2b59cd610eb85cd9e99f8bdef4467a} 
+ADAPTIVE\+\_\+\+UDF\+\_\+\+BASED\+\_\+\+DT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPTIVE\_CFL\_BASED\_DT@{ADAPTIVE\_CFL\_BASED\_DT}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!ADAPTIVE\_CFL\_BASED\_DT@{ADAPTIVE\_CFL\_BASED\_DT}}}\Hypertarget{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a1a70323dd7942a8f144e009eef37fcdf}\label{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a1a70323dd7942a8f144e009eef37fcdf} 
+ADAPTIVE\+\_\+\+CFL\+\_\+\+BASED\+\_\+\+DT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPTIVE\_ERROR\_BASED\_DT@{ADAPTIVE\_ERROR\_BASED\_DT}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!ADAPTIVE\_ERROR\_BASED\_DT@{ADAPTIVE\_ERROR\_BASED\_DT}}}\Hypertarget{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a4509af2d74508e57d49ae8c2aa176e0f}\label{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a4509af2d74508e57d49ae8c2aa176e0f} 
+ADAPTIVE\+\_\+\+ERROR\+\_\+\+BASED\+\_\+\+DT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPTIVE\_MULTIPHASE\_SPECIFIC\_DT@{ADAPTIVE\_MULTIPHASE\_SPECIFIC\_DT}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!ADAPTIVE\_MULTIPHASE\_SPECIFIC\_DT@{ADAPTIVE\_MULTIPHASE\_SPECIFIC\_DT}}}\Hypertarget{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a7af07b2bb98e8317a08b16bf99ed6a34}\label{unsteady_8h_a6a50e9d318e8f18e3670eb569e021007a7af07b2bb98e8317a08b16bf99ed6a34} 
+ADAPTIVE\+\_\+\+MULTIPHASE\+\_\+\+SPECIFIC\+\_\+\+DT&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{unsteady_8h_adb6dd1e1efed947287d44c13eecff654}\label{unsteady_8h_adb6dd1e1efed947287d44c13eecff654} 
+\index{unsteady.h@{unsteady.h}!Time\_Step\_Size\_Options@{Time\_Step\_Size\_Options}}
+\index{Time\_Step\_Size\_Options@{Time\_Step\_Size\_Options}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Time\_Step\_Size\_Options}{Time\_Step\_Size\_Options}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{unsteady_8h_adb6dd1e1efed947287d44c13eecff654}{Time\+\_\+\+Step\+\_\+\+Size\+\_\+\+Options}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MIN\_ALLOWED\_DT@{MIN\_ALLOWED\_DT}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!MIN\_ALLOWED\_DT@{MIN\_ALLOWED\_DT}}}\Hypertarget{unsteady_8h_adb6dd1e1efed947287d44c13eecff654aa295fd97cac2061c066f5c77817bf78a}\label{unsteady_8h_adb6dd1e1efed947287d44c13eecff654aa295fd97cac2061c066f5c77817bf78a} 
+MIN\+\_\+\+ALLOWED\+\_\+\+DT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WEIGHTED\_AVERAGE\_DT@{WEIGHTED\_AVERAGE\_DT}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!WEIGHTED\_AVERAGE\_DT@{WEIGHTED\_AVERAGE\_DT}}}\Hypertarget{unsteady_8h_adb6dd1e1efed947287d44c13eecff654a6c2102f6a8ca12ffe8c8fdd5403448fb}\label{unsteady_8h_adb6dd1e1efed947287d44c13eecff654a6c2102f6a8ca12ffe8c8fdd5403448fb} 
+WEIGHTED\+\_\+\+AVERAGE\+\_\+\+DT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MAX\_ALLOWED\_DT@{MAX\_ALLOWED\_DT}!unsteady.h@{unsteady.h}}\index{unsteady.h@{unsteady.h}!MAX\_ALLOWED\_DT@{MAX\_ALLOWED\_DT}}}\Hypertarget{unsteady_8h_adb6dd1e1efed947287d44c13eecff654a9c2124cd5a881c4523883d45d7fa259a}\label{unsteady_8h_adb6dd1e1efed947287d44c13eecff654a9c2124cd5a881c4523883d45d7fa259a} 
+MAX\+\_\+\+ALLOWED\+\_\+\+DT&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{unsteady_8h_ac0d87624136b4883e724dbcf5731ae84}\label{unsteady_8h_ac0d87624136b4883e724dbcf5731ae84} 
+\index{unsteady.h@{unsteady.h}!Accumulate\_Statistics@{Accumulate\_Statistics}}
+\index{Accumulate\_Statistics@{Accumulate\_Statistics}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Accumulate\_Statistics()}{Accumulate\_Statistics()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Accumulate\+\_\+\+Statistics (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a5059fbde26dc3c4c5f70941ac95e47c9}\label{unsteady_8h_a5059fbde26dc3c4c5f70941ac95e47c9} 
+\index{unsteady.h@{unsteady.h}!Accumulate\_Statistics\_Each\_CFF@{Accumulate\_Statistics\_Each\_CFF}}
+\index{Accumulate\_Statistics\_Each\_CFF@{Accumulate\_Statistics\_Each\_CFF}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Accumulate\_Statistics\_Each\_CFF()}{Accumulate\_Statistics\_Each\_CFF()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Accumulate\+\_\+\+Statistics\+\_\+\+Each\+\_\+\+CFF (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a2390205144f896c12c0cf64e6c70ae57}\label{unsteady_8h_a2390205144f896c12c0cf64e6c70ae57} 
+\index{unsteady.h@{unsteady.h}!AssignCFFUnsteady@{AssignCFFUnsteady}}
+\index{AssignCFFUnsteady@{AssignCFFUnsteady}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{AssignCFFUnsteady()}{AssignCFFUnsteady()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Assign\+CFFUnsteady (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_aa978d726c3cdc5f1cc19f06286b44e36}\label{unsteady_8h_aa978d726c3cdc5f1cc19f06286b44e36} 
+\index{unsteady.h@{unsteady.h}!Compute\_dt\_increment@{Compute\_dt\_increment}}
+\index{Compute\_dt\_increment@{Compute\_dt\_increment}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Compute\_dt\_increment()}{Compute\_dt\_increment()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} Compute\+\_\+dt\+\_\+increment (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a3ea7d52435f4c7bdb26f9079d31ed00e}\label{unsteady_8h_a3ea7d52435f4c7bdb26f9079d31ed00e} 
+\index{unsteady.h@{unsteady.h}!Compute\_dt\_increment\_mp\_mfluid@{Compute\_dt\_increment\_mp\_mfluid}}
+\index{Compute\_dt\_increment\_mp\_mfluid@{Compute\_dt\_increment\_mp\_mfluid}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Compute\_dt\_increment\_mp\_mfluid()}{Compute\_dt\_increment\_mp\_mfluid()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} Compute\+\_\+dt\+\_\+increment\+\_\+mp\+\_\+mfluid (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a5d09c60843f49a243f8aef8c385d8da8}\label{unsteady_8h_a5d09c60843f49a243f8aef8c385d8da8} 
+\index{unsteady.h@{unsteady.h}!Compute\_Fluid\_Timestep\_Size@{Compute\_Fluid\_Timestep\_Size}}
+\index{Compute\_Fluid\_Timestep\_Size@{Compute\_Fluid\_Timestep\_Size}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Compute\_Fluid\_Timestep\_Size()}{Compute\_Fluid\_Timestep\_Size()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} Compute\+\_\+\+Fluid\+\_\+\+Timestep\+\_\+\+Size (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a5a4a66ef19e04276aaf8192a1e9eec44}\label{unsteady_8h_a5a4a66ef19e04276aaf8192a1e9eec44} 
+\index{unsteady.h@{unsteady.h}!Compute\_Fluid\_Timestep\_Size\_Based\_on\_CFL@{Compute\_Fluid\_Timestep\_Size\_Based\_on\_CFL}}
+\index{Compute\_Fluid\_Timestep\_Size\_Based\_on\_CFL@{Compute\_Fluid\_Timestep\_Size\_Based\_on\_CFL}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Compute\_Fluid\_Timestep\_Size\_Based\_on\_CFL()}{Compute\_Fluid\_Timestep\_Size\_Based\_on\_CFL()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} Compute\+\_\+\+Fluid\+\_\+\+Timestep\+\_\+\+Size\+\_\+\+Based\+\_\+on\+\_\+\+CFL (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a0186f0e5cf1ae7ad013a4edc3d51a935}\label{unsteady_8h_a0186f0e5cf1ae7ad013a4edc3d51a935} 
+\index{unsteady.h@{unsteady.h}!Convert\_Unsteady\_Statistics@{Convert\_Unsteady\_Statistics}}
+\index{Convert\_Unsteady\_Statistics@{Convert\_Unsteady\_Statistics}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Convert\_Unsteady\_Statistics()}{Convert\_Unsteady\_Statistics()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Convert\+\_\+\+Unsteady\+\_\+\+Statistics (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_ab97cee0c3681e4ee7740e670a1881443}\label{unsteady_8h_ab97cee0c3681e4ee7740e670a1881443} 
+\index{unsteady.h@{unsteady.h}!Fill\_Unsteady\_Stat\_CFF\_Data@{Fill\_Unsteady\_Stat\_CFF\_Data}}
+\index{Fill\_Unsteady\_Stat\_CFF\_Data@{Fill\_Unsteady\_Stat\_CFF\_Data}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Fill\_Unsteady\_Stat\_CFF\_Data()}{Fill\_Unsteady\_Stat\_CFF\_Data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Fill\+\_\+\+Unsteady\+\_\+\+Stat\+\_\+\+CFF\+\_\+\+Data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{seem_8h_add6656cd05b5c4631a94620cb7781317}{Pointer}}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a66d2ba9e991dfccdfce38602900d51fc}\label{unsteady_8h_a66d2ba9e991dfccdfce38602900d51fc} 
+\index{unsteady.h@{unsteady.h}!Init\_Free\_Unsteady\_Stat\_CFF\_Storage@{Init\_Free\_Unsteady\_Stat\_CFF\_Storage}}
+\index{Init\_Free\_Unsteady\_Stat\_CFF\_Storage@{Init\_Free\_Unsteady\_Stat\_CFF\_Storage}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Init\_Free\_Unsteady\_Stat\_CFF\_Storage()}{Init\_Free\_Unsteady\_Stat\_CFF\_Storage()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Init\+\_\+\+Free\+\_\+\+Unsteady\+\_\+\+Stat\+\_\+\+CFF\+\_\+\+Storage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a0ccf74d026b0e4068c4f5dce4c06bb8a}\label{unsteady_8h_a0ccf74d026b0e4068c4f5dce4c06bb8a} 
+\index{unsteady.h@{unsteady.h}!Initialize\_Statistics@{Initialize\_Statistics}}
+\index{Initialize\_Statistics@{Initialize\_Statistics}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Initialize\_Statistics()}{Initialize\_Statistics()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Initialize\+\_\+\+Statistics (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_aef126c10eb03f01a97b11a5673ac054b}\label{unsteady_8h_aef126c10eb03f01a97b11a5673ac054b} 
+\index{unsteady.h@{unsteady.h}!Patch\_Old\_Time\_Levels@{Patch\_Old\_Time\_Levels}}
+\index{Patch\_Old\_Time\_Levels@{Patch\_Old\_Time\_Levels}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Patch\_Old\_Time\_Levels()}{Patch\_Old\_Time\_Levels()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Patch\+\_\+\+Old\+\_\+\+Time\+\_\+\+Levels (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_ac91a1c11542b8affce840e6a382406d3}\label{unsteady_8h_ac91a1c11542b8affce840e6a382406d3} 
+\index{unsteady.h@{unsteady.h}!Previous\_Time\_Level\_Svars@{Previous\_Time\_Level\_Svars}}
+\index{Previous\_Time\_Level\_Svars@{Previous\_Time\_Level\_Svars}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Previous\_Time\_Level\_Svars()}{Previous\_Time\_Level\_Svars()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Previous\+\_\+\+Time\+\_\+\+Level\+\_\+\+Svars (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}}]{sv,  }\item[{\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} \texorpdfstring{$\ast$}{*}}]{sv\+\_\+m1,  }\item[{\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} \texorpdfstring{$\ast$}{*}}]{sv\+\_\+m2 }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a97af672b5cbf53f87840fc1eb56d002e}\label{unsteady_8h_a97af672b5cbf53f87840fc1eb56d002e} 
+\index{unsteady.h@{unsteady.h}!Set\_Delta\_Time\_Sampled@{Set\_Delta\_Time\_Sampled}}
+\index{Set\_Delta\_Time\_Sampled@{Set\_Delta\_Time\_Sampled}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Set\_Delta\_Time\_Sampled()}{Set\_Delta\_Time\_Sampled()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Set\+\_\+\+Delta\+\_\+\+Time\+\_\+\+Sampled (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{time\+\_\+sampled }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_ab6f825c1e5a26a5f9513f314be018d6c}\label{unsteady_8h_ab6f825c1e5a26a5f9513f314be018d6c} 
+\index{unsteady.h@{unsteady.h}!store\_cff@{store\_cff}}
+\index{store\_cff@{store\_cff}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{store\_cff()}{store\_cff()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{src_2storage_2storage_8h_a3aa68c068d0db52b485abcadedce670e}{SV\+\_\+\+Store\+\_\+\+Type}} store\+\_\+cff (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}}]{n }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_a34a8942fe3e0d02c8df6ba6b24409d54}\label{unsteady_8h_a34a8942fe3e0d02c8df6ba6b24409d54} 
+\index{unsteady.h@{unsteady.h}!Time\_Extrapolate\_Coeff@{Time\_Extrapolate\_Coeff}}
+\index{Time\_Extrapolate\_Coeff@{Time\_Extrapolate\_Coeff}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Time\_Extrapolate\_Coeff()}{Time\_Extrapolate\_Coeff()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Time\+\_\+\+Extrapolate\+\_\+\+Coeff (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{coeff\+\_\+\+PHI\+\_\+n,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{coeff\+\_\+\+PHI\+\_\+m1,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{coeff\+\_\+\+PHI\+\_\+m2,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{highorder\+\_\+p }\end{DoxyParamCaption})}
+
+\Hypertarget{unsteady_8h_ab122133a8dd88a66669cc69b59096aa1}\label{unsteady_8h_ab122133a8dd88a66669cc69b59096aa1} 
+\index{unsteady.h@{unsteady.h}!unsteady\_statistics@{unsteady\_statistics}}
+\index{unsteady\_statistics@{unsteady\_statistics}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{unsteady\_statistics()}{unsteady\_statistics()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void unsteady\+\_\+statistics (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{domain,  }\item[{int}]{flag }\end{DoxyParamCaption})}
+
+
+
+External API. 
+
+\Hypertarget{unsteady_8h_a2adcf914023845887590cb44935f14a5}\label{unsteady_8h_a2adcf914023845887590cb44935f14a5} 
+\index{unsteady.h@{unsteady.h}!Update\_Old\_Time\_Levels@{Update\_Old\_Time\_Levels}}
+\index{Update\_Old\_Time\_Levels@{Update\_Old\_Time\_Levels}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{Update\_Old\_Time\_Levels()}{Update\_Old\_Time\_Levels()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Update\+\_\+\+Old\+\_\+\+Time\+\_\+\+Levels (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{unsteady_8h_a3776570a58892a3a07288161d7cb072e}\label{unsteady_8h_a3776570a58892a3a07288161d7cb072e} 
+\index{unsteady.h@{unsteady.h}!cffMap@{cffMap}}
+\index{cffMap@{cffMap}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{cffMap}{cffMap}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{struct_uns_stat_cff_data}{Uns\+Stat\+Cff\+Data}}\texorpdfstring{$\ast$}{*} cff\+Map\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{unsteady_8h_ad3fa9187d99fd3a412700f811a13e832}\label{unsteady_8h_ad3fa9187d99fd3a412700f811a13e832} 
+\index{unsteady.h@{unsteady.h}!cffNameIndexLen@{cffNameIndexLen}}
+\index{cffNameIndexLen@{cffNameIndexLen}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{cffNameIndexLen}{cffNameIndexLen}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int cff\+Name\+Index\+Len\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{unsteady_8h_a614a5f28e2dd345563a4de8bbc47d22a}\label{unsteady_8h_a614a5f28e2dd345563a4de8bbc47d22a} 
+\index{unsteady.h@{unsteady.h}!dt\_factor@{dt\_factor}}
+\index{dt\_factor@{dt\_factor}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{dt\_factor}{dt\_factor}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} dt\+\_\+factor\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{unsteady_8h_ab829639fb0c069c58344b38286915d26}\label{unsteady_8h_ab829639fb0c069c58344b38286915d26} 
+\index{unsteady.h@{unsteady.h}!dt\_factor\_M1@{dt\_factor\_M1}}
+\index{dt\_factor\_M1@{dt\_factor\_M1}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{dt\_factor\_M1}{dt\_factor\_M1}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} dt\+\_\+factor\+\_\+\+M1\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{unsteady_8h_a555aa3a529a8f19a1b6bf4ea6bd0aacb}\label{unsteady_8h_a555aa3a529a8f19a1b6bf4ea6bd0aacb} 
+\index{unsteady.h@{unsteady.h}!dt\_factor\_M2@{dt\_factor\_M2}}
+\index{dt\_factor\_M2@{dt\_factor\_M2}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{dt\_factor\_M2}{dt\_factor\_M2}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} dt\+\_\+factor\+\_\+\+M2\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{unsteady_8h_a074f44d957e1d420e972605cf01ca4dc}\label{unsteady_8h_a074f44d957e1d420e972605cf01ca4dc} 
+\index{unsteady.h@{unsteady.h}!dt\_factor\_n@{dt\_factor\_n}}
+\index{dt\_factor\_n@{dt\_factor\_n}!unsteady.h@{unsteady.h}}
+\doxysubsubsection{\texorpdfstring{dt\_factor\_n}{dt\_factor\_n}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} dt\+\_\+factor\+\_\+n\hspace{0.3cm}{\ttfamily [extern]}}
+

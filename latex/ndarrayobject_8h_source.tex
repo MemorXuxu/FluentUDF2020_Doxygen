@@ -1,0 +1,297 @@
+\doxysection{ndarrayobject.\+h}
+\hypertarget{ndarrayobject_8h_source}{}\label{ndarrayobject_8h_source}\index{fluent20.1.0/cortex/pylib/nexus/numpy/core/include/numpy/ndarrayobject.h@{fluent20.1.0/cortex/pylib/nexus/numpy/core/include/numpy/ndarrayobject.h}}
+\mbox{\hyperlink{ndarrayobject_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ DON'T\ INCLUDE\ THIS\ DIRECTLY.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ NPY\_NDARRAYOBJECT\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ NPY\_NDARRAYOBJECT\_H}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ CONFUSE\_EMACS\ \{}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ CONFUSE\_EMACS2\ \}}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ CONFUSE\_EMACS}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#undef\ CONFUSE\_EMACS}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#undef\ CONFUSE\_EMACS2}}
+\DoxyCodeLine{00013\ \textcolor{comment}{/*\ ...\ otherwise\ a\ semi-\/smart\ identer\ (like\ emacs)\ tries\ to\ indent}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ \ \ everything\ when\ you're\ typing\ */}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <Python.h>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ndarraytypes_8h}{ndarraytypes.h}}"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{/*\ Includes\ the\ "{}function"{}\ C-\/API\ -\/-\/\ these\ are\ all\ stored\ in\ a}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ \ \ list\ of\ pointers\ -\/-\/-\/\ one\ for\ each\ file}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ \ \ The\ two\ lists\ are\ concatenated\ into\ one\ in\ multiarray.}}
+\DoxyCodeLine{00023\ \textcolor{comment}{}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ They\ are\ available\ as\ import\_array()}}
+\DoxyCodeLine{00025\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{____multiarray__api_8h}{\_\_multiarray\_api.h}}"{}}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\ C-\/API\ that\ requires\ previous\ API\ to\ be\ defined\ */}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ PyArray\_DescrCheck(op)\ (((PyObject*)(op))-\/>ob\_type==\&PyArrayDescr\_Type)}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ PyArray\_Check(op)\ PyObject\_TypeCheck(op,\ \&PyArray\_Type)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ PyArray\_CheckExact(op)\ (((PyObject*)(op))-\/>ob\_type\ ==\ \&PyArray\_Type)}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ PyArray\_HasArrayInterfaceType(op,\ type,\ context,\ out)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((((out)=PyArray\_FromStructInterface(op))\ !=\ Py\_NotImplemented)\ ||\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ (((out)=PyArray\_FromInterface(op))\ !=\ Py\_NotImplemented)\ ||\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ (((out)=PyArray\_FromArrayAttr(op,\ type,\ context))\ !=\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ Py\_NotImplemented))}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ PyArray\_HasArrayInterface(op,\ out)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_HasArrayInterfaceType(op,\ NULL,\ NULL,\ out)}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ PyArray\_IsZeroDim(op)\ (PyArray\_Check(op)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (PyArray\_NDIM((PyArrayObject\ *)op)\ ==\ 0))}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ PyArray\_IsScalar(obj,\ cls)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (PyObject\_TypeCheck(obj,\ \&Py\#\#cls\#\#ArrType\_Type))}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ PyArray\_CheckScalar(m)\ (PyArray\_IsScalar(m,\ Generic)\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_IsZeroDim(m))}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#if\ PY\_MAJOR\_VERSION\ >=\ 3}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ PyArray\_IsPythonNumber(obj)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (PyFloat\_Check(obj)\ ||\ PyComplex\_Check(obj)\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ PyLong\_Check(obj)\ ||\ PyBool\_Check(obj))}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ PyArray\_IsIntegerScalar(obj)\ (PyLong\_Check(obj)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ PyArray\_IsScalar((obj),\ Integer))}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ PyArray\_IsPythonScalar(obj)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (PyArray\_IsPythonNumber(obj)\ ||\ PyBytes\_Check(obj)\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ PyUnicode\_Check(obj))}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ PyArray\_IsPythonNumber(obj)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (PyInt\_Check(obj)\ ||\ PyFloat\_Check(obj)\ ||\ PyComplex\_Check(obj)\ ||\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ PyLong\_Check(obj)\ ||\ PyBool\_Check(obj))}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ PyArray\_IsIntegerScalar(obj)\ (PyInt\_Check(obj)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ PyLong\_Check(obj)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ PyArray\_IsScalar((obj),\ Integer))}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ PyArray\_IsPythonScalar(obj)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (PyArray\_IsPythonNumber(obj)\ ||\ PyString\_Check(obj)\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ PyUnicode\_Check(obj))}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ PyArray\_IsAnyScalar(obj)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (PyArray\_IsScalar(obj,\ Generic)\ ||\ PyArray\_IsPythonScalar(obj))}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ PyArray\_CheckAnyScalar(obj)\ (PyArray\_IsPythonScalar(obj)\ ||\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_CheckScalar(obj))}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ PyArray\_GETCONTIGUOUS(m)\ (PyArray\_ISCONTIGUOUS(m)\ ?\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Py\_INCREF(m),\ (m)\ :\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (PyArrayObject\ *)(PyArray\_Copy(m)))}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ PyArray\_SAMESHAPE(a1,a2)\ ((PyArray\_NDIM(a1)\ ==\ PyArray\_NDIM(a2))\ \&\&\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_CompareLists(PyArray\_DIMS(a1),\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_DIMS(a2),\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_NDIM(a1)))}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ PyArray\_SIZE(m)\ PyArray\_MultiplyList(PyArray\_DIMS(m),\ PyArray\_NDIM(m))}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ PyArray\_NBYTES(m)\ (PyArray\_ITEMSIZE(m)\ *\ PyArray\_SIZE(m))}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ PyArray\_FROM\_O(m)\ PyArray\_FromAny(m,\ NULL,\ 0,\ 0,\ 0,\ NULL)}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ PyArray\_FROM\_OF(m,flags)\ PyArray\_CheckFromAny(m,\ NULL,\ 0,\ 0,\ flags,\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NULL)}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ PyArray\_FROM\_OT(m,type)\ PyArray\_FromAny(m,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_DescrFromType(type),\ 0,\ 0,\ 0,\ NULL)}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ PyArray\_FROM\_OTF(m,\ type,\ flags)\ \(\backslash\)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_FromAny(m,\ PyArray\_DescrFromType(type),\ 0,\ 0,\ \(\backslash\)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((flags)\ \&\ NPY\_ARRAY\_ENSURECOPY)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((flags)\ |\ NPY\_ARRAY\_DEFAULT)\ :\ (flags)),\ NULL)}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ PyArray\_FROMANY(m,\ type,\ min,\ max,\ flags)\ \(\backslash\)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_FromAny(m,\ PyArray\_DescrFromType(type),\ min,\ max,\ \(\backslash\)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((flags)\ \&\ NPY\_ARRAY\_ENSURECOPY)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (flags)\ |\ NPY\_ARRAY\_DEFAULT\ :\ (flags)),\ NULL)}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ PyArray\_ZEROS(m,\ dims,\ type,\ is\_f\_order)\ \(\backslash\)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_Zeros(m,\ dims,\ PyArray\_DescrFromType(type),\ is\_f\_order)}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ PyArray\_EMPTY(m,\ dims,\ type,\ is\_f\_order)\ \(\backslash\)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_Empty(m,\ dims,\ PyArray\_DescrFromType(type),\ is\_f\_order)}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ PyArray\_FILLWBYTE(obj,\ val)\ memset(PyArray\_DATA(obj),\ val,\ \(\backslash\)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_NBYTES(obj))}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#ifndef\ PYPY\_VERSION}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ PyArray\_REFCOUNT(obj)\ (((PyObject\ *)(obj))-\/>ob\_refcnt)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ NPY\_REFCOUNT\ PyArray\_REFCOUNT}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ NPY\_MAX\_ELSIZE\ (2\ *\ NPY\_SIZEOF\_LONGDOUBLE)}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ PyArray\_ContiguousFromAny(op,\ type,\ min\_depth,\ max\_depth)\ \(\backslash\)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_FromAny(op,\ PyArray\_DescrFromType(type),\ min\_depth,\ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth,\ NPY\_ARRAY\_DEFAULT,\ NULL)}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ PyArray\_EquivArrTypes(a1,\ a2)\ \(\backslash\)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_EquivTypes(PyArray\_DESCR(a1),\ PyArray\_DESCR(a2))}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ PyArray\_EquivByteorders(b1,\ b2)\ \(\backslash\)}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (((b1)\ ==\ (b2))\ ||\ (PyArray\_ISNBO(b1)\ ==\ PyArray\_ISNBO(b2)))}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ PyArray\_SimpleNew(nd,\ dims,\ typenum)\ \(\backslash\)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_New(\&PyArray\_Type,\ nd,\ dims,\ typenum,\ NULL,\ NULL,\ 0,\ 0,\ NULL)}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ PyArray\_SimpleNewFromData(nd,\ dims,\ typenum,\ data)\ \(\backslash\)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_New(\&PyArray\_Type,\ nd,\ dims,\ typenum,\ NULL,\ \(\backslash\)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data,\ 0,\ NPY\_ARRAY\_CARRAY,\ NULL)}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ PyArray\_SimpleNewFromDescr(nd,\ dims,\ descr)\ \(\backslash\)}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_NewFromDescr(\&PyArray\_Type,\ descr,\ nd,\ dims,\ \(\backslash\)}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NULL,\ NULL,\ 0,\ NULL)}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ PyArray\_ToScalar(data,\ arr)\ \(\backslash\)}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_Scalar(data,\ PyArray\_DESCR(arr),\ (PyObject\ *)arr)}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{comment}{/*\ These\ might\ be\ faster\ without\ the\ dereferencing\ of\ obj}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ \ \ going\ on\ inside\ -\/-\/\ of\ course\ an\ optimizing\ compiler\ should}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ \ \ inline\ the\ constants\ inside\ a\ for\ loop\ making\ it\ a\ moot\ point}}
+\DoxyCodeLine{00153\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ PyArray\_GETPTR1(obj,\ i)\ ((void\ *)(PyArray\_BYTES(obj)\ +\ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (i)*PyArray\_STRIDES(obj)[0]))}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ PyArray\_GETPTR2(obj,\ i,\ j)\ ((void\ *)(PyArray\_BYTES(obj)\ +\ \(\backslash\)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (i)*PyArray\_STRIDES(obj)[0]\ +\ \(\backslash\)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (j)*PyArray\_STRIDES(obj)[1]))}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ PyArray\_GETPTR3(obj,\ i,\ j,\ k)\ ((void\ *)(PyArray\_BYTES(obj)\ +\ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (i)*PyArray\_STRIDES(obj)[0]\ +\ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (j)*PyArray\_STRIDES(obj)[1]\ +\ \(\backslash\)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (k)*PyArray\_STRIDES(obj)[2]))}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ PyArray\_GETPTR4(obj,\ i,\ j,\ k,\ l)\ ((void\ *)(PyArray\_BYTES(obj)\ +\ \(\backslash\)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (i)*PyArray\_STRIDES(obj)[0]\ +\ \(\backslash\)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (j)*PyArray\_STRIDES(obj)[1]\ +\ \(\backslash\)}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (k)*PyArray\_STRIDES(obj)[2]\ +\ \(\backslash\)}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (l)*PyArray\_STRIDES(obj)[3]))}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \textcolor{comment}{/*\ Move\ to\ arrayobject.c\ once\ PyArray\_XDECREF\_ERR\ is\ removed\ */}}
+\DoxyCodeLine{00174\ \textcolor{keyword}{static}\ \mbox{\hyperlink{npy__common_8h_a393b364032c46841399790de0c2a6946}{NPY\_INLINE}}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00175\ PyArray\_DiscardWritebackIfCopy(\mbox{\hyperlink{structtag_py_array_object__fields}{PyArrayObject}}\ *arr)}
+\DoxyCodeLine{00176\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \mbox{\hyperlink{structtag_py_array_object__fields}{PyArrayObject\_fields}}\ *fa\ =\ (\mbox{\hyperlink{structtag_py_array_object__fields}{PyArrayObject\_fields}}\ *)arr;}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordflow}{if}\ (fa\ \&\&\ fa-\/>\mbox{\hyperlink{structtag_py_array_object__fields_a12f91b7191e95cbdcd772691dfb12290}{base}})\ \{}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((fa-\/>\mbox{\hyperlink{structtag_py_array_object__fields_ac8bf36fe0577cba66bccda3a6f7e80a4}{flags}}\ \&\ \mbox{\hyperlink{ndarraytypes_8h_a118a68a7b8d21e9cbf1c2ac3d61542ef}{NPY\_ARRAY\_UPDATEIFCOPY}})\ ||}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (fa-\/>\mbox{\hyperlink{structtag_py_array_object__fields_ac8bf36fe0577cba66bccda3a6f7e80a4}{flags}}\ \&\ \mbox{\hyperlink{ndarraytypes_8h_a410f284f7ce2bb8f3a5ce31bae1dca31}{NPY\_ARRAY\_WRITEBACKIFCOPY}}))\ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_ENABLEFLAGS((\mbox{\hyperlink{structtag_py_array_object__fields}{PyArrayObject}}*)fa-\/>\mbox{\hyperlink{structtag_py_array_object__fields_a12f91b7191e95cbdcd772691dfb12290}{base}},\ \mbox{\hyperlink{ndarraytypes_8h_a685e97c65cc63ab8073772796cbcbcfd}{NPY\_ARRAY\_WRITEABLE}});}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ Py\_DECREF(fa-\/>\mbox{\hyperlink{structtag_py_array_object__fields_a12f91b7191e95cbdcd772691dfb12290}{base}});}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ fa-\/>\mbox{\hyperlink{structtag_py_array_object__fields_a12f91b7191e95cbdcd772691dfb12290}{base}}\ =\ \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_CLEARFLAGS(arr,\ \mbox{\hyperlink{ndarraytypes_8h_a410f284f7ce2bb8f3a5ce31bae1dca31}{NPY\_ARRAY\_WRITEBACKIFCOPY}});}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_CLEARFLAGS(arr,\ \mbox{\hyperlink{ndarraytypes_8h_a118a68a7b8d21e9cbf1c2ac3d61542ef}{NPY\_ARRAY\_UPDATEIFCOPY}});}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00187\ \ \ \ \ \}}
+\DoxyCodeLine{00188\ \}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#define\ PyArray\_DESCR\_REPLACE(descr)\ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyArray\_Descr\ *\_new\_;\ \(\backslash\)}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_new\_\ =\ PyArray\_DescrNew(descr);\ \(\backslash\)}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Py\_XDECREF(descr);\ \(\backslash\)}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ descr\ =\ \_new\_;\ \(\backslash\)}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ while(0)}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{comment}{/*\ Copy\ should\ always\ return\ contiguous\ array\ */}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#define\ PyArray\_Copy(obj)\ PyArray\_NewCopy(obj,\ NPY\_CORDER)}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#define\ PyArray\_FromObject(op,\ type,\ min\_depth,\ max\_depth)\ \(\backslash\)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_FromAny(op,\ PyArray\_DescrFromType(type),\ min\_depth,\ \(\backslash\)}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth,\ NPY\_ARRAY\_BEHAVED\ |\ \(\backslash\)}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NPY\_ARRAY\_ENSUREARRAY,\ NULL)}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#define\ PyArray\_ContiguousFromObject(op,\ type,\ min\_depth,\ max\_depth)\ \(\backslash\)}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_FromAny(op,\ PyArray\_DescrFromType(type),\ min\_depth,\ \(\backslash\)}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth,\ NPY\_ARRAY\_DEFAULT\ |\ \(\backslash\)}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NPY\_ARRAY\_ENSUREARRAY,\ NULL)}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ PyArray\_CopyFromObject(op,\ type,\ min\_depth,\ max\_depth)\ \(\backslash\)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_FromAny(op,\ PyArray\_DescrFromType(type),\ min\_depth,\ \(\backslash\)}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_depth,\ NPY\_ARRAY\_ENSURECOPY\ |\ \(\backslash\)}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NPY\_ARRAY\_DEFAULT\ |\ \(\backslash\)}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NPY\_ARRAY\_ENSUREARRAY,\ NULL)}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ PyArray\_Cast(mp,\ type\_num)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_CastToType(mp,\ PyArray\_DescrFromType(type\_num),\ 0)}}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ PyArray\_Take(ap,\ items,\ axis)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_TakeFrom(ap,\ items,\ axis,\ NULL,\ NPY\_RAISE)}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ PyArray\_Put(ap,\ items,\ values)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_PutTo(ap,\ items,\ values,\ NPY\_RAISE)}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{comment}{/*\ Compatibility\ with\ old\ Numeric\ stuff\ -\/-\/\ don't\ use\ in\ new\ code\ */}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ PyArray\_FromDimsAndData(nd,\ d,\ type,\ data)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyArray\_FromDimsAndDataAndDescr(nd,\ d,\ PyArray\_DescrFromType(type),\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data)}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ \ \ Check\ to\ see\ if\ this\ key\ in\ the\ dictionary\ is\ the\ "{}title"{}}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ \ \ entry\ of\ the\ tuple\ (i.e.\ a\ duplicate\ dictionary\ entry\ in\ the\ fields}}
+\DoxyCodeLine{00235\ \textcolor{comment}{\ \ \ dict.}}
+\DoxyCodeLine{00236\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \textcolor{keyword}{static}\ \mbox{\hyperlink{npy__common_8h_a393b364032c46841399790de0c2a6946}{NPY\_INLINE}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00239\ NPY\_TITLE\_KEY\_check(PyObject\ *key,\ PyObject\ *value)}
+\DoxyCodeLine{00240\ \{}
+\DoxyCodeLine{00241\ \ \ \ \ PyObject\ *title;}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keywordflow}{if}\ (PyTuple\_GET\_SIZE(value)\ !=\ 3)\ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00244\ \ \ \ \ \}}
+\DoxyCodeLine{00245\ \ \ \ \ title\ =\ PyTuple\_GET\_ITEM(value,\ 2);}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keywordflow}{if}\ (key\ ==\ title)\ \{}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00248\ \ \ \ \ \}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#ifdef\ PYPY\_VERSION}}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ \ \ \ \ *\ On\ PyPy,\ dictionary\ keys\ do\ not\ always\ preserve\ object\ identity.}}
+\DoxyCodeLine{00252\ \textcolor{comment}{\ \ \ \ \ *\ Fall\ back\ to\ comparison\ by\ value.}}
+\DoxyCodeLine{00253\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordflow}{if}\ (PyUnicode\_Check(title)\ \&\&\ PyUnicode\_Check(key))\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ PyUnicode\_Compare(title,\ key)\ ==\ 0\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00256\ \ \ \ \ \}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#if\ PY\_VERSION\_HEX\ <\ 0x03000000}}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keywordflow}{if}\ (PyString\_Check(title)\ \&\&\ PyString\_Check(key))\ \{}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ PyObject\_Compare(title,\ key)\ ==\ 0\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{00260\ \ \ \ \ \}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00264\ \}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{comment}{/*\ Macro,\ for\ backward\ compat\ with\ "{}if\ NPY\_TITLE\_KEY(key,\ value)\ \{\ ..."{}\ */}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#define\ NPY\_TITLE\_KEY(key,\ value)\ (NPY\_TITLE\_KEY\_check((key),\ (value)))}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ DEPRECATE(msg)\ PyErr\_WarnEx(PyExc\_DeprecationWarning,msg,1)}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ DEPRECATE\_FUTUREWARNING(msg)\ PyErr\_WarnEx(PyExc\_FutureWarning,msg,1)}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#if\ !defined(NPY\_NO\_DEPRECATED\_API)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\ \ \ \ (NPY\_NO\_DEPRECATED\_API\ <\ NPY\_1\_14\_API\_VERSION)}}
+\DoxyCodeLine{00274\ \textcolor{keyword}{static}\ \mbox{\hyperlink{npy__common_8h_a393b364032c46841399790de0c2a6946}{NPY\_INLINE}}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00275\ PyArray\_XDECREF\_ERR(\mbox{\hyperlink{structtag_py_array_object__fields}{PyArrayObject}}\ *arr)}
+\DoxyCodeLine{00276\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{comment}{/*\ 2017-\/Nov-\/10\ 1.14\ */}}
+\DoxyCodeLine{00278\ \ \ \ \ \mbox{\hyperlink{ndarrayobject_8h_a82eab3e0d900b395bc91d8491cfcc651}{DEPRECATE}}(\textcolor{stringliteral}{"{}PyArray\_XDECREF\_ERR\ is\ deprecated,\ call\ "{}}}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}PyArray\_DiscardWritebackIfCopy\ then\ Py\_XDECREF\ instead"{}});}
+\DoxyCodeLine{00280\ \ \ \ \ PyArray\_DiscardWritebackIfCopy(arr);}
+\DoxyCodeLine{00281\ \ \ \ \ Py\_XDECREF(arr);}
+\DoxyCodeLine{00282\ \}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00287\ \}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ NPY\_NDARRAYOBJECT\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

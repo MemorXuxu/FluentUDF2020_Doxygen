@@ -1,0 +1,311 @@
+\doxysection{handlers.\+h}
+\hypertarget{handlers_8h_source}{}\label{handlers_8h_source}\index{fluent20.1.0/tgrid/src/handlers.h@{fluent20.1.0/tgrid/src/handlers.h}}
+\mbox{\hyperlink{handlers_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Internal\ error\ include\ file}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ Handlers\_h}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ Handlers\_h}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{environ_8h}{environ.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tg__handlers_8h}{tg\_handlers.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifndef\ FALSE}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ FALSE\ 0}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#ifndef\ TRUE}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ TRUE\ 1}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ Memory\ allocation\ handling}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ TG\_Malloc(s)\ \ \ \ TG\_Malloc1(s,\_\_FILE\_\_,\_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ TG\_Free(s)\ \ \ \ \ \ TG\_Free1(s,\_\_FILE\_\_,\_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ TG\_Realloc(p,s)\ TG\_Realloc1(p,s,\_\_FILE\_\_,\_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ Message\ handling}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ MSGSIZE\ 10240}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#ifdef\ Message}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#\ undef\ Message}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#ifdef\ Message0}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#\ undef\ Message0}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#ifdef\ Warning0}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#\ undef\ Warning0}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ Message\ \_TG\_Message}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ VMessage(l,p)\ (void)((l<=VerbosityLevel)\ \&\&\ Message\ p)}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ Message0\ \_TG\_Message0}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ VMessage0(l,p)(void)((l<=VerbosityLevel)\ \&\&\ Message0\ p)}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ CMessage\ \_TG\_Send\_Msg\_To\_Node\_Zero}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ VCMessage(a,b)\ (void)((a\ <=\ VerbosityLevel)\ \&\&\ CMessage\ b)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ DBGCM(l,p)\ (void)((l<=DebugLevel)\ \&\&\ CMessage\ p)}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ Warnings}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ Warning\ \_TG\_Warning}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ Warning0\ \_TG\_Warning0}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ Progress\ monitoring}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ Report\_Progress\ TG\_Progress}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ Interrupt}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{/*\ Note\ that\ if\ customized\ interrupt\ handling\ is\ used,\ only\ Interruptions()}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *\ macro\ (functions)\ is\ used.\ The\ disable/enable\ functions\ etc\ are\ called}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ but\ there\ work\ is\ ignored\ (assumes\ SIGINT).\ */}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ Interruptions()\ \ \ \ \ \ \ \ \ TG\_Interruptions()}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ Check\_Interrupt()\ \ \ \ \ \ \ TG\_Check\_Interrupt()}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ Interrupts\_Enabled()\ \ \ \ TG\_Interrupts\_Enabled()}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ Disable\_Interrupts()\ \ \ \ TG\_Disable\_Interrupts()}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ Enable\_Interrupts()\ \ \ \ \ TG\_Enable\_Interrupts()}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ Reset\_Interrupts()\ \ \ \ \ \ TG\_Reset\_Interrupt()}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ Error\ handling}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#ifndef\ VERBOSE\_ERRORS}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#\ define\ VERBOSE\_ERRORS\ 0}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#include\ <setjmp.h>}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_accbf0c900fe080af9faea13260a19964}{jmp\_handler}};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ JMP\_NULL\ -\/1}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ JMP\_HANDLER\_ENV(i)\ (jmp\_stack[i])}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ EXIT\ 1}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ NO\_EXIT\ 0}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ TGE\_SET\_JUMP()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ jmp\_value;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ ((jmp\_value\ =\ setjmp(JMP\_HANDLER\_ENV(push\_jmp\_handler())))\ !=\ 0)\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ eval\_jmp(jmp\_value);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ TGE\_CLEAR\_JUMP()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\ \ \ \ (void)pop\_jmp\_handler();}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ TGE\_SET\_JUMP1()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\ \ \ \ if\ (tg\_jmp\_handlers\_p)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ jmp\_value;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ ((jmp\_value\ =\ setjmp(JMP\_HANDLER\_ENV(push\_jmp\_handler())))\ !=\ 0)\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ eval\_jmp(jmp\_value);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ TGE\_CLEAR\_JUMP1()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\ \ \ \ if\ (tg\_jmp\_handlers\_p)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (void)pop\_jmp\_handler();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ tge\_jmp\_start()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ try\_value;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ ((try\_value\ =\ setjmp(JMP\_HANDLER\_ENV(push\_jmp\_handler())))\ ==\ 0)}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ tge\_jmp()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\ \ \ \ else}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ tge\_interrupted()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\ \ \ \ \ try\_value\ ==\ TGE\_INTERRUPT}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ tge\_jmp\_end(action)\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (try\_value\ !=\ 0)\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ eval\_try(action,\ try\_value);\(\backslash\)}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ else\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ pop\_jmp\_handler();\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#if\ VERBOSE\_ERRORS}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#\ define\ Error\ \(\backslash\)}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\ \ \ \ tg\_message("{}\(\backslash\)nError\ on\ line\ \%d\ in\ \%s.\(\backslash\)n"{},\_\_LINE\_\_,\_\_FILE\_\_),\ TG\_Error}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#\ define\ Error\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TG\_Error}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ Interrupt\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TG\_Interrupt}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *\ Debug\ handling}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#if\ DEBUG}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#\ define\ DebugLevel\ \ TG\_Debug\_Level}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#\ define\ DebuggingOn\ TG\_Debug\_Level\ >\ 0}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ VerbosityLevel\ TG\_Verbosity\_Level}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ VerbosityOn\ \ \ \ TG\_Verbosity\_Level\ >\ 0}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#if\ DEBUG}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#\ define\ DEBUGLINE(line)\ line}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#\ define\ DBG(l,s)\ (void)((l<=DebugLevel)\&\&s)}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#\ define\ DBGM(l,p)\ (void)((l<=DebugLevel)\&\&Message\ p)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#\ define\ DBGM0(l,p)\ (void)((l<=DebugLevel)\&\&Message0\ p)}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#\ define\ DBGXM(l,s,p)\ (void)((l<=DebugLevel)\&\&\ s\ \&\&Message\ p)}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#\ define\ DBGX(exp,s)\ (void)((exp)\&\&s)}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#\ define\ IF\_DBG(exp)\ exp}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#\ define\ DEBUGLINE(line)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#\ define\ DBG(l,s)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#\ define\ DBGM(l,p)}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#\ define\ DBGM0(l,p)}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#\ define\ DBGXM(l,s,p)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#\ define\ DBGX(exp,s)}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#\ define\ IF\_DBG(exp)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#if\ DEBUG\ ||\ ASSERT}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#\ if\ defined(\_\_STDC\_\_)\ ||\ \_NT}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#\ \ define\ Assert(exp)\ (void)((exp)||TG\_Abort("{}Failed\ assertion\ \`{}"{}\#exp"{}',\ line\ \%d\ in\ \%s."{},\_\_LINE\_\_,\_\_FILE\_\_))}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#\ \ define\ Assert(exp)\ (void)((exp)||TG\_Abort("{}Failed\ assertion\ \`{}exp',\ line\ \%d\ in\ \%s."{},\_\_LINE\_\_,\_\_FILE\_\_))}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#\ define\ Assert(exp)}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ *\ Timer}}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#if\ TIMINGS}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#\ include\ <sys/times.h>}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#\ include\ <time.h>}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#\ include\ <unistd.h>}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtimer__struct}{timer\_struct}}}
+\DoxyCodeLine{00207\ \{}
+\DoxyCodeLine{00208\ \ \ \ \ clock\_t\ time0;}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keyword}{struct\ }tms\ start;}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keyword}{struct\ }tms\ cur;}
+\DoxyCodeLine{00211\ \}\ \mbox{\hyperlink{mem_8h_aeab443aec925fba23ddd8651e9a63227}{Timer}};}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ TIMINGS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ MAX\_JMP\_BUFFS\ 10}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__extern__handlers}{\_tg\_extern\_handlers}}}
+\DoxyCodeLine{00217\ \{}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__handlers_a849cc7a685d289c6566c3431749c0365}{\_n\_jmp\_buffs}};}
+\DoxyCodeLine{00219\ \ \ \ \ jmp\_buf\ \mbox{\hyperlink{struct__tg__extern__handlers_ab3f3d390968225c6bfa0ddf79d5302cf}{\_jmp\_stack}}[\mbox{\hyperlink{handlers_8h_a92a0d33764c6a61dcb286a8a191cb072}{MAX\_JMP\_BUFFS}}];}
+\DoxyCodeLine{00220\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct__tg__extern__handlers_a7a2874cd0d0e1bc51e8ce5241e0c7047}{\_auto\_partition}};}
+\DoxyCodeLine{00221\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct__tg__extern__handlers_a6dc68cce99a0a779dde9ce7d408017e5}{\_mesh\_partitioned}};}
+\DoxyCodeLine{00222\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct__tg__extern__handlers_a7196377c3e2f91ee3b947beaae71dce2}{\_auto\_partition\_tet}};}
+\DoxyCodeLine{00223\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct__tg__extern__handlers_adb65fb99e03893f351e60e8401a6de76}{\_decoupled\_parallel}};}
+\DoxyCodeLine{00224\ \};}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ extern\_handlers(field)\ EXTERN\_INSTANCE\_VAR(handlers,\ field)}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ n\_jmp\_buffs\ extern\_handlers(\_n\_jmp\_buffs)}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#define\ jmp\_stack\ extern\_handlers(\_jmp\_stack)}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ auto\_partition\ extern\_handlers(\_auto\_partition)}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ auto\_partition\_tet\ extern\_handlers(\_auto\_partition\_tet)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ decoupled\_parallel\ extern\_handlers(\_decoupled\_parallel)}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ mesh\_partitioned\ extern\_handlers(\_mesh\_partitioned)}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00236\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00237\ \{}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ \mbox{\hyperlink{tginstance_8h_adaf6e5f72f916fc6075db32ad85c8f8d}{EXTERN\_INSTANCE\_PROTOTYPE}}(handlers);}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a423f060201fa9232d845230df7104d67}{meshing\_node\_count}};}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{handlers_8h_a15d4ee0bc84bd56ee4cc6bf1fdb725b7}{tg\_subcomm}};}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_ac8ee2e47ad60f76cd86beef2aa760270}{tg\_subcomm\_size}};}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\_compute\_node\_count}};}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{handlers_8h_a7927da99f4f75c53e306ac1fc42587ae}{\_TG\_Message0}}(\textcolor{keywordtype}{char}\ *,\ ...);}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{handlers_8h_a997db79ac82a17ff65eaac01b2eb38d5}{\_TG\_Warning0}}(\textcolor{keywordtype}{char}\ *,\ ...);}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_afd4b1e0cd3ed34937cc02786dab67885}{node\_master}};}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{handlers_8h_a370e9504e08719affb22eae95650b4bd}{tg\_jmp\_handlers\_p}};}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_ad140236cff51e613bfc23a655c486925}{\_TG\_Recv\_And\_Print\_Msg\_From\_Other\_Nodes}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a3c2414b33dfe1c12c7471261f20d62b6}{\_TG\_Send\_Msg\_To\_Node\_Zero}}(\textcolor{keywordtype}{char}\ *,\ ...);}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{handlers_8h_a6357602ba9d855003e50f578904463e9}{\_TG\_Message}}(\textcolor{keywordtype}{char}\ *,\ ...);}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a6c208cfbe0f0ccdcb8f6ab68a209099e}{\_TG\_Set\_Verbosity\_Level}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a75536f712e498589e28b47a3bd7563f3}{\_TG\_Set\_Acting\_Verbosity\_Level}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_ab8080fd94f031c6ecfe7e9e2e0cda524}{\_TG\_Reset\_Verbosity\_Level}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{handlers_8h_a4b51c973011db8c90089e15b027accb8}{\_TG\_Warning}}(\textcolor{keywordtype}{char}\ *,\ ...);}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a92201d912dfae5fbb2ac3faa677d582d}{TG\_Abort}}(\textcolor{keywordtype}{char}\ *,\ ...);}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a1144ddb238b05456be66b55e7ddd8fb6}{TG\_Error}}(\textcolor{keywordtype}{char}\ *,\ ...);}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a1f5259690661974ecd8401c42dad0496}{\_TG\_Set\_Error\_Warning\_File\_Name}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a1f0558bb7c701b8b27f3e0875bece4b5}{\_TG\_Dump\_Error\_And\_Warnings}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a95e27598fd48c157c4c8f3b017d3f27d}{TG\_Interrupt}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_abcc7a16346b1f793ced9e5a4587fb095}{TG\_Clear\_Error\_Handler}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_aca8396b5fcefae4ac2373c4dcaab9086}{TG\_Push\_Error\_Handler}}(\mbox{\hyperlink{tg__handlers_8h_a59c973f8580fd748c36dc0006b411d9a}{TGErrorHandler}});}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{tg__handlers_8h_a59c973f8580fd748c36dc0006b411d9a}{TGErrorHandler}}\ \mbox{\hyperlink{handlers_8h_abc360ab3de0d7e22bbcdab73d28b318b}{TG\_Pop\_Error\_Handler}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a2afe5b053930732fc971b5a6115fbe5b}{TG\_Report\_Error}}(\mbox{\hyperlink{tg__handlers_8h_a2e9ab44e5b23efd9c60e0caf19a8f34e}{ErrorCode}},\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_ac662161bd3370af66d67888c5880eaef}{\_TG\_Error\_Handler\_Default}}(\mbox{\hyperlink{tg__handlers_8h_a2e9ab44e5b23efd9c60e0caf19a8f34e}{ErrorCode}});}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_abfa46d41726ab4a16fa77e426f25d98b}{TG\_Print\_Diagnostics}};}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a7fd809cab2496197e2c3c28da0840af4}{TG\_Diagnostic}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{handlers_8h_aac84eabd963535dfd8623442c2931d12}{sformat}}(\textcolor{keywordtype}{char}\ *\ buf,\ \textcolor{keywordtype}{char}\ *format,\ ...);}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{handlers_8h_accbf0c900fe080af9faea13260a19964}{jmp\_handler}}\ \mbox{\hyperlink{handlers_8h_a390db1562d766444d66feb088e01b6c9}{push\_jmp\_handler}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{handlers_8h_accbf0c900fe080af9faea13260a19964}{jmp\_handler}}\ \mbox{\hyperlink{handlers_8h_ae4aba4fd1b5b86bd9239ac96c19f4aea}{pop\_jmp\_handler}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_aea8549d951ee9457e44ec020c1a1afd8}{clear\_jmp\_handler}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_aba583d2a3804830c5cd5e690121e3377}{disable\_jmp\_handlers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a00507b963beba9f4a7cffe80941518c0}{enable\_jmp\_handlers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_ae7d06a9b2300f26500c2bfb8548f16ba}{eval\_jmp}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a516ed6f8d7df54ad769ffbeb4311de9e}{eval\_try}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a7a25c567ca73b3f4c452d61b992e280f}{\_TG\_Install\_Signal\_Handlers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_aa383c7f53e66fb09ed07e0256372e79d}{\_TG\_Install\_Signal\_Handlers1}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_adb0beb294b066944e67e4bef1271c601}{\_TG\_Reset\_Signal\_Handlers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_a417c2367827878b958e2421afc9a3659}{\_TG\_Set\_SIGINT\_Action}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#if\ TIMINGS}}
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ start\_timer\ (\mbox{\hyperlink{structtimer__struct}{Timer}}*);}
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ stop\_timer\ (\mbox{\hyperlink{structtimer__struct}{Timer}}*,\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}*,\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}*,\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}*);}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a3f6c6984fe5b09ef0aeda3da2eb39900}{\_TG\_Initialize}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{handlers_8h_adf01b70a8064fde97d5117f7b9106986}{\_TG\_Create\_Subcomm}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a3ed5d06011197fc29d1b25361429d5af}{\_TG\_Create\_Dummy\_Subcomm}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a6c7ed341aafc28415bb064808be1e27f}{\_TG\_Init\_Subcomm}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a74537f885b9dc4e41d8c2f5a0389ef52}{\_TG\_Set\_Acting\_Subcomm}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a41d484666f0931cfee7bfdde4efe0243}{\_TG\_Reset\_Subcomm}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_ac52d4dd6db9950977d047b99f04f2811}{\_TG\_Destroy\_Subcomm}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_a6f6388dc448c4c454f653f6fbdc20d29}{\_TG\_Install\_Repair\_Subcomm}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{handlers_8h_aad743a374db06dfb90dcfe1416f98ef1}{\_TG\_Reset\_Repair\_Subcomm}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00309\ \}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ Handlers\_h\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,27 @@
+var nanfunctions_8py =
+[
+    [ "_copyto", "nanfunctions_8py.html#a851e3161b5e61d6d117de30d24c11b1f", null ],
+    [ "_divide_by_count", "nanfunctions_8py.html#adf935125d9c068604c0be03d75442cc3", null ],
+    [ "_nanmedian", "nanfunctions_8py.html#a40f286e0eb222fc2652c7fcabb05bfa4", null ],
+    [ "_nanmedian1d", "nanfunctions_8py.html#a0a3ef362c24c8c98bf3f12b801bd4b0b", null ],
+    [ "_nanmedian_small", "nanfunctions_8py.html#a921ef94437edff1466473caf4ae6f78a", null ],
+    [ "_nanquantile_1d", "nanfunctions_8py.html#a80053c5447a5f2a9bfe11b54ee84f9ef", null ],
+    [ "_nanquantile_unchecked", "nanfunctions_8py.html#a5c0d25af29d292e83b09b2007f6575e5", null ],
+    [ "_nanquantile_ureduce_func", "nanfunctions_8py.html#af321a64c4154da7fd308a94538312a3c", null ],
+    [ "_remove_nan_1d", "nanfunctions_8py.html#a3aefad4058f07bfb665548ea168d9d71", null ],
+    [ "_replace_nan", "nanfunctions_8py.html#a6048167e5ed9f27f6b1272bd4ad92505", null ],
+    [ "nanargmax", "nanfunctions_8py.html#a4619cba2858aed31e39f190957627c77", null ],
+    [ "nanargmin", "nanfunctions_8py.html#ab788834c6f921123fade97e974d1df84", null ],
+    [ "nancumprod", "nanfunctions_8py.html#adc00b4dafab2f5c3c4a4c730cbd63155", null ],
+    [ "nancumsum", "nanfunctions_8py.html#adbdb4ecf46679517e5836d4e3052d552", null ],
+    [ "nanmax", "nanfunctions_8py.html#a1691f17d25212ffc695886657780e00c", null ],
+    [ "nanmean", "nanfunctions_8py.html#a01c29b457cf4879fd35f5ec849d4e7ee", null ],
+    [ "nanmedian", "nanfunctions_8py.html#a4a25edeb57b1e0a84cc72d9a35b23b3b", null ],
+    [ "nanmin", "nanfunctions_8py.html#a918dd9da1a223eb41c37ab20c2a28454", null ],
+    [ "nanpercentile", "nanfunctions_8py.html#a5d4c140b498e6a37d8b8c598d2d103f0", null ],
+    [ "nanprod", "nanfunctions_8py.html#a4c3ea14f0861fcc86566b8e38e9483ae", null ],
+    [ "nanquantile", "nanfunctions_8py.html#a9cbb118a56c40ac6dc54ad1f250a8aa9", null ],
+    [ "nanstd", "nanfunctions_8py.html#a433c5e529be30665c16fcd25d3d46a6a", null ],
+    [ "nansum", "nanfunctions_8py.html#a5d03ece886098aeae37dd5fbae1557af", null ],
+    [ "nanvar", "nanfunctions_8py.html#ad5378a39574f5d21c321ed77a4863962", null ]
+];

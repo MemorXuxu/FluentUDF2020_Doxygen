@@ -1,0 +1,515 @@
+\doxysection{overset.\+h}
+\hypertarget{overset_8h_source}{}\label{overset_8h_source}\index{fluent20.1.0/src/mesh/overset.h@{fluent20.1.0/src/mesh/overset.h}}
+\mbox{\hyperlink{overset_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_OVERSET\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_OVERSET\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ RP\_OVERSET}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{mesh__flags_8h}{mesh\_flags.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ C\_OVERSET\_BD(\_c,\_t)\ C\_STORAGE\_R(\_c,\_t,SV\_OVERSET\_BD)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ F\_OVERSET\_WEIGHT(\_f,\_t)\ F\_STORAGE\_R(\_f,\_t,SV\_OVERSET\_WEIGHT)}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{/*\ not\ all\ overset\ cell\ flags\ are\ exchanged\ */}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ OVERSET\_CELL\_EXCHANGE\_FLAGS\ \ (OVERSET\_CELL\_FL\_SOLVE\ |\ \(\backslash\)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_RECEPTOR\ |\ \(\backslash\)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DONOR\ |\ \(\backslash\)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_ORPHAN\ |\ \(\backslash\)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DEAD\ |\ \(\backslash\)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_SOLVE\_OLD\ |\ \(\backslash\)}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_RECEPTOR\_OLD\ |\ \(\backslash\)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DEAD\_OLD\ |\ \(\backslash\)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_MARK0\ |\ \(\backslash\)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_MARK1\ |\ \(\backslash\)}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_RENDER\ |\ \(\backslash\)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DONOR\_POST\ |\ \(\backslash\)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_TMP)}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ OVERSET\_CELL\_ALL\_FLAGS\ \ (OVERSET\_CELL\_EXCHANGE\_FLAGS\ |\ \(\backslash\)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DONOR\_EXT\ |\ \(\backslash\)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_EXTENDED)}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ OVERSET\_SOLVE\_CELL\_P(\_c,\_t)\ \ \ \ \ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_SOLVE)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ OVERSET\_RECEPTOR\_CELL\_P(\_c,\_t)\ \ \ \ \ (sg\_overset?C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_RECEPTOR:0)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ OVERSET\_DONOR\_CELL\_P(\_c,\_t)\ \ \ \ \ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DONOR)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ OVERSET\_ORPHAN\_CELL\_P(\_c,\_t)\ \ \ \ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_ORPHAN)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ OVERSET\_DEAD\_CELL\_P(\_c,\_t)\ \ \ \ \ \ \ \ \ (sg\_overset?C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DEAD:0)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ OVERSET\_SOLVE\_OLD\_CELL\_P(\_c,\_t)\ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_SOLVE\_OLD)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ OVERSET\_RECEPTOR\_OLD\_CELL\_P(\_c,\_t)\ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_RECEPTOR\_OLD)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ OVERSET\_DEAD\_OLD\_CELL\_P(\_c,\_t)\ \ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DEAD\_OLD)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ OVERSET\_MARK0\_CELL\_P(\_c,\_t)\ \ \ \ \ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_MARK0)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ OVERSET\_MARK1\_CELL\_P(\_c,\_t)\ \ \ \ \ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_MARK1)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ OVERSET\_RENDER\_CELL\_P(\_c,\_t)\ \ \ \ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_RENDER)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ OVERSET\_DONOR\_EXT\_CELL\_P(\_c,\_t)\ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DONOR\_EXT)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ OVERSET\_TMP\_CELL\_P(\_c,\_t)\ \ \ \ \ \ \ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_TMP)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ OVERSET\_EXTENDED\_CELL\_P(\_c,\_t)\ \ \ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_EXTENDED)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ OVERSET\_DONOR\_POST\_CELL\_P(\_c,\_t)\ \ \ (C\_ENTITY\_FLAGS(\_c,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_CELL\_FL\_DONOR\_POST)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ OVERSET\_UNIDENTIFIED\_CELL\_P(\_c,\_t)\ !(OVERSET\_SOLVE\_CELL\_P(\_c,\_t)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_RECEPTOR\_CELL\_P(\_c,\_t)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_DEAD\_CELL\_P(\_c,\_t))}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ OVERSET\_DEAD\_TO\_SOLVE\_CELL\_P(\_c,\_t)\ (OVERSET\_SOLVE\_CELL\_P(\_c,\_t)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_DEAD\_OLD\_CELL\_P(\_c,\_t))}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ SET\_OVERSET\_CELL\_FLAGS\ SET\_C\_ENTITY\_FLAGS}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ CLEAR\_OVERSET\_CELL\_FLAGS\ CLEAR\_C\_ENTITY\_FLAGS}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ OVERSET\_CELL\_FLAG\ C\_ENTITY\_FLAG}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{comment}{/*\ overset\ cell\ plotting\ marks\ */}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ OVERSET\_SOLVE\_CELL\ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ OVERSET\_RECEPTOR\_CELL\ \ \ \ \ \ 0}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ OVERSET\_DONOR\_CELL\ \ \ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ OVERSET\_ORPHAN\_CELL\ \ \ \ \ \ \ -\/1}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ OVERSET\_DEAD\_CELL\ \ \ \ \ \ \ \ \ -\/2}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ OVERSET\_UNIDENTIFIED\_CELL\ -\/3}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{/*\ not\ all\ overset\ face\ flags\ are\ exchanged\ */}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ OVERSET\_FACE\_EXCHANGE\_FLAGS\ \ (OVERSET\_FACE\_FL\_SOLVE\_SOLVE\ |\ \(\backslash\)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_SOLVE\_RECEPTOR\ |\ \ \(\backslash\)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_RECEPTOR\_RECEPTOR\ |\ \(\backslash\)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_OVERSET\ |\ \(\backslash\)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_DEAD\ |\ \(\backslash\)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_MARK0\ |\ \(\backslash\)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_MARK1\ |\ \(\backslash\)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_OVERLAP)}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ OVERSET\_FACE\_ALL\_FLAGS\ \ (OVERSET\_FACE\_EXCHANGE\_FLAGS\ |\ \(\backslash\)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_RENDER\ |\ \(\backslash\)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_EXTENDED)}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ OVERSET\_SOLVE\_FACE\_P(\_f,\_t)\ \ \ \ \ \ \ \ \ \ \ \ \ (sg\_overset?F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (OVERSET\_FACE\_FL\_SOLVE\_SOLVE\ |\ \(\backslash\)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_SOLVE\_RECEPTOR\ |\ \(\backslash\)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_RECEPTOR\_RECEPTOR):1)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ OVERSET\_SOLVE\_SOLVE\_FACE\_P(\_f,\_t)\ \ \ \ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_SOLVE\_SOLVE)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ OVERSET\_SOLVE\_RECEPTOR\_FACE\_P(\_f,\_t)\ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_SOLVE\_RECEPTOR)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ OVERSET\_RECEPTOR\_RECEPTOR\_FACE\_P(\_f,\_t)\ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_RECEPTOR\_RECEPTOR)}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ OVERSET\_OVERSET\_FACE\_P(\_f,\_t)\ \ \ \ \ \ \ \ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_OVERSET)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ OVERSET\_DEAD\_FACE\_P(\_f,\_t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_DEAD)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ OVERSET\_MARK0\_FACE\_P(\_f,\_t)\ \ \ \ \ \ \ \ \ \ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_MARK0)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ OVERSET\_MARK1\_FACE\_P(\_f,\_t)\ \ \ \ \ \ \ \ \ \ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_MARK1)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ OVERSET\_OVERLAP\_FACE\_P(\_f,\_t)\ \ \ \ \ \ \ \ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_OVERLAP)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ OVERSET\_RENDER\_FACE\_P(\_f,\_t)\ \ \ \ \ \ \ \ \ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_RENDER)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ OVERSET\_EXTENDED\_FACE\_P(\_f,\_t)\ \ \ \ \ \ \ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_FACE\_FL\_EXTENDED)}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ SET\_OVERSET\_FACE\_FLAGS(\_f,\_t,\_flag)\ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ |=\ (\_flag))}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ OVERSET\_FACE\_FLAG(\_f,\_t,\_flag)\ \ \ \ \ \ \ \ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&\ \_flag)}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ CLEAR\_OVERSET\_FACE\_FLAGS(\_f,\_t,\_flag)\ (F\_ENTITY\_FLAGS(\_f,\_t)\ \&=\ \string~(\_flag))}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ NOT\_OVERSET\_OR\_SOLVE\_CELL\_P(\_c,\_t)\ (!sg\_overset\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OVERSET\_SOLVE\_CELL\_P(\_c,\_t))}}
+\DoxyCodeLine{00127\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }axis\_aligned\_bounding\_box\_struct}
+\DoxyCodeLine{00128\ \{}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmin[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ min\ corner\ of\ axis-\/aligned\ bounding\ box\ */}}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmax[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max\ corner\ of\ axis-\/aligned\ bounding\ box\ */}}
+\DoxyCodeLine{00131\ \}\ AABBox;}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ AABB\_XMIN(bb)\ ((bb)-\/>xmin)}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ AABB\_XMAX(bb)\ ((bb)-\/>xmax)}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ OCD\_NWEIGHTS\ 3}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{comment}{/*\ overset\ cell\ donors\ */}}
+\DoxyCodeLine{00139\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }overset\_cell\_donor\_struct}
+\DoxyCodeLine{00140\ \{}
+\DoxyCodeLine{00141\ \ \ \mbox{\hyperlink{struct__tg__cell__struct}{Cell}}\ *csp;}
+\DoxyCodeLine{00142\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ weight[OCD\_NWEIGHTS];}
+\DoxyCodeLine{00143\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ gradient\_weight[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];}
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ flags;\ \ \textcolor{comment}{/*\ lowest\ 24\ bits\ (0xffffff)\ are\ used\ to\ store\ partition}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ID,\ higher\ bits\ are\ used\ as\ donor\ flags\ */}}
+\DoxyCodeLine{00146\ \}\ Overset\_Cell\_Donor;}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ C\_OVERSET\_DONOR(\_c,\_t)\ \(\backslash\)}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\ \ C\_STORAGE(\_c,\_t,SV\_OVERSET\_DONOR,struct\ objp\_struct\ **)}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ C\_OVERSET\_NDONOR(\_c,\_t)\ C\_STORAGE\_I(\_c,\_t,SV\_OVERSET\_NDONOR)}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ OCD\_FL\_PRINCIPAL\ \ \ (1<<24)}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ OCD\_FL\_CENTRAL\ \ \ \ \ (1<<25)}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ OCD\_FL\_USED\ \ \ \ \ \ \ \ (1<<26)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ OCD\_FL\_SAME\_MESH\ \ \ (1<<27)}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{comment}{/*bits\ 29,\ 30,\ and\ 31\ are\ for\ lsf\ flag\ values*/}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ \ \ \ OCD\_LSF\_DEF\_GRADX\ \ \ \ \ \ \ (1<<28)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ \ \ \ OCD\_LSF\_DEF\_GRADY\ \ \ \ \ \ \ (2<<28)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ \ \ \ OCD\_LSF\_DEF\_GRADZ\ \ \ \ \ \ \ (4<<28)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ \ \ \ OCD\_LSF\_DEF\_GRADXY\ \ \ \ \ \ (3<<28)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ \ \ \ OCD\_LSF\_DEF\_GRADXZ\ \ \ \ \ \ (5<<28)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ \ \ \ OCD\_LSF\_DEF\_GRADYZ\ \ \ \ \ \ (6<<28)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ \ \ \ OCD\_LSF\_DEF\_GRADXYZ\ \ \ \ \ (7<<28)}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ O\_P\_OCD(objp)\ ((Overset\_Cell\_Donor\ *)\ O\_P(objp))}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ OCD\_CSP(ocd)\ ((ocd)-\/>csp)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ OCD\_WEIGHT(ocd,i)\ ((ocd)-\/>weight[i])}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ OCD\_G\_WEIGHT(ocd,i)\ ((ocd)-\/>gradient\_weight[i])}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#define\ OCD\_FLAGS(ocd)\ ((ocd)-\/>flags)}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ OCD\_LSF\_FLAGS(ocd)\ ((ocd)-\/>flags)}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ SET\_OCD\_FLAGS(ocd,\_flag)\ (OCD\_FLAGS(ocd)\ |=\ (\_flag))}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ SET\_OCD\_LSF\_FLAGS(ocd,\_flag)\ (OCD\_LSF\_FLAGS(ocd)\ |=\ (\_flag))}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#define\ CLEAR\_OCD\_FLAGS(ocd,\_flag)\ (OCD\_FLAGS(ocd)\ \&=\ \string~(\_flag))}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ CLEAR\_OCD\_LSF\_FLAGS(ocd,\_flag)\ (OCD\_LSF\_FLAGS(ocd)\ \&=\ \string~(\_flag))}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ OCD\_PRINCIPAL\_P(ocd)\ ((OCD\_FLAGS(ocd)\ \&\ OCD\_FL\_PRINCIPAL)\ !=\ 0)}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ OCD\_CENTRAL\_P(ocd)\ ((OCD\_FLAGS(ocd)\ \&\ OCD\_FL\_CENTRAL)\ !=\ 0)}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ OCD\_USED\_P(ocd)\ ((OCD\_FLAGS(ocd)\ \&\ OCD\_FL\_USED)\ !=\ 0)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ OCD\_SAME\_MESH\_P(ocd)\ ((OCD\_FLAGS(ocd)\ \&\ OCD\_FL\_SAME\_MESH)\ !=\ 0)}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ OCD\_LSF\_DEF\_GRAD\_X(ocd)((OCD\_LSF\_FLAGS(ocd)\ \&\ OCD\_LSF\_DEF\_GRADX))}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#define\ OCD\_LSF\_DEF\_GRAD\_Y(ocd)((OCD\_LSF\_FLAGS(ocd)\ \&\ OCD\_LSF\_DEF\_GRADY))}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#define\ OCD\_LSF\_DEF\_GRAD\_Z(ocd)((OCD\_LSF\_FLAGS(ocd)\ \&\ OCD\_LSF\_DEF\_GRADZ))}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ OCD\_PART(ocd)\ (OCD\_FLAGS(ocd)\ \&\ 0xffffff)}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#define\ SET\_OCD\_PART(ocd,\_part)\ (OCD\_FLAGS(ocd)\ =\ \(\backslash\)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((OCD\_FLAGS(ocd)\ \&\ 0xff000000)\ |\ \(\backslash\)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((\_part)\ \&\ 0xffffff)))}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#define\ C\_OVERSET\_RECEPTOR(\_c,\_t)\ \(\backslash\)}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\ \ C\_STORAGE(\_c,\_t,SV\_OVERSET\_RECEPTOR,struct\ objp\_struct\ **)}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#define\ C\_OVERSET\_NRECEPTOR(\_c,\_t)\ C\_STORAGE\_I(\_c,\_t,SV\_OVERSET\_NRECEPTOR)}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \textcolor{comment}{/*\ overset\ bounding\ cells\ */}}
+\DoxyCodeLine{00195\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }overset\_bounding\_cell\_struct}
+\DoxyCodeLine{00196\ \{}
+\DoxyCodeLine{00197\ \ \ \mbox{\hyperlink{struct__tg__cell__struct}{Cell}}\ *csp;}
+\DoxyCodeLine{00198\ \ \ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ id;}
+\DoxyCodeLine{00199\ \ \ \textcolor{keywordtype}{int}\ tid;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ original\ (parent)\ thread\ ID\ if\ extended\ threads\ are\ used\ */}}
+\DoxyCodeLine{00200\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ flags;\ \ \textcolor{comment}{/*\ lowest\ 24\ bits\ (0xffffff)\ are\ used\ to\ store\ partition}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ID,\ next\ 2\ bits\ are\ used\ as\ bounding\ cell\ flags\ */}}
+\DoxyCodeLine{00202\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ oflags;\ \textcolor{comment}{/*\ overset\ cell\ flags\ of\ the\ bounding\ cell\ */}}
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ priority;}
+\DoxyCodeLine{00204\ \}\ Overset\_Bounding\_Cell;}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#define\ C\_OVERSET\_BCELL(\_c,\_t)\ \(\backslash\)}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\ \ C\_STORAGE(\_c,\_t,SV\_OVERSET\_BCELL,struct\ objp\_struct\ **)}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ OBC\_FL\_VALID\ \ \ \ \ \ \ (1<<24)}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ OBC\_FL\_USED\ \ \ \ \ \ \ \ (1<<25)\ \ }\textcolor{comment}{/*\ currently\ not\ used\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ OBC\_FL\_TMP\ \ \ \ \ \ \ \ \ (1<<26)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ OBC\_FL\_NBR\ \ \ \ \ \ \ \ \ (1<<27)}}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#define\ O\_P\_OBC(objp)\ ((Overset\_Bounding\_Cell\ *)\ O\_P(objp))}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ OBC\_CSP(obc)\ ((obc)-\/>csp)}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ OBC\_ID(obc)\ ((obc)-\/>id)}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ OBC\_TID(obc)\ ((obc)-\/>tid)}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ OBC\_FLAGS(obc)\ ((obc)-\/>flags)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ SET\_OBC\_FLAGS(obc,\_flag)\ (OBC\_FLAGS(obc)\ |=\ (\_flag))}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ CLEAR\_OBC\_FLAGS(obc,\_flag)\ (OBC\_FLAGS(obc)\ \&=\ \string~(\_flag))}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ OBC\_VALID\_P(obc)\ ((OBC\_FLAGS(obc)\ \&\ OBC\_FL\_VALID)\ !=\ 0)}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ OBC\_USED\_P(obc)\ ((OBC\_FLAGS(obc)\ \&\ OBC\_FL\_USED)\ !=\ 0)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ OBC\_TMP\_P(obc)\ ((OBC\_FLAGS(obc)\ \&\ OBC\_FL\_TMP)\ !=\ 0)}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ OBC\_NBR\_P(obc)\ ((OBC\_FLAGS(obc)\ \&\ OBC\_FL\_NBR)\ !=\ 0)}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ OBC\_PART(obc)\ (OBC\_FLAGS(obc)\ \&\ 0xffffff)}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ SET\_OBC\_PART(obc,\_part)\ (OBC\_FLAGS(obc)\ =\ \(\backslash\)}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((OBC\_FLAGS(obc)\ \&\ 0xff000000)\ |\ \(\backslash\)}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((\_part)\ \&\ 0xffffff)))}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ OBC\_OFLAGS(obc)\ ((obc)-\/>oflags)}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#define\ SET\_OBC\_OFLAGS(obc,\_flag)\ (OBC\_OFLAGS(obc)\ |=\ (\_flag))}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ CLEAR\_OBC\_OFLAGS(obc,\_flag)\ (OBC\_OFLAGS(obc)\ \&=\ \string~(\_flag))}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ OBC\_SOLVE\_CELL\_P(obc)\ (OBC\_OFLAGS(obc)\ \&\ OVERSET\_CELL\_FL\_SOLVE)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ OBC\_DEAD\_CELL\_P(obc)\ (OBC\_OFLAGS(obc)\ \&\ OVERSET\_CELL\_FL\_DEAD)}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ OBC\_DEAD\_OLD\_CELL\_P(obc)\ (OBC\_OFLAGS(obc)\ \&\ OVERSET\_CELL\_FL\_DEAD\_OLD)}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#define\ OBC\_RECEPTOR\_CELL\_P(obc)\ (OBC\_OFLAGS(obc)\ \&\ OVERSET\_CELL\_FL\_RECEPTOR)}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ OBC\_PRIORITY(obc)\ ((obc)-\/>priority)}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ OBC\_CONTACT\_CELL\_P(obc)\ (OBC\_OFLAGS(obc)\ \&\ CELL\_CONTACT\_ZONE\_FLAG)}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ OBC\_CONTACT\_OLD\_CELL\_P(obc)\ (OBC\_OFLAGS(obc)\ \&\ CELL\_CONTACT\_ZONE\_FLAG\_OLD)}}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00240\ \textcolor{comment}{/*\ dci\ cell\ type}}
+\DoxyCodeLine{00241\ \textcolor{comment}{\ \ \ \ \ lowest\ 24\ bits\ (0xffffff)\ are\ used\ to\ store\ the\ number\ of\ donors,}}
+\DoxyCodeLine{00242\ \textcolor{comment}{\ \ \ \ \ next\ 4\ bits\ are\ used\ for\ cell\ type\ */}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ C\_DCI\_TYPE(\_c,\_t)\ C\_STORAGE\_UI(\_c,\_t,SV\_DCI\_TYPE)}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ DCI\_CELL\_FL\_SOLVE\ \ \ \ \ (1<<24)}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ DCI\_CELL\_FL\_RECEPTOR\ \ (1<<25)}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ DCI\_CELL\_FL\_DONOR\ \ \ \ \ (1<<26)}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ DCI\_CELL\_FL\_DEAD\ \ \ \ \ \ (1<<27)}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#define\ C\_DCI\_NDONOR(\_c,\_t)\ ((int)(C\_DCI\_TYPE(\_c,\_t)\ \&\ 0xffffff))}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ SET\_DCI\_NDONOR(\_c,\_t,\_n)\ (C\_DCI\_TYPE(\_c,\_t)\ =\ \(\backslash\)}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((C\_DCI\_TYPE(\_c,\_t)\ \&\ 0xff000000)\ |\ \(\backslash\)}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((\_n)\ \&\ 0xffffff)))}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ DCI\_SOLVE\_CELL\_P(\_c,\_t)\ (C\_DCI\_TYPE(\_c,\_t)\ \&\ DCI\_CELL\_FL\_SOLVE)}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ DCI\_RECEPTOR\_CELL\_P(\_c,\_t)\ (C\_DCI\_TYPE(\_c,\_t)\ \&\ DCI\_CELL\_FL\_RECEPTOR)}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_CELL\_P(\_c,\_t)\ (C\_DCI\_TYPE(\_c,\_t)\ \&\ DCI\_CELL\_FL\_DONOR)}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ DCI\_DEAD\_CELL\_P(\_c,\_t)\ (C\_DCI\_TYPE(\_c,\_t)\ \&\ DCI\_CELL\_FL\_DEAD)}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ SET\_DCI\_CELL\_FLAGS(\_c,\_t,\_flags)\ (C\_DCI\_TYPE(\_c,\_t)\ |=\ (\_flags))}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \textcolor{comment}{/*\ dci\ cell\ donors\ */}}
+\DoxyCodeLine{00259\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }dci\_cell\_donor\_struct}
+\DoxyCodeLine{00260\ \{}
+\DoxyCodeLine{00261\ \ \ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ cid;}
+\DoxyCodeLine{00262\ \ \ \textcolor{keywordtype}{int}\ tid;}
+\DoxyCodeLine{00263\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ flags;\ \ \textcolor{comment}{/*\ lowest\ 24\ bits\ (0xffffff)\ are\ used\ to\ store\ partition}}
+\DoxyCodeLine{00264\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ID,\ next\ 4\ bits\ are\ used\ as\ donor\ flags\ */}}
+\DoxyCodeLine{00265\ \}\ DCI\_Cell\_Donor;}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#define\ C\_DCI\_DONOR(\_c,\_t)\ \(\backslash\)}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\ \ C\_STORAGE(\_c,\_t,SV\_DCI\_DONOR,struct\ objp\_struct\ **)}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_FL\_PRINCIPAL\ \ \ (1<<24)}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_FL\_CENTRAL\ \ \ \ \ (1<<25)}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_FL\_USED\ \ \ \ \ \ \ \ (1<<26)}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_FL\_SAME\_MESH\ \ \ (1<<27)}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#define\ O\_P\_DCI(objp)\ ((DCI\_Cell\_Donor\ *)\ O\_P(objp))}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_ID(dci)\ ((dci)-\/>cid)}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_TID(dci)\ ((dci)-\/>tid)}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_FLAGS(dci)\ ((dci)-\/>flags)}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#define\ SET\_DCI\_DONOR\_FLAGS(dci,\_flag)\ (DCI\_DONOR\_FLAGS(dci)\ |=\ (\_flag))}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#define\ CLEAR\_DCI\_DONOR\_FLAGS(dci,\_flag)\ (DCI\_DONOR\_FLAGS(dci)\ \&=\ \string~(\_flag))}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_PRINCIPAL\_P(dci)\ ((DCI\_DONOR\_FLAGS(dci)\ \&\ DCI\_DONOR\_FL\_PRINCIPAL)\ !=\ 0)}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_CENTRAL\_P(dci)\ ((DCI\_DONOR\_FLAGS(dci)\ \&\ DCI\_DONOR\_FL\_CENTRAL)\ !=\ 0)}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_USED\_P(dci)\ ((DCI\_DONOR\_FLAGS(dci)\ \&\ DCI\_DONOR\_FL\_USED)\ !=\ 0)}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_SAME\_MESH\_P(dci)\ ((DCI\_DONOR\_FLAGS(dci)\ \&\ DCI\_DONOR\_FL\_SAME\_MESH)\ !=\ 0)}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#define\ DCI\_DONOR\_PART(dci)\ (DCI\_DONOR\_FLAGS(dci)\ \&\ 0xffffff)}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#define\ SET\_DCI\_DONOR\_PART(dci,\_part)\ (DCI\_DONOR\_FLAGS(dci)\ =\ \(\backslash\)}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((DCI\_DONOR\_FLAGS(dci)\ \&\ 0xff000000)\ |\ \(\backslash\)}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((\_part)\ \&\ 0xffffff)))}}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#define\ F\_DCI\_WEIGHT(\_f,\_t)\ F\_STORAGE\_R(\_f,\_t,SV\_DCI\_WEIGHT)}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ PARALLEL\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00292\ \{}
+\DoxyCodeLine{00293\ \ \ OT\_CELL\_THREAD\ \ \ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00294\ \ \ OT\_INTERIOR\_FACE\_THREAD\ =\ 1,}
+\DoxyCodeLine{00295\ \ \ OT\_OVERSET\_FACE\_THREAD\ \ =\ 2,}
+\DoxyCodeLine{00296\ \ \ OT\_CUT\_FACE\_THREAD\ \ \ \ \ \ =\ 3,}
+\DoxyCodeLine{00297\ \ \ OT\_PASSIVE\_FACE\_THREAD\ \ =\ 4}
+\DoxyCodeLine{00298\ \};}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }overset\_thread\_struct}
+\DoxyCodeLine{00301\ \{}
+\DoxyCodeLine{00302\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__struct}{thread\_struct}}\ *thread;}
+\DoxyCodeLine{00303\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__struct}{thread\_struct}}\ *extended\_thread;}
+\DoxyCodeLine{00304\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__struct}{thread\_struct}}\ *extended\_interior\_thread;\ \textcolor{comment}{/*filled\ for\ cell\ threads\ */}}
+\DoxyCodeLine{00305\ \ \ \textcolor{keywordtype}{int}\ type;}
+\DoxyCodeLine{00306\ \ \ \textcolor{keywordtype}{int}\ id\_parent;}
+\DoxyCodeLine{00307\ \ \ \textcolor{keywordtype}{int}\ priority;}
+\DoxyCodeLine{00308\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmin[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \textcolor{comment}{/*\ min\ corner\ of\ global\ axis-\/aligned\ bounding\ box\ */}}
+\DoxyCodeLine{00309\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmax[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \textcolor{comment}{/*\ max\ corner\ of\ global\ axis-\/aligned\ bounding\ box\ */}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00311\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *ll0;\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ local\ cell\ max\ length\ scale,\ available\ on\ all\ processes\ */}}
+\DoxyCodeLine{00312\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xlmin;\ \ \ \ \ \ \ \textcolor{comment}{/*\ min\ corner\ of\ local\ axis-\/aligned\ bounding\ box,\ available}}
+\DoxyCodeLine{00313\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\ all\ processes\ */}}
+\DoxyCodeLine{00314\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xlmax;\ \ \ \ \ \ \ \textcolor{comment}{/*\ max\ corner\ of\ local\ axis-\/aligned\ bounding\ box,\ available}}
+\DoxyCodeLine{00315\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\ all\ processes\ */}}
+\DoxyCodeLine{00316\ \ \ \textcolor{keywordtype}{int}\ *bmap\_nxyz;\ \ \ \ \textcolor{comment}{/*\ resolution\ of\ bit\ array\ covering\ local\ axis-\/aligned}}
+\DoxyCodeLine{00317\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bounding\ box,\ available\ on\ all\ processes\ */}}
+\DoxyCodeLine{00318\ \ \ \textcolor{keywordtype}{int}\ *bmap\_size;\ \ \ \ \textcolor{comment}{/*\ size\ of\ bit\ array\ in\ words\ (char),}}
+\DoxyCodeLine{00319\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ available\ on\ all\ processes\ */}}
+\DoxyCodeLine{00320\ \ \ \textcolor{keywordtype}{char}\ **bmap;\ \ \ \ \ \ \ \textcolor{comment}{/*\ bit\ array\ covering\ local\ axis-\/aligned\ bounding\ box,}}
+\DoxyCodeLine{00321\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ available\ on\ all\ processes\ */}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00323\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xlmin\_ext[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \textcolor{comment}{/*\ local\ axis-\/aligned\ bounding\ box\ of\ extended\ thread\ */}}
+\DoxyCodeLine{00324\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xlmax\_ext[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \textcolor{comment}{/*\ local\ axis-\/aligned\ bounding\ box\ of\ extended\ thread\ */}}
+\DoxyCodeLine{00325\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ l0;\ \ \textcolor{comment}{/*\ length\ scale\ used\ in\ bounding\ box\ overlap\ calculations\ */}}
+\DoxyCodeLine{00326\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h0;\ \ \textcolor{comment}{/*\ average\ adjacent\ cell\ height;\ used\ only\ for\ cut\ face\ threads\ */}}
+\DoxyCodeLine{00327\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ have\_cut\_seed\_cell\_p;\ \textcolor{comment}{/*\ marks\ cell\ zones\ with\ cut\ cell\ seed\ */}}
+\DoxyCodeLine{00328\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ have\_poly\_cells\_p;\ \textcolor{comment}{/*\ TRUE\ if\ associated\ cell\ zone\ has\ polyhedral\ cells\ */}}
+\DoxyCodeLine{00329\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ have\_hexcore\_p;\ \textcolor{comment}{/*\ TRUE\ if\ assoc.\ cell\ zone\ is\ hexcore\ (hanging\ nodes)\ */}}
+\DoxyCodeLine{00330\ \ \ \textcolor{keywordtype}{int}\ user\_overlap;\ \textcolor{comment}{/*\ 0\ =\ auto,\ 1\ =\ include,\ -\/1\ =\ exclude\ */}}
+\DoxyCodeLine{00331\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ feature\_angle\_filled\_p;\ \textcolor{comment}{/*\ TRUE\ if\ feature\ angle\ filled\ on\ original\ threads\ */}}
+\DoxyCodeLine{00332\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ extended\_feature\_angle\_filled\_p;\ \textcolor{comment}{/*\ TRUE\ if\ feature\ angle\ filled\ on\ extended\ threads\ */}}
+\DoxyCodeLine{00333\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *cut\_control;\ \textcolor{comment}{/*\ cut\ control\ overset\ cell\ thread\ IDs\ */}}
+\DoxyCodeLine{00334\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *ltf\_interior;\ \textcolor{comment}{/*\ interior\ face\ threads\ of\ overset\ thread\ */}}
+\DoxyCodeLine{00335\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *ltf\_overset;\ \ \textcolor{comment}{/*\ overset\ type\ boundary\ face\ threads\ */}}
+\DoxyCodeLine{00336\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *ltf\_cut;\ \ \ \ \ \ \textcolor{comment}{/*\ hole\ cutting\ face\ threads\ */}}
+\DoxyCodeLine{00337\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *ltf\_passive;\ \ \textcolor{comment}{/*\ face\ threads\ not\ used\ in\ hole\ cutting\ */}}
+\DoxyCodeLine{00338\ \}\ Overset\_Thread;}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#define\ O\_P\_OT(objp)\ ((Overset\_Thread\ *)O\_P(objp))}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#define\ OT\_THREAD(ot)\ ((ot)-\/>thread)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#define\ OT\_EXTENDED\_THREAD(ot)\ ((ot)-\/>extended\_thread)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#define\ OT\_EXTENDED\_INTERIOR\_THREAD(ot)\ ((ot)-\/>extended\_interior\_thread)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#define\ OT\_TYPE(ot)\ ((ot)-\/>type)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ OT\_PARENT\_ID(ot)\ ((ot)-\/>id\_parent)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#define\ OT\_PRIORITY(ot)\ ((ot)-\/>priority)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ OT\_XMIN(ot)\ ((ot)-\/>xmin)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#define\ OT\_XMAX(ot)\ ((ot)-\/>xmax)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#define\ OT\_XMIN\_EXT(ot)\ ((ot)-\/>xlmin\_ext)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\#define\ OT\_XMAX\_EXT(ot)\ ((ot)-\/>xlmax\_ext)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#define\ OT\_LENGTH0(ot)\ ((ot)-\/>l0)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#define\ OT\_HEIGHT0(ot)\ ((ot)-\/>h0)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#define\ OT\_CUT\_SEED\_P(ot)\ ((ot)-\/>have\_cut\_seed\_cell\_p)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#define\ OT\_POLY\_CELL\_P(ot)\ ((ot)-\/>have\_poly\_cells\_p)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#define\ OT\_HEXCORE\_P(ot)\ ((ot)-\/>have\_hexcore\_p)}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#define\ OT\_USER\_OVERLAP(ot)\ ((ot)-\/>user\_overlap)}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#define\ OT\_CUT\_CONTROL(ot)\ ((ot)-\/>cut\_control)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#define\ OT\_FEATURE\_ANGLE\_FILLED\_P(ot)\ ((ot)-\/>feature\_angle\_filled\_p)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\#define\ OT\_EXTENDED\_FEATURE\_ANGLE\_FILLED\_P(ot)\ ((ot)-\/>extended\_feature\_angle\_filled\_p)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\#define\ OT\_TF\_INTERIOR(ot)\ ((ot)-\/>ltf\_interior)}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#define\ OT\_TF\_OVERSET(ot)\ ((ot)-\/>ltf\_overset)}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#define\ OT\_TF\_CUT(ot)\ ((ot)-\/>ltf\_cut)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\#define\ OT\_TF\_PASSIVE(ot)\ ((ot)-\/>ltf\_passive)}}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }overset\_interface}
+\DoxyCodeLine{00366\ \{}
+\DoxyCodeLine{00367\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{namespacenumpy_1_1distutils_1_1npy__pkg__config_ab74e6bf80237ddc4109968cedc58c151}{name}}[\mbox{\hyperlink{cxserv_8h_a0c397a708cec89c74029582574516b30}{MAX\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00368\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *bg;\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ background\ meshes\ */}}
+\DoxyCodeLine{00369\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *comp;\ \ \ \ \ \ \textcolor{comment}{/*\ component\ meshes\ */}}
+\DoxyCodeLine{00370\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *\mbox{\hyperlink{namespacenumpy_1_1core_1_1getlimits_a5f3fcf87333f5770d16608f67ad88d19}{all}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ combined\ list\ of\ comp\ and\ bg\ meshes\ */}}
+\DoxyCodeLine{00371\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ stationary\_p;\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ interface\ with\ no\ mesh\ motion\ */}}
+\DoxyCodeLine{00372\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ solid\_body\_motion\_p;\ \textcolor{comment}{/*\ some\ zones\ have\ moving\ or\ dynamic\ mesh\ motion*/}}
+\DoxyCodeLine{00373\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ thin\_two\_five\_p;\ \ \ \ \ \textcolor{comment}{/*\ thin\ (one-\/\ or\ two-\/element\ thick)\ 2.5D\ interface\ */}}
+\DoxyCodeLine{00374\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ symm\_two\_five\_p;\ \ \ \ \ \textcolor{comment}{/*\ 2.5D\ interface\ with\ symmetry\ top\ and\ bottom\ zones\ */}}
+\DoxyCodeLine{00375\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ intersected\_p;\ \ \ \ \ \ \ \textcolor{comment}{/*\ intersected\ interface\ */}}
+\DoxyCodeLine{00376\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ bcells\_filled\_p;\ \ \ \ \ \textcolor{comment}{/*\ TRUE\ if\ bounding\ cells\ filled\ */}}
+\DoxyCodeLine{00377\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ marked\_overlaps\_p;\ \ \ \textcolor{comment}{/*\ TRUE\ if\ any\ cut\ faces\ are\ marked\ for\ overlaps\ */}}
+\DoxyCodeLine{00378\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ extended\_cut\_threads\_filled\_p;\ \ \ \textcolor{comment}{/*\ TRUE\ if\ extended\ threads\ filled\ */}}
+\DoxyCodeLine{00379\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ extended\_donor\_threads\_filled\_p;\ \textcolor{comment}{/*\ TRUE\ if\ extended\ threads\ filled\ */}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00381\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ dci\_filled\_p;\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ TRUE\ if\ DCI\ is\ filled\ */}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00383\ \ \ \textcolor{keyword}{struct\ }overset\_interface\ *next;}
+\DoxyCodeLine{00384\ \}\ Overset\_Interface;}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#define\ OI\_NAME(oi)\ ((oi)-\/>name)}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#define\ OI\_BG\_OBJP(oi)\ ((oi)-\/>bg)}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#define\ OI\_COMP\_OBJP(oi)\ ((oi)-\/>comp)}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#define\ OI\_ALL\_OBJP(oi)\ ((oi)-\/>all)}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#define\ OI\_STATIONARY\_P(oi)\ ((oi)-\/>stationary\_p)}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#define\ OI\_SOLID\_BODY\_MOTION\_P(oi)\ ((oi)-\/>solid\_body\_motion\_p)}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\#define\ OI\_THIN\_TWO\_FIVE\_P(oi)\ ((oi)-\/>thin\_two\_five\_p)}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#define\ OI\_SYMM\_TWO\_FIVE\_P(oi)\ ((oi)-\/>symm\_two\_five\_p)}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#define\ OI\_INTERSECTED\_P(oi)\ ((oi)-\/>intersected\_p)}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#define\ OI\_BCELLS\_FILLED\_P(oi)\ ((oi)-\/>bcells\_filled\_p)}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#define\ OI\_MARKED\_OVERLAPS\_P(oi)\ ((oi)-\/>marked\_overlaps\_p)}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#define\ OI\_DCI\_FILLED\_P(oi)\ ((oi)-\/>dci\_filled\_p)}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#define\ OI\_EXTENDED\_CUT\_THREADS\_FILLED\_P(oi)\ ((oi)-\/>extended\_cut\_threads\_filled\_p)}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#define\ OI\_EXTENDED\_DONOR\_THREADS\_FILLED\_P(oi)\ ((oi)-\/>extended\_donor\_threads\_filled\_p)}}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#define\ loop\_oi(oi,domain)\(\backslash\)}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\ \ loop\ (oi,domain-\/>overset\_interfaces)}}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *oi\_all\_objp(Overset\_Interface\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00407\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ Overset\_Interface\ *Get\_Overset\_Interface\_From\_Thread(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00408\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_Overset\_Component\_Zones(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ **);}
+\DoxyCodeLine{00409\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Overset\_Boundary\_Threads(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00410\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_Interface\_Face\_Thread\_P(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00411\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_Interface\_Cut\_Face\_Thread\_P(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00412\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_Interface\_Cell\_Thread\_P(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00413\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Create\_Overset\_Interface(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00414\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Update\_Overset\_Interface(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00415\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Delete\_Overset\_Interface(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00416\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Intersect\_Overset\_Interface(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00417\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Intersect\_All\_Overset\_Interfaces(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00418\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_Overset\_Donor\_Min\_Max(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00419\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Clear\_Overset\_Interface(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00420\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Clear\_All\_Overset\_Interfaces(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00422\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Fill\_Overset\_DCI(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00423\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Free\_Overset\_DCI(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00424\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Update\_All\_Overset\_Interfaces\_From\_DCI(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00425\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Write\_Overset\_DCI(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00427\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Overset\_Update\_Storage(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00428\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ List\_Overset\_Interface(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00429\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Write\_Overset\_Cell\_Counts(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00430\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Write\_Overset\_Cell\_Types(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00432\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Find\_Overset\_Bounding\_Cell(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}});}
+\DoxyCodeLine{00433\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Find\_All\_Overset\_Bounding\_Cells(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00435\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Overset\_Donor\_Checksum(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00436\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Overset\_Weighted\_Area(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00437\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Write\_Overset\_Area\_Weights(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00438\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ Mark\_Overset\_Cells(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int},}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00440\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Fill\_Overset\_Tmp\_Mark(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00441\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Check\_Overset\_Interfaces(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00442\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Count\_Overset\_Interfaces(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00443\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Any\_Overset\_Interface\_Intersected\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00444\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Any\_Overset\_Interface\_Not\_Intersected\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00445\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ All\_Overset\_Interfaces\_Intersected\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00446\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Unintersected\_Overset\_Interfaces\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00447\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_Interface\_BCells\_Filled\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00448\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Any\_Overset\_Interface\_BCells\_Filled\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00449\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_Interface\_Extended\_Threads\_Filled\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00450\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Any\_Overset\_Interface\_Extended\_Threads\_Filled\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00452\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Any\_Overset\_DCI\_Filled\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00453\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ All\_Overset\_DCI\_Filled\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00455\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_Interface\_Stationary\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00456\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Any\_Overset\_Interface\_Stationary\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00457\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Orphan\_Overset\_Boundary(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00458\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Solid\_Zones\_In\_Overset(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00459\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Mesh\_Interface\_In\_Overset(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00460\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Mesh\_Interface\_Overset\_Proximity(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00461\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Periodic\_Boundary\_In\_Overset(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00462\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Overset\_Orphan\_Cells(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00463\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Overset\_Dead\_To\_Solve\_Cells(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00464\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Overset\_Dead\_Zones(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ Overset\_Interface\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00465\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Overset\_Donor\_Receptor\_Connectivity(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00466\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Find\_Donor\_Cell\_At\_Location(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ *receptor\_cell,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **receptor\_thread,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ pos[3],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ delta\_t);}
+\DoxyCodeLine{00467\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00468\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Add\_Overset\_Donor\_Cells\_Int\_Ext(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00469\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Fill\_Overset\_Exchange\_Lists(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00471\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Update\_Cell\_Donor\_Pointers(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00472\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Overset\_Free\_Extended\_Entities(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00474\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Overset\_Free\_Extended\_Entity\_Hash\_Tables(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00475\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Mark\_Overset\_Dangling\_Donor\_Entities\_Active(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00477\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Update\_Overset\_Render\_Flag(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00479\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Find\_Cell\_With\_ID(\mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00480\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Find\_Donors\_With\_ID(\mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00481\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Find\_Cell\_With\_Centroid(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00483\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Overset\_BD\_Needs\_Update(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00484\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_BD\_Needs\_Update\_P(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Model\_Initialize\_overset(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00488\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_Repartition\_Domain\_If\_Needed(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00489\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Overset\_Needs\_Migration(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00490\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_Needs\_Migration\_P(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00491\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Migration\_Needs\_Overset\_Update(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00492\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Migration\_Needs\_Overset\_Update\_P(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00493\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_HDF\_Overset\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00494\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Read\_HDF\_Overset\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00495\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Register\_Overset\_HDF\_Case\_IO\_Manager(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00496\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Deregister\_Overset\_HDF\_Case\_IO\_Manager(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00497\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Case\_Has\_Read\_Complete\_Overset\_DCI(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00498\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Compat\_Update\_Overset\_DCI\_Donor\_Flags(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00499\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Update\_Overset\_DCI\_Partition\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00500\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ DCI\_Cell\_Donor\ *new\_dci(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00501\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *dci\_add(DCI\_Cell\_Donor\ *,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *);}
+\DoxyCodeLine{00502\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ cell\_free\_dci(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#if\ RP\_NODE\ \&\&\ RP\_HANG}}
+\DoxyCodeLine{00505\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Overset\_Enforce\_Memory\_Compaction\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \#if\ RP\_OVERSET\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_OVERSET\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

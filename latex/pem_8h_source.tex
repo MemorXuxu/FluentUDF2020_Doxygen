@@ -1,0 +1,291 @@
+\doxysection{pem.\+h}
+\hypertarget{pem_8h_source}{}\label{pem_8h_source}\index{fluent20.1.0/addons/fuelcells/src/pem.h@{fluent20.1.0/addons/fuelcells/src/pem.h}}
+\mbox{\hyperlink{pem_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}version.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ PEM\_MAIN}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#\ \ define\ PEM\_EXPORT}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#\ \ define\ PEM\_EXPORT\ extern\ UDF\_EXPORT}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{/*====================\ Constants\ ===================================*/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ TINY\ 1.0e-\/22}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ TINY\ 1.0e-\/16}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ R\_Gas\ UNIVERSAL\_GAS\_CONSTANT}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ Farad\ 9.65e7}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ F\_over\_R\ (Farad/R\_Gas)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ STRING\_SIZE\ 34}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{/*two-\/phase\ related\ parameters\ */}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ rho\_liq\ \ \ \ 982.0\ \ \ \ \ \ }\textcolor{comment}{/*\ \ \ kg/m\string^3\ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{/*====================\ Enumerations\ for\ UDS\ and\ UDM\ ================*/}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \mbox{\hyperlink{pem_8h_a0411cd49bb5b71852cecd93bcbf0ca2dab65e388c5e708869f531bcd8632fe6b7}{PEMFC}},}
+\DoxyCodeLine{00033\ \ \ \mbox{\hyperlink{pem_8h_a0411cd49bb5b71852cecd93bcbf0ca2daaef790767b7e2f5263761be453e6bee8}{SOFC}},}
+\DoxyCodeLine{00034\ \ \ \mbox{\hyperlink{pem_8h_a0411cd49bb5b71852cecd93bcbf0ca2da17d4aad74c7d9014a07e4d6e9e4849d2}{ELECTROLYSIS}}}
+\DoxyCodeLine{00035\ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00038\ \{}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{pem_8h_abed82baf7f470b522273a3e37c24c600a4f050477ff4018eddf57fdb9cc13221e}{phi\_s}},}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{pem_8h_abed82baf7f470b522273a3e37c24c600a4efde65863c730459f9b5dfe07f9530f}{phi\_m}},}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{pem_8h_abed82baf7f470b522273a3e37c24c600accd211c7a7309a751a3692328b5eff81}{w\_sat}},}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{pem_8h_abed82baf7f470b522273a3e37c24c600a291806489685f990f1ddc92df18f1591}{w\_lam}},}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{pem_8h_abed82baf7f470b522273a3e37c24c600abef440944b7b6f8619f4b7d22acc917b}{n\_uds\_required}}}
+\DoxyCodeLine{00044\ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{enum}\ \ \ \ \ \textcolor{comment}{/*\ user-\/defined\ memory\ (UDM)\ */}}
+\DoxyCodeLine{00047\ \{}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a374c1a38f3c441f7990f8a155f486216}{curr\_x}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 0\ \ \ \ x-\/component\ of\ current\ vector\ \ \ */}}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a1cf20aac1bfb829320d682ca3f2302c9}{curr\_y}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 1\ \ \ \ y-\/component\ of\ current\ vector\ \ \ */}}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a74f05b8f0ceeeae2d14db4d7db9b68af}{curr\_z}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 2\ \ \ \ z-\/component\ of\ current\ vector\ \ \ */}}
+\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57ac6d4a866c25f38f7df27a092a9c460ea}{curr\_mag}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 3\ \ \ \ magnitude\ \ \ of\ current\ vector\ \ \ */}}
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a05b2f30c367208ee2e6c247c379abf85}{heat\_ohmic}},\ \ \ \ \ \ \textcolor{comment}{/*\ 4\ \ \ \ volumetric\ heat\ source\ due\ to\ ohmic\ heating\ */}}
+\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57aa7f3b87cfd6a95b6f6a2609951054260}{heat\_reaction}},\ \ \ \textcolor{comment}{/*\ 5\ \ \ \ volumetric\ heat\ source\ due\ to\ reaction\ \ \ \ \ \ */}}
+\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a7c4211268454f77c698571b8bede7251}{surf\_eta}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 6\ \ \ \ overpotential\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a98850b70c733a0a5d985fba94db244b6}{phase\_change}},\ \ \ \ \textcolor{comment}{/*\ 7\ \ \ \ h20\ phase\ change\ source\ term\ \ \ \ */}}
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57af742ed8964e261e64653bebea7615ee1}{osm\_drag}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 8\ \ \ \ osmotic\ drag\ coefficient\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a27f27e485347867316bc34989d7f90b2}{w\_act}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 9\ \ \ \ water\ activity\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a608223cbc550596381e856f763364809}{w\_cont}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*10\ \ \ \ water\ content\ (lambda)\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a54bc2e429ea0f2c2fcab61db00a243bf}{pro\_cond}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*11\ \ \ \ protonic\ conductivity\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00060\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a1bfa711df677d673426c421720e1f172}{mass\_h2o\_diff}},\ \ \ \textcolor{comment}{/*12\ \ \ \ mass\ source\ due\ to\ back\ diff.\ \ \ */}}
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a34fc6be2e194deb70a33e50d4943584d}{trans\_current}},\ \ \ \textcolor{comment}{/*13\ \ \ \ transfer\ current\ \ A/m3\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00062\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a6d02d79424429b01d5e39c5b4c64f066}{osm\_drag\_source}},\ \textcolor{comment}{/*14\ \ \ \ mass\ source\ due\ to\ osmotic\ drag\ */}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a183b59e0f25aa0ac95ab26d1590b46fe}{n\_udm\_required}}}
+\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfada}{zone\_type}}}
+\DoxyCodeLine{00068\ \{}
+\DoxyCodeLine{00069\ \ \ \textcolor{comment}{/*\ ordering\ must\ be\ the\ same\ as\ in}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ \ \ *}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ \ \ *\ char\ *zone\_type\_lists[]}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ \ \ *\ char\ *zone\_type\_names[]}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ \ \ *}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ \ \ *\ used\ in\ function}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ \ \ *}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ \ \ *\ int\ which\_zone\_type(Thread\ *thread)}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ \ \ *}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaa3881773340dbebff46d3c534f4cbc85a}{other\_zone}}\ =\ -\/1,}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaa24e420f63562eff9d8b44b7f1d17bace}{aco\_zone}}\ =\ 0,\ \ \textcolor{comment}{/*\ anode\ \ current\ collector\ zones\ */}}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaacf34416ab534c8c8c107021f3a3e0b52}{ach\_zone}},\ \ \ \ \ \textcolor{comment}{/*\ anode\ \ flow\ channel\ \ \ zones\ */}}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaa9f8c4b4a9810a84936158c11a0b334bd}{adl\_zone}},\ \ \ \ \ \textcolor{comment}{/*\ anode\ \ diffusion\ layer\ \ zones\ */}}
+\DoxyCodeLine{00084\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaaac18f2b258c35cc06d8e1dbfaeeda5b9}{aca\_zone}},\ \ \ \ \ \textcolor{comment}{/*\ anode\ \ catalyst\ layer\ \ zones\ */}}
+\DoxyCodeLine{00085\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaa1df900f987a62fa5ad8153ead2bab61b}{mem\_zone}},\ \ \ \ \ \textcolor{comment}{/*\ membrane\ \ \ \ \ \ \ \ \ zones\ */}}
+\DoxyCodeLine{00086\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaafe3555dc735aaa7a5d17d8f26f68f5ea}{cca\_zone}},\ \ \ \ \ \textcolor{comment}{/*\ cathode\ catalyst\ layer\ \ zones\ */}}
+\DoxyCodeLine{00087\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaa97d4dc38c199e7e34b6a24c6f2aa132c}{cdl\_zone}},\ \ \ \ \ \textcolor{comment}{/*\ cathode\ diffusion\ layer\ \ zones\ */}}
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaa3375031f22363b9aec2428b7a71d2f54}{cch\_zone}},\ \ \ \ \ \textcolor{comment}{/*\ cathode\ flow\ channel\ \ \ zones\ */}}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaa0ecf5a6834555ef8624930e38ef49025}{cco\_zone}},\ \ \ \ \ \textcolor{comment}{/*\ cathode\ current\ collector\ zones\ */}}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaa77171bf9e1516d7c1bab578c530ee800}{cool\_zone}},\ \ \ \ \textcolor{comment}{/*\ coolant\ channels\ */}}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{pem_8h_a0fdf79ffb0b79648e58d693137ccfadaa008fa3bb41c6e1f5c601069594bbbe39}{n\_zone\_types}}}
+\DoxyCodeLine{00092\ \};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{comment}{/*=====================\ Species\ Information\ ========================*/}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pem_8h_a52232c96b2eb90d7ead70e5973615ffe}{i\_h2}};\ \textcolor{comment}{/*\ indices\ in\ mixture\ of\ species\ special\ for\ pem\ */}}
+\DoxyCodeLine{00097\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pem_8h_a394071c501198c667f0be28ab7271e40}{i\_o2}};}
+\DoxyCodeLine{00098\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pem_8h_ab773331194f03903ec9686fe6c3443c6}{i\_h2o}};}
+\DoxyCodeLine{00099\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pem_8h_a0ef6d857df235296932ad7d6f7288828}{i\_coolant}};}
+\DoxyCodeLine{00100\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a600d49d475e25c9c274c2854429f858b}{mw}}[\mbox{\hyperlink{materials_8h_aee6d7029bfa673b831eae06ff1dda000}{MAX\_SPE\_EQNS}}];\ \textcolor{comment}{/*\ copy\ of\ species\ molecular\ weights\ */}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{comment}{/*====================\ Model\ Parameters\ ============================*/}}
+\DoxyCodeLine{00103\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_abe49deceb5bce73087c766853ac1ef55}{FC\_Enabled}};}
+\DoxyCodeLine{00104\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pem_8h_ae2cf2bf56cbea3aa6e6e62095be0f1e5}{FC\_Model}};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_abcc6c457aec5f00e2195d43fe8cc5574}{pem\_mp\_on}};}
+\DoxyCodeLine{00107\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_aa41cedda6d3322808f7a93bda3a6cc66}{electrolysis}};}
+\DoxyCodeLine{00108\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_ade87bf03cb05cb3767a5c8da063744d6}{porous\_cc}};}
+\DoxyCodeLine{00109\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_af3474c7ae905350cf0fcf1f2af2c940e}{effective\_pcond}};}
+\DoxyCodeLine{00110\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_adc8663521ccd33a618656903786f447e}{use\_half\_cell\_u0}};}
+\DoxyCodeLine{00111\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_abc06c5413029d385f88c52303096dd28}{temperature\_effect\_on\_jref}};}
+\DoxyCodeLine{00112\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_aff4f743c2843aaec3552230102c6d72e}{ca\_particle\_model}};}
+\DoxyCodeLine{00113\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_a828139b951abb1b20454d392ae796017}{vw\_rxn\_heat}};}
+\DoxyCodeLine{00114\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_a677f6f40c6a40e7508c1dafe9d31f2f7}{high\_temp\_pemfc}};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a25f453b87c8d37f6ce68873c8bf9094b}{alpha\_m}};\ \textcolor{comment}{/*\ membrane\ conductivity\ coeff.\ \ \ \ \ \ */}}
+\DoxyCodeLine{00117\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a4b5c956060340dc966089f866c06ac3c}{beta\_m}};\ \ \textcolor{comment}{/*\ membrane\ conductivity\ exponent\ \ \ \ */}}
+\DoxyCodeLine{00118\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a40e5671a0ff2af00b8c3b5d01dc70f4c}{min\_water\_content}};\ \ \textcolor{comment}{/*\ minimum\ value\ of\ water\ content\ */}}
+\DoxyCodeLine{00119\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a1829c82fb43acdb07cf54e93aa9e89b6}{b\_diff\_lam}};\ \textcolor{comment}{/*\ correction\ factor\ for\ diffusivity\ of\ watre\ content\ */}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a9975a4ed904f999789768c10f1c52b7f}{high\_t\_pemfc\_k}};\ \textcolor{comment}{/*\ membrane\ conductivity\ coeff.\ \ \ \ \ \ */}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a11c2419f83a837764b241e39dd42336d}{Diff\_h2}}\ \ \ \ \ ;\ \textcolor{comment}{/*\ species\ diff.\ for\ h2\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00124\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a253ad3ad33417b63d988673465358724}{Diff\_o2}}\ \ \ \ \ ;\ \textcolor{comment}{/*\ species\ diff.\ for\ o2\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00125\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a68677cccbccfedbb1eb8600f005c44c0}{Diff\_h2o}}\ \ \ \ ;\ \textcolor{comment}{/*\ species\ diff.\ for\ h2o\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00126\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a26222572f0397cc7283bde399e8ac38e}{Diff\_others}}\ ;\ \textcolor{comment}{/*\ species\ diff.\ for\ all\ others\ \ \ */}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a3db8a1a05f9c21bd11636e3dded205c2}{b\_sat}}\ ;\ \ \ \ \ \ \textcolor{comment}{/*\ pore\ blockage\ exponent\ for\ gas\ diffusion\ */}}
+\DoxyCodeLine{00129\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_abab17302495267ec45c644f90250177b}{r\_sat}}\ ;\ \ \ \ \ \ \textcolor{comment}{/*\ liquid\ coverage\ correction\ exponent\ for\ rxn\ rate\ */}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \mbox{\hyperlink{pem_8h_a0409af2f29fec0d26d92bf4cc25448b1}{PEM\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a47b19c4c4e677975c34dec617531c630}{s\_sat}}\ ;\ \ \ \ \ \ \textcolor{comment}{/*\ relative\ permeability\ exponent\ s\string^?\ \ */}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a5e3b55e2a6e8dd8a11cc0154b4598f95}{V\_open}};}
+\DoxyCodeLine{00134\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ac586868fea74a0ad8733f3ff3f1e8dab}{leakage\_current}};}
+\DoxyCodeLine{00135\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a05934b103edb4382306eed17a024ab89}{j\_ref\_a}};\ \ \textcolor{comment}{/*\ anode\ \ reference\ current\ density\ \ */}}
+\DoxyCodeLine{00136\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ad2c8e6d9d43645d163a143539f15a389}{j\_ref\_c}};\ \ \textcolor{comment}{/*\ cathode\ reference\ current\ density\ */}}
+\DoxyCodeLine{00137\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_adb6abbb1cf27eaff55bcc90d4986b970}{c\_ref\_a}};\ \ \textcolor{comment}{/*\ anode\ \ reference\ concentration\ \ \ \ */}}
+\DoxyCodeLine{00138\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a43dc971e259d1e6b4e22d4858b4d2f68}{c\_ref\_c}};\ \ \textcolor{comment}{/*\ cathode\ reference\ concentration\ \ \ */}}
+\DoxyCodeLine{00139\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ac14bfbc7159d6125e88f679e4be40ffb}{g\_a}};\ \ \ \ \ \ \textcolor{comment}{/*\ anode\ \ concentration\ exponent\ \ \ \ \ */}}
+\DoxyCodeLine{00140\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a7f121b10f78213be66aea85b91ddd4af}{g\_c}};\ \ \ \ \ \ \textcolor{comment}{/*\ cathode\ concentration\ exponent\ \ \ \ */}}
+\DoxyCodeLine{00141\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a36dc2d5150e8a585051508499b50b8c2}{Cond\_rate}};\ \ \textcolor{comment}{/*\ Condensation\ rate\ const\ \ */}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_aead8e61a0549d5439b06f7b343f2efc9}{Delta\_S\_ca}},\ \mbox{\hyperlink{pem_8h_a906205c50141afd53298dd3b1e6fdb5c}{Delta\_S\_an}},\ \mbox{\hyperlink{pem_8h_a4ca4f9b56064f1c5a518b8fc2f67ec20}{T\_std\_nernst}},\ \mbox{\hyperlink{pem_8h_ac35a38086a613ef63dd2243b8f36526f}{p\_std\_nernst}};}
+\DoxyCodeLine{00144\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a4fe29ec48e781cb3f40043664766d6ca}{E\_ca\_std}},\ \mbox{\hyperlink{pem_8h_a272f7c5ff92721bb914524924ad5f38f}{E\_an\_std}};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{comment}{/*\ effective\ transfer\ current\ coefficients}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00148\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a85198879001c12061d39b9f1522fdd62}{j\_trans\_coef\_a}};\ \ \textcolor{comment}{/*\ anode\ \ \ */}}
+\DoxyCodeLine{00149\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a5037d68199619f135239c3b3259ab7fa}{j\_trans\_coef\_c}};\ \ \textcolor{comment}{/*\ cathode\ */}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a7ca8e23cd1addc3bad67515087932a91}{net\_water\_tran\_coeff}};}
+\DoxyCodeLine{00152\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_af066ee5394df9d3567b8982b5924a505}{net\_water\_transport}};}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_af16979014e35e127636fc521c81c342b}{aca\_av\_ratio}};\ \textcolor{comment}{/*\ surface\ to\ volume\ ratio\ */}}
+\DoxyCodeLine{00156\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a8e38e2c4d9cf3c514f104fae0d9e6add}{cca\_av\_ratio}};\ \textcolor{comment}{/*\ surface\ to\ volume\ ratio\ */}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a312786ea7d3f68190be1ded1a0aca3da}{aca\_alpha}};}
+\DoxyCodeLine{00159\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a944032f92f79375da8077a5b3d9d8547}{cca\_alpha}};}
+\DoxyCodeLine{00160\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a912a9a332b818170c04240264175ec7c}{aca\_tortu}};\ \textcolor{comment}{/*\ ionomer\ tortuosity\ */}}
+\DoxyCodeLine{00161\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a3a84844ada3a3c37b9ec53098566cff2}{cca\_tortu}};\ \textcolor{comment}{/*\ ionomer\ tortuosity\ */}}
+\DoxyCodeLine{00162\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_accb17da9473daec7dde8b32889fd319f}{aca\_beta}};}
+\DoxyCodeLine{00163\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_af2b198386a89b890b11323c2a190d5bf}{cca\_beta}};}
+\DoxyCodeLine{00164\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a92d8301ef8451a5776f808fbe9922435}{aca\_act}};}
+\DoxyCodeLine{00165\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a8ab329929d893cce5a995a8a4677aa7c}{cca\_act}};}
+\DoxyCodeLine{00166\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a76c7a5d7980f4518f8de00cdf34dac3d}{mem\_act}};}
+\DoxyCodeLine{00167\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a5a34f7a3b2ea334944f358aa32717683}{aca\_ionomer\_vof}};}
+\DoxyCodeLine{00168\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ad633432d6da219b5e00914a6baebddc8}{cca\_ionomer\_vof}};}
+\DoxyCodeLine{00169\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_aae1c4c519ecda887056b86085d6214cd}{an\_DeltaE}};}
+\DoxyCodeLine{00170\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a0d655e0f6b7d1c62feb273f0324f5059}{ca\_DeltaE}};}
+\DoxyCodeLine{00171\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ac815204dcce330e51a127e96b933fb50}{an\_kinetics\_Tref}};}
+\DoxyCodeLine{00172\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_adce40d0332117193bd16cd10661fc82e}{ca\_kinetics\_Tref}};}
+\DoxyCodeLine{00173\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_abdb0f86c3c1f5fd4b88cfc436d712086}{KwDw}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ product\ of\ O2\ solubility\ ind\ diffusivity\ in\ water\ */}}
+\DoxyCodeLine{00174\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_acf777ca5c435f9be4a21876e1227fe15}{r\_part}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ cathode\ catalyst\ particle\ radius\ */}}
+\DoxyCodeLine{00175\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a115863412ad4ddbdcbac5f8812d9a7d7}{R\_ion}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ cathode\ catalyst\ ionomer\ resistance\ */}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_a2d13a19e94d4715b39f4d6ec3d4cdf01}{echem\_on}};\ \ \ \ \ \ \textcolor{comment}{/*\ is\ electrochemistry\ turn\ on?\ */}}
+\DoxyCodeLine{00178\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_a8a408384864b8b56a4f011b9a495f4d5}{Butler\_Volmer}};\ \textcolor{comment}{/*\ \ Butler\_Volmer\ rate\ */}}
+\DoxyCodeLine{00179\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_a3e76bef2d6ead8ba07f8e318cbfdf113}{pem\_initialized}}\ ;}
+\DoxyCodeLine{00180\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_a5e3a9436db7248cc39a3ab640346b39d}{User\_Defined\_Non\_Iso\_Econd}}\ ;}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{comment}{/*=================\ Functions\ required\ by\ PEM\ model\ ================*/}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_adc33637c0ac4e29529f65c4e7eefb8ea}{pem\_density\_with\_coolant}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00185\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ade1f80445c53676eb5725bb49ac8807f}{pem\_diff}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ j\_spe);}
+\DoxyCodeLine{00186\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ac8c28158b7916f586b5695e05ff46ca9}{pem\_cond}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ iuds);}
+\DoxyCodeLine{00187\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a45f680428c4af19f9f23b6302b0cd150}{pem\_uds\_flux}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ iuds);}
+\DoxyCodeLine{00188\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a8077a27555e556eae172fa158618ba80}{pem\_source\_phi\_s}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00189\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a36a5c3239ce69f1326a4111ac2b27b98}{pem\_source\_phi\_m}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00190\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ac8435f4eb68207a7fdb45819fa4c8b10}{pem\_source\_h2}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00191\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ac5e9eb778c63045bb17fc8ecf5df43b5}{pem\_source\_o2}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00192\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_afd66c6be9a53aa8b1194f221ccaf8125}{pem\_source\_h2o}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00193\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ab3c15b73b06670cac0e1a7acd9cc1b6a}{pem\_source\_mass}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00194\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a5b7bedeeab87f34a48cc4282a1485962}{pem\_source\_lambda}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00195\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a789e25a0c354747a57b9395dbfffe3eb}{pem\_source\_energy}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00196\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ab4702aea08b968b37887c65f24a8c1df}{pem\_source\_liquid}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00197\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a24b49bd05e34cdf0f9c0f4c7ccc51b36}{resistance\_in\_channel}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sat);}
+\DoxyCodeLine{00198\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_ab3f07d268c7f4b9acd2a058df31612b0}{pem\_lam\_bc}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ nv);}
+\DoxyCodeLine{00199\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_adae7a003e6c3b50ccbc59bf4cc3570d1}{pem\_resist\_chan}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ nv);}
+\DoxyCodeLine{00200\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a64e5d1fcd08d5dc6853a479fdffa3a99}{pem\_initialize}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00201\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a8ff75d5b69295b1fc1c37fa111b9944f}{pem\_adjust}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00202\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a39aa035ab40a7551075e26a5707b7a07}{pem\_unsteady}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ i,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *apu,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *su);}
+\DoxyCodeLine{00203\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a677fdff0255b9ad55c7d61e73517fd09}{pem\_write\_sec}}(FILE\ *fp);}
+\DoxyCodeLine{00204\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_afcff851ab12eb6fb7b4cadec6387c6f2}{pem\_read\_sec}}(FILE\ *fp);}
+\DoxyCodeLine{00205\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a42fc8cddd84dae545d6638b9696cf152}{pem\_inquire}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00206\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a68c209c43b3c47996e7f306dbb939d65}{pem\_update}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00207\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a4b8c3f3e688d64783ea2233c4d247d00}{pem\_single\_precision\_warning}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00208\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a6bd217e0e30877e6edece10f51084ff4}{pem\_execute\_on\_loading}}(\textcolor{keywordtype}{char}\ *libname);}
+\DoxyCodeLine{00209\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a759e916173f43bfbf4c7f778d6bd16ea}{pem\_set\_udm\_uds\_names}}(\textcolor{keywordtype}{char}\ udm[\mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a183b59e0f25aa0ac95ab26d1590b46fe}{n\_udm\_required}}][\mbox{\hyperlink{pem_8h_ad78224efe1d3fb39b67ca74ad9d9eec7}{STRING\_SIZE}}],}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ uds[\mbox{\hyperlink{pem_8h_abed82baf7f470b522273a3e37c24c600abef440944b7b6f8619f4b7d22acc917b}{n\_uds\_required}}][\mbox{\hyperlink{pem_8h_ad78224efe1d3fb39b67ca74ad9d9eec7}{STRING\_SIZE}}]);}
+\DoxyCodeLine{00211\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a23264cf26a4e5926f5439bfb06f43394}{rename\_udm\_uds}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00212\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a0c7deb342f45bfe4cab80c7eda207ae3}{Set\_UDS\_Names}}(\textcolor{keywordtype}{char}\ uds\_names[\mbox{\hyperlink{pem_8h_abed82baf7f470b522273a3e37c24c600abef440944b7b6f8619f4b7d22acc917b}{n\_uds\_required}}][\mbox{\hyperlink{pem_8h_ad78224efe1d3fb39b67ca74ad9d9eec7}{STRING\_SIZE}}]);}
+\DoxyCodeLine{00213\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a75ba2e0f295eb5e13fb08bd2305cb744}{Set\_UDM\_Names}}(\textcolor{keywordtype}{char}\ udm\_names[\mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a183b59e0f25aa0ac95ab26d1590b46fe}{n\_udm\_required}}][\mbox{\hyperlink{pem_8h_ad78224efe1d3fb39b67ca74ad9d9eec7}{STRING\_SIZE}}]);}
+\DoxyCodeLine{00214\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a30a652fa4a06ebff9cce0e7c6f2958af}{Set\_UDS\_Units}}(\textcolor{keywordtype}{char}\ uds\_units[\mbox{\hyperlink{pem_8h_abed82baf7f470b522273a3e37c24c600abef440944b7b6f8619f4b7d22acc917b}{n\_uds\_required}}][\mbox{\hyperlink{pem_8h_ad78224efe1d3fb39b67ca74ad9d9eec7}{STRING\_SIZE}}]);}
+\DoxyCodeLine{00215\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_ac0189aa0e5ed798ac942c8bd2822b1f0}{Set\_UDM\_Units}}(\textcolor{keywordtype}{char}\ udm\_units[\mbox{\hyperlink{pem_8h_ab04a0655cd1e3bcac5e8f48c18df1a57a183b59e0f25aa0ac95ab26d1590b46fe}{n\_udm\_required}}][\mbox{\hyperlink{pem_8h_ad78224efe1d3fb39b67ca74ad9d9eec7}{STRING\_SIZE}}]);}
+\DoxyCodeLine{00216\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a9914c63a0053ca3b350e431163845c95}{update\_joule\_heat}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_aac46c3b3c89e44532df5853441df1d93}{pem\_report}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00221\ \mbox{\hyperlink{pem_8h_ae092d0a8a7f81504471d27334d1f4503}{mass\_diffusivity\_kinetic\_theory\_parameters}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sig\_ab[],}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ eps\_ab[]);}
+\DoxyCodeLine{00224\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00225\ \mbox{\hyperlink{pem_8h_a0c8fe6f023d9196ed7ab65429d4ccf18}{anisotropic\_elec\_cond}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ i,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dmatrix[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}][\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}]);}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a44b7e2f17cdc2ecd8566bbe285418c5f}{fill\_km\_iso}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cond,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dmatrix[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}][\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}]);}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_aca0c2e43da44547738f40fe012f524d4}{liquid\_water\_flux}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,\ \textcolor{keywordtype}{int}\ ns);}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_acdda68b12de770ed61bbd4ecd59f3349}{pem\_get\_old\_stack\_voltage}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00232\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_aa4532835071d3c7d19351a6cda1b7c6a}{pem\_get\_old\_stack\_current}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00233\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a1b3f63216220f2e21ae3c1b3edc41625}{pem\_set\_new\_stack\_voltage}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00234\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_ad55ae0a674caf3a8ecb4fd5df3e1931b}{pem\_set\_new\_stack\_current}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_af7df0cb5d7b35e797edb6344dd87496f}{is\_pemfc}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00237\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_a84ddf26847b55e2e3d806e6d18fc4684}{is\_sofc}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00238\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pem_8h_aed53df730160039ba86b4b1e00a85bb2}{is\_dmfc}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ User\ modifiable\ functions\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_addee23ec78b4146387907e67af78bb0d}{Get\_P\_sat}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00243\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a19ba6660d59d8624991541c3fdf4980b}{Water\_Activity}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ P,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00244\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_af0e621827802249d0a819e4532074608}{Water\_Content}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ act);}
+\DoxyCodeLine{00245\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a0799c4a54ae7f269991daa48301a2b4a}{Leakage\_Current}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00246\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_ab5682fea347aa8d1378bda787bb1a0d2}{Phase\_Change\_const}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00247\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a83779d4fb2b881da12d387769db8454b}{Osmotic\_Drag\_Coefficient}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ P,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00248\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_aa5f9445ba01c959c637b3be92246cc08}{Membrane\_Conductivity}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ lam,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00249\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a07822803bbb829fee889ea3ad129f5ba}{Electrolyte\_Conductivity}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00250\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_af38bcc072b56ba1bf1964a104d492b10}{Water\_Content\_Diffusivity}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ lam,}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T,}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ mem\_mol\_density,}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00254\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a8a611f63f2cb5e50528894b8a146a658}{Gas\_Diffusivity}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ j\_spe);}
+\DoxyCodeLine{00255\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a8097a0dad780e9fe0db0680af83f2c95}{MCD\_Gas\_Diffusivity}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ j\_spe);}
+\DoxyCodeLine{00256\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a95f87627b6187ccb51834b04d18fabc9}{Saturation\_Diffusivity}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sat,}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cos\_theta,}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a0617d81b4a6dfa244757066f8e477623}{porosity}},}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00260\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a98ca7eb1a018c7738b6068e92414aa38}{Anode\_AV\_Ratio}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00261\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a8b0f95470bdbd5da0fb85c34f8c83d77}{Cathode\_AV\_Ratio}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00262\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_afc029c3f22b9a922ae10ada785688d10}{Anode\_J\_TransCoef}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00263\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a6f756627546234d6270825ab013efbac}{Cathode\_J\_TransCoef}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00264\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a4db9cc83c1407b52759dc37d022b9b21}{Open\_Cell\_Voltage}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00265\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{pem_8h_a1cb3766cfbb2ee7ea0bc7f1f6307312d}{get\_fc\_zone\_type}}(\textcolor{keywordtype}{int}\ tid);}
+\DoxyCodeLine{00266\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{ecm__p2d_8h_abd986326573a98d7afd32ea67f2823c8}{Transfer\_Current}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ i\_ref,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ gamma,\ \textcolor{keywordtype}{int}\ species\_i,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha\_a,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha\_c,}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *dRade,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *dRcde,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c);}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \textcolor{comment}{/*\ migrated\ from\ fcm\_util.h\ */}}
+\DoxyCodeLine{00270\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00271\ \{}
+\DoxyCodeLine{00272\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \mbox{\hyperlink{structfc__contact__resist__data_a8cc3dd191f714ba4ae35b2d3ac5b557a}{tid}};}
+\DoxyCodeLine{00273\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ \ \mbox{\hyperlink{structfc__contact__resist__data_ab7e013d29966300f42f66c088681a242}{contact\_resist\_value}};}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \}\ \mbox{\hyperlink{structfc__contact__resist__data}{fc\_contact\_resist\_data}};}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \mbox{\hyperlink{structfc__contact__resist__data}{fc\_contact\_resist\_data}}\ *\mbox{\hyperlink{pem_8h_a76fb975afb464ae340ff6453fa7168aa}{pfc\_contact\_resist\_data}};}
+\DoxyCodeLine{00278\ \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pem_8h_ab28bae7ab830026cc5bf83bf50dec203}{n\_fc\_contact\_resist\_data}};}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a91619eb3345cdec9786c14d884e98c77}{get\_resist\_value}}(\textcolor{keywordtype}{int}\ tid);}
+\DoxyCodeLine{00281\ \textcolor{comment}{/*\ end\ of\ fcm\_util.h\ migrattion\ */}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a92a1ffb03fd1b032bf354cdb12de6ab9}{electric\_contact\_resistance}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ ns);}
+\DoxyCodeLine{00284\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pem_8h_a0cf323958d0e17b52a8f2882d8fee6ba}{Thermal\_ctk\_pemfc}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00285\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pem_8h_a846dba6eb4a2211f41ebfb778e72c654}{electrode\_volume\_calculation}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+
+\end{DoxyCode}

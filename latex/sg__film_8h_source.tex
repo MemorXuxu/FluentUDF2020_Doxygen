@@ -1,0 +1,673 @@
+\doxysection{sg\+\_\+film.\+h}
+\hypertarget{sg__film_8h_source}{}\label{sg__film_8h_source}\index{fluent20.1.0/src/sphysics/sg\_film.h@{fluent20.1.0/src/sphysics/sg\_film.h}}
+\mbox{\hyperlink{sg__film_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_FILM\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_FILM\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dpm__types_8h}{dpm\_types.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#if\ RP\_WALL\_FILM}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ WALL\_FILM\_PHS2\_SPLASH\ 0}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ sg\_wallfilm;\ \textcolor{comment}{/*\ Eulerian\ Wall\ Film\ model\ flag\ (nothing\ to\ do\ with\ M\_wall\_film!)\ */}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ edge\_t;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{/*\ Wall\ Film\ Equation\ ID\ */}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \ \ EQN\_NULL\ =\ -\/1,}
+\DoxyCodeLine{00021\ \ \ EQN\_CONTINUITY,}
+\DoxyCodeLine{00022\ \ \ EQN\_MOMENTUM\_X,}
+\DoxyCodeLine{00023\ \ \ EQN\_MOMENTUM\_Y,}
+\DoxyCodeLine{00024\ \ \ EQN\_ENERGY,}
+\DoxyCodeLine{00025\ \ \ EQN\_SCALAR,}
+\DoxyCodeLine{00026\ \ \ EQN\_ALL}
+\DoxyCodeLine{00027\ \}\ FEeqn;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{/*\ Time\ Discretization\ scheme\ */}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ EXPLICIT\_FIRST\_ORDER\ =\ 0,}
+\DoxyCodeLine{00033\ \ \ IMPLICIT\_FIRST\_ORDER,}
+\DoxyCodeLine{00034\ \ \ IMPLICIT\_SECOND\_ORDER,}
+\DoxyCodeLine{00035\ \ \ N\_TIME\_DISCRETIZATION}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{/*\ Space\ Discretization\ scheme\ */}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ UPWIND\_FIRST\_ORDER\ =\ 0,}
+\DoxyCodeLine{00042\ \ \ UPWIND\_SECOND\_ORDER,}
+\DoxyCodeLine{00043\ \ \ CENTERED\_SECOND\_ORDER,}
+\DoxyCodeLine{00044\ \ \ N\_SPACE\_DISCRETIZATION}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{/*\ monodimensional-\/limiter\ scheme\ */}}
+\DoxyCodeLine{00048\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \ \ NO\_LIMITER\ =\ 0,}
+\DoxyCodeLine{00051\ \ \ MINMOD\_LINEAR,}
+\DoxyCodeLine{00052\ \ \ MINMOD\_QUADRATIC,}
+\DoxyCodeLine{00053\ \ \ MINMOD\_CUBIC,}
+\DoxyCodeLine{00054\ \ \ N\_LIMITER\_SCHEME}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00058\ \{}
+\DoxyCodeLine{00059\ \ \ FEV\_NULL\ =\ -\/1,}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ EV\_MIN\ ((FEvar)(FEV\_NULL+1))}}
+\DoxyCodeLine{00061\ \ \ \textcolor{comment}{/*\ edge\ variables\ with\ edge\ thread\ length\ */}}
+\DoxyCodeLine{00062\ \ \ EV\_EDGE,}
+\DoxyCodeLine{00063\ \ \ EV\_LENGTH,}
+\DoxyCodeLine{00064\ \ \ EV\_CENTROID,}
+\DoxyCodeLine{00065\ \ \ EV\_NORM0,}
+\DoxyCodeLine{00066\ \ \ EV\_NORM1,}
+\DoxyCodeLine{00067\ \ \ EV\_NORMC,}
+\DoxyCodeLine{00068\ \ \ EV\_ANGLE,}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ EV\_UPWIND,}
+\DoxyCodeLine{00071\ \ \ EV\_HVFLUX,}
+\DoxyCodeLine{00072\ \ \ EV\_SHED\_COUNT,}
+\DoxyCodeLine{00073\ \ \ EV\_SHED\_MASS,}
+\DoxyCodeLine{00074\ \ \ EV\_SHED\_DIAM,}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ EV\_SCALAR,}
+\DoxyCodeLine{00077\ \ \ EV\_VECTOR,}
+\DoxyCodeLine{00078\ \ \ EV\_TENSOR,}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ EV\_DUMMY\_R,}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ EV\_MAX\ ((FEvar)(EV\_DUMMY\_R+1))}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ FV\_MIN\ ((FEvar)(EV\_DUMMY\_R+1))}}
+\DoxyCodeLine{00083\ \ \ \textcolor{comment}{/*\ face\ variables\ with\ face\ thread\ length\ */}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#if\ WALL\_FILM\_PHS2\_SPLASH}}
+\DoxyCodeLine{00085\ \ \ FV\_PHS2\_SPLASH\_COEF,}
+\DoxyCodeLine{00086\ \ \ FV\_PHS2\_SPLASH\_MASS,}
+\DoxyCodeLine{00087\ \ \ FV\_PHS2\_SPLASH\_MOMS,}
+\DoxyCodeLine{00088\ \ \ FV\_PHS2\_SPLASH\_NUMS,}
+\DoxyCodeLine{00089\ \ \ FV\_PHS2\_SPLASH\_DIAM,}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00091\ \ \ FV\_STRIP\_COUNT,}
+\DoxyCodeLine{00092\ \ \ FV\_STRIP\_MASS,}
+\DoxyCodeLine{00093\ \ \ FV\_SHED\_COUNT,}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ FV\_DPM\_DYNAMIC\_PRES,}
+\DoxyCodeLine{00096\ \ \ FV\_DPM\_DYNAMIC\_HITS,}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ FV\_MRF\_VELOCITY,}
+\DoxyCodeLine{00099\ \ \ FV\_MRF\_ACCELERATION,}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ FV\_T\_LAMBDA\_GF,}
+\DoxyCodeLine{00102\ \ \ FV\_T\_BULK\_TEMP,}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ FV\_FILM\_MU,}
+\DoxyCodeLine{00105\ \ \ FV\_FILM\_CP,}
+\DoxyCodeLine{00106\ \ \ FV\_FILM\_KD,}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ FV\_GAUSS\_PDF,}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ FV\_DUMMY\_R,}
+\DoxyCodeLine{00111\ \ \ FV\_DUMMY\_R\_NV,}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ FEV\_MAX}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ FV\_MAX\ ((FEvar)(FEV\_MAX))}}
+\DoxyCodeLine{00115\ \}\ FEvar;}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00118\ \{}
+\DoxyCodeLine{00119\ \ \ FEV\_ST\_DEFAULT\ =\ 0,\ \textcolor{comment}{/*\ temp\ storage\ can\ be\ allocated\ on\ demand\ */}}
+\DoxyCodeLine{00120\ \ \ FEV\_ST\_ESSENTIAL,\ \ \ \textcolor{comment}{/*\ storage\ must\ be\ allocated\ before\ calculation\ can\ start\ */}}
+\DoxyCodeLine{00121\ \ \ FEV\_ST\_PERMANENT\ \ \ \ \textcolor{comment}{/*\ storage\ allocted\ when\ edge/face\ trees\ are\ built\ */}}
+\DoxyCodeLine{00122\ \}\ FEV\_Store\_Type;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\_fe\_variable\_attribute}
+\DoxyCodeLine{00125\ \{}
+\DoxyCodeLine{00126\ \ \ FEvar\ nv;}
+\DoxyCodeLine{00127\ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_af17df974669c99cc2fd057c73695186c}{SV\_Dimension}}\ dimension;}
+\DoxyCodeLine{00128\ \ \ FEV\_Store\_Type\ store\_flags;}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*init)(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{struct\ }\_fe\_variable\_attribute\ *);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \}\ FEVar\_Attribute;}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ FEV\_METHOD(ev,\ method)((ev)-\/>method)}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ FEV(ev,dim,flag,init)\ \{ev,dim,flag,init\}}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\_fe\_thread}
+\DoxyCodeLine{00139\ \{}
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t;}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \textcolor{keywordtype}{int}\ sv\_length;}
+\DoxyCodeLine{00143\ \ \ \textcolor{keywordtype}{int}\ nelements;}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordtype}{int}\ nelements\_in\_layer[\mbox{\hyperlink{mem__grid_8h_a0a1210d0792b02c29f0e02c68a73e56e}{N\_LAYER}}];\ \textcolor{comment}{/*\ see\ thread\_struct\ definition...\ */}}
+\DoxyCodeLine{00146\ \ \ \textcolor{keywordtype}{int}\ nlayer;}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00148\ \ \ \textcolor{keywordtype}{void}\ *storage[FEV\_MAX];}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \}\ FE\_Thread;}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00153\ \{}
+\DoxyCodeLine{00154\ \ \ ET\_INTERIOR\ =\ 0,\ \textcolor{comment}{/*\ interior\ edge\ on\ film\ wall\ thread\ */}}
+\DoxyCodeLine{00155\ \ \ ET\_BOUNDARY\ =\ 1,\ \textcolor{comment}{/*\ boundary\ edge\ on\ film\ wall\ thread\ */}}
+\DoxyCodeLine{00156\ \ \ ET\_JUNCTION\ =\ 2,\ \textcolor{comment}{/*\ edge\ joining\ 2\ film\ wall\ threads\ \ */}}
+\DoxyCodeLine{00157\ \ \ ET\_PARTITION,\ \ \ \ \textcolor{comment}{/*\ edge\ on\ partition\ line\ */}}
+\DoxyCodeLine{00158\ \ \ ET\_SYMMETRY,\ \ \ \ \ \textcolor{comment}{/*\ edge\ on\ symmetric\ line\ */}}
+\DoxyCodeLine{00159\ \ \ ET\_PERIODIC\ \ \ \ \ \ \textcolor{comment}{/*\ edge\ on\ periodic\ \ line\ */}}
+\DoxyCodeLine{00160\ \}\ Edge\_Element\_Type;}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00163\ \{}
+\DoxyCodeLine{00164\ \ \ VAPOR\_DIFFUSION\_BALANCE\ =\ 0,\ \textcolor{comment}{/*\ Species\ diffusion\ balance\ (SLi)\ */}}
+\DoxyCodeLine{00165\ \ \ VAPOR\_BOUNDARY\_LAYER,\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Wall\ boundary\ layer\ model\ (as\ in\ LWF)\ \ \ \ */}}
+\DoxyCodeLine{00166\ \ \ VAPOR\_USER}
+\DoxyCodeLine{00167\ \};}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00170\ \{}
+\DoxyCodeLine{00171\ \ \ PHASE2\_MASS\ =\ 0,}
+\DoxyCodeLine{00172\ \ \ PHASE2\_MOM\_X,}
+\DoxyCodeLine{00173\ \ \ PHASE2\_MOM\_Y,}
+\DoxyCodeLine{00174\ \ \ PHASE2\_MOM\_Z,}
+\DoxyCodeLine{00175\ \ \ PHASE2\_HEAT,}
+\DoxyCodeLine{00176\ \ \ PHASE2\_TURB\_K,}
+\DoxyCodeLine{00177\ \ \ PHASE2\_TURB\_D}
+\DoxyCodeLine{00178\ \}\ Phase2\_Src\_Index;}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\_e\_struct}
+\DoxyCodeLine{00181\ \{}
+\DoxyCodeLine{00182\ \ \ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *v0;}
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *v1;}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t0;}
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t1;}
+\DoxyCodeLine{00187\ \ \ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f0;}
+\DoxyCodeLine{00188\ \ \ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f1;}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tb;\ \textcolor{comment}{/*\ boundary\ face\ thread\ the\ edge\ is\ adjacent\ to\ */}}
+\DoxyCodeLine{00191\ \ \ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ fb;}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ FE\_Thread\ *et\_shadow;}
+\DoxyCodeLine{00194\ \ \ edge\_t\ e\_shadow;}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ Edge\_Element\_Type\ type;\ \ \textcolor{comment}{/*\ interior\ or\ exterior\ */}}
+\DoxyCodeLine{00197\ \ \ \textcolor{keywordtype}{int}\ flag;}
+\DoxyCodeLine{00198\ \}\ E\_Edge;}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *\ Edge\ flags\ (default\ zero)}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ E\_FL\_NONE\ \ \ \ \ (0)}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#define\ E\_FL\_FLOW\_IN\ \ (1)\ \ \ \ }\textcolor{comment}{/*\ edge\ on\ fluid\ flow\ inlet\ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#define\ E\_FL\_FLOW\_OUT\ (1<<1)\ }\textcolor{comment}{/*\ edge\ on\ fluid\ flow\ outlet\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#define\ E\_FL\_SHARP\ \ \ \ (1<<2)\ }\textcolor{comment}{/*\ edge\ with\ sharp\ angle\ for\ forced\ separation\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ E\_FL\_PART\_SEP\ (1<<3)\ }\textcolor{comment}{/*\ edge\ on\ partition\ edge\ with\ separation\ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ E\_FLOW\_IN\_FL(e,\ et)\ (E\_EDGE\_Flag(e,\ et)\ \&\ E\_FL\_FLOW\_IN)}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ E\_FLOW\_OUT\_FL(e,\ et)(E\_EDGE\_Flag(e,\ et)\ \&\ E\_FL\_FLOW\_OUT)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ E\_SHARP\_FL(e,\ et)\ \ \ (E\_EDGE\_Flag(e,\ et)\ \&\ E\_FL\_SHARP)}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ E\_PART\_SEP\_FL(e,\ et)(E\_EDGE\_Flag(e,\ et)\ \&\ E\_FL\_PART\_SEP)}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ MARK\_EDGE\_FLAG(e,\ et,\ flag)\ \ \ (E\_EDGE\_Flag(e,\ et)\ |=\ \ (flag))}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ UNMARK\_EDGE\_FLAG(e,\ et,\ flag)\ (E\_EDGE\_Flag(e,\ et)\ \&=\ \string~(flag))}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ TOGGLE\_EDGE\_FLAG(e,\ et,\ flag)\ (E\_EDGE\_Flag(e,\ et)\ \string^=\ \ (flag))}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00219\ \textcolor{comment}{\ *\ Edge\ storage}}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ THREAD\_FTREE(t)\ \ \ \ \ \ \ \ \ ((t)-\/>ftree)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ FE\_THREAD(t)\ \ \ \ \ \ \ \ \ \ \ \ \ ((FE\_Thread\ *)(THREAD\_FTREE((t))))}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ FE\_THREAD\_ALLOCATED\_P(t)\ (THREAD\_FTREE((t))\ !=\ NULL)}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#if\ !ALLOCATE\_STORAGE\_ARRAY\_ON\_DEMAND}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#\ define\ FET\_STORAGE(t,\ nv)\ (THREAD\_STORAGE((t),\ (nv)))}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{/*\ !ALLOCATE\_STORAGE\_ARRAY\_ON\_DEMAND\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#\ define\ FET\_STORAGE(t,\ nv)\ ((t)-\/>storage[nv])}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !ALLOCATE\_STORAGE\_ARRAY\_ON\_DEMAND\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ FT\_T(ft)\ ((ft)-\/>t)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ FT\_STORAGE(t,\ nv)\ (FET\_STORAGE((t),\ (nv)))}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ FV\_ALLOCATED\_P(t,\ nv)\ (NULL\ !=\ FT\_STORAGE((t),\ (nv)))}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ T\_STORAGE\_R\_MV(t,\ sv)\ \ (T\_STORAGE((t),\ (sv),\ real\ (*)[ND\_ND][ND\_ND]))}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ F\_STORAGE\_R\_MV(f,\ t,\ n)(T\_STORAGE\_R\_MV((t),\ (n))[(f)])}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ THREAD\_ETREE(t)\ \ \ \ \ \ \ \ \ ((t)-\/>etree)}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#define\ E\_THREAD(t)\ \ \ \ \ \ \ \ \ \ \ \ \ ((FE\_Thread\ *)(THREAD\_ETREE((t))))}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ E\_THREAD\_ALLOCATED\_P(t)\ (THREAD\_ETREE((t))\ !=\ NULL)}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ ET\_T(et)\ ((et)-\/>t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ edge\ thread\ hosting\ face\ thread\ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ ET\_T0(et)\ (ET\_T(et)-\/>t0)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ hosting\ face\ adjacent\ cell\ thread\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ ET\_STORAGE(et,\ nv)\ (FET\_STORAGE((et),\ (nv)))}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ ET\_EDGE(et)\ ((E\_Edge\ *)ET\_STORAGE((et),\ EV\_EDGE))}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ ET\_N\_ELEMENTS(et)\ (THREAD\_N\_ELEMENTS((et)))}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#define\ E\_STORAGE\_I(e,\ et,\ n)\ (T\_STORAGE\_I((et),\ (n))[(e)])}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ E\_STORAGE\_R(e,\ et,\ n)\ (T\_STORAGE\_R\_NO\_CHECK((et),\ (n))[(e)])}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ E\_STORAGE\_R\_NV(e,\ et,\ n)\ (T\_STORAGE\_R\_NV\_NO\_CHECK((et),\ (n))[(e)])}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ E\_STORAGE\_R\_MV(e,\ et,\ n)\ (T\_STORAGE\_R\_MV((et),\ (n))[(e)])}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ EV\_LENGTH(et)\ (SV\_LENGTH((et)))}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ EV\_ALLOCATED\_P(et,\ nv)\ (NULL\ !=\ ET\_STORAGE((et),\ (nv)))}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \textcolor{comment}{/*\ macros\ for\ edge\ variables\ */}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ E\_EDGE(e,\ et)\ \ \ \ \ \ (ET\_EDGE((et))[(e)])}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ E\_EDGE\_V0(e,\ et)\ \ \ (E\_EDGE((e),\ (et)).v0)}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ E\_EDGE\_V1(e,\ et)\ \ \ (E\_EDGE((e),\ (et)).v1)}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#define\ E\_EDGE\_T0(e,\ et)\ \ \ (E\_EDGE((e),\ (et)).t0)}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ E\_EDGE\_T1(e,\ et)\ \ \ (E\_EDGE((e),\ (et)).t1)}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ E\_EDGE\_F0(e,\ et)\ \ \ (E\_EDGE((e),\ (et)).f0)}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ E\_EDGE\_F1(e,\ et)\ \ \ (E\_EDGE((e),\ (et)).f1)}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ E\_EDGE\_TB(e,\ et)\ \ \ (E\_EDGE((e),\ (et)).tb)}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#define\ E\_EDGE\_FB(e,\ et)\ \ \ (E\_EDGE((e),\ (et)).fb)}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#define\ E\_EDGE\_Type(e,\ et)\ (E\_EDGE((e),\ (et)).type)}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#define\ E\_EDGE\_Flag(e,\ et)\ (E\_EDGE((e),\ (et)).flag)}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#define\ E\_SHADOW(e,\ et)\ \ \ \ (E\_EDGE((e),\ (et)).e\_shadow)}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ ET\_SHADOW(e,\ et)\ \ \ (E\_EDGE((e),\ (et)).et\_shadow)}}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#define\ E\_LENGTH\_CACHE(e,\ et)\ \ (E\_STORAGE\_R\_NV((e),\ (et),\ EV\_LENGTH))}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#define\ E\_CENTROID\_CACHE(e,\ et)(E\_STORAGE\_R\_NV((e),\ (et),\ EV\_CENTROID))}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#define\ E\_NORM0\_CACHE(e,\ et)\ \ \ (E\_STORAGE\_R\_NV((e),\ (et),\ EV\_NORM0))}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#define\ E\_NORM1\_CACHE(e,\ et)\ \ \ (E\_STORAGE\_R\_NV((e),\ (et),\ EV\_NORM1))}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#define\ E\_NORMC\_CACHE(e,\ et)\ \ \ (E\_STORAGE\_R\_NV((e),\ (et),\ EV\_NORMC))}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#define\ E\_LENGTH(L,\ e,\ et)\ \ NV\_V(L,=,E\_LENGTH\_CACHE((e),\ (et)))}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#define\ E\_CENTROID(x,\ e,\ et)NV\_V(x,=,E\_CENTROID\_CACHE((e),\ (et)))}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#define\ E\_NORM0(n,\ e,\ et)\ \ \ NV\_V(n,=,E\_NORM0\_CACHE((e),\ (et)))}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ E\_NORM1(n,\ e,\ et)\ \ \ NV\_V(n,=,E\_NORM1\_CACHE((e),\ (et)))}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#define\ E\_NORMC(n,\ e,\ et)\ \ \ NV\_V(n,=,E\_NORMC\_CACHE((e),\ (et)))}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#define\ E\_ANGLE(e,\ et)\ \ \ \ \ \ (E\_STORAGE\_R((e),\ (et),\ EV\_ANGLE))}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#define\ E\_UPWIND(e,\ et)\ \ \ \ \ (E\_STORAGE\_I((e),\ (et),\ EV\_UPWIND))}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#define\ E\_HVFLUX(e,\ et)\ \ \ \ \ (E\_STORAGE\_R((e),\ (et),\ EV\_HVFLUX))}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#define\ E\_SHED\_COUNT(e,\ et)\ (E\_STORAGE\_I((e),\ (et),\ EV\_SHED\_COUNT))}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#define\ E\_SHED\_MASS(e,\ et)\ \ (E\_STORAGE\_R((e),\ (et),\ EV\_SHED\_MASS))}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#define\ E\_SHED\_DIAM(e,\ et)\ \ (E\_STORAGE\_R((e),\ (et),\ EV\_SHED\_DIAM))}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#define\ E\_SCALAR(e,\ et)\ \ (E\_STORAGE\_R((e),\ (et),\ EV\_SCALAR))}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#define\ E\_VECTOR(e,\ et)\ \ (E\_STORAGE\_R\_NV((e),\ (et),\ EV\_VECTOR))}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#define\ E\_TENSOR(e,\ et)\ \ (E\_STORAGE\_R\_MV((e),\ (et),\ EV\_TENSOR))}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ E\_DUMMY\_R(e,\ et)\ (E\_STORAGE\_R((e),\ (et),\ EV\_DUMMY\_R))}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#define\ begin\_e\_loop(e,\ et)\ begin\_generic\_loop(e,\ et)}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#define\ end\_e\_loop(e,\ et)\ \ \ end\_generic\_loop(e,\ et)}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#define\ F\_STRIP\_COUNT(f,\ t)\ (F\_STORAGE\_I((f),\ FE\_THREAD((t)),\ FV\_STRIP\_COUNT))}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#define\ F\_STRIP\_MASS(f,\ t)\ \ (F\_STORAGE\_R((f),\ FE\_THREAD((t)),\ FV\_STRIP\_MASS))}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#define\ F\_SHED\_COUNT(f,\ t)\ \ (F\_STORAGE\_I((f),\ FE\_THREAD((t)),\ FV\_SHED\_COUNT))}}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#define\ F\_DPM\_DYNAMIC\_PRES(f,\ t)\ (F\_STORAGE\_R((f),\ FE\_THREAD((t)),\ FV\_DPM\_DYNAMIC\_PRES))}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#define\ F\_DPM\_DYNAMIC\_HITS(f,\ t)\ (F\_STORAGE\_R((f),\ FE\_THREAD((t)),\ FV\_DPM\_DYNAMIC\_HITS))}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#define\ F\_MRF\_VELOCITY(f,\ t)\ \ \ \ \ (F\_STORAGE\_R\_NV((f),\ FE\_THREAD((t)),\ FV\_MRF\_VELOCITY))}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#define\ F\_MRF\_ACCELERATION(f,\ t)\ (F\_STORAGE\_R\_NV((f),\ FE\_THREAD((t)),\ FV\_MRF\_ACCELERATION))}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#define\ F\_T\_LAMBDA\_GF(f,\ t)\ (F\_STORAGE\_R((f),\ FE\_THREAD((t)),\ FV\_T\_LAMBDA\_GF))}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#define\ F\_T\_BULK\_TEMP(f,\ t)\ (F\_STORAGE\_R((f),\ FE\_THREAD((t)),\ FV\_T\_BULK\_TEMP))}}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#define\ F\_FILM\_MU(f,\ t)\ (F\_STORAGE\_R((f),\ FE\_THREAD((t)),\ FV\_FILM\_MU))}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#define\ F\_FILM\_CP(f,\ t)\ (F\_STORAGE\_R((f),\ FE\_THREAD((t)),\ FV\_FILM\_CP))}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#define\ F\_FILM\_KD(f,\ t)\ (F\_STORAGE\_R((f),\ FE\_THREAD((t)),\ FV\_FILM\_KD))}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#define\ F\_DUMMY\_R(f,\ t)\ \ \ \ (F\_STORAGE\_R((f),\ FE\_THREAD((t)),\ FV\_DUMMY\_R))}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#define\ F\_DUMMY\_R\_NV(f,\ t)\ (F\_STORAGE\_R\_NV((f),\ FE\_THREAD((t)),\ FV\_DUMMY\_R\_NV))}}
+\DoxyCodeLine{00318\ \textcolor{comment}{/*\ macros\ for\ additional\ face\ variables\ (new\ SV\_s)\ (Note:\ t\ is\ the\ true\ wall\ thread)\ */}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#define\ F\_ORIGIN\_CACHE(f,\ t)\ \ \ (F\_STORAGE\_R\_NV((f),\ (t),\ SV\_EF\_ORIGIN))}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#define\ F\_TM(f,\ t)\ \ \ \ \ \ \ \ \ \ \ \ \ (F\_STORAGE\_R\_MV((f),\ (t),\ SV\_EF\_TRANS\_M))}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#define\ F\_ORIGIN(f,\ t)\ \ \ \ \ \ \ \ \ \ F\_ORIGIN\_CACHE((f),\ (t))}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#define\ F\_HEIGHT(f,\ t)\ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HEIGHT))\ }\textcolor{comment}{/*\ use\ this\ to\ hold\ h*rho\ for\ variable\ density\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#define\ F\_HEIGHT\_PREV(f,\ t)\ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HEIGHT\_PREV))}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#define\ F\_HEIGHT\_SRC(f,\ t)\ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HEIGHT\_SRC))}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#define\ F\_HEIGHT\_SRC\_PREV(f,\ t)(F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HEIGHT\_SRC\_PREV))}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ F\_HVEL\_X(f,\ t)\ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVEL\_X))}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#define\ F\_HVEL\_Y(f,\ t)\ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVEL\_Y))}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#define\ F\_HVEL\_X\_PREV(f,\ t)\ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVEL\_X\_PREV))}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#define\ F\_HVEL\_Y\_PREV(f,\ t)\ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVEL\_Y\_PREV))}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#define\ F\_HVEL\_X\_SRC(f,\ t)\ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVEL\_X\_SRC))}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ F\_HVEL\_Y\_SRC(f,\ t)\ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVEL\_Y\_SRC))}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#define\ F\_HVEL\_X\_SRC\_PREV(f,\ t)(F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVEL\_X\_SRC\_PREV))}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#define\ F\_HVEL\_Y\_SRC\_PREV(f,\ t)(F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVEL\_Y\_SRC\_PREV))}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ F\_HT(f,\ t)\ \ \ \ \ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HT))}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\#define\ F\_HT\_PREV(f,\ t)\ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HT\_PREV))}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#define\ F\_HT\_SRC(f,\ t)\ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HT\_SRC))}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#define\ F\_HT\_SRC\_PREV(f,\ t)\ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HT\_SRC\_PREV))}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#define\ F\_HS(f,\ t)\ \ \ \ \ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HS))}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#define\ F\_HS\_PREV(f,\ t)\ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HS\_PREV))}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#define\ F\_HS\_SRC(f,\ t)\ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HS\_SRC))}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#define\ F\_HS\_SRC\_PREV(f,\ t)\ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HS\_SRC\_PREV))}}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ F\_SVEL\_X(f,\ t)\ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_SVEL\_X))}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#define\ F\_SVEL\_Y(f,\ t)\ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_SVEL\_Y))}}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#define\ F\_HVELA\_X(f,\ t)\ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVELA\_X))}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#define\ F\_HVELA\_Y(f,\ t)\ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_HVELA\_Y))}}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#define\ F\_Z\_ACC(f,\ t)\ \ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_Z\_ACC))}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#define\ F\_Z\_ACC\_G(f,\ t)\ \ \ \ \ \ \ \ (F\_STORAGE\_R\_NV((f),\ (t),\ SV\_EF\_Z\_ACC\_G))}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#define\ F\_H\_COV(f,\ t)\ \ \ \ \ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EF\_H\_COV))}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#define\ F\_H\_COV\_G(f,\ t)\ \ \ \ \ \ \ \ (F\_STORAGE\_R\_NV((f),\ (t),\ SV\_EF\_H\_COV\_G))}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#define\ F\_VEC\_X\_G(f,\ t)\ \ \ \ \ \ \ (F\_STORAGE\_R\_NV((f),\ (t),\ SV\_EF\_VEC\_X\_G))}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#define\ F\_VEC\_Y\_G(f,\ t)\ \ \ \ \ \ \ (F\_STORAGE\_R\_NV((f),\ (t),\ SV\_EF\_VEC\_Y\_G))}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#define\ F\_VEC\_Z\_G(f,\ t)\ \ \ \ \ \ \ (F\_STORAGE\_R\_NV((f),\ (t),\ SV\_EF\_VEC\_Z\_G))}}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\#define\ SV\_EF\_HVV\_I(i)\ ((Svar)((SV\_EF\_HVV\_0+(i)*(SV\_EF\_HVV\_1-\/SV\_EF\_HVV\_0))))}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#define\ SV\_EF\_HGV\_I(i)\ ((Svar)(SV\_EF\_HVV\_I(i)+SV\_EF\_HVV\_0\_GV-\/SV\_EF\_HVV\_0))}}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \textcolor{comment}{/*\ macros\ for\ new\ stored\ face\ variables\ (new\ SV\_s)\ */}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\#define\ F\_EFILM\_HEIGHT(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_HEIGHT))}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#define\ F\_EFILM\_U(f,\ t)\ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_U))}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#define\ F\_EFILM\_V(f,\ t)\ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_V))}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#define\ F\_EFILM\_W(f,\ t)\ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_W))}}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\#define\ F\_EFILM\_T(f,\ t)\ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_T))}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#define\ F\_EFILM\_S(f,\ t)\ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_S))}}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\#define\ F\_EFILM\_T\_ALPHA(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_T\_ALPHA))}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\#define\ F\_EFILM\_T\_BETA(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_T\_BETA))}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#define\ F\_EFILM\_TS\_FLUX(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_TS\_FLUX))}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\#define\ F\_EFILM\_P(f,\ t)\ \ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_P))}}
+\DoxyCodeLine{00376\ }
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#define\ F\_EFILM\_DPM\_MASS\_SRC(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_DPM\_MASS\_SRC))}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\#define\ F\_EFILM\_DPM\_MOM\_X\_SRC(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_DPM\_MOM\_X\_SRC))}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\#define\ F\_EFILM\_DPM\_MOM\_Y\_SRC(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_DPM\_MOM\_Y\_SRC))}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#define\ F\_EFILM\_DPM\_MOM\_Z\_SRC(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_DPM\_MOM\_Z\_SRC))}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\#define\ F\_EFILM\_DPM\_ENERGY\_SRC(f,\ t)(F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_DPM\_ENERGY\_SRC))}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\#define\ F\_EFILM\_DPM\_PRESSURE(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_DPM\_PRESSURE))}}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\#define\ F\_EFILM\_SEPARATING\_SRC(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_SEPARATING\_SRC))}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\#define\ F\_EFILM\_SEPARATED\_DIAM(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_SEPARATED\_DIAM))}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#define\ F\_EFILM\_SEPARATED\_MASS(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_SEPARATED\_MASS))}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#define\ F\_EFILM\_STRIPPING\_SRC(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_STRIPPING\_SRC))}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#define\ F\_EFILM\_STRIPPED\_DIAM(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_STRIPPED\_DIAM))}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#define\ F\_EFILM\_STRIPPED\_MASS(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_STRIPPED\_MASS))}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#define\ F\_EFILM\_SEPARATED\_MASS\_SUM(f,\ t)\ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_SEPARATED\_MASS\_SUM))}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#define\ F\_EFILM\_STRIPPED\_MASS\_SUM(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_STRIPPED\_MASS\_SUM))}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\#define\ F\_EFILM\_OUTFLOW\_MASS\_SUM(f,\ t)\ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_OUTFLOW\_MASS\_SUM))}}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#define\ F\_EFILM\_PHS2\_MASS\_SRC(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_PHS2\_MASS\_SRC))}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#define\ F\_EFILM\_PHS2\_MOMS\_SRC(f,\ t)\ \ (F\_STORAGE\_R\_NV((f),\ (t),\ SV\_EFILM\_PHS2\_MOMS\_SRC))}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#define\ F\_EFILM\_PHS2\_ENERGY\_SRC(f,\ t)(F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_PHS2\_ENERGY\_SRC))}}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#define\ F\_EFILM\_VAPOR\_MASS\_SRC(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_VAPOR\_MASS\_SRC))}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\#define\ F\_EFILM\_VAPOR\_MASS\_APP(f,\ t)\ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_VAPOR\_MASS\_APP))}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#define\ F\_EFILM\_US(f,\ t)\ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_US))}}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#define\ F\_EFILM\_VS(f,\ t)\ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_VS))}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#define\ F\_EFILM\_WS(f,\ t)\ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_WS))}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#define\ F\_EFILM\_TS(f,\ t)\ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_TS))}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#define\ F\_EFILM\_DENSITY(f,\ t)(F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_DENSITY))}}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#define\ F\_EFILM\_CFL(f,\ t)\ \ \ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_CFL))}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#define\ F\_EFILM\_WEBER(f,\ t)\ \ \ (F\_STORAGE\_R((f),\ (t),\ SV\_EFILM\_WEBER))}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#define\ UNV\_DOT(n,\ m)\ MIN(1.0,\ MAX(-\/1.0,\ NV\_DOT(n,\ m)))}}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00413\ \textcolor{comment}{\ *\ Transformation\ MACROs}}
+\DoxyCodeLine{00414\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\#define\ NV\_VM\_G2L(l,EQ,g,r)\(\backslash\)}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\ \ real\ NV\_VEC(\_g)=\{0.0\};\ \ \(\backslash\)}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\ \ NV\_V((\_g),=,(g));\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\ \ NV\_ROTP\_V((l),EQ,(\_g),(r));\ \(\backslash\)}}
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#define\ NV\_VM\_L2G(g,EQ,l,r)\(\backslash\)}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\ \ real\ NV\_VEC(\_l)=\{0.0\};\ \ \(\backslash\)}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\ \ NV\_V((\_l),=,(l));\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\ \ NV\_ROTN\_V((g),EQ,(\_l),(r));\ \(\backslash\)}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#define\ NV\_VMM\_L2L(y,EQ,x,a,r)\(\backslash\)}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\ \ real\ NV\_VEC(\_x)=\{0.0\};\ \ \(\backslash\)}}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\ \ NV\_VM\_L2G((\_x),EQ,(x),(a));\ \(\backslash\)}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\ \ NV\_VM\_G2L((y),EQ,(\_x),(r));\ \(\backslash\)}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\#define\ NT\_TV(m,x,y,z)\(\backslash\)}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{ND\_VEC(\(\backslash\)}}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\ \ \ \ \ \ \ NV\_V((m)[0],=,(x)),\(\backslash\)}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\ \ \ \ \ \ \ NV\_V((m)[1],=,(y)),\(\backslash\)}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\ \ \ \ \ \ \ NV\_V((m)[2],=,(z)))}}
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#define\ NT\_TM(a,b)\(\backslash\)}}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{ND\_VEC(\(\backslash\)}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\ \ \ \ \ \ \ NV\_V((a)[0],=,(b)[0]),\(\backslash\)}}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{\ \ \ \ \ \ \ NV\_V((a)[1],=,(b)[1]),\(\backslash\)}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\ \ \ \ \ \ \ NV\_V((a)[2],=,(b)[2]))}}
+\DoxyCodeLine{00447\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00448\ \textcolor{comment}{\ *\ matrix\ multiply:\ B\ =\ A\ .\ R\string^T\ (matrices\ are\ ND\_ND\ x\ ND\_ND)}}
+\DoxyCodeLine{00449\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#define\ \_M\_A\_RT(b,EQ,a,r)\ MAT\_A\_RT(b,EQ,a,r)}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#define\ M\_A\_RT(b,EQ,a,r)\(\backslash\)}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{ND\_VEC(\(\backslash\)}}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{NV\_D((b)[0],=,NV\_ROTP\_X((a)[0],(r)),NV\_ROTP\_Y((a)[0],(r)),NV\_ROTP\_Z((a)[0],(r))),\(\backslash\)}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{NV\_D((b)[1],=,NV\_ROTP\_X((a)[1],(r)),NV\_ROTP\_Y((a)[1],(r)),NV\_ROTP\_Z((a)[1],(r))),\(\backslash\)}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{NV\_D((b)[2],=,NV\_ROTP\_X((a)[2],(r)),NV\_ROTP\_Y((a)[2],(r)),NV\_ROTP\_Z((a)[2],(r))))}}
+\DoxyCodeLine{00456\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00457\ \textcolor{comment}{\ *\ matrix\ multiply:\ B\ =\ A\ .\ R\ (matrices\ are\ ND\_ND\ x\ ND\_ND)}}
+\DoxyCodeLine{00458\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00459\ \textcolor{preprocessor}{\#define\ \_M\_A\_R(b,EQ,a,r)\ MAT\_A\_R(b,EQ,a,r)}}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#define\ M\_A\_R(b,EQ,a,r)\(\backslash\)}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{ND\_VEC(\(\backslash\)}}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{NV\_D((b)[0],=,NV\_ROTN\_X((a)[0],(r)),NV\_ROTN\_Y((a)[0],(r)),NV\_ROTN\_Z((a)[0],(r))),\(\backslash\)}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{NV\_D((b)[1],=,NV\_ROTN\_X((a)[1],(r)),NV\_ROTN\_Y((a)[1],(r)),NV\_ROTN\_Z((a)[1],(r))),\(\backslash\)}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{NV\_D((b)[2],=,NV\_ROTN\_X((a)[2],(r)),NV\_ROTN\_Y((a)[2],(r)),NV\_ROTN\_Z((a)[2],(r))))}}
+\DoxyCodeLine{00465\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00466\ \textcolor{comment}{\ *\ matrix\ multiply:\ B\ =\ A\string^T\ .\ R\ (matrices\ are\ ND\_ND\ x\ ND\_ND)}}
+\DoxyCodeLine{00467\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\#define\ M\_RT\_A(b,EQ,r,a)\(\backslash\)}}
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{ND\_VEC(\(\backslash\)}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{NV\_D((b)[0],=,\(\backslash\)}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\ \ \ \ \ ROTN\_X((r)[0][0],(r)[1][0],(r)[2][0],(a)),\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\ \ \ \ \ ROTN\_Y((r)[0][0],(r)[1][0],(r)[2][0],(a)),\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\ \ \ \ \ ROTN\_Z((r)[0][0],(r)[1][0],(r)[2][0],(a))),\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{NV\_D((b)[1],=,\(\backslash\)}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\ \ \ \ \ ROTN\_X((r)[0][1],(r)[1][1],(r)[2][1],(a)),\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\ \ \ \ \ ROTN\_Y((r)[0][1],(r)[1][1],(r)[2][1],(a)),\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\ \ \ \ \ ROTN\_Z((r)[0][1],(r)[1][1],(r)[2][1],(a))),\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{NV\_D((b)[2],=,\(\backslash\)}}
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\ \ \ \ \ ROTN\_X((r)[0][2],(r)[1][2],(r)[2][2],(a)),\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\ \ \ \ \ ROTN\_Y((r)[0][2],(r)[1][2],(r)[2][2],(a)),\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\ \ \ \ \ ROTN\_Z((r)[0][2],(r)[1][2],(r)[2][2],(a))))}}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \textcolor{comment}{/*\ G-\/>L\ */}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#define\ R\_M\_RT(m,r,i,j)\(\backslash\)}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\ \ NVD\_DOT((r)[i],NV\_DOT((m)[0],(r)[j]),NV\_DOT((m)[1],(r)[j]),NV\_DOT((m)[2],(r)[j]))}}
+\DoxyCodeLine{00486\ \textcolor{comment}{/*\ L-\/>G\ */}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#define\ RT\_M\_R(m,r,i,j)\(\backslash\)}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\ \ ND\_DOT((r)[0][i],(r)[1][i],(r)[2][i],\(\backslash\)}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\ \ \ NVD\_DOT((m)[0],(r)[0][j],(r)[1][j],(r)[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\ \ \ NVD\_DOT((m)[1],(r)[0][j],(r)[1][j],(r)[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\ \ \ NVD\_DOT((m)[2],(r)[0][j],(r)[1][j],(r)[2][j]))}}
+\DoxyCodeLine{00492\ }
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\#define\ NT\_TM\_G2L(lt,EQ,gt,r)\(\backslash\)}}
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\ \ real\ \_t[ND\_ND][ND\_ND]=\{\{0.0\}\};\(\backslash\)}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\ \ M\_A\_RT((\_t),=,(gt),(r));\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\ \ M\_A\_R((lt),=,(r),(\_t));\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\#define\ NT\_TM\_L2G(gt,EQ,lt,r)\(\backslash\)}}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00502\ \textcolor{preprocessor}{\ \ real\ \_t[ND\_ND][ND\_ND]=\{\{0.0\}\};\(\backslash\)}}
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\ \ M\_A\_R((\_t),=,(lt),(r));\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\ \ M\_RT\_A((gt),=,(r),(\_t));\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\#define\ NT\_TMM\_L2L(y,EQ,x,a,r)\(\backslash\)}}
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\ \ real\ \_t[ND\_ND][ND\_ND]=\{\{0.0\}\};\(\backslash\)}}
+\DoxyCodeLine{00510\ \textcolor{preprocessor}{\ \ real\ \_g[ND\_ND][ND\_ND]=\{\{0.0\}\};\(\backslash\)}}
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\ \ \_t[0][0]=(x)[0];\(\backslash\)}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\ \ \_t[0][1]=(x)[1];\(\backslash\)}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\ \ \_t[1][0]=(x)[1];\(\backslash\)}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\ \ \_t[1][1]=(x)[2];\(\backslash\)}}
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\ \ NT\_TM\_L2G(\_g,=,\_t,(a));\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\ \ (y)[0]=R\_M\_RT(\_g,(r),0,0);\ \ \(\backslash\)}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\ \ (y)[1]=R\_M\_RT(\_g,(r),0,1);\ \ \(\backslash\)}}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\ \ (y)[2]=R\_M\_RT(\_g,(r),1,1);\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00521\ \textcolor{comment}{/*\ 2D\ vector\ macros\ */}}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#define\ N2V\_VEC(a)a[2]}}
+\DoxyCodeLine{00523\ \textcolor{preprocessor}{\#define\ N2D\_VEC(x,y)x,y}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\#define\ N2V\_S(a,EQ,s)N2D\_VEC((a)[0]EQ(s),(a)[1]EQ(s))}}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#define\ N2D\_S(a0,a1,EQ,s)N2D\_VEC((a0)EQ(s),(a1)EQ(s))}}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#define\ N2V\_V(a,EQ,x)N2D\_VEC((a)[0]EQ(x)[0],(a)[1]EQ(x)[1])}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#define\ N2D\_D(a0,a1,EQ,x0,x1)N2D\_VEC((a0)EQ(x0),(a1)EQ(x1))}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\#define\ N2V\_D(a,EQ,x0,x1)N2D\_D((a)[0],(a)[1],EQ,x0,x1)}}
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\#define\ N2D\_V(a0,a1,EQ,x)N2D\_D(a0,a1,EQ,(x)[0],(x)[1])}}
+\DoxyCodeLine{00530\ }
+\DoxyCodeLine{00531\ \textcolor{preprocessor}{\#define\ N2V\_VS(a,EQ,x,S,s)N2D\_VEC((a)[0]EQ(x)[0]S(s),(a)[1]EQ(x)[1]S(s))}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#define\ N2V\_DS(a,EQ,x0,x1,S,s)N2D\_VEC((a)[0]EQ(x0)S(s),(a)[1]EQ(x1)S(s))}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\#define\ N2D\_VS(a0,a1,EQ,x,S,s)N2D\_VEC((a0)EQ(x)[0]S(s),(a1)EQ(x)[1]S(s))}}
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\#define\ N2D\_DS(a0,a1,EQ,x0,x1,S,s)N2D\_VEC((a0)EQ(x0)S(s),(a1)EQ(x1)S(s))}}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#define\ N2V\_VV(a,EQ,x,V,y)N2D\_VEC((a)[0]EQ(x)[0]V(y)[0],(a)[1]EQ(x)[1]V(y)[1])}}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\#define\ N2V\_DD(a,EQ,x0,x1,V,y0,y1)N2D\_VEC((a)[0]EQ(x0)V(y0),(a)[1]EQ(x1)V(y1))}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#define\ N2D\_DD(a0,a1,EQ,x0,x1,V,y0,y1)N2D\_VEC((a0)EQ(x0)V(y0),(a1)EQ(x1)V(y1))}}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ \textcolor{preprocessor}{\#define\ N2V\_VV\_S(a,EQ,x,V,y,S,s)N2D\_VEC((a)[0]EQ((x)[0]V(y)[0])S(s),(a)[1]EQ((x)[1]V(y)[1])S(s))}}
+\DoxyCodeLine{00541\ \textcolor{preprocessor}{\#define\ N2V\_VVS\ N2V\_VV\_S}}
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\#define\ N2V\_DV\_S(a,EQ,x0,x1,V,y,S,s)N2D\_VEC((a)[0]EQ((x0)V(y)[0])S(s),(a)[1]EQ((x1)V(y)[1])S(s))}}
+\DoxyCodeLine{00543\ \textcolor{preprocessor}{\#define\ N2V\_DD\_S(a,EQ,x0,x1,V,y0,y1,S,s)N2D\_VEC((a)[0]EQ((x0)V(y0))S(s),(a)[1]EQ((x1)V(y1))S(s))}}
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\#define\ N2D\_VV\_S(a0,a1,EQ,x,V,y,S,s)N2D\_VEC((a0)EQ((x)[0]V(y)[0])S(s),(a1)EQ((x)[1]V(y)[1])S(s))}}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\#define\ N2D\_VD\_S(a0,a1,EQ,x,V,y0,y1,S,s)N2D\_VEC((a0)EQ((x)[0]V(y0))S(s),(a1)EQ((x)[1]V(y1))S(s))}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\#define\ N2D\_DV\_S(a0,a1,EQ,x0,x1,V,y,S,s)N2D\_VEC((a0)EQ((x0)V(y)[0])S(s),(a1)EQ((x1)V(y)[1])S(s))}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\#define\ N2D\_DD\_S(a0,a1,EQ,x0,x1,V,y0,y1,S,s)N2D\_VEC((a0)EQ((x0)V(y0))S(s),(a1)EQ((x1)V(y1))S(s))}}
+\DoxyCodeLine{00549\ }
+\DoxyCodeLine{00550\ \textcolor{comment}{/*\ Export\ EWF\ model\ functions\ and\ parameters\ */}}
+\DoxyCodeLine{00551\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ if\_wall\_film(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00552\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ if\_wall\_film\_t(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00553\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ if\_wall\_film\_accretion(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00554\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ if\_wall\_film\_phase\_change(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00555\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ if\_wall\_film\_secondphase(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00556\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ FE\_THREAD\_VALID\_P(\textcolor{keyword}{const}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *thread);}
+\DoxyCodeLine{00557\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ E\_THREAD\_VALID\_P(\textcolor{keyword}{const}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *thread);}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Model\_Initialize\_film(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00560\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Init\_Eulerian\_Wall\_Film(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ restart);}
+\DoxyCodeLine{00561\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ SV\_Init\_Efilm\_Dpm\_Source(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00562\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ SV\_Update\_Efilm\_Dpm\_Source(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00563\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ SV\_Update\_Efilm\_Dpm\_Pressure(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00564\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Create\_All\_Wall\_Film\_Threads(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00565\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Remove\_All\_Wall\_Film\_Threads(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00567\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Get\_WFM\_Boolean(\textcolor{keywordtype}{char}\ *para\_name);}
+\DoxyCodeLine{00568\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Get\_WFM\_Int(\textcolor{keywordtype}{char}\ *para\_name);}
+\DoxyCodeLine{00569\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Get\_WFM\_Real(\textcolor{keywordtype}{char}\ *para\_name);}
+\DoxyCodeLine{00570\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{char}\ *Get\_WFM\_Char(\textcolor{keywordtype}{char}\ *para\_name);}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Efilm\_Height\_Non\_Small(\textcolor{keyword}{const}\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00573\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_Efilm\_Mass\_Cutoffs(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *strip,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *shed);}
+\DoxyCodeLine{00574\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Efilm\_Density(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00575\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Efilm\_Viscosity(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00576\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Efilm\_ktc(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00577\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Efilm\_Cp(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00578\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Get\_Dpm\_Efilm\_Relax(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00579\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{group__dpm_gaf68ee55ae6a98b8547b01b2fe73e1d48}{Wall\_Film\_Regime}}\ Efilm\_Dpm\_Impingement(\mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *tp,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ *pn,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ f\_normal[],\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Efilm\_Edge\_Npar(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00582\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *\mbox{\hyperlink{group__dpm__mem__injection_gaed22cfb9ecf594908e24bec835c0a147}{Get\_Efilm\_Injection}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00583\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Efilm\_Material(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *pm);}
+\DoxyCodeLine{00584\ }
+\DoxyCodeLine{00585\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Get\_Face\_Separation(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *mdot,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *diam);}
+\DoxyCodeLine{00586\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Get\_Edge\_Separation(edge\_t\ e,\ FE\_Thread\ *et,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *mdot,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *diam);}
+\DoxyCodeLine{00587\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ compute\_efilm\_lambda(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *lambda\_gn,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *lambda\_g,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *lambda\_f);}
+\DoxyCodeLine{00588\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ compute\_mfluid\_bulk\_temperature(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *lambda\_gn);}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00590\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Collect\_Film\_Phase2\_Sources(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *dS,\ Phase2\_Src\_Index\ SRC\_INDEX);}
+\DoxyCodeLine{00591\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Collect\_Wall\_Film\_Phase2\_Sources(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_s,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap);}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Collect\_Film\_Phase\_Change\_Sources(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_s,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ is\_vapor);}
+\DoxyCodeLine{00594\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Get\_Efilm\_Vapor\_Index(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00595\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Get\_Efilm\_Vapor\_Phase\_Index(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00596\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Film\_Mass\_Flux\_Report(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ integral[]);}
+\DoxyCodeLine{00597\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Film\_Heat\_Flux\_Report(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ integral[]);}
+\DoxyCodeLine{00598\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_Efilm\_Velocity(\textcolor{keyword}{const}\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *film\_v,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ surface\_v,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ relative\_v);}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_WALL\_FILM\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00603\ \{}
+\DoxyCodeLine{00604\ \ \ \mbox{\hyperlink{sg__film_8h_a49b1d57ca8b026018a74c3dcb2779740a71cbe48f6196dafbfa5410dfbf017186}{SEPARATION\_FOUCART}}\ =\ 0,}
+\DoxyCodeLine{00605\ \ \ \mbox{\hyperlink{sg__film_8h_a49b1d57ca8b026018a74c3dcb2779740a844c6bc312fbc2370ffad8ccfce4c2e0}{SEPARATION\_OROURKE}},\ \ \ \textcolor{comment}{/*\ O'Rourke\ \&\ Amsden,\ SAE\ 961961\ */}}
+\DoxyCodeLine{00606\ \ \ \mbox{\hyperlink{sg__film_8h_a49b1d57ca8b026018a74c3dcb2779740aa2bb9e8e143442cb3f74415832a3c751}{SEPARATION\_FRIEDRICH}},\ \textcolor{comment}{/*\ Friedrich\ ASME\ May\ 2008\ Vol\ 130\ 051301-\/1.\ */}}
+\DoxyCodeLine{00607\ \ \ \mbox{\hyperlink{sg__film_8h_a49b1d57ca8b026018a74c3dcb2779740a96c6fb9402ac6c05e35aaca465116357}{SEPARATION\_USER}}}
+\DoxyCodeLine{00608\ \};}
+\DoxyCodeLine{00609\ }
+\DoxyCodeLine{00610\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00611\ \{}
+\DoxyCodeLine{00612\ \ \ \mbox{\hyperlink{sg__film_8h_a12acb3634428eafc5724df6d836f4e64ac3b3d1b84bd388989cc3e22c1704a5ca}{STRIPPING\_MAYER}}\ =\ 0,\ \textcolor{comment}{/*\ MAYER\ 1961\ */}}
+\DoxyCodeLine{00613\ \ \ \mbox{\hyperlink{sg__film_8h_a12acb3634428eafc5724df6d836f4e64a00dab0237d71bbf8e7a3e27934751174}{STRIPPING\_FOUCART}},\ \ \ \textcolor{comment}{/*\ FOUCART\ 2005\ */}}
+\DoxyCodeLine{00614\ \ \ \mbox{\hyperlink{sg__film_8h_a12acb3634428eafc5724df6d836f4e64a3b83fca4acfbbef2b08c85d61b3b2d8a}{STRIPPING\_USER}}}
+\DoxyCodeLine{00615\ \};}
+\DoxyCodeLine{00616\ }
+\DoxyCodeLine{00617\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__film_8h_a4dbd7901b126edf20914a3e9947981dd}{Efilm\_Dpm\_Rebound}}(\mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *tp,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p\_a[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ We\_n,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ e\_n[],}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_ref[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ del\_mom[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *rest\_n,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *rest\_t,}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__dpm_ga0bdbe9dce30dcc16f655c219bd64fba8}{Wall\_Impingement\_Type}}\ impinge\_model);}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__imp__struct}{\_imp\_struct}}}
+\DoxyCodeLine{00622\ \{}
+\DoxyCodeLine{00623\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__imp__struct_a23ce6b458fbb6ef5d119827d41532ef3}{Re\_n}};}
+\DoxyCodeLine{00624\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__imp__struct_a98103a6ff08df30da6dbcf555a27698e}{We\_n}},\ \mbox{\hyperlink{struct__imp__struct_af7e9843ec72a188f4ec0ae406bd094c7}{We\_n\_cr}};}
+\DoxyCodeLine{00625\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__imp__struct_aa0d1192078dd2b3fb6b8b19a87ff8de4}{Oh}};}
+\DoxyCodeLine{00626\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__imp__struct_a2850d7019c85b069edc762f70c405d20}{Km}},\ \mbox{\hyperlink{struct__imp__struct_afa458886cada6a29816e890bf974b58f}{Km\_cr}};}
+\DoxyCodeLine{00627\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__imp__struct_ae6c3ffd000e4e73d30642f839c794e46}{E}};}
+\DoxyCodeLine{00628\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__imp__struct_a7382357327b39fe290897dd829891f4e}{T\_star}};}
+\DoxyCodeLine{00629\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__imp__struct_a88632bbacea88d8fa2c39adefefa0ba7}{T\_crit}};}
+\DoxyCodeLine{00630\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct__imp__struct_a60edbc1891143f5deffa8d6cf0ad2d62}{W\_cold}};}
+\DoxyCodeLine{00631\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct__imp__struct_a637409b4b211785ea3e27df99e8125db}{W\_wet}};}
+\DoxyCodeLine{00632\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__imp__struct_a96913366a657c573872e504e9b997927}{Y\_splash}};}
+\DoxyCodeLine{00633\ \}\ \mbox{\hyperlink{sg__film_8h_adcaa0d2af8c6f4ce19b9763761ee1a42}{Imp\_State}};}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__film_8h_ab4b9ab51bf4e337e1c1d8198920f8107}{InitializeWallFilmPrimitives}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00636\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__film_8h_a18e433f67e7396e9ec3b552d63410810}{Update\_Impingement\_Parameters}}(\mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *tp,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p\_n,\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__imp__struct}{Imp\_State}}\ *Imp\_Par,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *film\_h,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *dT\_s,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ewf\_call);}
+\DoxyCodeLine{00638\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{group__dpm_gaf68ee55ae6a98b8547b01b2fe73e1d48}{Wall\_Film\_Regime}}\ \mbox{\hyperlink{sg__film_8h_aaf03676d5338dbcab8be41f7b0a514cd}{Efilm\_Impingement\_Regime}}(\mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *tp,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ *pn,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ e\_n[],\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p\_rel[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_ref[],\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ dpm\_update,}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__imp__struct}{Imp\_State}}\ *Imp\_Par,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ewf\_call);}
+\DoxyCodeLine{00641\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__film_8h_a4dbd7901b126edf20914a3e9947981dd}{Efilm\_Dpm\_Rebound}}(\mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *tp,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p\_a[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ We\_n,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ e\_n[],}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_ref[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ del\_mom[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *rest\_n,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *rest\_t,}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__dpm_ga0bdbe9dce30dcc16f655c219bd64fba8}{Wall\_Impingement\_Type}}\ impinge\_model);}
+\DoxyCodeLine{00644\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__film_8h_a68ca6b8755683f220d0eec2188b9b5ee}{Efilm\_Dpm\_Splash\_Stanton}}(\mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *tp,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ *pn,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ e\_n[],}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p\_a[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_ref[],\ \textcolor{keywordtype}{int}\ N\_parc,}
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct__imp__struct}{Imp\_State}}\ *Imp\_Par,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ dpm\_update,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ewf\_call);}
+\DoxyCodeLine{00647\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__film_8h_a9a1f7d20b57291cc4856e9c647a247e6}{Efilm\_Dpm\_Splash\_Kuhnke}}(\mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *tp,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ *pn,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ e\_n[],\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p\_a[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_p[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V\_ref[],\ \textcolor{keywordtype}{int}\ N\_parc,}
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct__imp__struct}{Imp\_State}}\ *Imp\_Par,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ dpm\_update,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ewf\_call);}
+\DoxyCodeLine{00650\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__film_8h_aa836d21be56d12bfe4d94b4b86fc5165}{UDF\_Splash}}(\mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *tp,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ *pn,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ f\_normal[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ rel\_dot\_n,\ \textcolor{keywordtype}{int}\ n\_samp,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ update);}
+\DoxyCodeLine{00651\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__film_8h_a4cb1a1b7978c37927c4b4182a472f43b}{Friedrich\_Shed\_Mdot\_Diam}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ e\_norm[],\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tf,\ \ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f\_d,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tf\_d,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ film\_v[],\ }
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ film\_l,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ film\_h,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ rho\_l,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sig\_l,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ mu\_l,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *m\_shed,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *d\_shed);}
+\DoxyCodeLine{00653\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__film_8h_a3ef787b164cdeb59bfc19ccde8262506}{Friedrich\_Shed\_Mdot\_Diam\_NCI}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ e\_norm[],\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f\_d,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tf\_d,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ film\_v[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ film\_l,\ }
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ film\_h,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ rho\_l,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sig\_l,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ mu\_l,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *m\_shed,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *d\_shed,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ U\_gas[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__mphase_8h_a907f539572bcb7894bb85eaeb067588d}{rho\_gas}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ A[]);}
+\DoxyCodeLine{00655\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__film_8h_ac20a255e4ce30013c0bcd9245039fc40}{Strip\_Weber\_Number}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00656\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{sg__film_8h_a086439f9c063cf55c196fdfdbb24f400}{Stripped\_Mdot\_Diam\_new}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tf,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ time\_step,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *mdot,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *diam);}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \textcolor{comment}{/*\ \ \ \ no\ longer\ used}}
+\DoxyCodeLine{00659\ \textcolor{comment}{\ *\ FLUENT\_EXPORT\ real\ Efilm\_Dpm\_Splash(Tracked\_Particle\ *tp,\ Particle\ *pn,\ real\ V\_p\_a[],\ real\ V\_p[],\ real\ e\_n[],\ real\ V\_ref[],}}
+\DoxyCodeLine{00660\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ real\ We\_n,\ real\ Ky,\ real\ Ky\_c,\ real\ E,\ real\ Km\_c,\ real\ V\_sc,\ int\ N\_parc,\ cxboolean\ update,}}
+\DoxyCodeLine{00661\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Wall\_Impingement\_Type\ impingement\_model);}}
+\DoxyCodeLine{00662\ \textcolor{comment}{\ *\ FLUENT\_EXPORT\ void\ Kuhnke\_Splash(Tracked\_Particle\ *tp,\ Particle\ *pn,\ real\ V\_p\_a[],\ real\ V\_p[],\ real\ f\_e\_n[],\ real\ V\_ref[],}}
+\DoxyCodeLine{00663\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int\ N\_parc,\ cxboolean\ dpm\_update);}}
+\DoxyCodeLine{00664\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00665\ }
+\DoxyCodeLine{00666\ }
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_FILM\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

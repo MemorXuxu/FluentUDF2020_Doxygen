@@ -1,0 +1,302 @@
+\doxysection{sundials\+\_\+spgmr.\+h}
+\hypertarget{sundials__spgmr_8h_source}{}\label{sundials__spgmr_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_spgmr.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_spgmr.h}}
+\mbox{\hyperlink{sundials__spgmr_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.3\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2011/06/23\ 00:17:51\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer(s):\ Scott\ D.\ Cohen,\ Alan\ C.\ Hindmarsh\ and}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Radu\ Serban\ @\ LLNL}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2002,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ This\ is\ the\ header\ file\ for\ the\ implementation\ of\ SPGMR\ Krylov}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ iterative\ linear\ solver.\ \ The\ SPGMR\ algorithm\ is\ based\ on\ the}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ Scaled\ Preconditioned\ GMRES\ (Generalized\ Minimal\ Residual)}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ method.}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ The\ SPGMR\ algorithm\ solves\ a\ linear\ system\ A\ x\ =\ b.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ Preconditioning\ is\ allowed\ on\ the\ left,\ right,\ or\ both.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ Scaling\ is\ allowed\ on\ both\ sides,\ and\ restarts\ are\ also\ allowed.}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ We\ denote\ the\ preconditioner\ and\ scaling\ matrices\ as\ follows:}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ \ \ P1\ =\ left\ preconditioner}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ \ \ P2\ =\ right\ preconditioner}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ \ \ S1\ =\ diagonal\ matrix\ of\ scale\ factors\ for\ P1-\/inverse\ b}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *\ \ \ S2\ =\ diagonal\ matrix\ of\ scale\ factors\ for\ P2\ x}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ *\ The\ matrices\ A,\ P1,\ and\ P2\ are\ not\ required\ explicitly;\ only}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ routines\ that\ provide\ A,\ P1-\/inverse,\ and\ P2-\/inverse\ as}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ operators\ are\ required.}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ In\ this\ notation,\ SPGMR\ applies\ the\ underlying\ GMRES\ method\ to}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *\ the\ equivalent\ transformed\ system}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *\ \ \ Abar\ xbar\ =\ bbar\ ,\ where}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ \ \ Abar\ =\ S1\ (P1-\/inverse)\ A\ (P2-\/inverse)\ (S2-\/inverse)\ ,}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ \ \ bbar\ =\ S1\ (P1-\/inverse)\ b\ ,\ and\ \ \ xbar\ =\ S2\ P2\ x\ .}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ The\ scaling\ matrices\ must\ be\ chosen\ so\ that\ vectors\ S1}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ P1-\/inverse\ b\ and\ S2\ P2\ x\ have\ dimensionless\ components.}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ If\ preconditioning\ is\ done\ on\ the\ left\ only\ (P2\ =\ I),\ by\ a}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ matrix\ P,\ then\ S2\ must\ be\ a\ scaling\ for\ x,\ while\ S1\ is\ a}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *\ scaling\ for\ P-\/inverse\ b,\ and\ so\ may\ also\ be\ taken\ as\ a\ scaling}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ for\ x.\ \ Similarly,\ if\ preconditioning\ is\ done\ on\ the\ right\ only}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ (P1\ =\ I,\ P2\ =\ P),\ then\ S1\ must\ be\ a\ scaling\ for\ b,\ while\ S2\ is}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ a\ scaling\ for\ P\ x,\ and\ may\ also\ be\ taken\ as\ a\ scaling\ for\ b.}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ The\ stopping\ test\ for\ the\ SPGMR\ iterations\ is\ on\ the\ L2\ norm\ of}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ the\ scaled\ preconditioned\ residual:}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ \ \ \ \ ||\ bbar\ -\/\ Abar\ xbar\ ||\_2\ \ <\ \ delta}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ with\ an\ input\ test\ constant\ delta.}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ The\ usage\ of\ this\ SPGMR\ solver\ involves\ supplying\ two\ routines}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ and\ making\ three\ calls.\ \ The\ user-\/supplied\ routines\ are}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ \ \ \ atimes\ (A\_data,\ x,\ y)\ to\ compute\ y\ =\ A\ x,\ given\ x,}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ and}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ \ \ \ psolve\ (P\_data,\ y,\ x,\ lr)}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ to\ solve\ P1\ x\ =\ y\ or\ P2\ x\ =\ y\ for\ x,\ given\ y.}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ The\ three\ user\ calls\ are:}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ \ \ \ mem\ \ =\ SpgmrMalloc(lmax,\ vec\_tmpl);}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ to\ initialize\ memory,}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ \ \ \ flag\ =\ SpgmrSolve(mem,A\_data,x,b,...,}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_data,s1,s2,atimes,psolve,...);}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ to\ solve\ the\ system,\ and}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ \ \ \ SpgmrFree(mem);}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ to\ free\ the\ memory\ created\ by\ SpgmrMalloc.}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ Complete\ details\ for\ specifying\ atimes\ and\ psolve\ and\ for\ the}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ usage\ calls\ are\ given\ below\ and\ in\ sundials\_iterative.h.}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#ifndef\ \_SPGMR\_H}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ \_SPGMR\_H}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00074\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__iterative_8h}{sundials/sundials\_iterative.h}}>}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *\ Types:\ SpgmrMemRec,\ SpgmrMem}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ SpgmrMem\ is\ a\ pointer\ to\ an\ SpgmrMemRec\ which\ contains}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *\ the\ memory\ needed\ by\ SpgmrSolve.\ The\ SpgmrMalloc\ routine}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ returns\ a\ pointer\ of\ type\ SpgmrMem\ which\ should\ then\ be\ passed}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ in\ subsequent\ calls\ to\ SpgmrSolve.\ The\ SpgmrFree\ routine\ frees}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ the\ memory\ allocated\ by\ SpgmrMalloc.}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ l\_max\ is\ the\ maximum\ Krylov\ dimension\ that\ SpgmrSolve\ will\ be}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ permitted\ to\ use.}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *\ V\ is\ the\ array\ of\ Krylov\ basis\ vectors\ v\_1,\ ...,\ v\_(l\_max+1),}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ stored\ in\ V[0],\ ...,\ V[l\_max],\ where\ l\_max\ is\ the\ second}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ parameter\ to\ SpgmrMalloc.\ Each\ v\_i\ is\ a\ vector\ of\ type}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ N\_Vector.}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ Hes\ is\ the\ (l\_max+1)\ x\ l\_max\ Hessenberg\ matrix.\ It\ is\ stored}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ row-\/wise\ so\ that\ the\ (i,j)th\ element\ is\ given\ by\ Hes[i][j].}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *\ givens\ is\ a\ length\ 2*l\_max\ array\ which\ represents\ the}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *\ Givens\ rotation\ matrices\ that\ arise\ in\ the\ algorithm.\ The}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *\ Givens\ rotation\ matrices\ F\_0,\ F\_1,\ ...,\ F\_j,\ where\ F\_i\ is}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c\_i\ \ -\/s\_i\ \ \ \ \ \ <-\/-\/-\/\ row\ i}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s\_i\ \ \ c\_i}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *\ are\ represented\ in\ the\ givens\ vector\ as}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ givens[0]=c\_0,\ givens[1]=s\_0,\ givens[2]=c\_1,\ givens[3]=s\_1,}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ ...,\ givens[2j]=c\_j,\ givens[2j+1]=s\_j.}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ xcor\ is\ a\ vector\ (type\ N\_Vector)\ which\ holds\ the\ scaled,}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ preconditioned\ correction\ to\ the\ initial\ guess.}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ yg\ is\ a\ length\ (l\_max+1)\ array\ of\ realtype\ used\ to\ hold\ "{}short"{}}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ vectors\ (e.g.\ y\ and\ g).}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ vtemp\ is\ a\ vector\ (type\ N\_Vector)\ used\ as\ temporary\ vector}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *\ storage\ during\ calculations.}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00125\ \ \ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct___spgmr_mem_rec}{\_SpgmrMemRec}}\ \{}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___spgmr_mem_rec_a8b26ed13d8014367278ac46adcac60b6}{l\_max}};}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *\mbox{\hyperlink{struct___spgmr_mem_rec_aac570fd51cb9ea1c05b3af2ab5626f4f}{V}};}
+\DoxyCodeLine{00131\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **\mbox{\hyperlink{struct___spgmr_mem_rec_a24e4f813f7619641905a27fc38bc3f25}{Hes}};}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{struct___spgmr_mem_rec_a5d5004891e2dfd6e68e86c32e88aeda5}{givens}};}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct___spgmr_mem_rec_a130b1cf11d0c9794a10f9247c9871571}{xcor}};}
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{struct___spgmr_mem_rec_aa8c76de3b4d6a444286747f4f5ca4003}{yg}};}
+\DoxyCodeLine{00135\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct___spgmr_mem_rec_a7d54a0b3c4a2fcb8a0d75b5de8f7f748}{vtemp}};}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \}\ \mbox{\hyperlink{sundials__spgmr_8h_a4edb70c456b4c67a200df4e34178963d}{SpgmrMemRec}},\ *\mbox{\hyperlink{sundials__spgmr_8h_ae7d58eb02fda589f3b241f69448c96f2}{SpgmrMem}};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ Function\ :\ SpgmrMalloc}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *\ SpgmrMalloc\ allocates\ the\ memory\ used\ by\ SpgmrSolve.\ It}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ returns\ a\ pointer\ of\ type\ SpgmrMem\ which\ the\ user\ of\ the}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ SPGMR\ package\ should\ pass\ to\ SpgmrSolve.\ The\ parameter\ l\_max}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *\ is\ the\ maximum\ Krylov\ dimension\ that\ SpgmrSolve\ will\ be}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *\ permitted\ to\ use.\ The\ parameter\ vec\_tmpl\ is\ a\ pointer\ to\ an}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ N\_Vector\ used\ as\ a\ template\ to\ create\ new\ vectors\ by\ duplication.}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ This\ routine\ returns\ NULL\ if\ there\ is\ a\ memory\ request\ failure.}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct___spgmr_mem_rec}{SpgmrMem}}\ \mbox{\hyperlink{sundials__spgmr_8h_a47cf9cc029d586f70621f8817c05cd7a}{SpgmrMalloc}}(\textcolor{keywordtype}{int}\ l\_max,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ vec\_tmpl);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ Function\ :\ SpgmrSolve}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *\ SpgmrSolve\ solves\ the\ linear\ system\ Ax\ =\ b\ using\ the\ SPGMR}}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ *\ method.\ The\ return\ values\ are\ given\ by\ the\ symbolic\ constants}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *\ below.\ The\ first\ SpgmrSolve\ parameter\ is\ a\ pointer\ to\ memory}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ *\ allocated\ by\ a\ prior\ call\ to\ SpgmrMalloc.}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ *\ mem\ is\ the\ pointer\ returned\ by\ SpgmrMalloc\ to\ the\ structure}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ *\ containing\ the\ memory\ needed\ by\ SpgmrSolve.}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ *\ A\_data\ is\ a\ pointer\ to\ information\ about\ the\ coefficient}}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ *\ matrix\ A.\ This\ pointer\ is\ passed\ to\ the\ user-\/supplied\ function}}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ *\ atimes.}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ *\ x\ is\ the\ initial\ guess\ x\_0\ upon\ entry\ and\ the\ solution}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ *\ N\_Vector\ upon\ exit\ with\ return\ value\ SPGMR\_SUCCESS\ or}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ *\ SPGMR\_RES\_REDUCED.\ For\ all\ other\ return\ values,\ the\ output\ x}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ *\ is\ undefined.}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ *\ b\ is\ the\ right\ hand\ side\ N\_Vector.\ It\ is\ undisturbed\ by\ this}}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ *\ function.}}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ *\ pretype\ is\ the\ type\ of\ preconditioning\ to\ be\ used.\ Its}}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ *\ legal\ values\ are\ enumerated\ in\ sundials\_iterative.h.\ These}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ *\ values\ are\ PREC\_NONE=0,\ PREC\_LEFT=1,\ PREC\_RIGHT=2,\ and}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ *\ PREC\_BOTH=3.}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ *\ gstype\ is\ the\ type\ of\ Gram-\/Schmidt\ orthogonalization\ to\ be}}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ *\ used.\ Its\ legal\ values\ are\ enumerated\ in\ sundials\_iterative.h.}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ *\ These\ values\ are\ MODIFIED\_GS=0\ and\ CLASSICAL\_GS=1.}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ *\ delta\ is\ the\ tolerance\ on\ the\ L2\ norm\ of\ the\ scaled,}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *\ preconditioned\ residual.\ On\ return\ with\ value\ SPGMR\_SUCCESS,}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ *\ this\ residual\ satisfies\ ||\ s1\ P1\_inv\ (b\ -\/\ Ax)\ ||\_2\ <=\ delta.}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ *\ max\_restarts\ is\ the\ maximum\ number\ of\ times\ the\ algorithm\ is}}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ *\ allowed\ to\ restart.}}
+\DoxyCodeLine{00194\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00195\ \textcolor{comment}{\ *\ P\_data\ is\ a\ pointer\ to\ preconditioner\ information.\ This}}
+\DoxyCodeLine{00196\ \textcolor{comment}{\ *\ pointer\ is\ passed\ to\ the\ user-\/supplied\ function\ psolve.}}
+\DoxyCodeLine{00197\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ *\ s1\ is\ an\ N\_Vector\ of\ positive\ scale\ factors\ for\ P1-\/inv\ b,\ where}}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ *\ P1\ is\ the\ left\ preconditioner.\ (Not\ tested\ for\ positivity.)}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ *\ Pass\ NULL\ if\ no\ scaling\ on\ P1-\/inv\ b\ is\ required.}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ *\ s2\ is\ an\ N\_Vector\ of\ positive\ scale\ factors\ for\ P2\ x,\ where}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ *\ P2\ is\ the\ right\ preconditioner.\ (Not\ tested\ for\ positivity.)}}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ *\ Pass\ NULL\ if\ no\ scaling\ on\ P2\ x\ is\ required.}}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ *\ atimes\ is\ the\ user-\/supplied\ function\ which\ performs\ the}}
+\DoxyCodeLine{00207\ \textcolor{comment}{\ *\ operation\ of\ multiplying\ A\ by\ a\ given\ vector.\ Its\ description}}
+\DoxyCodeLine{00208\ \textcolor{comment}{\ *\ is\ given\ in\ sundials\_iterative.h.}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *\ psolve\ is\ the\ user-\/supplied\ function\ which\ solves\ a}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *\ preconditioner\ system\ Pz\ =\ r,\ where\ P\ is\ P1\ or\ P2.\ Its\ full}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ *\ description\ is\ given\ in\ sundials\_iterative.h.\ The\ psolve\ function}}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ *\ will\ not\ be\ called\ if\ pretype\ is\ NONE;\ in\ that\ case,\ the\ user}}
+\DoxyCodeLine{00214\ \textcolor{comment}{\ *\ should\ pass\ NULL\ for\ psolve.}}
+\DoxyCodeLine{00215\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00216\ \textcolor{comment}{\ *\ res\_norm\ is\ a\ pointer\ to\ the\ L2\ norm\ of\ the\ scaled,}}
+\DoxyCodeLine{00217\ \textcolor{comment}{\ *\ preconditioned\ residual.\ On\ return\ with\ value\ SPGMR\_SUCCESS\ or}}
+\DoxyCodeLine{00218\ \textcolor{comment}{\ *\ SPGMR\_RES\_REDUCED,\ (*res\_norm)\ contains\ the\ value}}
+\DoxyCodeLine{00219\ \textcolor{comment}{\ *\ ||\ s1\ P1\_inv\ (b\ -\/\ Ax)\ ||\_2\ for\ the\ computed\ solution\ x.}}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ *\ For\ all\ other\ return\ values,\ (*res\_norm)\ is\ undefined.\ The}}
+\DoxyCodeLine{00221\ \textcolor{comment}{\ *\ caller\ is\ responsible\ for\ allocating\ the\ memory\ (*res\_norm)}}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ *\ to\ be\ filled\ in\ by\ SpgmrSolve.}}
+\DoxyCodeLine{00223\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ *\ nli\ is\ a\ pointer\ to\ the\ number\ of\ linear\ iterations\ done\ in}}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ *\ the\ execution\ of\ SpgmrSolve.\ The\ caller\ is\ responsible\ for}}
+\DoxyCodeLine{00226\ \textcolor{comment}{\ *\ allocating\ the\ memory\ (*nli)\ to\ be\ filled\ in\ by\ SpgmrSolve.}}
+\DoxyCodeLine{00227\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00228\ \textcolor{comment}{\ *\ nps\ is\ a\ pointer\ to\ the\ number\ of\ calls\ made\ to\ psolve\ during}}
+\DoxyCodeLine{00229\ \textcolor{comment}{\ *\ the\ execution\ of\ SpgmrSolve.\ The\ caller\ is\ responsible\ for}}
+\DoxyCodeLine{00230\ \textcolor{comment}{\ *\ allocating\ the\ memory\ (*nps)\ to\ be\ filled\ in\ by\ SpgmrSolve.}}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ Note:\ Repeated\ calls\ can\ be\ made\ to\ SpgmrSolve\ with\ varying}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ input\ arguments.\ If,\ however,\ the\ problem\ size\ N\ or\ the}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ *\ maximum\ Krylov\ dimension\ l\_max\ changes,\ then\ a\ call\ to}}
+\DoxyCodeLine{00235\ \textcolor{comment}{\ *\ SpgmrMalloc\ must\ be\ made\ to\ obtain\ new\ memory\ for\ SpgmrSolve}}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ *\ to\ use.}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00239\ \ \ \ \ \ }
+\DoxyCodeLine{00240\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__spgmr_8h_a333765383becce99432e51991d4e361c}{SpgmrSolve}}(\mbox{\hyperlink{struct___spgmr_mem_rec}{SpgmrMem}}\ mem,\ \textcolor{keywordtype}{void}\ *A\_data,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ b,}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pretype,\ \textcolor{keywordtype}{int}\ gstype,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ delta,\ }
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_restarts,\ \textcolor{keywordtype}{void}\ *P\_data,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ s1,\ }
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ s2,\ \mbox{\hyperlink{sundials__iterative_8h_ae6141362b5d76746240c633ccb13f8c2}{ATimesFn}}\ atimes,\ \mbox{\hyperlink{sundials__iterative_8h_aaa4b7052d94440eb63f74dd049b7d563}{PSolveFn}}\ psolve,\ }
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *res\_norm,\ \textcolor{keywordtype}{int}\ *nli,\ \textcolor{keywordtype}{int}\ *nps);}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{comment}{/*\ Return\ values\ for\ SpgmrSolve\ */}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ SPGMR\_SUCCESS\ \ \ \ \ \ \ \ \ \ \ \ 0\ \ }\textcolor{comment}{/*\ Converged\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ SPGMR\_RES\_REDUCED\ \ \ \ \ \ \ \ 1\ \ }\textcolor{comment}{/*\ Did\ not\ converge,\ but\ reduced}}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ norm\ of\ residual\ \ \ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ SPGMR\_CONV\_FAIL\ \ \ \ \ \ \ \ \ \ 2\ \ }\textcolor{comment}{/*\ Failed\ to\ converge\ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ SPGMR\_QRFACT\_FAIL\ \ \ \ \ \ \ \ 3\ \ }\textcolor{comment}{/*\ QRfact\ found\ singular\ matrix\ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ SPGMR\_PSOLVE\_FAIL\_REC\ \ \ \ 4\ \ }\textcolor{comment}{/*\ psolve\ failed\ recoverably\ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ SPGMR\_ATIMES\_FAIL\_REC\ \ \ \ 5\ \ }\textcolor{comment}{/*\ atimes\ failed\ recoverably\ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ SPGMR\_PSET\_FAIL\_REC\ \ \ \ \ \ 6\ \ }\textcolor{comment}{/*\ pset\ faild\ recoverably\ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ SPGMR\_MEM\_NULL\ \ \ \ \ \ \ \ \ \ -\/1\ \ }\textcolor{comment}{/*\ mem\ argument\ is\ NULL\ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ SPGMR\_ATIMES\_FAIL\_UNREC\ -\/2\ \ }\textcolor{comment}{/*\ atimes\ returned\ failure\ flag\ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#define\ SPGMR\_PSOLVE\_FAIL\_UNREC\ -\/3\ \ }\textcolor{comment}{/*\ psolve\ failed\ unrecoverably\ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ SPGMR\_GS\_FAIL\ \ \ \ \ \ \ \ \ \ \ -\/4\ \ }\textcolor{comment}{/*\ Gram-\/Schmidt\ routine\ faiuled\ \ */}\textcolor{preprocessor}{\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ SPGMR\_QRSOL\_FAIL\ \ \ \ \ \ \ \ -\/5\ \ }\textcolor{comment}{/*\ QRsol\ found\ singular\ R\ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ SPGMR\_PSET\_FAIL\_UNREC\ \ \ -\/6\ \ }\textcolor{comment}{/*\ pset\ failed\ unrecoverably\ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00266\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00267\ \textcolor{comment}{\ *\ Function\ :\ SpgmrFree}}
+\DoxyCodeLine{00268\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00269\ \textcolor{comment}{\ *\ SpgmrMalloc\ frees\ the\ memory\ allocated\ by\ SpgmrMalloc.\ It\ is}}
+\DoxyCodeLine{00270\ \textcolor{comment}{\ *\ illegal\ to\ use\ the\ pointer\ mem\ after\ a\ call\ to\ SpgmrFree.}}
+\DoxyCodeLine{00271\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__spgmr_8h_ae0744ba32e4a332a9e46e07e297a27d1}{SpgmrFree}}(\mbox{\hyperlink{struct___spgmr_mem_rec}{SpgmrMem}}\ mem);}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00277\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00278\ \textcolor{comment}{\ *\ Macro:\ SPGMR\_VTEMP}}
+\DoxyCodeLine{00279\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00280\ \textcolor{comment}{\ *\ This\ macro\ provides\ access\ to\ the\ work\ vector\ vtemp\ in\ the}}
+\DoxyCodeLine{00281\ \textcolor{comment}{\ *\ memory\ block\ of\ the\ SPGMR\ module.\ \ The\ argument\ mem\ is\ the}}
+\DoxyCodeLine{00282\ \textcolor{comment}{\ *\ memory\ pointer\ returned\ by\ SpgmrMalloc,\ of\ type\ SpgmrMem,}}
+\DoxyCodeLine{00283\ \textcolor{comment}{\ *\ and\ the\ macro\ value\ is\ of\ type\ N\_Vector.}}
+\DoxyCodeLine{00284\ \textcolor{comment}{\ *\ On\ a\ return\ from\ SpgmrSolve\ with\ *nli\ =\ 0,\ this\ vector}}
+\DoxyCodeLine{00285\ \textcolor{comment}{\ *\ contains\ the\ scaled\ preconditioned\ initial\ residual,}}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ *\ s1\ *\ P1\_inverse\ *\ (b\ -\/\ A\ x\_0).}}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#define\ SPGMR\_VTEMP(mem)\ (mem-\/>vtemp)}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00293\ \}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

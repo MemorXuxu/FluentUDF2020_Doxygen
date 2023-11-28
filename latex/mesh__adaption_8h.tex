@@ -1,0 +1,566 @@
+\doxysection{fluent20.1.0/src/mesh/mesh\+\_\+adaption.h File Reference}
+\hypertarget{mesh__adaption_8h}{}\label{mesh__adaption_8h}\index{fluent20.1.0/src/mesh/mesh\_adaption.h@{fluent20.1.0/src/mesh/mesh\_adaption.h}}
+
+
+Header file for mesh adaption functions.  
+
+
+{\ttfamily \#include "{}global.\+h"{}}\newline
+{\ttfamily \#include "{}mem.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structadapt__data__struct}{adapt\+\_\+data\+\_\+struct}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a52e91a2f8cb497295031c829bc993ebd}{OPTION\+\_\+\+REFINE\+\_\+\+BIT}}~(1 $<$$<$ 0)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_ae3274e63547bd6a01ffe713c5cde32be}{OPTION\+\_\+\+COARSE\+\_\+\+BIT}}~(1 $<$$<$ 1)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a05e024cb2dde994793d9e4aeab1fcb60}{OPTION\+\_\+\+ADAPT\+\_\+\+BITS}}~(\mbox{\hyperlink{mesh__adaption_8h_a52e91a2f8cb497295031c829bc993ebd}{OPTION\+\_\+\+REFINE\+\_\+\+BIT}} \texorpdfstring{$\vert$}{|} \mbox{\hyperlink{mesh__adaption_8h_ae3274e63547bd6a01ffe713c5cde32be}{OPTION\+\_\+\+COARSE\+\_\+\+BIT}})
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a3f4e451bbeadc7a6092d00b823a5b6ca}{CELL\+\_\+\+ADAPTION\+\_\+\+FLAGS}}~(\mbox{\hyperlink{mesh__flags_8h_a085bd0ffd45d64d2ca2d215cbc5a7fc7}{CELL\+\_\+\+REFINE\+\_\+\+FLAG}} \texorpdfstring{$\vert$}{|} \mbox{\hyperlink{mesh__flags_8h_aca22d64c6533fa651cb8f4e53f701240}{CELL\+\_\+\+COARSE\+\_\+\+FLAG}})
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_aa519ffc5affff634cd38f55839faa507}{GLOBAL\+\_\+\+PARENT\+\_\+\+ALLOCATED\+\_\+P}}(t)~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a71d5cdfae1a14d22d6dd719d978617d9}{REFINE\+\_\+\+LEVEL\+\_\+\+ALLOCATED\+\_\+P}}(t)~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a371417c682e089483648852aae68ecf4}{PARENT\+\_\+\+INDEX\+\_\+\+ALLOCATED\+\_\+P}}(t)~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a9dcf0c71994457c3bdf37d159b59878a}{REFINE\+\_\+\+LEVEL\+\_\+\+INITIALIZED\+\_\+P}}(t)~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a6a8ec138ff7d5e7c668f98bf89b291e2}{PARENT\+\_\+\+INDEX\+\_\+\+INITIALIZED\+\_\+P}}(t)~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a2740160d2b1bdc840810461f03c86fba}{NODE\+\_\+\+REFINE\+\_\+\+LEVEL}}(v)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a23930e95709c78310267d0d172efb148}{FACE\+\_\+\+REFINE\+\_\+\+LEVEL}}(f,  t)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a0a348a1fb4b4b1b02fef44029fccfb4e}{CELL\+\_\+\+REFINE\+\_\+\+LEVEL}}(c,  t)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a8ee71c48414027106162eed85c67275a}{FACE\+\_\+\+PARENT\+\_\+\+INDEX}}(f,  t)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a9628018c4268778fb9d02ee85afb7bbc}{CELL\+\_\+\+PARENT\+\_\+\+INDEX}}(c,  t)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a0d5ed95f8ab87bc1eff51f9da18baced}{CELL\+\_\+\+GLOBAL\+\_\+\+PARENT}}(c,  t)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a78397e703dd1a8da87fa48bc9db388a5}{SET\+\_\+\+NODE\+\_\+\+REFINE\+\_\+\+LEVEL}}(v,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a254671664b89dad447205a7bcb60622a}{SET\+\_\+\+FACE\+\_\+\+REFINE\+\_\+\+LEVEL}}(f,  t,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a352a28d32fce65e5a4fe3053cb299cd2}{SET\+\_\+\+CELL\+\_\+\+REFINE\+\_\+\+LEVEL}}(c,  t,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a16d32418d3f6268a9ad09cfa3c538bb9}{SET\+\_\+\+FACE\+\_\+\+PARENT\+\_\+\+INDEX}}(f,  t,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a948fce5d7ef4123a2e88343ae9affed3}{SET\+\_\+\+CELL\+\_\+\+PARENT\+\_\+\+INDEX}}(c,  t,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_ae606a3334205ed04aab3148e5632069d}{SET\+\_\+\+CELL\+\_\+\+GLOBAL\+\_\+\+PARENT}}(c,  t,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a44d94489da1ed58d8250c138f8c5a109}{FSP\+\_\+\+REFINE\+\_\+\+LEVEL}}(fsp)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_ac31c54756a26861c95f5295c2ec7499f}{CSP\+\_\+\+REFINE\+\_\+\+LEVEL}}(csp)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a106b38cd7dd31b84551178f162e32fbe}{FSP\+\_\+\+PARENT\+\_\+\+INDEX}}(fsp)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a2a9b0dd408e578ccb27dd1afcb02bb9d}{CSP\+\_\+\+PARENT\+\_\+\+INDEX}}(csp)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a170bc47b0ce49feb0ef20c8ebfb21ded}{CSP\+\_\+\+GLOBAL\+\_\+\+PARENT}}(csp)~0
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_af357ae92ce642b97f8cd9a175d2ef525}{SET\+\_\+\+FSP\+\_\+\+REFINE\+\_\+\+LEVEL}}(fsp,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_af1d0726a833cbc45286477f289434162}{SET\+\_\+\+CSP\+\_\+\+REFINE\+\_\+\+LEVEL}}(csp,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a7b67874c692d33322e2ec262cd350cd6}{SET\+\_\+\+FSP\+\_\+\+PARENT\+\_\+\+INDEX}}(fsp,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_ade2262c0221993034d04dd60f1fff161}{SET\+\_\+\+CSP\+\_\+\+PARENT\+\_\+\+INDEX}}(csp,  s)
+\item 
+\#define \mbox{\hyperlink{mesh__adaption_8h_a3068a31af84b4fb17b93d067679a66c8}{SET\+\_\+\+CSP\+\_\+\+GLOBAL\+\_\+\+PARENT}}(csp,  s)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \mbox{\hyperlink{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bc}{adapt\+\_\+option\+\_\+enum}} \mbox{\hyperlink{mesh__adaption_8h_a2337e18a8ac88c77ee7b7d70dac41232}{Adapt\+\_\+\+Option}}
+\item 
+typedef enum \mbox{\hyperlink{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67}{adapt\+\_\+history\+\_\+action\+\_\+enum}} \mbox{\hyperlink{mesh__adaption_8h_ac42039eb3b29082ecb8eceedc25c63b3}{Adapt\+\_\+\+History\+\_\+\+Action}}
+\item 
+typedef struct \mbox{\hyperlink{structadapt__data__struct}{adapt\+\_\+data\+\_\+struct}} \mbox{\hyperlink{mesh__adaption_8h_aeb205ca00214936d778ab985e973edba}{Adapt\+\_\+\+Data}}
+\item 
+typedef \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mesh__adaption_8h_a6b4ad87105b7c5791b2432a73c07679f}{Allow\+\_\+\+Adapt\+\_\+P}}) (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bc}{adapt\+\_\+option\+\_\+enum}} \{ \mbox{\hyperlink{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca04d45172048e55af3240ef4a3b21b71e}{ADAPT\+\_\+\+OPTION\+\_\+\+HANG}} = 0
+, \mbox{\hyperlink{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca45dc539b3768a1f93f83fe43f9f255eb}{ADAPT\+\_\+\+OPTION\+\_\+2D}} = 1
+, \mbox{\hyperlink{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca7afd3e877f1d8742a8fa6e86ca7126a9}{ADAPT\+\_\+\+OPTION\+\_\+3D}} = 2
+, \mbox{\hyperlink{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca37400390d46718d8709142ed26191ce6}{ADAPT\+\_\+\+OPTION\+\_\+\+INVALID}}
+ \}
+\item 
+enum \mbox{\hyperlink{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67}{adapt\+\_\+history\+\_\+action\+\_\+enum}} \{ \newline
+\mbox{\hyperlink{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67a5f97721ca4c76f1f3f129664356f7b19}{ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+APPLY\+\_\+\+MOVE}}
+, \mbox{\hyperlink{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67a3247ceebffdfd40693c2f86c0362a9b7}{ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+FETCH\+\_\+\+MOVE}}
+, \mbox{\hyperlink{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67a445b88b1bff200179623e13dc4cd304c}{ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+APPLY\+\_\+\+COPY}}
+, \mbox{\hyperlink{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67aaa6b1062eafa2382b08c280af1ab58f5}{ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+FETCH\+\_\+\+COPY}}
+, \newline
+\mbox{\hyperlink{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67aa7649429e24754505101d52d813994ea}{ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+INVALID}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a01975c8deb7edc26e00b6105331cc5a3}{Adapt\+Fluent\+Mesh}} (void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a1043664a478f5f80aa704fb0197c4aae}{Apply\+Fluent\+Mesh\+Delegate}} (void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a2bc1ec4df4c4c5c8b2cef0f2bf67b87d}{Init\+Adapt\+Polyhedral\+Mesh}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a33cc803a265f9a9e684b3f3c550818e5}{Free\+Adapt\+Polyhedral\+Mesh}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a381d7c30d752e9e692c2874ed6d19cdf}{Initialize\+Adaption\+Storage}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_abf1ce8572b4a7787d860514539cba17f}{Initialize\+Adaption\+Primitives}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_ad477e94262231ed868ea6cd0047df11a}{Dynamic\+Adapt\+Polyhedral\+Mesh}} (\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a0e7a9fa2ce4f0360ac8b9d678932699f}{Register\+Polyhedra\+Adaption\+IOManagers}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a80301606bda62febfad01e606002dc6c}{Migration\+For\+Polyhedra\+Adaption}} (\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a95cdaac7c7e8382df16dbbdbb1977eb7}{Encapsulation\+For\+Polyhedra\+Adaption}} (\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a5bdb10ffd68292d90ed1d538a521efc2}{Write\+Out\+Polyhedra\+Mesh\+Data}} (\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a87dd96d05633f86810c6a984a79bda21}{Invoke\+History\+Action}} (\mbox{\hyperlink{mesh__adaption_8h_ac42039eb3b29082ecb8eceedc25c63b3}{Adapt\+\_\+\+History\+\_\+\+Action}}, \mbox{\hyperlink{mesh__adaption_8h_aeb205ca00214936d778ab985e973edba}{Adapt\+\_\+\+Data}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a28e76843c2c55f143ed42f7d8364dc4e}{Cache\+Cell\+Adaption\+Flags}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_afdf2cd0cc5f868feda6a6a32434d5716}{Restore\+Cell\+Adaption\+Flags}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a5300473b7db1fb680b9d912e4096f1c3}{Prioritize\+Refinement\+Flags}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a51df776c8f9d4ac2d0d3a9cd54775295}{Set\+Cell\+Adaption\+Flag}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a687382f79dd4457a463ec1882c6fe5d9}{Clear\+Cell\+Adaption\+Flags}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a5c1209f8902bbdc549c22e5be371d0c2}{Write\+Cell\+Adaption\+Flags}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a944aef80edf15ffd16df42805db1b6ec}{Apply\+Adaption\+Predicate}} (\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int, \mbox{\hyperlink{mesh__adaption_8h_a6b4ad87105b7c5791b2432a73c07679f}{Allow\+\_\+\+Adapt\+\_\+P}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a1bb2fe381d833870f50de6d44bec0c1e}{Clear\+Adaption\+Predicate}} (\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int, \mbox{\hyperlink{mesh__adaption_8h_a6b4ad87105b7c5791b2432a73c07679f}{Allow\+\_\+\+Adapt\+\_\+P}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a4ba7cde21816851e3d61ca3a9c209e5b}{Count\+Adaption\+Flags}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int, size\+\_\+t \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mesh__adaption_8h_a9d1b0009b2388374613846171ec1ac59}{Extend\+Marking\+With\+Security\+Layer}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header file for mesh adaption functions. 
+
+\doxylink{mesh__adaption_8h}{mesh\+\_\+adaption.\+h} 
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{mesh__adaption_8h_a3f4e451bbeadc7a6092d00b823a5b6ca}\label{mesh__adaption_8h_a3f4e451bbeadc7a6092d00b823a5b6ca} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!CELL\_ADAPTION\_FLAGS@{CELL\_ADAPTION\_FLAGS}}
+\index{CELL\_ADAPTION\_FLAGS@{CELL\_ADAPTION\_FLAGS}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{CELL\_ADAPTION\_FLAGS}{CELL\_ADAPTION\_FLAGS}}
+{\footnotesize\ttfamily \#define CELL\+\_\+\+ADAPTION\+\_\+\+FLAGS~(\mbox{\hyperlink{mesh__flags_8h_a085bd0ffd45d64d2ca2d215cbc5a7fc7}{CELL\+\_\+\+REFINE\+\_\+\+FLAG}} \texorpdfstring{$\vert$}{|} \mbox{\hyperlink{mesh__flags_8h_aca22d64c6533fa651cb8f4e53f701240}{CELL\+\_\+\+COARSE\+\_\+\+FLAG}})}
+
+\Hypertarget{mesh__adaption_8h_a0d5ed95f8ab87bc1eff51f9da18baced}\label{mesh__adaption_8h_a0d5ed95f8ab87bc1eff51f9da18baced} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!CELL\_GLOBAL\_PARENT@{CELL\_GLOBAL\_PARENT}}
+\index{CELL\_GLOBAL\_PARENT@{CELL\_GLOBAL\_PARENT}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{CELL\_GLOBAL\_PARENT}{CELL\_GLOBAL\_PARENT}}
+{\footnotesize\ttfamily \#define CELL\+\_\+\+GLOBAL\+\_\+\+PARENT(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_a9628018c4268778fb9d02ee85afb7bbc}\label{mesh__adaption_8h_a9628018c4268778fb9d02ee85afb7bbc} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!CELL\_PARENT\_INDEX@{CELL\_PARENT\_INDEX}}
+\index{CELL\_PARENT\_INDEX@{CELL\_PARENT\_INDEX}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{CELL\_PARENT\_INDEX}{CELL\_PARENT\_INDEX}}
+{\footnotesize\ttfamily \#define CELL\+\_\+\+PARENT\+\_\+\+INDEX(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_a0a348a1fb4b4b1b02fef44029fccfb4e}\label{mesh__adaption_8h_a0a348a1fb4b4b1b02fef44029fccfb4e} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!CELL\_REFINE\_LEVEL@{CELL\_REFINE\_LEVEL}}
+\index{CELL\_REFINE\_LEVEL@{CELL\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{CELL\_REFINE\_LEVEL}{CELL\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define CELL\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_a170bc47b0ce49feb0ef20c8ebfb21ded}\label{mesh__adaption_8h_a170bc47b0ce49feb0ef20c8ebfb21ded} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!CSP\_GLOBAL\_PARENT@{CSP\_GLOBAL\_PARENT}}
+\index{CSP\_GLOBAL\_PARENT@{CSP\_GLOBAL\_PARENT}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{CSP\_GLOBAL\_PARENT}{CSP\_GLOBAL\_PARENT}}
+{\footnotesize\ttfamily \#define CSP\+\_\+\+GLOBAL\+\_\+\+PARENT(\begin{DoxyParamCaption}\item[{}]{csp }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_a2a9b0dd408e578ccb27dd1afcb02bb9d}\label{mesh__adaption_8h_a2a9b0dd408e578ccb27dd1afcb02bb9d} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!CSP\_PARENT\_INDEX@{CSP\_PARENT\_INDEX}}
+\index{CSP\_PARENT\_INDEX@{CSP\_PARENT\_INDEX}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{CSP\_PARENT\_INDEX}{CSP\_PARENT\_INDEX}}
+{\footnotesize\ttfamily \#define CSP\+\_\+\+PARENT\+\_\+\+INDEX(\begin{DoxyParamCaption}\item[{}]{csp }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_ac31c54756a26861c95f5295c2ec7499f}\label{mesh__adaption_8h_ac31c54756a26861c95f5295c2ec7499f} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!CSP\_REFINE\_LEVEL@{CSP\_REFINE\_LEVEL}}
+\index{CSP\_REFINE\_LEVEL@{CSP\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{CSP\_REFINE\_LEVEL}{CSP\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define CSP\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{csp }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_a8ee71c48414027106162eed85c67275a}\label{mesh__adaption_8h_a8ee71c48414027106162eed85c67275a} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!FACE\_PARENT\_INDEX@{FACE\_PARENT\_INDEX}}
+\index{FACE\_PARENT\_INDEX@{FACE\_PARENT\_INDEX}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{FACE\_PARENT\_INDEX}{FACE\_PARENT\_INDEX}}
+{\footnotesize\ttfamily \#define FACE\+\_\+\+PARENT\+\_\+\+INDEX(\begin{DoxyParamCaption}\item[{}]{f,  }\item[{}]{t }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_a23930e95709c78310267d0d172efb148}\label{mesh__adaption_8h_a23930e95709c78310267d0d172efb148} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!FACE\_REFINE\_LEVEL@{FACE\_REFINE\_LEVEL}}
+\index{FACE\_REFINE\_LEVEL@{FACE\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{FACE\_REFINE\_LEVEL}{FACE\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define FACE\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{f,  }\item[{}]{t }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_a106b38cd7dd31b84551178f162e32fbe}\label{mesh__adaption_8h_a106b38cd7dd31b84551178f162e32fbe} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!FSP\_PARENT\_INDEX@{FSP\_PARENT\_INDEX}}
+\index{FSP\_PARENT\_INDEX@{FSP\_PARENT\_INDEX}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{FSP\_PARENT\_INDEX}{FSP\_PARENT\_INDEX}}
+{\footnotesize\ttfamily \#define FSP\+\_\+\+PARENT\+\_\+\+INDEX(\begin{DoxyParamCaption}\item[{}]{fsp }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_a44d94489da1ed58d8250c138f8c5a109}\label{mesh__adaption_8h_a44d94489da1ed58d8250c138f8c5a109} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!FSP\_REFINE\_LEVEL@{FSP\_REFINE\_LEVEL}}
+\index{FSP\_REFINE\_LEVEL@{FSP\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{FSP\_REFINE\_LEVEL}{FSP\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define FSP\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{fsp }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_aa519ffc5affff634cd38f55839faa507}\label{mesh__adaption_8h_aa519ffc5affff634cd38f55839faa507} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!GLOBAL\_PARENT\_ALLOCATED\_P@{GLOBAL\_PARENT\_ALLOCATED\_P}}
+\index{GLOBAL\_PARENT\_ALLOCATED\_P@{GLOBAL\_PARENT\_ALLOCATED\_P}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{GLOBAL\_PARENT\_ALLOCATED\_P}{GLOBAL\_PARENT\_ALLOCATED\_P}}
+{\footnotesize\ttfamily \#define GLOBAL\+\_\+\+PARENT\+\_\+\+ALLOCATED\+\_\+P(\begin{DoxyParamCaption}\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}}
+
+\Hypertarget{mesh__adaption_8h_a2740160d2b1bdc840810461f03c86fba}\label{mesh__adaption_8h_a2740160d2b1bdc840810461f03c86fba} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!NODE\_REFINE\_LEVEL@{NODE\_REFINE\_LEVEL}}
+\index{NODE\_REFINE\_LEVEL@{NODE\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{NODE\_REFINE\_LEVEL}{NODE\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define NODE\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{v }\end{DoxyParamCaption})~0}
+
+\Hypertarget{mesh__adaption_8h_a05e024cb2dde994793d9e4aeab1fcb60}\label{mesh__adaption_8h_a05e024cb2dde994793d9e4aeab1fcb60} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!OPTION\_ADAPT\_BITS@{OPTION\_ADAPT\_BITS}}
+\index{OPTION\_ADAPT\_BITS@{OPTION\_ADAPT\_BITS}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{OPTION\_ADAPT\_BITS}{OPTION\_ADAPT\_BITS}}
+{\footnotesize\ttfamily \#define OPTION\+\_\+\+ADAPT\+\_\+\+BITS~(\mbox{\hyperlink{mesh__adaption_8h_a52e91a2f8cb497295031c829bc993ebd}{OPTION\+\_\+\+REFINE\+\_\+\+BIT}} \texorpdfstring{$\vert$}{|} \mbox{\hyperlink{mesh__adaption_8h_ae3274e63547bd6a01ffe713c5cde32be}{OPTION\+\_\+\+COARSE\+\_\+\+BIT}})}
+
+\Hypertarget{mesh__adaption_8h_ae3274e63547bd6a01ffe713c5cde32be}\label{mesh__adaption_8h_ae3274e63547bd6a01ffe713c5cde32be} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!OPTION\_COARSE\_BIT@{OPTION\_COARSE\_BIT}}
+\index{OPTION\_COARSE\_BIT@{OPTION\_COARSE\_BIT}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{OPTION\_COARSE\_BIT}{OPTION\_COARSE\_BIT}}
+{\footnotesize\ttfamily \#define OPTION\+\_\+\+COARSE\+\_\+\+BIT~(1 $<$$<$ 1)}
+
+\Hypertarget{mesh__adaption_8h_a52e91a2f8cb497295031c829bc993ebd}\label{mesh__adaption_8h_a52e91a2f8cb497295031c829bc993ebd} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!OPTION\_REFINE\_BIT@{OPTION\_REFINE\_BIT}}
+\index{OPTION\_REFINE\_BIT@{OPTION\_REFINE\_BIT}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{OPTION\_REFINE\_BIT}{OPTION\_REFINE\_BIT}}
+{\footnotesize\ttfamily \#define OPTION\+\_\+\+REFINE\+\_\+\+BIT~(1 $<$$<$ 0)}
+
+\Hypertarget{mesh__adaption_8h_a371417c682e089483648852aae68ecf4}\label{mesh__adaption_8h_a371417c682e089483648852aae68ecf4} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!PARENT\_INDEX\_ALLOCATED\_P@{PARENT\_INDEX\_ALLOCATED\_P}}
+\index{PARENT\_INDEX\_ALLOCATED\_P@{PARENT\_INDEX\_ALLOCATED\_P}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{PARENT\_INDEX\_ALLOCATED\_P}{PARENT\_INDEX\_ALLOCATED\_P}}
+{\footnotesize\ttfamily \#define PARENT\+\_\+\+INDEX\+\_\+\+ALLOCATED\+\_\+P(\begin{DoxyParamCaption}\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}}
+
+\Hypertarget{mesh__adaption_8h_a6a8ec138ff7d5e7c668f98bf89b291e2}\label{mesh__adaption_8h_a6a8ec138ff7d5e7c668f98bf89b291e2} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!PARENT\_INDEX\_INITIALIZED\_P@{PARENT\_INDEX\_INITIALIZED\_P}}
+\index{PARENT\_INDEX\_INITIALIZED\_P@{PARENT\_INDEX\_INITIALIZED\_P}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{PARENT\_INDEX\_INITIALIZED\_P}{PARENT\_INDEX\_INITIALIZED\_P}}
+{\footnotesize\ttfamily \#define PARENT\+\_\+\+INDEX\+\_\+\+INITIALIZED\+\_\+P(\begin{DoxyParamCaption}\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}}
+
+\Hypertarget{mesh__adaption_8h_a71d5cdfae1a14d22d6dd719d978617d9}\label{mesh__adaption_8h_a71d5cdfae1a14d22d6dd719d978617d9} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!REFINE\_LEVEL\_ALLOCATED\_P@{REFINE\_LEVEL\_ALLOCATED\_P}}
+\index{REFINE\_LEVEL\_ALLOCATED\_P@{REFINE\_LEVEL\_ALLOCATED\_P}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{REFINE\_LEVEL\_ALLOCATED\_P}{REFINE\_LEVEL\_ALLOCATED\_P}}
+{\footnotesize\ttfamily \#define REFINE\+\_\+\+LEVEL\+\_\+\+ALLOCATED\+\_\+P(\begin{DoxyParamCaption}\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}}
+
+\Hypertarget{mesh__adaption_8h_a9dcf0c71994457c3bdf37d159b59878a}\label{mesh__adaption_8h_a9dcf0c71994457c3bdf37d159b59878a} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!REFINE\_LEVEL\_INITIALIZED\_P@{REFINE\_LEVEL\_INITIALIZED\_P}}
+\index{REFINE\_LEVEL\_INITIALIZED\_P@{REFINE\_LEVEL\_INITIALIZED\_P}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{REFINE\_LEVEL\_INITIALIZED\_P}{REFINE\_LEVEL\_INITIALIZED\_P}}
+{\footnotesize\ttfamily \#define REFINE\+\_\+\+LEVEL\+\_\+\+INITIALIZED\+\_\+P(\begin{DoxyParamCaption}\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}}
+
+\Hypertarget{mesh__adaption_8h_ae606a3334205ed04aab3148e5632069d}\label{mesh__adaption_8h_ae606a3334205ed04aab3148e5632069d} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_CELL\_GLOBAL\_PARENT@{SET\_CELL\_GLOBAL\_PARENT}}
+\index{SET\_CELL\_GLOBAL\_PARENT@{SET\_CELL\_GLOBAL\_PARENT}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_CELL\_GLOBAL\_PARENT}{SET\_CELL\_GLOBAL\_PARENT}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+CELL\+\_\+\+GLOBAL\+\_\+\+PARENT(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a948fce5d7ef4123a2e88343ae9affed3}\label{mesh__adaption_8h_a948fce5d7ef4123a2e88343ae9affed3} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_CELL\_PARENT\_INDEX@{SET\_CELL\_PARENT\_INDEX}}
+\index{SET\_CELL\_PARENT\_INDEX@{SET\_CELL\_PARENT\_INDEX}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_CELL\_PARENT\_INDEX}{SET\_CELL\_PARENT\_INDEX}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+CELL\+\_\+\+PARENT\+\_\+\+INDEX(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a352a28d32fce65e5a4fe3053cb299cd2}\label{mesh__adaption_8h_a352a28d32fce65e5a4fe3053cb299cd2} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_CELL\_REFINE\_LEVEL@{SET\_CELL\_REFINE\_LEVEL}}
+\index{SET\_CELL\_REFINE\_LEVEL@{SET\_CELL\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_CELL\_REFINE\_LEVEL}{SET\_CELL\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+CELL\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a3068a31af84b4fb17b93d067679a66c8}\label{mesh__adaption_8h_a3068a31af84b4fb17b93d067679a66c8} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_CSP\_GLOBAL\_PARENT@{SET\_CSP\_GLOBAL\_PARENT}}
+\index{SET\_CSP\_GLOBAL\_PARENT@{SET\_CSP\_GLOBAL\_PARENT}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_CSP\_GLOBAL\_PARENT}{SET\_CSP\_GLOBAL\_PARENT}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+CSP\+\_\+\+GLOBAL\+\_\+\+PARENT(\begin{DoxyParamCaption}\item[{}]{csp,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_ade2262c0221993034d04dd60f1fff161}\label{mesh__adaption_8h_ade2262c0221993034d04dd60f1fff161} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_CSP\_PARENT\_INDEX@{SET\_CSP\_PARENT\_INDEX}}
+\index{SET\_CSP\_PARENT\_INDEX@{SET\_CSP\_PARENT\_INDEX}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_CSP\_PARENT\_INDEX}{SET\_CSP\_PARENT\_INDEX}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+CSP\+\_\+\+PARENT\+\_\+\+INDEX(\begin{DoxyParamCaption}\item[{}]{csp,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_af1d0726a833cbc45286477f289434162}\label{mesh__adaption_8h_af1d0726a833cbc45286477f289434162} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_CSP\_REFINE\_LEVEL@{SET\_CSP\_REFINE\_LEVEL}}
+\index{SET\_CSP\_REFINE\_LEVEL@{SET\_CSP\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_CSP\_REFINE\_LEVEL}{SET\_CSP\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+CSP\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{csp,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a16d32418d3f6268a9ad09cfa3c538bb9}\label{mesh__adaption_8h_a16d32418d3f6268a9ad09cfa3c538bb9} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_FACE\_PARENT\_INDEX@{SET\_FACE\_PARENT\_INDEX}}
+\index{SET\_FACE\_PARENT\_INDEX@{SET\_FACE\_PARENT\_INDEX}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_FACE\_PARENT\_INDEX}{SET\_FACE\_PARENT\_INDEX}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+FACE\+\_\+\+PARENT\+\_\+\+INDEX(\begin{DoxyParamCaption}\item[{}]{f,  }\item[{}]{t,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a254671664b89dad447205a7bcb60622a}\label{mesh__adaption_8h_a254671664b89dad447205a7bcb60622a} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_FACE\_REFINE\_LEVEL@{SET\_FACE\_REFINE\_LEVEL}}
+\index{SET\_FACE\_REFINE\_LEVEL@{SET\_FACE\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_FACE\_REFINE\_LEVEL}{SET\_FACE\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+FACE\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{f,  }\item[{}]{t,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a7b67874c692d33322e2ec262cd350cd6}\label{mesh__adaption_8h_a7b67874c692d33322e2ec262cd350cd6} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_FSP\_PARENT\_INDEX@{SET\_FSP\_PARENT\_INDEX}}
+\index{SET\_FSP\_PARENT\_INDEX@{SET\_FSP\_PARENT\_INDEX}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_FSP\_PARENT\_INDEX}{SET\_FSP\_PARENT\_INDEX}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+FSP\+\_\+\+PARENT\+\_\+\+INDEX(\begin{DoxyParamCaption}\item[{}]{fsp,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_af357ae92ce642b97f8cd9a175d2ef525}\label{mesh__adaption_8h_af357ae92ce642b97f8cd9a175d2ef525} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_FSP\_REFINE\_LEVEL@{SET\_FSP\_REFINE\_LEVEL}}
+\index{SET\_FSP\_REFINE\_LEVEL@{SET\_FSP\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_FSP\_REFINE\_LEVEL}{SET\_FSP\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+FSP\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{fsp,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a78397e703dd1a8da87fa48bc9db388a5}\label{mesh__adaption_8h_a78397e703dd1a8da87fa48bc9db388a5} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SET\_NODE\_REFINE\_LEVEL@{SET\_NODE\_REFINE\_LEVEL}}
+\index{SET\_NODE\_REFINE\_LEVEL@{SET\_NODE\_REFINE\_LEVEL}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SET\_NODE\_REFINE\_LEVEL}{SET\_NODE\_REFINE\_LEVEL}}
+{\footnotesize\ttfamily \#define SET\+\_\+\+NODE\+\_\+\+REFINE\+\_\+\+LEVEL(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{s }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{mesh__adaption_8h_aeb205ca00214936d778ab985e973edba}\label{mesh__adaption_8h_aeb205ca00214936d778ab985e973edba} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!Adapt\_Data@{Adapt\_Data}}
+\index{Adapt\_Data@{Adapt\_Data}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{Adapt\_Data}{Adapt\_Data}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structadapt__data__struct}{adapt\+\_\+data\+\_\+struct}} \mbox{\hyperlink{mesh__adaption_8h_aeb205ca00214936d778ab985e973edba}{Adapt\+\_\+\+Data}}}
+
+\Hypertarget{mesh__adaption_8h_ac42039eb3b29082ecb8eceedc25c63b3}\label{mesh__adaption_8h_ac42039eb3b29082ecb8eceedc25c63b3} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!Adapt\_History\_Action@{Adapt\_History\_Action}}
+\index{Adapt\_History\_Action@{Adapt\_History\_Action}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{Adapt\_History\_Action}{Adapt\_History\_Action}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67}{adapt\+\_\+history\+\_\+action\+\_\+enum}} \mbox{\hyperlink{mesh__adaption_8h_ac42039eb3b29082ecb8eceedc25c63b3}{Adapt\+\_\+\+History\+\_\+\+Action}}}
+
+\Hypertarget{mesh__adaption_8h_a2337e18a8ac88c77ee7b7d70dac41232}\label{mesh__adaption_8h_a2337e18a8ac88c77ee7b7d70dac41232} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!Adapt\_Option@{Adapt\_Option}}
+\index{Adapt\_Option@{Adapt\_Option}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{Adapt\_Option}{Adapt\_Option}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bc}{adapt\+\_\+option\+\_\+enum}} \mbox{\hyperlink{mesh__adaption_8h_a2337e18a8ac88c77ee7b7d70dac41232}{Adapt\+\_\+\+Option}}}
+
+\Hypertarget{mesh__adaption_8h_a6b4ad87105b7c5791b2432a73c07679f}\label{mesh__adaption_8h_a6b4ad87105b7c5791b2432a73c07679f} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!Allow\_Adapt\_P@{Allow\_Adapt\_P}}
+\index{Allow\_Adapt\_P@{Allow\_Adapt\_P}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{Allow\_Adapt\_P}{Allow\_Adapt\_P}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}(\texorpdfstring{$\ast$}{*} Allow\+\_\+\+Adapt\+\_\+P) (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67}\label{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!adapt\_history\_action\_enum@{adapt\_history\_action\_enum}}
+\index{adapt\_history\_action\_enum@{adapt\_history\_action\_enum}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{adapt\_history\_action\_enum}{adapt\_history\_action\_enum}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67}{adapt\+\_\+history\+\_\+action\+\_\+enum}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPT\_HISTORY\_ACTION\_APPLY\_MOVE@{ADAPT\_HISTORY\_ACTION\_APPLY\_MOVE}!mesh\_adaption.h@{mesh\_adaption.h}}\index{mesh\_adaption.h@{mesh\_adaption.h}!ADAPT\_HISTORY\_ACTION\_APPLY\_MOVE@{ADAPT\_HISTORY\_ACTION\_APPLY\_MOVE}}}\Hypertarget{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67a5f97721ca4c76f1f3f129664356f7b19}\label{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67a5f97721ca4c76f1f3f129664356f7b19} 
+ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+APPLY\+\_\+\+MOVE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPT\_HISTORY\_ACTION\_FETCH\_MOVE@{ADAPT\_HISTORY\_ACTION\_FETCH\_MOVE}!mesh\_adaption.h@{mesh\_adaption.h}}\index{mesh\_adaption.h@{mesh\_adaption.h}!ADAPT\_HISTORY\_ACTION\_FETCH\_MOVE@{ADAPT\_HISTORY\_ACTION\_FETCH\_MOVE}}}\Hypertarget{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67a3247ceebffdfd40693c2f86c0362a9b7}\label{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67a3247ceebffdfd40693c2f86c0362a9b7} 
+ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+FETCH\+\_\+\+MOVE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPT\_HISTORY\_ACTION\_APPLY\_COPY@{ADAPT\_HISTORY\_ACTION\_APPLY\_COPY}!mesh\_adaption.h@{mesh\_adaption.h}}\index{mesh\_adaption.h@{mesh\_adaption.h}!ADAPT\_HISTORY\_ACTION\_APPLY\_COPY@{ADAPT\_HISTORY\_ACTION\_APPLY\_COPY}}}\Hypertarget{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67a445b88b1bff200179623e13dc4cd304c}\label{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67a445b88b1bff200179623e13dc4cd304c} 
+ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+APPLY\+\_\+\+COPY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPT\_HISTORY\_ACTION\_FETCH\_COPY@{ADAPT\_HISTORY\_ACTION\_FETCH\_COPY}!mesh\_adaption.h@{mesh\_adaption.h}}\index{mesh\_adaption.h@{mesh\_adaption.h}!ADAPT\_HISTORY\_ACTION\_FETCH\_COPY@{ADAPT\_HISTORY\_ACTION\_FETCH\_COPY}}}\Hypertarget{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67aaa6b1062eafa2382b08c280af1ab58f5}\label{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67aaa6b1062eafa2382b08c280af1ab58f5} 
+ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+FETCH\+\_\+\+COPY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPT\_HISTORY\_ACTION\_INVALID@{ADAPT\_HISTORY\_ACTION\_INVALID}!mesh\_adaption.h@{mesh\_adaption.h}}\index{mesh\_adaption.h@{mesh\_adaption.h}!ADAPT\_HISTORY\_ACTION\_INVALID@{ADAPT\_HISTORY\_ACTION\_INVALID}}}\Hypertarget{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67aa7649429e24754505101d52d813994ea}\label{mesh__adaption_8h_acffdf9fb27112dcd14b1589cc24f4f67aa7649429e24754505101d52d813994ea} 
+ADAPT\+\_\+\+HISTORY\+\_\+\+ACTION\+\_\+\+INVALID&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bc}\label{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bc} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!adapt\_option\_enum@{adapt\_option\_enum}}
+\index{adapt\_option\_enum@{adapt\_option\_enum}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{adapt\_option\_enum}{adapt\_option\_enum}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bc}{adapt\+\_\+option\+\_\+enum}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPT\_OPTION\_HANG@{ADAPT\_OPTION\_HANG}!mesh\_adaption.h@{mesh\_adaption.h}}\index{mesh\_adaption.h@{mesh\_adaption.h}!ADAPT\_OPTION\_HANG@{ADAPT\_OPTION\_HANG}}}\Hypertarget{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca04d45172048e55af3240ef4a3b21b71e}\label{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca04d45172048e55af3240ef4a3b21b71e} 
+ADAPT\+\_\+\+OPTION\+\_\+\+HANG&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPT\_OPTION\_2D@{ADAPT\_OPTION\_2D}!mesh\_adaption.h@{mesh\_adaption.h}}\index{mesh\_adaption.h@{mesh\_adaption.h}!ADAPT\_OPTION\_2D@{ADAPT\_OPTION\_2D}}}\Hypertarget{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca45dc539b3768a1f93f83fe43f9f255eb}\label{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca45dc539b3768a1f93f83fe43f9f255eb} 
+ADAPT\+\_\+\+OPTION\+\_\+2D&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPT\_OPTION\_3D@{ADAPT\_OPTION\_3D}!mesh\_adaption.h@{mesh\_adaption.h}}\index{mesh\_adaption.h@{mesh\_adaption.h}!ADAPT\_OPTION\_3D@{ADAPT\_OPTION\_3D}}}\Hypertarget{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca7afd3e877f1d8742a8fa6e86ca7126a9}\label{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca7afd3e877f1d8742a8fa6e86ca7126a9} 
+ADAPT\+\_\+\+OPTION\+\_\+3D&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ADAPT\_OPTION\_INVALID@{ADAPT\_OPTION\_INVALID}!mesh\_adaption.h@{mesh\_adaption.h}}\index{mesh\_adaption.h@{mesh\_adaption.h}!ADAPT\_OPTION\_INVALID@{ADAPT\_OPTION\_INVALID}}}\Hypertarget{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca37400390d46718d8709142ed26191ce6}\label{mesh__adaption_8h_af05e7bcb1ef695e6071af5aba48687bca37400390d46718d8709142ed26191ce6} 
+ADAPT\+\_\+\+OPTION\+\_\+\+INVALID&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{mesh__adaption_8h_a01975c8deb7edc26e00b6105331cc5a3}\label{mesh__adaption_8h_a01975c8deb7edc26e00b6105331cc5a3} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!AdaptFluentMesh@{AdaptFluentMesh}}
+\index{AdaptFluentMesh@{AdaptFluentMesh}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{AdaptFluentMesh()}{AdaptFluentMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Adapt\+Fluent\+Mesh (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a944aef80edf15ffd16df42805db1b6ec}\label{mesh__adaption_8h_a944aef80edf15ffd16df42805db1b6ec} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!ApplyAdaptionPredicate@{ApplyAdaptionPredicate}}
+\index{ApplyAdaptionPredicate@{ApplyAdaptionPredicate}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{ApplyAdaptionPredicate()}{ApplyAdaptionPredicate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Apply\+Adaption\+Predicate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int}]{,  }\item[{\mbox{\hyperlink{mesh__adaption_8h_a6b4ad87105b7c5791b2432a73c07679f}{Allow\+\_\+\+Adapt\+\_\+P}}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a1043664a478f5f80aa704fb0197c4aae}\label{mesh__adaption_8h_a1043664a478f5f80aa704fb0197c4aae} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!ApplyFluentMeshDelegate@{ApplyFluentMeshDelegate}}
+\index{ApplyFluentMeshDelegate@{ApplyFluentMeshDelegate}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{ApplyFluentMeshDelegate()}{ApplyFluentMeshDelegate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Apply\+Fluent\+Mesh\+Delegate (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a28e76843c2c55f143ed42f7d8364dc4e}\label{mesh__adaption_8h_a28e76843c2c55f143ed42f7d8364dc4e} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!CacheCellAdaptionFlags@{CacheCellAdaptionFlags}}
+\index{CacheCellAdaptionFlags@{CacheCellAdaptionFlags}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{CacheCellAdaptionFlags()}{CacheCellAdaptionFlags()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Cache\+Cell\+Adaption\+Flags (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a1bb2fe381d833870f50de6d44bec0c1e}\label{mesh__adaption_8h_a1bb2fe381d833870f50de6d44bec0c1e} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!ClearAdaptionPredicate@{ClearAdaptionPredicate}}
+\index{ClearAdaptionPredicate@{ClearAdaptionPredicate}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{ClearAdaptionPredicate()}{ClearAdaptionPredicate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Clear\+Adaption\+Predicate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int}]{,  }\item[{\mbox{\hyperlink{mesh__adaption_8h_a6b4ad87105b7c5791b2432a73c07679f}{Allow\+\_\+\+Adapt\+\_\+P}}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a687382f79dd4457a463ec1882c6fe5d9}\label{mesh__adaption_8h_a687382f79dd4457a463ec1882c6fe5d9} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!ClearCellAdaptionFlags@{ClearCellAdaptionFlags}}
+\index{ClearCellAdaptionFlags@{ClearCellAdaptionFlags}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{ClearCellAdaptionFlags()}{ClearCellAdaptionFlags()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Clear\+Cell\+Adaption\+Flags (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a4ba7cde21816851e3d61ca3a9c209e5b}\label{mesh__adaption_8h_a4ba7cde21816851e3d61ca3a9c209e5b} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!CountAdaptionFlags@{CountAdaptionFlags}}
+\index{CountAdaptionFlags@{CountAdaptionFlags}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{CountAdaptionFlags()}{CountAdaptionFlags()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Count\+Adaption\+Flags (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int}]{,  }\item[{size\+\_\+t \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_ad477e94262231ed868ea6cd0047df11a}\label{mesh__adaption_8h_ad477e94262231ed868ea6cd0047df11a} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!DynamicAdaptPolyhedralMesh@{DynamicAdaptPolyhedralMesh}}
+\index{DynamicAdaptPolyhedralMesh@{DynamicAdaptPolyhedralMesh}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{DynamicAdaptPolyhedralMesh()}{DynamicAdaptPolyhedralMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Dynamic\+Adapt\+Polyhedral\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a95cdaac7c7e8382df16dbbdbb1977eb7}\label{mesh__adaption_8h_a95cdaac7c7e8382df16dbbdbb1977eb7} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!EncapsulationForPolyhedraAdaption@{EncapsulationForPolyhedraAdaption}}
+\index{EncapsulationForPolyhedraAdaption@{EncapsulationForPolyhedraAdaption}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{EncapsulationForPolyhedraAdaption()}{EncapsulationForPolyhedraAdaption()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Encapsulation\+For\+Polyhedra\+Adaption (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a9d1b0009b2388374613846171ec1ac59}\label{mesh__adaption_8h_a9d1b0009b2388374613846171ec1ac59} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!ExtendMarkingWithSecurityLayer@{ExtendMarkingWithSecurityLayer}}
+\index{ExtendMarkingWithSecurityLayer@{ExtendMarkingWithSecurityLayer}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{ExtendMarkingWithSecurityLayer()}{ExtendMarkingWithSecurityLayer()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Extend\+Marking\+With\+Security\+Layer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a33cc803a265f9a9e684b3f3c550818e5}\label{mesh__adaption_8h_a33cc803a265f9a9e684b3f3c550818e5} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!FreeAdaptPolyhedralMesh@{FreeAdaptPolyhedralMesh}}
+\index{FreeAdaptPolyhedralMesh@{FreeAdaptPolyhedralMesh}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{FreeAdaptPolyhedralMesh()}{FreeAdaptPolyhedralMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Free\+Adapt\+Polyhedral\+Mesh (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a2bc1ec4df4c4c5c8b2cef0f2bf67b87d}\label{mesh__adaption_8h_a2bc1ec4df4c4c5c8b2cef0f2bf67b87d} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!InitAdaptPolyhedralMesh@{InitAdaptPolyhedralMesh}}
+\index{InitAdaptPolyhedralMesh@{InitAdaptPolyhedralMesh}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{InitAdaptPolyhedralMesh()}{InitAdaptPolyhedralMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Init\+Adapt\+Polyhedral\+Mesh (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_abf1ce8572b4a7787d860514539cba17f}\label{mesh__adaption_8h_abf1ce8572b4a7787d860514539cba17f} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!InitializeAdaptionPrimitives@{InitializeAdaptionPrimitives}}
+\index{InitializeAdaptionPrimitives@{InitializeAdaptionPrimitives}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{InitializeAdaptionPrimitives()}{InitializeAdaptionPrimitives()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Initialize\+Adaption\+Primitives (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a381d7c30d752e9e692c2874ed6d19cdf}\label{mesh__adaption_8h_a381d7c30d752e9e692c2874ed6d19cdf} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!InitializeAdaptionStorage@{InitializeAdaptionStorage}}
+\index{InitializeAdaptionStorage@{InitializeAdaptionStorage}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{InitializeAdaptionStorage()}{InitializeAdaptionStorage()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Initialize\+Adaption\+Storage (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a87dd96d05633f86810c6a984a79bda21}\label{mesh__adaption_8h_a87dd96d05633f86810c6a984a79bda21} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!InvokeHistoryAction@{InvokeHistoryAction}}
+\index{InvokeHistoryAction@{InvokeHistoryAction}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{InvokeHistoryAction()}{InvokeHistoryAction()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Invoke\+History\+Action (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mesh__adaption_8h_ac42039eb3b29082ecb8eceedc25c63b3}{Adapt\+\_\+\+History\+\_\+\+Action}}}]{,  }\item[{\mbox{\hyperlink{mesh__adaption_8h_aeb205ca00214936d778ab985e973edba}{Adapt\+\_\+\+Data}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a80301606bda62febfad01e606002dc6c}\label{mesh__adaption_8h_a80301606bda62febfad01e606002dc6c} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!MigrationForPolyhedraAdaption@{MigrationForPolyhedraAdaption}}
+\index{MigrationForPolyhedraAdaption@{MigrationForPolyhedraAdaption}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{MigrationForPolyhedraAdaption()}{MigrationForPolyhedraAdaption()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Migration\+For\+Polyhedra\+Adaption (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a5300473b7db1fb680b9d912e4096f1c3}\label{mesh__adaption_8h_a5300473b7db1fb680b9d912e4096f1c3} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!PrioritizeRefinementFlags@{PrioritizeRefinementFlags}}
+\index{PrioritizeRefinementFlags@{PrioritizeRefinementFlags}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{PrioritizeRefinementFlags()}{PrioritizeRefinementFlags()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Prioritize\+Refinement\+Flags (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a0e7a9fa2ce4f0360ac8b9d678932699f}\label{mesh__adaption_8h_a0e7a9fa2ce4f0360ac8b9d678932699f} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!RegisterPolyhedraAdaptionIOManagers@{RegisterPolyhedraAdaptionIOManagers}}
+\index{RegisterPolyhedraAdaptionIOManagers@{RegisterPolyhedraAdaptionIOManagers}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{RegisterPolyhedraAdaptionIOManagers()}{RegisterPolyhedraAdaptionIOManagers()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Register\+Polyhedra\+Adaption\+IOManagers (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_afdf2cd0cc5f868feda6a6a32434d5716}\label{mesh__adaption_8h_afdf2cd0cc5f868feda6a6a32434d5716} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!RestoreCellAdaptionFlags@{RestoreCellAdaptionFlags}}
+\index{RestoreCellAdaptionFlags@{RestoreCellAdaptionFlags}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{RestoreCellAdaptionFlags()}{RestoreCellAdaptionFlags()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Restore\+Cell\+Adaption\+Flags (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a51df776c8f9d4ac2d0d3a9cd54775295}\label{mesh__adaption_8h_a51df776c8f9d4ac2d0d3a9cd54775295} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!SetCellAdaptionFlag@{SetCellAdaptionFlag}}
+\index{SetCellAdaptionFlag@{SetCellAdaptionFlag}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{SetCellAdaptionFlag()}{SetCellAdaptionFlag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Set\+Cell\+Adaption\+Flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a5c1209f8902bbdc549c22e5be371d0c2}\label{mesh__adaption_8h_a5c1209f8902bbdc549c22e5be371d0c2} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!WriteCellAdaptionFlags@{WriteCellAdaptionFlags}}
+\index{WriteCellAdaptionFlags@{WriteCellAdaptionFlags}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{WriteCellAdaptionFlags()}{WriteCellAdaptionFlags()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Write\+Cell\+Adaption\+Flags (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} unsigned int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mesh__adaption_8h_a5bdb10ffd68292d90ed1d538a521efc2}\label{mesh__adaption_8h_a5bdb10ffd68292d90ed1d538a521efc2} 
+\index{mesh\_adaption.h@{mesh\_adaption.h}!WriteOutPolyhedraMeshData@{WriteOutPolyhedraMeshData}}
+\index{WriteOutPolyhedraMeshData@{WriteOutPolyhedraMeshData}!mesh\_adaption.h@{mesh\_adaption.h}}
+\doxysubsubsection{\texorpdfstring{WriteOutPolyhedraMeshData()}{WriteOutPolyhedraMeshData()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Write\+Out\+Polyhedra\+Mesh\+Data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+

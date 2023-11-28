@@ -1,0 +1,256 @@
+\doxysection{dpm\+\_\+dem.\+h}
+\hypertarget{dpm__dem_8h_source}{}\label{dpm__dem_8h_source}\index{fluent20.1.0/src/dpm/dpm\_dem.h@{fluent20.1.0/src/dpm/dpm\_dem.h}}
+\mbox{\hyperlink{dpm__dem_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_DPM\_DEM\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_DPM\_DEM\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dpm__types_8h}{dpm\_types.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{threads_8h}{threads.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dpm__dem__wall_8h}{dpm\_dem\_wall.h}}"{}}\ \textcolor{comment}{/*\ need\ struct\ dpm\_collision\_wall\ \ */}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{binary__params_8h}{binary\_params.h}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{/*\ DEM}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ Data\ structures\ for\ collisions.\ Here\ for\ information\ NOT\ stored\ on\ the\ particles\ themselves.}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{group__dpm_gaa5d312154d3b5407c9d2ab6d35d36812}{collision\_time\_integration\_scheme}}}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812a0a995c8e688592c16a43c19646e51e8f}{COLLISION\_PSEUDO\_EULER}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ "{}semi-\/implicit"{}\ Euler\ ...\ ,\ like\ in\ Mohan-\/udf\ */}}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812a86d80baa8d280d813c5b67089d4690d3}{COLLISION\_TRAPEZOIDAL}},}
+\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812a39ace2d155a31dbe9fbd20727acf6f81}{COLLISION\_STOERMER\_VERLET}},}
+\DoxyCodeLine{00032\ \ \ \mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812a603438ae2ae9b6493c7389ec357a8f22}{COLLISION\_STOERMER\_VERLET\_VELOCITY}},\ \ \ \textcolor{comment}{/*\ forces\ depend\ on\ position\ only,\ i.e.,\ NO\ \ \ dashpot\ term\ */}}
+\DoxyCodeLine{00033\ \ \ \mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812ab6b8c6235817fb95233f0dbab7d39954}{COLLISION\_STOERMER\_VERLET\_VELOCITY\_2}}\ \ \textcolor{comment}{/*\ forces\ may\ depend\ on\ velocity,\ \ i.e.,\ WITH\ dashpot\ term\ */}}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdem__ctrl__struct}{dem\_ctrl\_struct}}\ \ \textcolor{comment}{/*\ reflecting\ user\ input\ */}}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm_ga5b6bea6ab7b1a7f9e40735712a4b66a7}{dem\_on}};}
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm_ga576e1ca834b7698cd09c1fdf013a6f9e}{last\_update}};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \textcolor{comment}{/*\ admininistration\ flags\ etc.}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00043\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm_ga1bc49587b643c6a6b26563da58a8dbd7}{n\_collision\_substeps\_in\_time}};}
+\DoxyCodeLine{00044\ \ \ \textcolor{keyword}{enum}\ \mbox{\hyperlink{group__dpm_gaa5d312154d3b5407c9d2ab6d35d36812}{collision\_time\_integration\_scheme}}\ \mbox{\hyperlink{group__dpm_gae91eb5ca5e84988cad0ec25aea710b15}{time\_integration\_scheme}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_ga698988035e738fdbea5b5e1114dd6d7d}{max\_particle\_velocity}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm_ga719129064d782cae22e99521e1886c01}{adaptive\_edge\_length}};}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ \ \mbox{\hyperlink{group__dpm_ga620efd15a7a7716fa899d915b370eb28}{edge\_length\_factor}};}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ \ \mbox{\hyperlink{group__dpm_ga2cb4900b351a398aaee76a7071dc07be}{static\_edge\_length}};}
+\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ \ \mbox{\hyperlink{group__dpm_gace58c9815b020f4c52b54dad27d38ea1}{force\_range\_factor}};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \textcolor{comment}{/*\ Move\ particles\ directly\ after\ collisions\ and\ do\ not\ invoke}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ \ \ *\ particle\ tracking\ routine\ at\ all,\ locate\ particles\ after}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ \ \ *\ collisions.\ \ Else\ particle\ tracking\ gets\ called.\ \ As\ of}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ \ \ *\ 2010-\/05-\/19:\ experimental.\ Already\ useful\ for\ debugging.}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm_ga545ccddc1682119bed6ecb15493a7b5f}{inhibit\_particle\_tracking}};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm_ga0c8cf78bf8d7ccfe52bfb0385c8621c4}{skip\_acceleration\_calculation}};\ \textcolor{comment}{/*\ external\ trigger\ for\ dpm\_laws.c:ParticleAcceleration}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ default\ of\ zero\ means\ FALSE,\ i.e.,\ normal\ operation.}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_ga1c7b61e43e9b6680eba9754562375285}{friction\_force\_equiv\_min\_acceleration}};\ \textcolor{comment}{/*\ lower\ limit\ on\ friction\ force.\ \ Do\ not}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ bother\ about\ friction,\ if\ a\ force\ on\ a}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ parcel\ gives\ less\ acceleration.}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00069\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm_gadc671b0ae7d870c3eb3c71f555d718cd}{use\_cartesian\_cm}};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \}\ \mbox{\hyperlink{group__dpm_ga023f997da50026896e4eee58a2631ca0}{dem\_ctrl\_t}};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structdem__ctrl__struct}{dem\_ctrl\_t}}\ \mbox{\hyperlink{group__dpm_ga003e90bc581d5587e6c46078a56d73b4}{dem\_ctrl}};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_struct}}\ \ \textcolor{comment}{/*\ holding\ (potentially\ many)\ data\ computed\ at\ runtime\ */}}
+\DoxyCodeLine{00078\ \{}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm_ga7688ea411ec74528504aec8979695ca2}{need\_periodic\_update}};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{group__dpm_gad0dc13296079a4cce1cc8d0bf5e85b9d}{flags}};\ \ \ \ \ \textcolor{comment}{/*\ one\ set\ of\ flags\ for\ each\ collision\ cell\ */}}
+\DoxyCodeLine{00082\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{group__dpm_gad6415e06131c9ba30fb147c876dd0667}{flags\_periodic}};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#if\ !\ UDF\_COMPILER\ }\textcolor{comment}{/*\ ATTENTION:\ int64\_t\ is\ not\ accepted\ by\ the\ udf\ interpreter.\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_ga44bd51354a50e98e31aec1a84f6192b3}{n\_cc}};\ \ \ \textcolor{comment}{/*\ number\ of\ collision\ cells\ */}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *\mbox{\hyperlink{group__dpm_gac039ca9801865301099634992c11e7ad}{head}};\ \ \textcolor{comment}{/*\ Head\ of\ particle\ list\ for\ each\ collision\ mesh\ cell.}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ One\ entry\ per\ collision\ mesh\ cell.}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_gafa437730ed41b11ccfe5ddad3450ac22}{n\_pp}};\ \ \ \textcolor{comment}{/*\ number\ of\ (real)\ particles/parcels\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_gaaf84740758aecf452c21059cc41c768a}{n\_pp\_alloc}};\ \textcolor{comment}{/*\ tribute\ to\ ghost\ particles:\ number\ of\ allocated\ entries\ in\ *lpl\ and\ **p\ arrays\ */}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *\mbox{\hyperlink{group__dpm_gae847a58db2d63f800173beb6f834226c}{lpl}};\ \ \ \textcolor{comment}{/*\ Particle\ List:\ One\ entry\ per\ particle/parcel\ in\ the\ domain\ */}}
+\DoxyCodeLine{00096\ \ \ \mbox{\hyperlink{structparticle__struct}{Particle}}\ **\mbox{\hyperlink{group__dpm_ga003f317d83f0e727108ff234991beb0e}{p}};\ \ \ \textcolor{comment}{/*\ Array\ of\ pointers\ to\ particles/parcels\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \mbox{\hyperlink{group__dpm_gae9fb3d3ad5afe455d07b20aa553a2b95}{NV\_VEC}}(maxpos);\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ right\ background\ upper\ corner\ \ \ \ \ */}}
+\DoxyCodeLine{00100\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \mbox{\hyperlink{group__dpm_gaa246a39f43de272f40a36d04da7d4a7a}{NV\_VEC}}(minpos);\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ left\ \ foreground\ lower\ corner\ \ \ \ \ */}}
+\DoxyCodeLine{00101\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_ga23d3e509d27f85057a88b9c4c2234d57}{NV\_VEC}}(n\_edges);\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ edges\ in\ each\ direction\ */}}
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_gad03359a3c89bbe406f801968e1ad7f61}{NV\_VEC}}(offset);\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ to\ convert\ between\ directional\ indices\ and\ cell\ number\ */}}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \mbox{\hyperlink{group__dpm_ga61755158c72132d670f43ce61a1a4975}{NV\_VEC}}(edge\_length);\ \ \ \ \textcolor{comment}{/*\ length\ of\ edges\ in\ each\ direction\ */}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00105\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \mbox{\hyperlink{global_8h_ad2d0744d62bd67159642f00dd33db15b}{NV\_VEC}}(maxpos\_global);\ \ \textcolor{comment}{/*\ right\ background\ upper\ corner\ \ \ \ \ */}}
+\DoxyCodeLine{00106\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \mbox{\hyperlink{global_8h_ad2d0744d62bd67159642f00dd33db15b}{NV\_VEC}}(minpos\_global);\ \ \textcolor{comment}{/*\ left\ \ foreground\ lower\ corner\ \ \ \ \ */}}
+\DoxyCodeLine{00107\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{global_8h_ad2d0744d62bd67159642f00dd33db15b}{NV\_VEC}}(n\_edges\_global);\ \textcolor{comment}{/*\ number\ of\ edges\ in\ each\ direction\ */}}
+\DoxyCodeLine{00108\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{global_8h_ad2d0744d62bd67159642f00dd33db15b}{NV\_VEC}}(offset\_global);\ \ \textcolor{comment}{/*\ to\ convert\ between\ directional\ indices\ and\ cell\ number\ */}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \textcolor{comment}{/*\ To\ convert\ between\ local\ and\ global\ directional\ indices:\ */}}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{global_8h_ad2d0744d62bd67159642f00dd33db15b}{NV\_VEC}}(minpos\_index);\ \ \ \textcolor{comment}{/*\ Directional\ indices\ of\ local\ minpos\ in\ global\ collision\ mesh.}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ These\ are\ valid\ indices\ for\ cells\ belonging\ to\ the\ local\ mesh.}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00114\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{global_8h_ad2d0744d62bd67159642f00dd33db15b}{NV\_VEC}}(maxpos\_index);\ \ \ \textcolor{comment}{/*\ Directional\ indices\ of\ local\ maxpos\ in\ global\ collision\ mesh.}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ First\ INVALID\ indices\ for\ the\ local\ collision\ mesh,\ since\ indices}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ apply\ for\ the\ lower-\/left-\/front\ corner\ of\ a\ collision\ cell.}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ **ghost\_cc;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ For\ each\ neighbor\ partition,\ have\ an\ array\ of\ collision\ cells\ that}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ are\ in\ the\ vicinity\ of\ the\ partition\ boundary\ towards\ that\ neighbor.}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00124\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *n\_ghost\_cc;\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ \ \ \ \ \ \ \ \ \ \ ghost\ collision\ cells\ for\ each\ neighbor\ partition.\ */}}
+\DoxyCodeLine{00125\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *n\_ghost\_cc\_alloc;\ \ \ \textcolor{comment}{/*\ number\ of\ allocated\ ghost\ collision\ cells\ for\ each\ neighbor\ partition.\ */}}
+\DoxyCodeLine{00126\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ ***ghost\_cc\_periodic;\ \textcolor{comment}{/*\ For\ each\ neighbor\ partition,\ have\ an\ array\ of\ face\ threads\ of\ periodic\ boundary}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ faces\ coresponding\ to\ a\ partition\ boundary\ towards\ the\ "{}periodic\ neighbor"{}.}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{structcell__and__thread__struct}{cat\_t}}\ ***periodic\_cat;\ \ \ \ \ \ \ \textcolor{comment}{/*\ For\ each\ neighbor\ ,\ have\ an\ array\ of\ internal\ partition\ boundary\ cells,\ i.e.\ a}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ part\ of\ the\ neighbor-\/>int\_cl\_ext\ list\ which\ have\ a\ face\ corresponding\ to\ a\ periodic}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ boundary\ face\ thread}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ ***periodic\_tf;\ \ \ \ \ \ \ \textcolor{comment}{/*\ For\ each\ neighbor,\ have\ an\ array\ of\ periodic\ boundary\ face\ threads\ */}}
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ n\_periodic\_tf;}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{structparticle__struct}{Particle}}\ *\mbox{\hyperlink{group__dpm_gaa9b35a94e571b477a3746f2ba10c921c}{ghost\_pl}};\ \ \textcolor{comment}{/*\ List\ of\ ghost\ particles\ RECEIVED\ from\ other\ partitions\ or\ from\ a\ periodic\ partnet\ boundary\ face\ thread}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ Those\ are\ NOT\ sorted\ into\ injections!}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_ga16f68444e0715125156e0e1ac39e2702}{n\_ghost\_pl}};\ \ \textcolor{comment}{/*\ number\ of\ ghost\ particles/parcels\ */}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \mbox{\hyperlink{structdpm__collision__wall}{dpm\_collision\_wall\_t}}\ *\mbox{\hyperlink{group__dpm_ga42ce98291302ae28e486289334d8594f}{bcoll}};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !\ UDF\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \}\ \mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\_mesh\_t}};}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ \mbox{\hyperlink{group__dpm_ga4b088d691033d4455de2d5772c5d2064}{dem\_cartesian\_mesh}};}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structinteraction__partner__table__struct}{interaction\_partner\_table\_t}}\ \mbox{\hyperlink{group__dpm_gaf466b89a431e8aaf16d1b18b2075006b}{dem\_collision\_partner\_table}};}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{comment}{/*\ DEM\ \ collision\ cell\ flags:\ \ DEM\_CC\_FLAG....}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ DEM\_CC\_FLAG\_HAS\_WALLS\ \ \ \ \ \ (1)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ DEM\_CC\_FLAG\_IS\_GHOST\_CC\ \ \ \ (1<<1)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ DEM\_CC\_FLAG\_IS\_PERIODIC\_CC\ (1<<2)}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ DEM\_CC\_FLAG\_P(cartesian\_mesh,\ icc,\ flag)\ \ \ \ \ (cartesian\_mesh-\/>flags[icc]\ \&\ \ \ (flag))}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ DEM\_SET\_CC\_FLAG(cartesian\_mesh,\ icc,\ flag)\ \ \ (cartesian\_mesh-\/>flags[icc]\ |=\ \ (flag))}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ DEM\_CLEAR\_CC\_FLAG(cartesian\_mesh,\ icc,\ flag)\ (cartesian\_mesh-\/>flags[icc]\ \&=\ \string~(flag))}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ DEM\_INTEGRATE\_DURING\ (\ DURING\_TRACKING\ ==\ dpm\_par.spray\_suite.collision\_mode\ ||\ DURING\_UPDATE\ ==\ dpm\_par.spray\_suite.collision\_mode\ )}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{comment}{/*\ DEM\ end\ of\ \ data\ structures\ for\ collisions.\ Here\ for\ information\ NOT\ stored\ on\ the\ particles\ themselves.}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \textcolor{comment}{/*\ DEM}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00175\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga0fc6c8a88f6d325fced1689aed11edc3}{Fill\_dem\_collision\_partner\_table}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \mbox{\hyperlink{group__dpm_gaea071eab2346aa8f25748050e07d864e}{Reset\_Cartesian\_Mesh}}(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00178\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga1bf0541b196475c4057b0b86ff462ce1}{Initialize\_Cartesian\_Mesh}}(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00179\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \mbox{\hyperlink{group__dpm_ga47f7fb57ee44b94c8a1638d02da73fde}{Fill\_Cartesian\_Mesh}}(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga3b643067ae808a438cda76b733b27d68}{Reset\_Cartesian\_Mesh\_Wall\_Intersection}}(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00182\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{group__dpm_gadca095d7bec948c6de98387b9e346bc8}{Fill\_Cartesian\_Mesh\_Wall\_Intersection}}(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00185\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ DEM\_Reset\_Ghost\_Cc(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00186\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ DEM\_Allocate\_Ghost\_Cc(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00187\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ DEM\_Initialize\_Ghost\_Cc(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00188\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Fill\_Cartesian\_Mesh\_Ghost\_Cc(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00189\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ DEM\_Get\_Ghost\_Particles(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ allow\_collision\_mesh\_extension);}
+\DoxyCodeLine{00190\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ DEM\_Allocate\_Parallel\_Periodic(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00191\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ DEM\_Initialize\_Parallel\_Periodic(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00192\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ DEM\_Reset\_Parallel\_Periodic(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00193\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Build\_Update\_Cartesian\_Mesh\_Parallel\_Periodic(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga346f27006cf8db0571e8af7cd3ae5b2b}{DEM\_Cleanup\_Ghost\_Particles}}(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga6738bb72b77ffa122c392cd68c2da151}{DEM\_Get\_Ghost\_Particles\_Periodic}}(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_gab013a8809db267366dc59970be86a9af}{dem\_update\_cartesian\_mesh\_with\_ghost\_particles}}(\mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ adapt\_cm);}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_gad835d2805304961c56216d2a59c459e6}{DEM\_Initialize\_Particle\_Collision\_Storage}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00203\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga79af98d2cba350c0740ed87b7c4b9cf8}{DEM\_Update\_Collision\_Partner\_Indices}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_gabd228fd36caad007919e6693ce576163}{Get\_Face\_Bounding\_Box\_Coordinates}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xfmin[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xfmax[]);}
+\DoxyCodeLine{00206\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga32b8ec181525d9f0cbbbf38c1ed3827e}{Get\_Cell\_Bounding\_Box\_Coordinates}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xfmin[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xfmax[]);}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#if\ !\ UDF\_COMPILER}}
+\DoxyCodeLine{00210\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm_ga938f1c408fb282f4c06bb3c8f8443656}{Bounding\_Box\_Intersects\_Cartesian\_Mesh}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xfmin[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xfmax[],\ \mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00211\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_gae9b3b1b8118b4653ed99a5e6e23a323f}{Get\_Bounding\_Box\_Cartesian\_Mesh\_Coverage}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xfmin[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xfmax[],\ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ idxmin[],\ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ idxmax[],\ \mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00212\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga03471c6036422db6d5ba3c4e8bc8be95}{Compute\_Cartesian\_Mesh\_Global}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *minpos,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *maxpos,}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *n\_edges,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *edge\_length,}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *offset,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ margin);}
+\DoxyCodeLine{00215\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_gacb52743e644056868d55479d6de3c546}{DEM\_Compute\_Global\_Collision\_Mesh}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ minpos[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ maxpos[],}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ n\_edges[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ edge\_length[],}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ offset[],\ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ margin);}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00219\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ DEM\_Compute\_Local\_Collision\_Mesh(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ \ \ \ \ \ minpos[],}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ \ \ \ \ \ maxpos[],}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \ \ \ \ \ \ n\_edges[],}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \ \ \ \ \ \ offset[],}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \ \ \ \ \ \ minpos\_index[],}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \ \ \ \ \ \ maxpos\_index[],}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ minpos\_global[],}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ maxpos\_global[],}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ n\_edges\_global[],}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ edge\_length[],}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ margin}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ DEM\_Local\_To\_Global\_Cellno(\mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ cellno,\ \mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00233\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ DEM\_Global\_To\_Local\_Cellno(\mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ global\_cellno,\ \mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ RP\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !\ UDF\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_gab8e3d00b022b2cef1d0e92806a09f010}{DEM\_Get\_Cartesian\_Cell\_Number\_For\_Point}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xxx,\ \mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\_mesh\_t}}\ *cartesian\_mesh);}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga56f4bb1d6324cb093ce5626a261033ca}{DEM\_Cartesian\_Collision\_Mesh\_Loop}}(\textcolor{keywordtype}{void}\ (*particle\_particle)(\mbox{\hyperlink{structparticle__struct}{Particle}}\ *,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ *),}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ (*particle\_wall)(\mbox{\hyperlink{structparticle__struct}{Particle}}\ *,\ \mbox{\hyperlink{structdpm__collision__face}{dpm\_collision\_face\_t}}\ *)}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_gac6e5f326df7a0c754a152f45d33152d3}{DEM\_Calculate\_Non\_Collision\_Acceleration}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ time\_step);}
+\DoxyCodeLine{00248\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga84ec4299b3f415201ffd273f7a416115}{DEM\_Collide\_Particles\_Single\_Substep}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ time\_step);}
+\DoxyCodeLine{00249\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga26e69cee341fb23d1c4ff290a9d27ffe}{DEM\_Limit\_Particle\_Velocity}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *vel);}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_gac84b8d17a9e36afd9e5c919bd9c97433}{set\_collision\_partner\_search\_method}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00252\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_gae7e034d33866258b804142fdf230e70f}{dem\_particle\_particle\_collision}}(\mbox{\hyperlink{structparticle__struct}{Particle}}\ *pi,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ *pj);}
+\DoxyCodeLine{00253\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga9931fb8f712f820baed93d65348b00e6}{dem\_particle\_wall\_collision}}(\mbox{\hyperlink{structparticle__struct}{Particle}}\ *pi,\ \mbox{\hyperlink{structdpm__collision__face}{dpm\_collision\_face\_t}}\ *\mbox{\hyperlink{structface__data}{face\_data}});}
+\DoxyCodeLine{00254\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm_ga80496b7a8a75c6a4d132712196958380}{dem\_add\_forces\_from\_sub\_step}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00255\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm_gaaf9b081e8617f2957be67f284f6339bb}{get\_thread\_dpm\_bc\_collision\_partner\_index}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread);}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_DPM\_DEM\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

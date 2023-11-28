@@ -1,0 +1,337 @@
+\doxysection{dbgmsg.\+h}
+\hypertarget{dbgmsg_8h_source}{}\label{dbgmsg_8h_source}\index{fluent20.1.0/src/util/dbgmsg.h@{fluent20.1.0/src/util/dbgmsg.h}}
+\mbox{\hyperlink{dbgmsg_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/********************************************************************/}}
+\DoxyCodeLine{00006\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ Macros\ for\ generating\ text\ output,\ e.g.\ for\ reporting.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ But\ also\ useful\ for\ debugging\ possibly\ optimized\ code...}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ by}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ Ulrich\ Becker,\ \ \ ubecker@ansys.com}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifndef\ \ \_FLUENT\_DBGMSG\_H}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ \ \_FLUENT\_DBGMSG\_H}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{/*\ compiler\ flags\ to\ influence\ behaviour\ ..\ see\ below\ for\ use\ and\ consequences:}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ DBGMSG\_FP\ \ \ \ \ a\ FILE\ pointer\ where\ to\ print\ to.\ Default\ is\ stdout.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ DBGMSG\_CX\_MESSAGE\_CMD}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ DBGMSG\_USE\_CX\_MESSAGE}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ DBGMSG\_ONLY\_SINGLE\_NODE\ \ \ restrict\ to\ output\ from\ single\ compute\ node\ in\ PARALLEL}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *\ DBGMSG\_REAL\_IS\_FLOAT\ \ \ \ \ \ by\ default\ real\ is\ treated\ as\ double}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{/********************************************************************************************/}}
+\DoxyCodeLine{00030\ \textcolor{comment}{/********************************************************************************************/}}
+\DoxyCodeLine{00031\ \textcolor{comment}{/********************************************************************************************/}}
+\DoxyCodeLine{00032\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ Helper\ macros.\ NOT\ to\ be\ called\ directly\ !\ ...\ usually\ ...}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifndef\ DBGMSG\_CX\_MESSAGE\_CMD}}
+\DoxyCodeLine{00039\ \textcolor{comment}{/*\ only\ print\ from\ compute\ node\ 0:*/}}
+\DoxyCodeLine{00040\ \textcolor{comment}{/*\ \#define\ DBGMSG\_CX\_MESSAGE\_CMD\ Message0\ */}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{/*\ OR\ print\ from\ all\ compute\ nodes:\ */}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#\ \ define\ DBGMSG\_CX\_MESSAGE\_CMD\ CX\_Message}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#ifdef\ DBGMSG\_ONLY\_SINGLE\_NODE\ }\textcolor{comment}{/*\ define\ as\ node\ number\ from\ which\ to\ issue\ messages\ only\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#\ \ define\ DBGMSG\_EFFECTIVE\_OUT(sexp)\ (\ DBGMSG\_ONLY\_SINGLE\_NODE\ ==\ myid\ ?\ (sexp)\ :\ 0\ )}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#\ \ define\ DBGMSG\_EFFECTIVE\_OUT(sexp)\ (sexp)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#if\ DBGMSG\_USE\_CX\_MESSAGE}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#\ \ ifdef\ DBGMSG\_FP}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#\ \ \ \ warning\ "{}Using\ "{}\ DBGMSG\_CX\_MESSAGE\_CMD\ "{}\ is\ enforced.\ Will\ not\ make\ use\ of\ definition\ of\ DBGMSG\_FP."{}}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#\ \ if\ PARALLEL}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print1(a1\ \ \ \ \ \ \ \ \ )\ DBGMSG\_EFFECTIVE\_OUT(((DBGMSG\_CX\_MESSAGE\_CMD("{}myid=\%d::"{},myid)),(DBGMSG\_CX\_MESSAGE\_CMD(a1\ \ \ \ \ \ \ \ \ ))))}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print2(a1,a2\ \ \ \ \ \ )\ DBGMSG\_EFFECTIVE\_OUT(((DBGMSG\_CX\_MESSAGE\_CMD("{}myid=\%d::"{},myid)),(DBGMSG\_CX\_MESSAGE\_CMD(a1,a2\ \ \ \ \ \ ))))}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print3(a1,a2,a3\ \ \ )\ DBGMSG\_EFFECTIVE\_OUT(((DBGMSG\_CX\_MESSAGE\_CMD("{}myid=\%d::"{},myid)),(DBGMSG\_CX\_MESSAGE\_CMD(a1,a2,a3\ \ \ ))))}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print4(a1,a2,a3,a4)\ DBGMSG\_EFFECTIVE\_OUT(((DBGMSG\_CX\_MESSAGE\_CMD("{}myid=\%d::"{},myid)),(DBGMSG\_CX\_MESSAGE\_CMD(a1,a2,a3,a4))))}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#\ \ else\ }\textcolor{comment}{/*\ serial\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print1(a1\ \ \ \ \ \ \ \ \ )\ (DBGMSG\_CX\_MESSAGE\_CMD(a1\ \ \ \ \ \ \ \ \ ))}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print2(a1,a2\ \ \ \ \ \ )\ (DBGMSG\_CX\_MESSAGE\_CMD(a1,a2\ \ \ \ \ \ ))}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print3(a1,a2,a3\ \ \ )\ (DBGMSG\_CX\_MESSAGE\_CMD(a1,a2,a3\ \ \ ))}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print4(a1,a2,a3,a4)\ (DBGMSG\_CX\_MESSAGE\_CMD(a1,a2,a3,a4))}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#\ \ ifndef\ DBGMSG\_FP}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#\ \ \ \ if\ (\ defined(\_WIN32)\ ||\ defined\ (WIN64)\ )\ }\textcolor{comment}{/*\ windows\ does\ not\ know\ stderr\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ DBGMSG\_FP\ stdout}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ DBGMSG\_FP\ stdout}}
+\DoxyCodeLine{00073\ \textcolor{comment}{/*\ \#\ \ \ \ \ \ define\ DBGMSG\_FP\ stderr\ */}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#\ \ if\ PARALLEL}}
+\DoxyCodeLine{00077\ \textcolor{comment}{/*\ \ \ 2010-\/12-\/07\ Print\ myid\ only\ when\ printing\ to\ stdout.\ When\ printing\ to\ a\ file,\ assume\ that\ files\ are\ different\ for\ all\ compute\ nodes.\ Then\ myid\ must\ not\ clutter\ the\ text.*/}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print1\_buf(a1\ \ \ \ \ \ \ \ \ )\ DBGMSG\_EFFECTIVE\_OUT(((stdout\ ==\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,"{}myid=\%d::"{},myid)\ :\ 0),(NULL\ !=\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,a1\ \ \ \ \ \ \ \ \ )\ :\ 0)))}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print2\_buf(a1,a2\ \ \ \ \ \ )\ DBGMSG\_EFFECTIVE\_OUT(((stdout\ ==\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,"{}myid=\%d::"{},myid)\ :\ 0),(NULL\ !=\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,a1,a2\ \ \ \ \ \ )\ :\ 0)))}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print3\_buf(a1,a2,a3\ \ \ )\ DBGMSG\_EFFECTIVE\_OUT(((stdout\ ==\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,"{}myid=\%d::"{},myid)\ :\ 0),(NULL\ !=\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,a1,a2,a3\ \ \ )\ :\ 0)))}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print4\_buf(a1,a2,a3,a4)\ DBGMSG\_EFFECTIVE\_OUT(((stdout\ ==\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,"{}myid=\%d::"{},myid)\ :\ 0),(NULL\ !=\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,a1,a2,a3,a4)\ :\ 0)))}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#\ \ else\ }\textcolor{comment}{/*\ serial\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print1\_buf(a1\ \ \ \ \ \ \ \ \ )\ (NULL\ !=\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,a1\ \ \ \ \ \ \ \ \ )\ :\ 0)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print2\_buf(a1,a2\ \ \ \ \ \ )\ (NULL\ !=\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,a1,a2\ \ \ \ \ \ )\ :\ 0)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print3\_buf(a1,a2,a3\ \ \ )\ (NULL\ !=\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,a1,a2,a3\ \ \ )\ :\ 0)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#\ \ \ \ define\ dm\_print4\_buf(a1,a2,a3,a4)\ (NULL\ !=\ DBGMSG\_FP\ ?\ fprintf(DBGMSG\_FP,a1,a2,a3,a4)\ :\ 0)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#\ \ define\ dm\_flush\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (NULL\ !=\ DBGMSG\_FP\ ?\ fflush(DBGMSG\_FP)\ :\ 0)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#\ \ define\ dm\_print1(a1\ \ \ \ \ \ \ \ \ )\ (dm\_print1\_buf(a1\ \ \ \ \ \ \ \ \ ),dm\_flush)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#\ \ define\ dm\_print2(a1,a2\ \ \ \ \ \ )\ (dm\_print2\_buf(a1,a2\ \ \ \ \ \ ),dm\_flush)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#\ \ define\ dm\_print3(a1,a2,a3\ \ \ )\ (dm\_print3\_buf(a1,a2,a3\ \ \ ),dm\_flush)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#\ \ define\ dm\_print4(a1,a2,a3,a4)\ (dm\_print4\_buf(a1,a2,a3,a4),dm\_flush)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{comment}{/*\ Print\ an\ entire\ real\ vector\ in\ one\ line,\ possibly\ preceeded\ by\ the\ variable\ name.}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ Save\ on\ the\ digits\ printed\ for\ legibility!}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ tof==TrueOrFalse\ to\ print\ or\ not\ to\ print\ the\ variable\ name.}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ dm\_rvecmsg(n,\ V,\ tof)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\ \ int\ \_ii;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\ \ if\ (tof)\ dm\_print2("{}\%s:\ "{},\#V);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\ \ for(\_ii=0;\ \_ii<n;\ \_ii++)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\ \ \ \ dm\_print2\_buf("{}\%8.5e\ \ \ "{},V[\_ii]);\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\ \ if\ (tof)\ nlmsg;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ dm\_flush;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ dm\_lvecmsg(n,\ V,\ tof)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\ \ int\ \_ii;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\ \ if\ (tof)\ dm\_print2("{}\%s:\ "{},\#V);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\ \ for(\_ii=0;\ \_ii<n;\ \_ii++)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\ \ \ \ dm\_print2\_buf("{}\%"{}int64\_fmt"{}\ \ \ "{},V[\_ii]);\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\ \ if\ (tof)\ nlmsg;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\ \ dm\_flush;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{comment}{/*\ bare\ bones\ version\ for\ any\ sort\ of\ vector\ or\ formatting:\ */}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ dm\_fmtvecmsg(fmt,n,\ V,\ tof)\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\ \ int\ \_ii;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\ \ if\ (tof)\ dm\_print2("{}\%s:\ "{},\#V);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\ \ for(\_ii=0;\ \_ii<n;\ \_ii++)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ dm\_print2\_buf(fmt,V[\_ii]);\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\ \ if\ (tof)\ nlmsg;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\ \ dm\_flush;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{comment}{/*\ Print\ an\ entire\ real\ vector\ in\ one\ line,\ possibly\ preceeded\ by\ the\ variable\ name.}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *\ Print\ all\ the\ digits!}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *\ tof==TrueOrFalse\ to\ print\ or\ not\ to\ print\ the\ variable\ name.}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ dm\_rrvecmsg(n,\ V,\ tof)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\ \ int\ \_ii;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\ \ if\ (tof)\ dm\_print2("{}\%s:\ "{},\#V);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\ \ for(\_ii=0;\ \_ii<n;\ \_ii++)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\ \ \ \ ((sizeof(real)==sizeof(double))\ ?\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\ \ \ \ \ dm\_print2\_buf("{}\%24.16e\ \(\backslash\)t"{},\ V[\_ii])\ :\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\ \ \ \ \ dm\_print2\_buf("{}\%16.8e\ \(\backslash\)t"{}\ ,\ V[\_ii])\ );\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\ \ if\ (tof)\ nlmsg;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\ \ dm\_flush;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{comment}{/*\ Print\ an\ entire\ real\ matrix,\ line\ by\ line,\ possibly\ preceeded\ by\ the\ variable\ name.}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *\ Save\ on\ the\ digits\ printed\ for\ legibility!}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ *\ tof==TrueOrFalse\ to\ print\ or\ not\ to\ print\ the\ variable\ name.}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ dm\_rmatmsg(m,\ n,\ M,\ tof)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ int\ \_ii,\_jj;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ if\ (tof)\ dm\_print2("{}\%s:\ "{},\#M);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\ \ if\ (tof)\ nlmsg;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ for(\_ii=0;\ \_ii<m;\ \_ii++)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\ \ \ \ }\textcolor{comment}{/*\ real\ *M\#\#\_ii=\&M[\_ii*n];\ \ */}\textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ \ \ for(\_jj=0;\ \_jj<n;\ \_jj++)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\ \ \ \ \ \ dm\_print2\_buf("{}\%8.2g\ \ \ "{},M[\_ii][\_jj]);\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\ \ \ \ \ \ if\ ((n-\/1)\ ==\ \_jj)\ nlmsg;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\ \ if\ (tof)\ nlmsg;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\ \ dm\_flush;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#ifndef\ int64\_fmt}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#\ if\ (\_lnamd64)}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#\ \ define\ int64\_fmt\ "{}ld"{}}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#\ \ define\ int64\_fmt\ "{}lld"{}}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#ifndef\ TRUE}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ TRUE\ 1}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#ifndef\ FALSE}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#define\ FALSE\ 0}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{comment}{/*\ need\ to\ provide\ "{}real"{}\ for\ non-\/fluent\ code:}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_CONFIG\_H}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#\ if\ DBGMSG\_REAL\_IS\_FLOAT}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#\ \ define\ real\ float}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#\ \ define\ real\ double}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{comment}{/********************************************************************************************/}}
+\DoxyCodeLine{00198\ \textcolor{comment}{/********************************************************************************************/}}
+\DoxyCodeLine{00199\ \textcolor{comment}{/********************************************************************************************/}}
+\DoxyCodeLine{00200\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ *\ Macros\ to\ be\ called\ directly.}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ *\ Generally:}}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ *\ \ \ macros\ containing\ \ \ ..msg()\ \ \ will\ print\ the\ variable\ name\ together\ with\ its\ value.}}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ *\ \ \ macros\ containing\ \ \ ..val()\ \ \ will\ only\ print\ the\ value.}}
+\DoxyCodeLine{00207\ \textcolor{comment}{}}
+\DoxyCodeLine{00208\ \textcolor{comment}{\ *\ Exception:}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *\ \ \ msg\ \ \ \ \ prints\ the\ message\ string\ provided\ as\ argument}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *\ \ \ nlmsg\ \ \ prints\ a\ line\ break}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *\ \ \ tabmsg\ \ prints\ a\ tab}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ msg(s)\ dm\_print1(s)\ \ \ \ }\textcolor{comment}{/*\ s\ is\ a\ string\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ nlmsg\ \ dm\_print1("{}\(\backslash\)n"{})}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ tabmsg\ dm\_print1("{}\(\backslash\)t"{})}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{comment}{/*\ boolean\ is\ cx\_boolean\ in\ FLUENT}}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ bmsg(b)\ \ \ \ \ \ \ \ \ ((b)\ ?\ dm\_print2("{}\%-\/s\ =\ true\ \(\backslash\)t"{},\ \#b)\ :\ dm\_print2("{}\%-\/s\ =\ false\ \(\backslash\)t"{},\ \#b))}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \textcolor{comment}{/*\ int}}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ imsg(i)\ \ \ \ \ \ \ \ \ \ dm\_print3("{}\%-\/s\ =\ \%d\ \(\backslash\)t"{},\ \#i,\ i)}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ imsgw(i,w)\ \ \ \ \ \ \ dm\_print3("{}\%s\ =\ \%"{}\#w"{}d\ \ "{},\ \#i,\ i)}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ imsg3(i)\ \ \ \ \ \ \ \ \ imsgw(i,3)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ ivmsg(v,i)\ \ \ \ \ \ \ dm\_print4("{}\%-\/s[\%2d]\ =\ \%d\ \(\backslash\)t"{},\ \#v,\ i,\ v[i])\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ vector\ component\ i\ of\ integer\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ ival(i)\ \ \ \ \ \ \ \ \ \ dm\_print2("{}\%d\ \(\backslash\)t"{},\ i)}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ ivalw(i,w)\ \ \ \ \ \ \ dm\_print2("{}\%"{}\#w"{}d\ \ "{},\ i)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ ival3(i)\ \ \ \ \ \ \ \ \ ivalw(i,3)}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ ivval(v,i)\ \ \ \ \ \ \ dm\_print2("{}\%d\ \(\backslash\)t"{},\ v[i])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ vector\ component\ i\ of\ integer\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{comment}{/*\ long\ is\ int64\_t\ in\ FLUENT}}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ lmsg(i)\ \ \ \ \ \ \ \ \ \ dm\_print3("{}\%-\/s\ =\ \%"{}int64\_fmt"{}\ \(\backslash\)t"{},\ \#i,\ i)}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ lmsgw(i,w)\ \ \ \ \ \ \ dm\_print3("{}\%s\ =\ \%"{}\#w"{}"{}int64\_fmt"{}\ \ "{},\ \#i,\ i)}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#define\ lmsg3(i)\ \ \ \ \ \ \ \ \ lmsgw(i,3)}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ lvmsg(v,i)\ \ \ \ \ \ \ dm\_print4("{}\%-\/s[\%2d]\ =\ \%"{}int64\_fmt"{}\ \(\backslash\)t"{},\ \#v,\ i,\ v[i])\ }\textcolor{comment}{/*\ vector\ component\ i\ of\ long\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ lval(i)\ \ \ \ \ \ \ \ \ \ dm\_print2("{}\%"{}int64\_fmt"{}\ \(\backslash\)t"{},\ i)}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ lvalw(i,w)\ \ \ \ \ \ \ dm\_print2("{}\%"{}\#w"{}"{}int64\_fmt"{}\ \ "{},\ i)}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ lval3(i)\ \ \ \ \ \ \ \ \ lmsgw(i,3)}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ lvval(v,i)\ \ \ \ \ \ \ dm\_print2("{}\%\%"{}int64\_fmt"{}\ \(\backslash\)t"{},\ v[i])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ vector\ component\ i\ of\ long\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ lvecmsg(n,\ V)\ \ \ \ dm\_lvecmsg(n,\ V,\ TRUE)\ \ \ }\textcolor{comment}{/*\ entire\ long\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ lvecval(n,\ V)\ \ \ \ dm\_lvecmsg(n,\ V,\ FALSE)\ \ }\textcolor{comment}{/*\ entire\ long\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{comment}{/*\ real}}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ rmsg(r)\ \ \ \ \ \ \ \ \ \ dm\_print3("{}\%-\/s\ =\ \%12.4e\ \(\backslash\)t"{},\ \#r,\ r)}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ rmsgw(r,w)\ \ \ \ \ \ \ dm\_print3("{}\%"{}\#w"{}s\ =\ \%12.4e\ \(\backslash\)t"{},\ \#r,\ r)}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ rmsg7(r)\ \ \ \ \ \ \ \ \ rmsgw(r,7)}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ rmsgX(r)\ \ \ \ \ \ \ \ \ rmsgw(r,10)}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ rvmsg(v,i)\ \ \ \ \ \ \ dm\_print4("{}\%-\/s[\%2d]\ =\ \%12.4e\ \(\backslash\)t"{},\ \#v,\ i,\ v[i])\ \ \ \ \ \ \ }\textcolor{comment}{/*\ vector\ component\ i\ of\ real\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ rval(r)\ \ \ \ \ \ \ \ \ \ dm\_print2("{}\%12.4e\ \(\backslash\)t"{},\ r)}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ rvval(v,i)\ \ \ \ \ \ \ dm\_print2("{}\%\%12.4e\ \(\backslash\)t"{},\ v[i])\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ vector\ component\ i\ of\ real\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ rvecmsg(n,\ V)\ \ \ \ dm\_rvecmsg(n,\ V,\ TRUE)\ \ \ }\textcolor{comment}{/*\ entire\ real\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ rvecval(n,\ V)\ \ \ \ dm\_rvecmsg(n,\ V,\ FALSE)\ \ }\textcolor{comment}{/*\ entire\ real\ vector\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ rmatmsg(m,\ n,\ M)\ dm\_rmatmsg(m,\ n,\ M,\ TRUE)\ \ }\textcolor{comment}{/*\ entire\ real\ matrix\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#define\ rmatval(m,\ n,\ M)\ dm\_rmatmsg(m,\ n,\ M,\ FALSE)\ }\textcolor{comment}{/*\ entire\ real\ matrix\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{comment}{/*\ show\ all\ the\ digits\ in\ a\ real\ number:\ \ rr\ ==\ really\_real}}
+\DoxyCodeLine{00269\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ rrmsg(r)\ \ \ \ \ \ \ \ ((sizeof(real)==sizeof(double))\ ?\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dm\_print3("{}\%-\/s\ =\ \%24.16e\ \(\backslash\)t"{},\ \#r,\ r)\ :\ \(\backslash\)}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dm\_print3("{}\%-\/s\ =\ \%16.8e\ \(\backslash\)t"{}\ ,\ \#r,\ r)\ )}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#define\ rrvmsg(v,i)\ \ \ \ \ ((sizeof(real)==sizeof(double))\ ?\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dm\_print4("{}\%-\/s[\%2d]\ =\ \%24.16e\ \(\backslash\)t"{},\ \#v,\ i,\ v[i])\ :\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dm\_print4("{}\%-\/s[\%2d]\ =\ \%16.8e\ \(\backslash\)t"{}\ ,\ \#v,\ i,\ v[i])\ )}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#define\ rrval(r)\ \ \ \ \ \ \ \ ((sizeof(real)==sizeof(double))\ ?\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dm\_print2("{}\%24.16e\ \(\backslash\)t"{},\ r)\ :\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dm\_print2("{}\%16.8e\ \(\backslash\)t"{}\ ,\ r)\ )}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ rrvval(v,i)\ \ \ \ \ ((sizeof(real)==sizeof(double))\ ?\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dm\_print2("{}\%24.16e\ \(\backslash\)t"{},\ v[i])\ :\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dm\_print2("{}\%16.8e\ \(\backslash\)t"{}\ ,\ v[i])\ )}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#define\ rrvecmsg(n,\ V)\ \ dm\_rrvecmsg(n,\ V,\ TRUE)\ \ \ }\textcolor{comment}{/*\ entire\ real\ vector\ with\ all\ its\ digits\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#define\ rrvecval(n,\ V)\ \ dm\_rrvecmsg(n,\ V,\ FALSE)\ \ }\textcolor{comment}{/*\ entire\ real\ vector\ with\ all\ its\ digits\ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \textcolor{comment}{/*\ 2010-\/05-\/07\ Nothing\ for\ really\ real\ matices\ ...\ yet.\ */}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \textcolor{comment}{/*\ string\ variables}}
+\DoxyCodeLine{00291\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#define\ smsg(s)\ \ \ \ \ \ \ \ \ dm\_print3("{}\%-\/s\ :\ \%-\/s\ \(\backslash\)t"{},\ \#s,\ s)}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#define\ smsgw(s,w1,w2)\ \ dm\_print3("{}\%-\/"{}\#w1"{}s\ :\ \%-\/"{}\#w2"{}s\ \(\backslash\)t"{},\ \#s,\ s)}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ sval(s)\ \ \ \ \ \ \ \ \ dm\_print2("{}\%-\/s\ \(\backslash\)t"{},\ s)\ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ other\ than\ msg(),\ this\ includes\ tab\ alignment\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{comment}{/*\ enums}}
+\DoxyCodeLine{00297\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#define\ enmsg(e)\ \ \ \ \ \ \ \ dm\_print3("{}\%-\/3d\ \%-\/20s\ \(\backslash\)t"{},\ e,\ \#e)}}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{comment}{/*\ function\ name\ and\ location}}
+\DoxyCodeLine{00301\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#define\ fmsg(f)\ \ \ \ \ \ \ \ \ dm\_print4("{}\%-\/s\ (\%s:\%d):\ \(\backslash\)t"{},\ \#f,\ \_\_FILE\_\_\ ,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#define\ fmsgline(f)\ \ \ \ \ dm\_print4("{}\(\backslash\)n\%-\/s\ (\%s:\%d):\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)n"{},\ \#f,\ \_\_FILE\_\_\ ,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \textcolor{comment}{/*\ FLUENT\ data\ types\ ...\ only\ available\ with\ FLUENT\ headers.}}
+\DoxyCodeLine{00308\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#define\ tmsg(t)\ \ \ \ \ \ \ \ \ dm\_print2("{}t-\/id:\ \%d\ \(\backslash\)t"{},THREAD\_ID(t))}}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#define\ udsmsg(c,t,enm)\ dm\_print3("{}\%s\ =\%12.4e\ \(\backslash\)t"{},\ \#enm,\ C\_UDSI(c,t,enm))\ \ \ \ \ \ }\textcolor{comment}{/*\ Cell\ values\ of\ UDS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#define\ udmmsg(c,t,enm)\ dm\_print3("{}\%s\ =\%12.4e\ \(\backslash\)t"{},\ \#enm,\ C\_UDMI(c,t,enm))\ \ \ \ \ \ }\textcolor{comment}{/*\ Cell\ values\ of\ UDM\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#define\ svmsg(c,t,sv)\ \ \ dm\_print3("{}\%s\ =\%12.4e\ \(\backslash\)t"{},\ \#sv,\ \ C\_STORAGE\_R(c,t,sv))\ \ }\textcolor{comment}{/*\ Cell\ values\ of\ SVar\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#define\ svenmsg(sv)\ \ \ \ \ dm\_print4("{}\%s\ =\ \%-\/4d\ (\%s)\ \(\backslash\)t"{},\ \#sv,\ sv,\ sv\_master[sv].print\_name)\ }\textcolor{comment}{/*\ name,\ value,\ and\ print-\/name\ of\ storage\ variable\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#define\ DBGMSG\_PMYID\_FMT\ "{}\%-\/5d"{}}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#\ \ if\ (DBGMSG\_USE\_CX\_MESSAGE\ \&\&\ DBGMSG\_CX\_MESSAGE\_CMD\ ==\ CX\_Message0)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#\ \ \ \ warning\ "{}Using\ CX\_Message0.\ Will\ not\ print\ compute\ node\ IDs.\ Consider\ redefining\ DBGMSG\_CX\_MESSAGE\_CMD."{}}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#\ \ \ \ define\ myidmsg\ imsg(DBGMSG\_PMYID\_FMT,myid)}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#\ \ define\ myidmsg}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ \_FLUENT\_DBGMSG\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

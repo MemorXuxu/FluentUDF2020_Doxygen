@@ -1,0 +1,28 @@
+var ida__spils_8h =
+[
+    [ "IDASPILS_ILL_INPUT", "ida__spils_8h.html#aa852dd58aa9594fc87c4adfbd6b81b55", null ],
+    [ "IDASPILS_LMEM_NULL", "ida__spils_8h.html#ae7abd2240a5a2e242da7c9f1f9820bd4", null ],
+    [ "IDASPILS_MEM_FAIL", "ida__spils_8h.html#a401bc1e01a019c771cb575d23ebdf800", null ],
+    [ "IDASPILS_MEM_NULL", "ida__spils_8h.html#a2592c506e25551dda6c44913436e7e5e", null ],
+    [ "IDASPILS_PMEM_NULL", "ida__spils_8h.html#a01fae32f87b72f7644ea38453df876ea", null ],
+    [ "IDASPILS_SUCCESS", "ida__spils_8h.html#a57163ec81f07d25a4d8c327f5afecea2", null ],
+    [ "IDASpilsJacTimesVecFn", "ida__spils_8h.html#a124030cc9f166cf8bfbb13090548f9d6", null ],
+    [ "IDASpilsPrecSetupFn", "ida__spils_8h.html#a66dd933c015a6b1962691951592fd7aa", null ],
+    [ "IDASpilsPrecSolveFn", "ida__spils_8h.html#a1031ef2a1bb8da370ab92070fc3fd36d", null ],
+    [ "IDASpilsGetLastFlag", "ida__spils_8h.html#a0d564b4894094620e3198e8465afcbed", null ],
+    [ "IDASpilsGetNumConvFails", "ida__spils_8h.html#a7f373ac94ba1f97bba2706a8d8a2aceb", null ],
+    [ "IDASpilsGetNumJtimesEvals", "ida__spils_8h.html#aeee53b90aa1fcc4d7926e5d17ba1b452", null ],
+    [ "IDASpilsGetNumLinIters", "ida__spils_8h.html#af292518023da279c9342a19c2d3ebe78", null ],
+    [ "IDASpilsGetNumPrecEvals", "ida__spils_8h.html#aad606890f574b4c2c1650d93052263b6", null ],
+    [ "IDASpilsGetNumPrecSolves", "ida__spils_8h.html#ae1d12508a0d108038674d9b7799b761e", null ],
+    [ "IDASpilsGetNumResEvals", "ida__spils_8h.html#a1bc35cf45d7cf5445b50a203f3ebca7f", null ],
+    [ "IDASpilsGetReturnFlagName", "ida__spils_8h.html#a8b85941c82c77fb5353097b47cd3ab17", null ],
+    [ "IDASpilsGetWorkSpace", "ida__spils_8h.html#ab418cd46bf84c68f3aa5ef1b61a1c8d2", null ],
+    [ "IDASpilsSetEpsLin", "ida__spils_8h.html#ad255856ade8f23ae593bb5f6047f6b22", null ],
+    [ "IDASpilsSetGSType", "ida__spils_8h.html#a52d05bfee431ae9ccb70f61a03870d8e", null ],
+    [ "IDASpilsSetIncrementFactor", "ida__spils_8h.html#ae88d2723aca9f7a15b44d26a4fe7e9d3", null ],
+    [ "IDASpilsSetJacTimesVecFn", "ida__spils_8h.html#a5fa34a512bc2e54905e6622515d4e745", null ],
+    [ "IDASpilsSetMaxl", "ida__spils_8h.html#a2832f76902ee83f72a6f665fefbb9d93", null ],
+    [ "IDASpilsSetMaxRestarts", "ida__spils_8h.html#a907083d8d0f35f3c5570ae44a0349536", null ],
+    [ "IDASpilsSetPreconditioner", "ida__spils_8h.html#a814927d4774d20fc15ad00a59cc651bb", null ]
+];

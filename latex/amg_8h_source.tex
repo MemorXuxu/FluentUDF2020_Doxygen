@@ -1,0 +1,655 @@
+\doxysection{amg.\+h}
+\hypertarget{amg_8h_source}{}\label{amg_8h_source}\index{fluent20.1.0/src/amg/amg.h@{fluent20.1.0/src/amg/amg.h}}
+\mbox{\hyperlink{amg_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_AMG\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_AMG\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{amg__par_8h}{amg\_par.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ NULL\_INDEX\ \ -\/1}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ CHILD\_NONE\ 0}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ MAX\_N\_SETS\ \ 10}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ MAX\_SIM\_EQ\ \ 81\ \ \ }\textcolor{comment}{/*\ 1\ +\ 4*MAX\_PHASES\ for\ nphase\ full\ coupled\ MP\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ MAX\_OVERLAP\ \ \ \ \ 2}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ AMG\_SMALL\ 1.e-\/20}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ AMG\_SMALL\ 1.e-\/10}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ USE\_ILU\ \ \ 1}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#ifndef\ AMG\_CHUNKED\_MEMORY}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ AMG\_CHUNKED\_MEMORY\ 1}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#if\ AMG\_CHUNKED\_MEMORY}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcoeff__mem__t__}{coeff\_mem\_t\_}}}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ \textcolor{comment}{/*\ segragated\ */}}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structcoeff__mem__t___af8c215585d6d424efdce9d58fd8e8e1b}{s\_d}};}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structcoeff__mem__t___affb8e3cec8479b55179ecc1aab0df79c}{s\_dp}};}
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structcoeff__mem__t___a766d8ba3f1da6eef838f64925e5c3769}{s\_d\_size}};}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structcoeff__mem__t___a7fcd081f3fc97432c825bddd02473b6a}{s\_value}};}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structcoeff__mem__t___a6c47df1076f9090ac0a40125dd8da7a5}{s\_valuep}};}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structcoeff__mem__t___a77be74f3e133b23b306d12c6eae2ef84}{s\_value\_size}};}
+\DoxyCodeLine{00041\ \ \ \textcolor{comment}{/*\ coupled\ */}}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structcoeff__mem__t___ad9bb221ef7e11aa133195c290829608c}{c\_d}};}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structcoeff__mem__t___afcc3dd97bc15efc41bcb88af0f40dfb4}{c\_dp}};}
+\DoxyCodeLine{00044\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structcoeff__mem__t___ab111a49386b0c5b0fa5868091795bc3a}{c\_d\_size}};}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structcoeff__mem__t___aedfffc1e7d3116b4d8342b161fcce979}{c\_value}};}
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structcoeff__mem__t___a59ae8f2e2180cc45d6a57d92a876db0f}{c\_valuep}};}
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structcoeff__mem__t___a8c3e62a98b16d7bec1550189240497a3}{c\_value\_size}};}
+\DoxyCodeLine{00048\ \}\ \mbox{\hyperlink{amg_8h_a96addb84bdaaf1d4d85aa908a6da0518}{coeff\_mem\_t}};}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ SYSTEM\_NAME\_LEN\ 128}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ MAX\_LEVELS\ \ 50}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_matrix}{Matrix}}}
+\DoxyCodeLine{00055\ \{}
+\DoxyCodeLine{00056\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{struct_matrix_ae2a3ca5f4441173575b4d3db38a02a30}{system\_name}}[\mbox{\hyperlink{amg_8h_ad03082a69062c2da2a44bb2f9f92fc7d}{SYSTEM\_NAME\_LEN}}];\ \textcolor{comment}{/*\ name\ of\ the\ linear\ system\ */}}
+\DoxyCodeLine{00057\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_matrix_a6bfb72a86f4ab7bc027ef65966e2f2d7}{tot\_size}};\ \ \ \ \ \textcolor{comment}{/*\ \#\ of\ simultaneous\ equations\ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00058\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_matrix_a439227feff9d7f55384e8780cfc2eb82}{size}};\ \ \ \ \ \textcolor{comment}{/*\ \#\ of\ solved\ simultaneous\ equations\ \ \ \ \ \ */}}
+\DoxyCodeLine{00059\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_matrix_a66165c2bb62de1ee0d6f2a6e2328ffcb}{n\_coeffs}};\ \ \ \ \ \textcolor{comment}{/*\ \#\ of\ off-\/diagonal\ coefficients\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00060\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_matrix_ab7dacfdded5286c4ca3e9b3da989674d}{n\_ceqn}};\ \ \ \ \ \textcolor{comment}{/*\ \#\ of\ coupled\ equations\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_a677cf7b5418a23d2943dc10cd4482d6d}{d}};\ \ \ \textcolor{comment}{/*\ matrix\ diagonal\ coefficients\ (size)\ \ \ \ \ */}}
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_a5b3f6d353e591ac458c65bb085fde463}{value}};\ \ \ \textcolor{comment}{/*\ off-\/diagonal\ coefficients\ \ (n\_coeffs)\ */}}
+\DoxyCodeLine{00064\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_a13fa4640018fe38ead46a7a70fd8da2b}{row}};\ \ \textcolor{comment}{/*\ row\ start\ pointers\ \ \ \ \ (size\ +\ 1)\ */}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#if\ RP\_AMG\_SM}}
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ row\_u;\ \ \textcolor{comment}{/*\ row\ start\ pointers\ \ \ \ \ (size\ +\ 1)\ */}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00068\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_a31b672a6b1c8ec4fb976fbc818ec9fa3}{col}};\ \ \textcolor{comment}{/*\ column\ indices\ \ \ \ \ (n\_coeffs)\ */}}
+\DoxyCodeLine{00069\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_acf63b6a691128a2f96f65696908394e1}{nconn}};\ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ connections\ \ \ \ \ \ \ \ (n\_coeffs)\ */}}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_abdbe1cad1b456fd176166522db9e7322}{accum\_weight}};}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_a232fb704106b45e044d7134560ca6f52}{store\_weight}};}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#if\ OVERSET\_NUMERICS}}
+\DoxyCodeLine{00073\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ work;\ \ \ \ \ \ \textcolor{comment}{/*\ overset\ receptor/dead/neighbor\ mask\ \ \ \ \ */}}
+\DoxyCodeLine{00074\ \ \ \textcolor{keywordtype}{size\_t}\ work\_size;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ work\ vector\ \ \ */}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_a30bc3455be56d05848d0a0f737d72cf5}{d\_size}};\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ d\ vector\ \ \ \ \ \ */}}
+\DoxyCodeLine{00078\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_a1f79f22363173f16bbbb89bbc3f93783}{value\_size}};\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ value\ vector\ \ */}}
+\DoxyCodeLine{00079\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_aee7ad3ae51d2de12bd3fff591261651e}{row\_size}};\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ row\ vector\ \ \ \ */}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#if\ RP\_AMG\_SM}}
+\DoxyCodeLine{00081\ \ \ \textcolor{keywordtype}{size\_t}\ row\_u\_size;\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ row\ vector\ \ \ \ */}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00083\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_a4dbc6de031f331380c28d076b964cc8e}{col\_size}};\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ col\ vector\ \ \ \ */}}
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_a74d1a478485141cb4f0d4f3972a32dd9}{nconn\_size}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ "{}"{}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nconn\ vector\ \ */}}
+\DoxyCodeLine{00085\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_a2d3fa9a071b46c2717304ef893c7b88c}{accumw\_size}};}
+\DoxyCodeLine{00086\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_aa76928d0890d17b28f6b0ef5e839297b}{storew\_size}};}
+\DoxyCodeLine{00087\ \ \ \textcolor{comment}{/*\ SAMG\ data\ */}}
+\DoxyCodeLine{00088\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_matrix_a294ef8eb318358a6fdcbd54f6b850111}{nRows}};}
+\DoxyCodeLine{00089\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_matrix_a4b9521cdf54746ddc86ada1b48c281d7}{nCols}};}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_matrix_a58c486e0832964fd7914a6e1773ddbbc}{store\_d}};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#if\ AMG\_CHUNKED\_MEMORY}}
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_a113ba2799c658a77980f1126c091a852}{valuep}};}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_a93ebcfbaa0603c389e6e8c7d249c8c99}{dp}};}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_ac3aff2d6549abff87db229099a0d3cea}{Ep}};}
+\DoxyCodeLine{00096\ \ \ \mbox{\hyperlink{structcoeff__mem__t__}{coeff\_mem\_t}}\ \mbox{\hyperlink{struct_matrix_a788729fc1ea5d65202f9424f91432b0f}{sc}};}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00098\ \ \ \textcolor{keywordtype}{int}\ SQRn\_ceqn;}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00100\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{struct_matrix_af44e75ebc75719cab3cfce80c624dd86}{y}};}
+\DoxyCodeLine{00101\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{struct_matrix_a6b294f758139fa8ac3643f6e70fecba9}{r}};}
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{struct_matrix_ade3f123bb5900ba2a3d45cc93a77282d}{z}};}
+\DoxyCodeLine{00103\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_acea44ca4b1377299391a15e1d2b54a29}{y\_size}};}
+\DoxyCodeLine{00104\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_afc6f7c678e635a68a0eb923454759212}{r\_size}};}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_a888f91f3c305ce10e33d7b0a7ff151c1}{z\_size}};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_matrix_ae459f32d19160a9f10a36f6a388fa17e}{neighb}};\ \ \ \textcolor{comment}{/*\ neighbor\ column\ indices\ \ (n\_coeffs)\ */}}
+\DoxyCodeLine{00108\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_matrix_a6d7679a7611dce51c5c63d30948127f4}{neighb\_size}};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#if\ RP\_AMG\_LAPLACE\_C}}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *lcoeff;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ LAPLACE\ coefficients\ */}}
+\DoxyCodeLine{00112\ \ \ \textcolor{keywordtype}{size\_t}\ lcoeff\_size;}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#if\ OVERSET\_NUMERICS}}
+\DoxyCodeLine{00115\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ press\_corr\_p;\ \ \ \ \ \ \textcolor{comment}{/*\ flag\ indicating\ segregated\ system\ pressure\ correction\ system\ */}}
+\DoxyCodeLine{00116\ \ \ \textcolor{keywordtype}{int}\ \ my\_level\_id;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ level\ is\ the\ matrix\ associated\ \ */}}
+\DoxyCodeLine{00117\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_matrix}{Matrix}}\ *myC;}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00119\ \}}
+\DoxyCodeLine{00120\ \mbox{\hyperlink{amg_8h_a9570374e3dbc873595100dae1e584459}{Matrix}};}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_table}{Table}}}
+\DoxyCodeLine{00124\ \{}
+\DoxyCodeLine{00125\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_table_a6319d98bd47f2577036012999dca3c1f}{size}}[\mbox{\hyperlink{pamg_8h_a733e6914161c2550e6c3dd9d8a5b8419}{MAX\_OVERLAP}}];\ \textcolor{comment}{/*\ number\ of\ equations\ \ \ \ \ \ \ (n\_neighbors)\ */}}
+\DoxyCodeLine{00126\ \ \ \textcolor{keywordtype}{int}\ **\mbox{\hyperlink{struct_table_a0011676cacb64cb6a082dcd17e00bd2b}{map}}[\mbox{\hyperlink{pamg_8h_a733e6914161c2550e6c3dd9d8a5b8419}{MAX\_OVERLAP}}];\ \textcolor{comment}{/*\ equation\ indices\ \ \ \ (n\_neighbors,\ size)\ */}}
+\DoxyCodeLine{00127\ \}}
+\DoxyCodeLine{00128\ \mbox{\hyperlink{amg_8h_aaa5713bb2ecdf81c430009179b806232}{Table}};}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_system}{System}}}
+\DoxyCodeLine{00132\ \{}
+\DoxyCodeLine{00133\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_system_a349c4089dd506fc31a2fee418ab0b6c0}{n\_overlap}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \#\ of\ exterior\ layers\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00134\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_system_a6a2ab777b32c42566cc5c8d75291060b}{n\_neighbors}};\ \ \ \ \textcolor{comment}{/*\ \#\ of\ neighbors\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00135\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_system_a7a45264f51287a53df2b62b0a3a8b96d}{n\_neighbors\_o}};\ \ \ \ \textcolor{comment}{/*\ \#\ of\ neighbors\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00136\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_system_a1955c1a2b87e2f32d1d15bde941559c7}{n\_compute\_nodes}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \#\ of\ compute\ nodes\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00137\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_system_a7c0ae149169f30e421fd5ff657cbecbe}{n\_cells}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \#\ of\ cells\ in\ my\ compute\ node\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00138\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_system_af9650afe4b09491cf2583300c86c81fb}{my\_id}};\ \ \ \ \ \ \textcolor{comment}{/*\ multiport\ id\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00139\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_system_a038d37e389e21aac235fbe7423b7dd4a}{nb\_id}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ multiport\ id\ of\ neighbor\ \ (n\_neighbors)\ */}}
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{struct_table}{Table}}\ \mbox{\hyperlink{struct_system_a284e33dc79f16230c9c051637251ad7d}{intr}};\ \ \ \ \ \textcolor{comment}{/*\ interior\ table\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00141\ \ \ \mbox{\hyperlink{struct_table}{Table}}\ \mbox{\hyperlink{struct_system_aab9e2255dfd51ede70b05bd2b8975be1}{extr}};\ \ \ \ \ \textcolor{comment}{/*\ exterior\ table\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00142\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_system_aafbdc520d7e9221412a4fe451f6cd93b}{local}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ the\ local\ neighbor\ id\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00143\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_system_af8faaf36875900811c716083430ce823}{remote}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ the\ remote\ neighbor\ id\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_system_acf4d33ee4cff36f69b924471174dcb11}{level}};}
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_system_a54e2f07c0624c79d98700aff96030e81}{part}};}
+\DoxyCodeLine{00146\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_system_ac997c8c4b412a8a291ac60fe9bc36c4f}{hlevel}};}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00148\ \ \ \textcolor{keywordtype}{void}\ *e;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ the\ exchange\ buffer\ related\ */}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00150\ \}}
+\DoxyCodeLine{00151\ \mbox{\hyperlink{amg_8h_ababfb172494f68b9d1cc84e298b1dd8d}{System}};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#if\ \ RP\_AMG\_DO}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#\ include\ "{}\mbox{\hyperlink{mem_8h}{mem.h}}"{}}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00159\ \{}
+\DoxyCodeLine{00160\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa78a2b2424b30bd7dfafed2e5732cc156}{AMG\_STORE\_X}}\ =\ 0,}
+\DoxyCodeLine{00161\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfaae1533361018c5b353c5de6aaa17b191}{AMG\_STORE\_Y}},}
+\DoxyCodeLine{00162\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa973dfe646333ecd8f33ce886e78efe28}{AMG\_STORE\_T}},}
+\DoxyCodeLine{00163\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa2524a726c12a73d8ab608f41d8c68eb6}{AMG\_STORE\_B}},}
+\DoxyCodeLine{00164\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa1e7ac12481faf2048742e180e4c0301b}{AMG\_STORE\_D}},}
+\DoxyCodeLine{00165\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa01e6d138ef2fd3a868199b5598f5bcce}{AMG\_STORE\_E}},}
+\DoxyCodeLine{00166\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfad0e63925b242fa2853b2191f37945a64}{AMG\_STORE\_VALUE}},}
+\DoxyCodeLine{00167\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa2944a1c828ef5768431ba91d8afda6fd}{AMG\_STORE\_COL}},}
+\DoxyCodeLine{00168\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa71685b0c6de9d39381973fdc6c2dfb88}{AMG\_STORE\_ROW}},}
+\DoxyCodeLine{00169\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfaa6d2308df1a34d35ffa090f9c1837bd8}{AMG\_STORE\_CHILD}},}
+\DoxyCodeLine{00170\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa6928c8dbc96c18a905fb1276fc7f4e03}{AMG\_STORE\_MAPU}},}
+\DoxyCodeLine{00171\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa0624a97a7b0e3553479b24633b5a4322}{AMG\_STORE\_MAPD}},}
+\DoxyCodeLine{00172\ \ \ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa1363fd2fbe57e81c6ee9fcfe99858aa0}{AMG\_STORE\_MAX}}}
+\DoxyCodeLine{00173\ \}\ \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bf}{amg\_store\_enum\_t}};}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structamg__store__t__}{amg\_store\_t\_}}}
+\DoxyCodeLine{00176\ \{}
+\DoxyCodeLine{00177\ \ \ \textcolor{keywordtype}{void}\ **\mbox{\hyperlink{structamg__store__t___a0fe295e3f3f4aed49f6d8b1577c7b054}{store}};}
+\DoxyCodeLine{00178\ \ \ \textcolor{keywordtype}{size\_t}\ *\mbox{\hyperlink{structamg__store__t___ae3c15c00c8f7ae14ae18501067cb5ac4}{size}};}
+\DoxyCodeLine{00179\ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_af17df974669c99cc2fd057c73695186c}{SV\_Dimension}}\ \mbox{\hyperlink{structamg__store__t___a1d7fe5b651e78ccdf9210bfd91bf00f4}{dimension}};}
+\DoxyCodeLine{00180\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structamg__store__t___aed52b9f958e445e1e780b520aae61c8c}{neq}};}
+\DoxyCodeLine{00181\ \}\ \mbox{\hyperlink{amg_8h_a03fd4410f2e1c2cee1472be825cfcd62}{amg\_store\_t}};}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_level}{Level}}}
+\DoxyCodeLine{00184\ \{}
+\DoxyCodeLine{00185\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_level_a6a299dd6d07776219174ed7abd325548}{n\_sets}};\ \ \ \ \ \textcolor{comment}{/*\ number\ of\ sets\ of\ equations\ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00186\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_level_a1d9c8e38dc3ea394baaf7dcc614bb42a}{coarsen\_on}}[\mbox{\hyperlink{pamg_8h_a407f56b3c03266175baa049614121aef}{MAX\_N\_SETS}}];\ \textcolor{comment}{/*\ equation\ to\ coarsen\ on\ in\ each\ set\ \ \ \ \ \ */}}
+\DoxyCodeLine{00187\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_level_a8e8893b2bc303e95822be5989e071f3c}{set}}[\mbox{\hyperlink{pamg_8h_a407f56b3c03266175baa049614121aef}{MAX\_N\_SETS}}\ +\ 1];\ \ \textcolor{comment}{/*\ set\ limit\ equation\ indices\ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00188\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_level_a84a60e78acea2e6c9796cdef3695cb41}{set\_interface\_start}}[\mbox{\hyperlink{pamg_8h_a407f56b3c03266175baa049614121aef}{MAX\_N\_SETS}}];\ \ \textcolor{comment}{/*\ set\ inerface\ index\ start\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#if\ OVERSET\_NUMERICS}}
+\DoxyCodeLine{00191\ \ \ \mbox{\hyperlink{struct_matrix}{Matrix}}\ C;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ receptor\ cell\ coefficients\ \ */}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00193\ \ \ \mbox{\hyperlink{struct_system}{System}}\ \mbox{\hyperlink{struct_level_adfd971197aee73cdb7f94d77fddb6d5c}{s}};\ \ \ \ \ \textcolor{comment}{/*\ neighbor\ overlap\ information\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00194\ \ \ \mbox{\hyperlink{struct_matrix}{Matrix}}\ \mbox{\hyperlink{struct_level_a7fd62dbdc3f3ec7a61ec84a01ed1ad4e}{A}};\ \ \ \ \ \textcolor{comment}{/*\ coefficient\ matrix\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00195\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_level_a9b9202d3c02a97f0c3e94f17f20616e4}{E}};\ \ \ \textcolor{comment}{/*\ inverse\ diagonal\ of\ ILU\ decomposition\ \ \ */}}
+\DoxyCodeLine{00196\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_level_a308813dc009062001bf9e54e203d6cdd}{x}};\ \ \ \textcolor{comment}{/*\ solution\ vector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00197\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_level_a80a16de1fca3bd21817a6f5579cac3fd}{xzero}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ flag\ to\ specify:\ 0\ for\ x==0\ 1\ otherwise\ */}}
+\DoxyCodeLine{00198\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_level_ad72eed6819d5abfaf8eb92e55c0b1fac}{b}};\ \ \ \textcolor{comment}{/*\ right\ hand\ side\ vector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00199\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_level_a4f7130e0247145bf3f0ce1ad578a90ce}{t}};\ \ \ \textcolor{comment}{/*\ right\ hand\ side\ vector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00200\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \mbox{\hyperlink{struct_level_acf3cd8124b7eb710a980a0560989333e}{child}};\ \ \textcolor{comment}{/*\ coarse\ level\ child\ index\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_level_a93f98d79dbbb4e9d0586073730f8e7f4}{flex\_sweeps}};\ \ \ \ \textcolor{comment}{/*\ number\ of\ flexible\ cycle\ sweeps\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00203\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_level_a0d1c869b017aa8c264d6e794f8742ddf}{x\_size}};\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ x\ vector\ \ \ \ \ \ */}}
+\DoxyCodeLine{00204\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_level_a4d84b4a2cb178dc580aaf5b9bca1355e}{b\_size}};\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ b\ vector\ \ \ \ \ \ */}}
+\DoxyCodeLine{00205\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_level_abff204b7296256d10ca578cb7a35b3ee}{t\_size}};\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ b\ vector\ \ \ \ \ \ */}}
+\DoxyCodeLine{00206\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_level_ad50d245d75b68ceb2eb07d87569e6f62}{child\_size}};\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ child\ vector\ \ */}}
+\DoxyCodeLine{00207\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_level_a85550f7ed61f9c352de2605117b7ebda}{e\_size}};\ \ \ \ \textcolor{comment}{/*\ current\ allocated\ size\ of\ E\ vector\ \ \ \ \ \ */}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#if\ RP\_AMG\_DO}}
+\DoxyCodeLine{00210\ \ \ \textcolor{keywordtype}{int}\ *cindex;}
+\DoxyCodeLine{00211\ \ \ \textcolor{keywordtype}{size\_t}\ cindex\_size;}
+\DoxyCodeLine{00212\ \ \ \mbox{\hyperlink{structcell__and__thread__struct}{cat\_t}}\ *parents;}
+\DoxyCodeLine{00213\ \ \ \textcolor{keywordtype}{int}\ *parent\_start;}
+\DoxyCodeLine{00214\ \ \ \textcolor{keywordtype}{size\_t}\ parents\_size;}
+\DoxyCodeLine{00215\ \ \ \textcolor{keywordtype}{size\_t}\ parent\_start\_size;}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \mbox{\hyperlink{structface__and__thread__struct}{fat\_t}}\ *bfaces;}
+\DoxyCodeLine{00218\ \ \ \textcolor{keywordtype}{int}\ *bface\_start;}
+\DoxyCodeLine{00219\ \ \ \textcolor{keywordtype}{size\_t}\ bfaces\_size;}
+\DoxyCodeLine{00220\ \ \ \textcolor{keywordtype}{size\_t}\ bface\_start\_size;}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \mbox{\hyperlink{structface__and__thread__struct}{fat\_t}}\ *ifaces;}
+\DoxyCodeLine{00223\ \ \ \textcolor{keywordtype}{int}\ *iface\_start;}
+\DoxyCodeLine{00224\ \ \ \textcolor{keywordtype}{size\_t}\ ifaces\_size;}
+\DoxyCodeLine{00225\ \ \ \textcolor{keywordtype}{size\_t}\ iface\_start\_size;}
+\DoxyCodeLine{00226\ \ \ \mbox{\hyperlink{dbgmsg_8h_a5f5a64ef503db0fc824df8320929b126}{real}}\ (*iface\_area)[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];}
+\DoxyCodeLine{00227\ \ \ \textcolor{keywordtype}{size\_t}\ iface\_area\_size;}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **I;}
+\DoxyCodeLine{00230\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **Ib;}
+\DoxyCodeLine{00231\ \ \ \textcolor{keywordtype}{int}\ I\_len0,\ I\_len1;}
+\DoxyCodeLine{00232\ \ \ \textcolor{keywordtype}{int}\ Ib\_len0,\ Ib\_len1;}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **a\_term;}
+\DoxyCodeLine{00235\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **e\_term;}
+\DoxyCodeLine{00236\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **s\_term;}
+\DoxyCodeLine{00237\ \ \ \textcolor{keywordtype}{int}\ aterm\_len0,\ aterm\_len1;}
+\DoxyCodeLine{00238\ \ \ \textcolor{keywordtype}{int}\ eterm\_len0,\ eterm\_len1;}
+\DoxyCodeLine{00239\ \ \ \textcolor{keywordtype}{int}\ sterm\_len0,\ sterm\_len1;}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \textcolor{comment}{/*\ SAMG\ data\ */}}
+\DoxyCodeLine{00243\ \ \ \mbox{\hyperlink{struct_matrix}{Matrix}}\ \mbox{\hyperlink{struct_level_a31bc3ef92792a74b0d1cb7e39cd31c7f}{P}};}
+\DoxyCodeLine{00244\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_level_a185409bbc95b4671879e39373c5010d5}{order}};}
+\DoxyCodeLine{00245\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_level}{Level}}\ *\mbox{\hyperlink{struct_level_ae17b4d9c16af8dad519ffc815c8cf508}{next}};}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \textcolor{comment}{/*\ reorder\ */}}
+\DoxyCodeLine{00248\ \ \ \mbox{\hyperlink{structcell__and__thread__struct}{cat\_t}}\ *\mbox{\hyperlink{struct_level_a69c5839b81375ef02cf3df00eede51b1}{reorder\_index}};}
+\DoxyCodeLine{00249\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_level_a2e7bfb1a3dbb410722912bfb82a9587c}{nreorder\_index}};}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \ \ \textcolor{comment}{/*\ the\ stores\ */}}
+\DoxyCodeLine{00252\ \ \ \mbox{\hyperlink{structamg__store__t__}{amg\_store\_t}}\ *\mbox{\hyperlink{struct_level_a6be19ec435db3d6ab490b06c1d302e97}{store}};}
+\DoxyCodeLine{00253\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_level_a0b1daf36d48ec15df633fdd09cf6e84e}{nstore}};}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \textcolor{comment}{/*\ the\ cross\ level\ related\ data\ */}}
+\DoxyCodeLine{00256\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{struct_level_aa4589eee048c96235918aa3c2da3e1b7}{cross}};}
+\DoxyCodeLine{00257\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_level_abbebac10053274b6aa23f0a2c004c802}{ilevel}};}
+\DoxyCodeLine{00258\ \}}
+\DoxyCodeLine{00259\ \mbox{\hyperlink{amg_8h_afa7cb00ec26d37d1ba8a7e0b6f32c63f}{Level}};}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00262\ \{}
+\DoxyCodeLine{00263\ \ \ \mbox{\hyperlink{amg_8h_ac0658dc6037e69253e72380ac19cba91a2f926e13088145fda502ba61ae51ac48}{FLUENT\_SOLVER\_FVM}}\ =\ 0,}
+\DoxyCodeLine{00264\ \ \ \mbox{\hyperlink{amg_8h_ac0658dc6037e69253e72380ac19cba91a42cd3879adca42245c911a28e537edd5}{FLUENT\_SOLVER\_FEA}}\ =\ 1\ \ }
+\DoxyCodeLine{00265\ \}}
+\DoxyCodeLine{00266\ \mbox{\hyperlink{amg_8h_ac0658dc6037e69253e72380ac19cba91}{AMG\_Solver\_Mode}};}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00269\ \{}
+\DoxyCodeLine{00270\ \ \ \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a0bfd475eb3b3a62c1326dc92d4e57f1a}{FLEXIBLE\_CYCLE}}\ =\ 0,}
+\DoxyCodeLine{00271\ \ \ \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a3f9d0f8f4400b01209d16d6bd07058cb}{V\_CYCLE}}\ =\ 1,}
+\DoxyCodeLine{00272\ \ \ \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08ab878166192f3bbb3df22735b2c6dafc1}{W\_CYCLE}}\ =\ 2,}
+\DoxyCodeLine{00273\ \ \ \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a6ce16ab03eaaecb71458081ce0147fa0}{F\_CYCLE}}\ =\ 3}
+\DoxyCodeLine{00274\ \}}
+\DoxyCodeLine{00275\ \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08}{AMG\_Cycle\_Type}};}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00279\ \{}
+\DoxyCodeLine{00280\ \ \ \mbox{\hyperlink{amg_8h_a98c8bf66eeb69488144d3e79c0354a9da6d8e6be2f4b7d0331d9b9ed87712023b}{SMOOTHER\_JACOBI}},}
+\DoxyCodeLine{00281\ \ \ \mbox{\hyperlink{amg_8h_a98c8bf66eeb69488144d3e79c0354a9daea1f0d0d7903136085dc7910b4d9395f}{SMOOTHER\_GAUSS\_SEIDEL}},}
+\DoxyCodeLine{00282\ \ \ \mbox{\hyperlink{amg_8h_a98c8bf66eeb69488144d3e79c0354a9da2d84cf3308d5fe6771f64ebf3e9bce26}{SMOOTHER\_ILU}}}
+\DoxyCodeLine{00283\ \}}
+\DoxyCodeLine{00284\ \mbox{\hyperlink{amg_8h_a98c8bf66eeb69488144d3e79c0354a9d}{AMG\_Smoother\_Type}};}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00287\ \{}
+\DoxyCodeLine{00288\ \ \ \mbox{\hyperlink{amg_8h_a08a6c0525ecf918e4662615e5cadb100ac804d6575c6a49b244b99bebe720f4b0}{METHOD\_AGGREGATIVE}},}
+\DoxyCodeLine{00289\ \ \ \mbox{\hyperlink{amg_8h_a08a6c0525ecf918e4662615e5cadb100ad1fd1a98d2950a6c229b2242f4ef7b1e}{METHOD\_SELECTIVE}}}
+\DoxyCodeLine{00290\ \}}
+\DoxyCodeLine{00291\ \mbox{\hyperlink{amg_8h_a08a6c0525ecf918e4662615e5cadb100}{AMG\_Method}};}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00294\ \{}
+\DoxyCodeLine{00295\ \ \ \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea9f1d180b9c87b8b01446ff020cf82eea}{SOLVE\_STATUS\_NORMAL}},}
+\DoxyCodeLine{00296\ \ \ \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512eaf28e30f026cd353d47df308cad8a98c4}{SOLVE\_STATUS\_GLOBAL}},}
+\DoxyCodeLine{00297\ \ \ \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512eab8f0d1be8df7a35d390fcf99948980b8}{SOLVE\_STATUS\_HYBRID}},}
+\DoxyCodeLine{00298\ \ \ \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512eac341e661bbb2d8eeb0a23f317aaac185}{SOLVE\_STATUS\_HYBRID\_GLOBAL}},}
+\DoxyCodeLine{00299\ \ \ \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea93eb8273406f9478931912206628441c}{SOLVE\_STATUS\_GROUP}},}
+\DoxyCodeLine{00300\ \ \ \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea12a09716a03e94f8f2719421d6bd6c69}{SOLVE\_STATUS\_FINAL}}}
+\DoxyCodeLine{00301\ \}}
+\DoxyCodeLine{00302\ \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512e}{AMG\_Solve\_Status}};}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4}{amg\_grouping\_method\_e}}}
+\DoxyCodeLine{00305\ \{}
+\DoxyCodeLine{00306\ \ \ \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a5c7cc93c1f5f63d2e468529392ba85ca}{AMG\_GROUPING\_TRADITIONAL}}\ =\ 0,}
+\DoxyCodeLine{00307\ \ \ \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a682a971a2d3bfd793ca4677bc702b283}{AMG\_GROUPING\_LARGE\_GROUP\_SIZE}},}
+\DoxyCodeLine{00308\ \ \ \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4ad608bc9a8c4fe541ddef03afe90968ff}{AMG\_GROUPING\_GREEDY}},}
+\DoxyCodeLine{00309\ \ \ \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a9264159c41c81d7a449b6ac71934d24e}{AMG\_GROUPING\_GREEDY\_FLUX}}}
+\DoxyCodeLine{00310\ \}}
+\DoxyCodeLine{00311\ \mbox{\hyperlink{amg_8h_ada36b21fe251dc72cc81999055ae0a8e}{AMG\_Grouping\_Method}};}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_a_m_g___controls}{AMG\_Controls}}}
+\DoxyCodeLine{00314\ \{}
+\DoxyCodeLine{00315\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_aec50a73fcac885c9df15e834c295a67b}{sys\_id}};}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \textcolor{comment}{/*\ Equation\ controls.\ */}}
+\DoxyCodeLine{00318\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a3680048c4656840e0de1886972b9497f}{scale\_corrections}};}
+\DoxyCodeLine{00319\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ae26b0a1787cf81f6df7bf0ae6d1b79c5}{scale\_filter}};}
+\DoxyCodeLine{00320\ \ \ \mbox{\hyperlink{pamg_8h_a7b2b3448ff217e23fd3cab726d95eb08}{AMG\_Cycle\_Type}}\ \mbox{\hyperlink{struct_a_m_g___controls_a202a3c36ce68f863330ef38b5e99e089}{cycle\_type}};}
+\DoxyCodeLine{00321\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_a_m_g___controls_a61860600a95b57724c1bbb106aed5c70}{termination\_epsilon}};}
+\DoxyCodeLine{00322\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_a_m_g___controls_aaa024d6c4e8c1f72cabac5976a0bb749}{restriction\_epsilon}};}
+\DoxyCodeLine{00323\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_a_m_g___controls_adf7dc1d4313a73d03e4c21342e56c6ae}{divergence\_epsilon}};}
+\DoxyCodeLine{00324\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_a_m_g___controls_a97eab6d709b80585fe9e8a54b1e3da27}{tolerance}};}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \textcolor{comment}{/*\ Coarsening\ parameters.\ */}}
+\DoxyCodeLine{00327\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ab71428cdbb7f3d61e631ff88f31dd0c6}{max\_levels}};}
+\DoxyCodeLine{00328\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a939f3969e8c4745952f2c64b3ab5aed8}{group\_size}};}
+\DoxyCodeLine{00329\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_adcd47536277bd5c0285cf82a0380ed62}{level\_group\_size}}[\mbox{\hyperlink{amg_8h_add784659439a8dd6b1423406171414d3}{MAX\_LEVELS}}];}
+\DoxyCodeLine{00330\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_aaeef088c5409a910701ff6ff8661b7ff}{min\_group\_size}};}
+\DoxyCodeLine{00331\ \ \ \mbox{\hyperlink{amg_8h_ada36b21fe251dc72cc81999055ae0a8e}{AMG\_Grouping\_Method}}\ \mbox{\hyperlink{struct_a_m_g___controls_aa14772f9e147dec54a7cb3a42be49ae6}{group\_method}};}
+\DoxyCodeLine{00332\ \ \ \mbox{\hyperlink{amg_8h_ada36b21fe251dc72cc81999055ae0a8e}{AMG\_Grouping\_Method}}\ \mbox{\hyperlink{struct_a_m_g___controls_a9257eda0fd1f0309a33ca49eec243413}{group\_method\_fallback}};}
+\DoxyCodeLine{00333\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_aed159ac65eef87ecf6a4549a9095a13b}{greedy\_force\_nonsymmetric}};}
+\DoxyCodeLine{00334\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_a2efe9d17bd19b200909a1f7f14cf9eae}{map\_neighb}};}
+\DoxyCodeLine{00335\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a6e9c222e3a3353862017b07038e41b6c}{coarsening\_assume\_symmetry}};}
+\DoxyCodeLine{00336\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_a9f908de5e5b2485a98f8f77a72d15688}{grouping\_check\_self}};}
+\DoxyCodeLine{00337\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_a594a2b7b94929ec1a48c68df4eedc95f}{grouping\_check\_exterior}};}
+\DoxyCodeLine{00338\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_a_m_g___controls_a83cdc74a7df239447e6f498f371c2476}{grouping\_check\_exterior\_scale}};}
+\DoxyCodeLine{00339\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a6f2b223f2a5b287381c6abcb4d4fdbfd}{grouping\_stop\_method}};}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \textcolor{comment}{/*\ Fixed\ cycle\ parameters.\ */}}
+\DoxyCodeLine{00342\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a16fa693d6e5299b785a863d0a0441a66}{pre\_sweeps}};}
+\DoxyCodeLine{00343\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a347a9aab71003396d90924d65898c208}{post\_sweeps}};}
+\DoxyCodeLine{00344\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ae67528b2c113198111b76b4e49ea19c0}{min\_cycles}};}
+\DoxyCodeLine{00345\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a278477e87d63e0f95c4080c4dac976d8}{max\_cycles}};}
+\DoxyCodeLine{00346\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_acdb622afd427f34fddbad864128deb44}{cont\_positive}};}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ \textcolor{comment}{/*\ Flexible\ cycle\ parameters.\ */}}
+\DoxyCodeLine{00349\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ad80abe447220034b1f5632312b2bb1f0}{max\_coarse\_sweeps}};}
+\DoxyCodeLine{00350\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a4275c28c640fea4110da2fe0a9f5c830}{max\_fine\_sweeps}};}
+\DoxyCodeLine{00351\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a8cc5d4c166d43ee09399824e8ee8851b}{smoother\_sweeps}};}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \ \ \textcolor{comment}{/*\ Options.\ */}}
+\DoxyCodeLine{00354\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a1bdcfae3209cbd96db35a2ae356fa15e}{verbosity}};}
+\DoxyCodeLine{00355\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ab10999280774670517b855990b9962a8}{smoother}};}
+\DoxyCodeLine{00356\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a6c7f1c9b82b8366169a96440e40988a2}{sweep\_exchange}};}
+\DoxyCodeLine{00357\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a9d45fbbd8c08cfe4746253617b6ed6b8}{global\_solve}};}
+\DoxyCodeLine{00358\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ad985a955eeeff52d05b31e7091d16bec}{global\_solve\_optimization}};}
+\DoxyCodeLine{00359\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ada8fae2fbe51e7bf7ed861bedad32e90}{in\_global\_solve}};}
+\DoxyCodeLine{00360\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ae90e6c94442b7f7537295a45b42f6915}{in\_global\_coarsening}};}
+\DoxyCodeLine{00361\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a9a6ef6244fa01cf2724c53b9d8730da4}{ignore\_slow\_communication}};}
+\DoxyCodeLine{00362\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a03fba353c041f712bbc9200f12f02494}{force\_slow\_communication}};}
+\DoxyCodeLine{00363\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a41be111e202b6202eaecaeebbd2f9c75}{machine\_count}};}
+\DoxyCodeLine{00364\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_a_m_g___controls_a592b96b5d01065b8ae2d9f9dab0f64ea}{ilu\_seg\_relax}};}
+\DoxyCodeLine{00365\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_a_m_g___controls_ad61d74a746b19e99aa2b18595df28608}{ilu\_cpl\_relax}};}
+\DoxyCodeLine{00366\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_aaed00adccbcaa27204115bcab8fc94fb}{ilu\_relax\_method}};}
+\DoxyCodeLine{00367\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a0dc482a5f674d8fa28ec188fe7fa528e}{save\_temps}};}
+\DoxyCodeLine{00368\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_aa7228c11c52df23f2d0be994d2a10036}{v5}};}
+\DoxyCodeLine{00369\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_adcc9a19ad3119f823a658f6a49a24e64}{method}};\ \textcolor{comment}{/*\ aggregative\ or\ selective\ */}}
+\DoxyCodeLine{00370\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_ae6a5672b3038ba6bcc063dc463392e7b}{dd\_diagnostics}};}
+\DoxyCodeLine{00371\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_ac454d345e9132f18220cbf6850f4aca9}{residual\_record}};}
+\DoxyCodeLine{00372\ \ \ }
+\DoxyCodeLine{00373\ \ \ \textcolor{comment}{/*Smoother\ options*/}}
+\DoxyCodeLine{00374\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_abcbc3f575068da3330a8abbaec2e9f54}{sweep\_partition\_interface}};}
+\DoxyCodeLine{00375\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_a_m_g___controls_a5c22d53e760f304c1819ad253ad7610c}{smoother\_under\_relax\_factor}};}
+\DoxyCodeLine{00376\ }
+\DoxyCodeLine{00377\ \ \ \textcolor{comment}{/*\ Memory\ */}}
+\DoxyCodeLine{00378\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_a_m_g___controls_a455f8b9ee0e87ad99006b6f0226b1955}{malloc\_oversize\_percent}};}
+\DoxyCodeLine{00379\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_a_m_g___controls_a3c570c4c1c774cc521d81a65ffc051d4}{memory\_chunk\_size}};}
+\DoxyCodeLine{00380\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a271687e0cba475c035ce00ff9f500f92}{memory\_chunk\_use}};}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \ \ \textcolor{comment}{/*\ Global\ solve\ parameters\ */}}
+\DoxyCodeLine{00383\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_aecefb5718ad7315887f0e718b7175b63}{global\_residual}};}
+\DoxyCodeLine{00384\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a46ffa51e9e7e46163bd4f1b7bfc1cca3}{check\_global\_solution}};}
+\DoxyCodeLine{00385\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a65f1ea4c81ba3f76498963eaa4ee79ec}{max\_global\_cycles}};}
+\DoxyCodeLine{00386\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a622fb3d833b7b1023821fe8b9677e92a}{global\_solve\_type}};\ \textcolor{comment}{/*\ 0\ -\/\ global\ solve\ before\ fixed\ cycle}}
+\DoxyCodeLine{00387\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 1\ -\/\ global\ solve\ only\ once\ per\ cycle}}
+\DoxyCodeLine{00388\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 2\ -\/\ global\ solve\ for\ every\ sub\ cycle}}
+\DoxyCodeLine{00389\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00390\ \ \ \textcolor{comment}{/*\ solve\ status\ */}}
+\DoxyCodeLine{00391\ \ \ \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512e}{AMG\_Solve\_Status}}\ \mbox{\hyperlink{struct_a_m_g___controls_a4d8c8f87792fbe775bfb75be478a3071}{solve\_status}};}
+\DoxyCodeLine{00392\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_af79c892382e5d1c497c5e514330636a5}{use\_hybrid}};}
+\DoxyCodeLine{00393\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_af64cfcc29424c3b939fcac8d99ea7383}{use\_hybrid\_optimization}};}
+\DoxyCodeLine{00394\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a1a72752c4d08913c8b003ca32d1a3830}{use\_hierarchy}};}
+\DoxyCodeLine{00395\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_aa85ffe7728fe6b62d593de58cb66f232}{repeat}};}
+\DoxyCodeLine{00396\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_ae6c440c0c278c2353c8f4230471a95dd}{protective\_enhanced}};}
+\DoxyCodeLine{00397\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ab46fbdf8bf4108c46f4419febbb44dd1}{stall\_cycle}};}
+\DoxyCodeLine{00398\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_a7d5410bb3f2824a30de02b03ac19cc4a}{early\_protection}};}
+\DoxyCodeLine{00399\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a685a506c607987fedbb8f98d348a9acc}{stall\_iter}};}
+\DoxyCodeLine{00400\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_a_m_g___controls_aad24d5d8489847b2c83e9b882d0b2e37}{stall\_rate}};}
+\DoxyCodeLine{00401\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a188d261a71b99a2af3cc7a078d3bb95b}{diverge\_iter}};}
+\DoxyCodeLine{00402\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_a_m_g___controls_ad5279ec19f67ea34b918239e5acf3a99}{diverge\_rate}};}
+\DoxyCodeLine{00403\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a57c8f461222eafebba22c744431677b0}{global\_master\_dist}};\ \textcolor{comment}{/*\ 0\ -\/\ as\ apart\ as\ possible\ (default)}}
+\DoxyCodeLine{00404\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 1\ -\/\ as\ close\ as\ possible}}
+\DoxyCodeLine{00405\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00406\ \ \ \textcolor{comment}{/*\ resuse\ */}}
+\DoxyCodeLine{00407\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a1368077cae3ad71ad1be430bcf514685}{precondition\_reuse}};\ \ \textcolor{comment}{/*\ control\ to\ reuse\ in\ precondition:}}
+\DoxyCodeLine{00408\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 0\ -\/\ re-\/create\ coarse\ levels\ everytime}}
+\DoxyCodeLine{00409\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 1\ -\/\ Keep\ using\ the\ coarse\ levels\ (all\ levels\ local,\ hybrid\ or\ global)\ and\ reuse\ the\ ILU\_Decomposition}}
+\DoxyCodeLine{00410\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00411\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a8b16086473959a99b2a2964ddc158dd4}{reuse}};\ \ \textcolor{comment}{/*\ 0\ -\/\ re-\/create\ coarse\ levels\ everytime}}
+\DoxyCodeLine{00412\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 1\ -\/\ Keep\ using\ the\ coarse\ levels\ (all\ levels\ local,\ hybrid\ or\ global)\ and\ reuse\ the\ ILU\_Decomposition}}
+\DoxyCodeLine{00413\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ \ \ \textcolor{comment}{/*\ the\ 2/3\ rule\ of\ coarsening,\ whether\ checked\ globally\ */}}
+\DoxyCodeLine{00416\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_adf9eaf8ce9ccad0d1e43f5feda09e2f2}{global\_check\_coarsening}};}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \ \ \textcolor{comment}{/*\ check\ for\ preset\ child\ */}}
+\DoxyCodeLine{00419\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a80386681aa7434cc36a5566b3b393a46}{child\_preset}};\ \textcolor{comment}{/*\ 0\ -\/\ no\ partitions\ with\ all\ preset}}
+\DoxyCodeLine{00420\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 1\ -\/\ my\ partition\ is\ all\ preset}}
+\DoxyCodeLine{00421\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 2\ -\/\ all\ partions\ are\ preset}}
+\DoxyCodeLine{00422\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00423\ }
+\DoxyCodeLine{00424\ \ \ \textcolor{comment}{/*\ second\ layer\ of\ protection/stabilization\ */}}
+\DoxyCodeLine{00425\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_a98d6c52e7107124a8087e992fd745c03}{stabilization\_protection}};\ \textcolor{comment}{/*\ protect\ the\ stabilization\ if\ fails\ */}}
+\DoxyCodeLine{00426\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_a1df04bf57973aa41da83802fb9462456}{solver\_protection}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ protect\ any\ solver\ if\ fails\ Now\ for\ CG\ and\ BCGSTAB\ */}}
+\DoxyCodeLine{00427\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_ac0ba4bb31f852d0e1779a98c0cd7de63}{solver\_protection\_method}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ solver"{}amg-\/stabilization"{}\ used\ as\ 2nd\ layer\ of\ protection\ */}}
+\DoxyCodeLine{00428\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_adf7e971408bf454472a490100dc63bcd}{use\_solver\_protection}};\ \ \ \ \textcolor{comment}{/*\ switch\ to\ indicate\ that\ the\ 2nd\ layer\ layer\ of\ protection\ is\ activated\ */}}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \ \ \textcolor{comment}{/*\ use\ cross\ partition\ coarsening\ */}}
+\DoxyCodeLine{00431\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a73050ff1210fb3cff7be47e75d647f03}{cross}};}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \ \ \textcolor{comment}{/*\ use\ overlap\ communication\ and\ computation\ */}}
+\DoxyCodeLine{00434\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_a_m_g___controls_a4ecb803406dc08d16c7f92a314dcf6ce}{overlap\_cc}};}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_a56508a808f0b0077eaa51066720a46ae}{udsmootherilu}};}
+\DoxyCodeLine{00437\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_a_m_g___controls_adb2a93cb060370ae40d0fdba565b0fe8}{udlinearsolver}};}
+\DoxyCodeLine{00438\ \}}
+\DoxyCodeLine{00439\ \mbox{\hyperlink{amg_8h_a7f14a5e08ebb354e0006eba271e48361}{AMG\_Controls}};}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_aee211349a23cf17d71eac3f0028cadbe}{Setup\_Equation\_Grouping}}(\mbox{\hyperlink{amg_8h_ada36b21fe251dc72cc81999055ae0a8e}{AMG\_Grouping\_Method}},}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_a_m_g___controls}{AMG\_Controls}}\ *);}
+\DoxyCodeLine{00443\ }
+\DoxyCodeLine{00444\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_a_m_g___methods}{AMG\_Methods}}}
+\DoxyCodeLine{00445\ \{}
+\DoxyCodeLine{00446\ \ \ void\ (*\mbox{\hyperlink{struct_a_m_g___methods_a0446f30ece73ffec79f72316d2bb2a8d}{ILU\_Decomposition}})\ \ \ \ \ \ \ \ (\mbox{\hyperlink{amg_8h_a9570374e3dbc873595100dae1e584459}{Matrix}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ []);}
+\DoxyCodeLine{00447\ \ \ int\ \ (*\mbox{\hyperlink{struct_a_m_g___methods_abcde59f6252a289a1db87a2fc0cd7716}{Make\_Coarse\_Level}})\ \ \ \ \ \ \ \ (\mbox{\hyperlink{struct_level}{Level}}\ *,\ int);}
+\DoxyCodeLine{00448\ \ \ int\ \ (*\mbox{\hyperlink{struct_a_m_g___methods_a78f1c1a01ae467c64a5909139578a1c5}{Group\_Equations}})\ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{struct_level}{Level}}\ *,\ \mbox{\hyperlink{struct_level}{Level}}\ *);}
+\DoxyCodeLine{00449\ \ \ void\ (*\mbox{\hyperlink{struct_a_m_g___methods_a383e024140e8ee910a8f3e8cd4f5e8ed}{Init\_Overlap\_Tables}})\ \ \ \ \ \ (\mbox{\hyperlink{struct_level}{Level}}\ *,\ \mbox{\hyperlink{struct_level}{Level}}\ *);}
+\DoxyCodeLine{00450\ \ \ void\ (*\mbox{\hyperlink{struct_a_m_g___methods_a4f607d2b73605c63c9f6fee3c01beb5c}{Restrict\_Overlap\_Table}})\ \ \ (int,\ int,\ \textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{struct_table}{Table}}\ *,\ \mbox{\hyperlink{struct_table}{Table}}\ *);}
+\DoxyCodeLine{00451\ \ \ void\ (*\mbox{\hyperlink{struct_a_m_g___methods_ad7865ba6d261e84189cb87a4be2faee5}{Localize\_Child\_Numbering}})\ (\mbox{\hyperlink{struct_system}{System}}\ *,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00452\ \ \ int\ \ (*\mbox{\hyperlink{struct_a_m_g___methods_af3ea847e83732b166e045ab5960503a3}{Restrict\_Matrix}})\ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{struct_level}{Level}}\ *,\ \mbox{\hyperlink{struct_level}{Level}}\ *);}
+\DoxyCodeLine{00453\ \}\ \mbox{\hyperlink{struct_a_m_g___methods}{AMG\_Methods}};}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\#if\ RP\_AMG\_LAPLACE\_C}}
+\DoxyCodeLine{00456\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }amg\_laplace\_t\_}
+\DoxyCodeLine{00457\ \{}
+\DoxyCodeLine{00458\ \ \ \textcolor{comment}{/*\ the\ current\ sys\_id\ */}}
+\DoxyCodeLine{00459\ \ \ \textcolor{keywordtype}{int}\ sys\_id;}
+\DoxyCodeLine{00460\ \ \ \textcolor{comment}{/*\ this\ is\ the\ indicator\ for\ having\ any\ laplace\ coarsening}}
+\DoxyCodeLine{00461\ \textcolor{comment}{\ \ \ \ \ for\ either\ scalar\ or\ coupled\ systems\ */}}
+\DoxyCodeLine{00462\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ on;}
+\DoxyCodeLine{00463\ \ \ \textcolor{comment}{/*\ if\ there\ are\ more\ than\ one\ equation\ coarsening\ for\ the\ same\ system,}}
+\DoxyCodeLine{00464\ \textcolor{comment}{\ \ \ \ \ ignore\ laplace\ coarsening\ */}}
+\DoxyCodeLine{00465\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ignore[\mbox{\hyperlink{mem__grid_8h_a544e66bba0ae5bf6b2fdc6521356a9eda8d3f15941713d6432032332a84d85a09}{AMG\_MAX\_SYSTEMS}}];}
+\DoxyCodeLine{00466\ \ \ \textcolor{comment}{/*\ see\ if\ need\ to\ do\ regrouping,\ first\ set\ in\ make\ fine\ level,}}
+\DoxyCodeLine{00467\ \textcolor{comment}{\ \ \ \ \ then\ double\ checked\ in\ make\ coarse\ level\ */}}
+\DoxyCodeLine{00468\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ regroup[\mbox{\hyperlink{mem__grid_8h_a544e66bba0ae5bf6b2fdc6521356a9eda8d3f15941713d6432032332a84d85a09}{AMG\_MAX\_SYSTEMS}}];}
+\DoxyCodeLine{00469\ \ \ \textcolor{comment}{/*\ the\ basice\ indicator\ for\ whether\ use\ laplace\ coarsening\ */}}
+\DoxyCodeLine{00470\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ enable[\mbox{\hyperlink{mem__grid_8h_a544e66bba0ae5bf6b2fdc6521356a9eda8d3f15941713d6432032332a84d85a09}{AMG\_MAX\_SYSTEMS}}];}
+\DoxyCodeLine{00471\ \ \ \textcolor{comment}{/*\ the\ name\ of\ the\ coarsend\ equation\ */}}
+\DoxyCodeLine{00472\ \ \ \textcolor{keywordtype}{char}\ *coarsened\_equation[\mbox{\hyperlink{mem__grid_8h_a544e66bba0ae5bf6b2fdc6521356a9eda8d3f15941713d6432032332a84d85a09}{AMG\_MAX\_SYSTEMS}}];}
+\DoxyCodeLine{00473\ \ \ \textcolor{comment}{/*\ the\ name\ of\ the\ current\ equation\ name\ */}}
+\DoxyCodeLine{00474\ \ \ \textcolor{keywordtype}{char}\ *cur\_equation[\mbox{\hyperlink{mem__grid_8h_a544e66bba0ae5bf6b2fdc6521356a9eda8d3f15941713d6432032332a84d85a09}{AMG\_MAX\_SYSTEMS}}];}
+\DoxyCodeLine{00475\ \ \ \textcolor{comment}{/*\ remember\ the\ fine\ level\ child\ */}}
+\DoxyCodeLine{00476\ \ \ \textcolor{keywordtype}{int}\ *child[\mbox{\hyperlink{mem__grid_8h_a544e66bba0ae5bf6b2fdc6521356a9eda8d3f15941713d6432032332a84d85a09}{AMG\_MAX\_SYSTEMS}}];}
+\DoxyCodeLine{00477\ \ \ \textcolor{comment}{/*\ the\ fine\ level\ child\ size\ */}}
+\DoxyCodeLine{00478\ \ \ \textcolor{keywordtype}{size\_t}\ child\_size[\mbox{\hyperlink{mem__grid_8h_a544e66bba0ae5bf6b2fdc6521356a9eda8d3f15941713d6432032332a84d85a09}{AMG\_MAX\_SYSTEMS}}];}
+\DoxyCodeLine{00479\ \ \ \textcolor{comment}{/*\ to\ see\ if\ in\ coarsening\ of\ global\ levels\ */}}
+\DoxyCodeLine{00480\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ in\_global\_coarsening;}
+\DoxyCodeLine{00481\ \}\ amg\_laplace\_t;}
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \#if\ RP\_AMG\_LAPLACE\_C\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00485\ \textcolor{comment}{/*\ Declarations\ for\ parallel\ timers.\ */}}
+\DoxyCodeLine{00486\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ par\_amg\_cycle\_count;}
+\DoxyCodeLine{00487\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ par\_amg\_sweep\_count;}
+\DoxyCodeLine{00488\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ par\_amg\_exchange\_count;}
+\DoxyCodeLine{00489\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ par\_amg\_global\_solve\_count;}
+\DoxyCodeLine{00490\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{double}\ par\_amg\_global\_solve\_time;}
+\DoxyCodeLine{00491\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ par\_amg\_solve\_count;}
+\DoxyCodeLine{00492\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{double}\ par\_amg\_solve\_time;}
+\DoxyCodeLine{00493\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ par\_amg\_global\_matrix\_size;}
+\DoxyCodeLine{00494\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ par\_amg\_diverged\_count;}
+\DoxyCodeLine{00495\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ par\_amg\_diverged\_recovered\_count;}
+\DoxyCodeLine{00496\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ amg\_early\_protection\_stage1\_count;}
+\DoxyCodeLine{00497\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ amg\_early\_protection\_stage2\_count;}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a660e9825668968c35b54a9e05363c9b5}{AMG\_Get\_Residual}}(\mbox{\hyperlink{struct_matrix}{Matrix}}\ *A,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *x,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *b,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ residual[],\ \textcolor{keywordtype}{int}\ n\_ceqn);}
+\DoxyCodeLine{00501\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a8725817ed8f21d37975843df674f8bae}{AMG\_Get\_Residualg}}(\mbox{\hyperlink{struct_matrix}{Matrix}}\ *A,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *x,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *b,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ residual[],\ \textcolor{keywordtype}{int}\ n\_ceqn);}
+\DoxyCodeLine{00502\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{amg_8h_aa2a4779e434efdfb0f62de39c078b71e}{Smoother\_Solve}}(\mbox{\hyperlink{struct_a_m_g___controls}{AMG\_Controls}}\ controls,\ \mbox{\hyperlink{struct_level}{Level}}\ \mbox{\hyperlink{amgif_8h_af6bd0e439b30d98604ba7649b71bd404}{fine}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ residual0[]);}
+\DoxyCodeLine{00503\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{amg_8h_aa963c3ce11585d6b02037319b8a3dfa1}{AMG\_Solve}}(\mbox{\hyperlink{struct_a_m_g___controls}{AMG\_Controls}}\ controls,\ \mbox{\hyperlink{struct_level}{Level}}\ \mbox{\hyperlink{amgif_8h_af6bd0e439b30d98604ba7649b71bd404}{fine}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ residual0[]);}
+\DoxyCodeLine{00504\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{amg_8h_a296fa84b6a806350c1ccffd5dc093ccd}{SAMG\_solve}}(\mbox{\hyperlink{struct_a_m_g___controls}{AMG\_Controls}}\ *amgC,\ \mbox{\hyperlink{struct_level}{Level}}\ *f,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ residual0[]);}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{struct_level}{Level}}\ *\mbox{\hyperlink{amg_8h_a977a252e2dac27680aeeb4f4609d34c9}{Make\_All\_Coarse\_Levels}}(\mbox{\hyperlink{struct_a_m_g___controls}{AMG\_Controls}}\ controls,\ \mbox{\hyperlink{struct_level}{Level}}\ \mbox{\hyperlink{amgif_8h_af6bd0e439b30d98604ba7649b71bd404}{fine}});}
+\DoxyCodeLine{00507\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a70d2add4c7eab5f903ad5591c625d39e}{Fixed\_Cycle}}(\mbox{\hyperlink{struct_level}{Level}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ level,\ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{int}\ cycle\_type,}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ invoke\_globle\_solve,\ \textcolor{keywordtype}{int}\ invoke\_exchange);}
+\DoxyCodeLine{00509\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{amg_8h_a002536665241b9f60aae570342c87a1f}{Equation\_Coarse\_Level\_Index}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{amg_8h_a9ed35919d62076e502bd7ee3258e612d}{Resize\_Vector\_AMG}}(\textcolor{keywordtype}{void}\ **v,\ \textcolor{keywordtype}{size\_t}\ *allocated\_size,}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ required\_size,}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ resize,}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line);}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{amg_8h_a6b8a76fb134176559f9a7969969c5f59}{Resize\_Vector\_Chunk\_AMG}}(\textcolor{keywordtype}{void}\ **v,\ \textcolor{keywordtype}{size\_t}\ *allocated\_size,}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ required\_size,\ \mbox{\hyperlink{struct_matrix}{Matrix}}\ *A,}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cont,\ \textcolor{keywordtype}{int}\ resize,}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line);}
+\DoxyCodeLine{00520\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a262916fae2cfd4da529b928970af5905}{Free\_Chunk\_Memory\_AMG}}\ (\mbox{\hyperlink{struct_matrix}{Matrix}}\ *A);}
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#define\ Resize\_Vector(v,\ allocated\_size,\ required\_size)\ \(\backslash\)}}
+\DoxyCodeLine{00523\ \textcolor{preprocessor}{\ \ Resize\_Vector\_AMG((void\ **)(\&(v)),\ (allocated\_size),\ (required\_size),\ 1,\(\backslash\)}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#define\ Resize\_Vector\_Chunk(v,\ allocated\_size,\ required\_size,\ A,\ cont)\ \ \(\backslash\)}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\ \ Resize\_Vector\_Chunk\_AMG((void\ **)(\&(v)),\ (allocated\_size),\ (required\_size),\ \&(A),\ cont,\ \(\backslash\)}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ 1,\ \_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\#if\ AMG\_CHUNKED\_MEMORY}}
+\DoxyCodeLine{00531\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structamg__mem__head__t__}{amg\_mem\_head\_t\_}}}
+\DoxyCodeLine{00532\ \{}
+\DoxyCodeLine{00533\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structamg__mem__head__t___a7a2168e48d832410e6f7086be9f49d35}{cont}};}
+\DoxyCodeLine{00534\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structamg__mem__head__t___aa1909a57c992d1b520c1a00b6046d845}{use\_chunk}};}
+\DoxyCodeLine{00535\ \ \ \textcolor{keywordtype}{short}\ \mbox{\hyperlink{structamg__mem__head__t___aa74f5dd012a75e8ac633ff289e433600}{n\_ceqn}};}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structamg__mem__head__t___afa4bb43b5e37785fc2cbed0c21b32207}{p}};}
+\DoxyCodeLine{00538\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structamg__mem__head__t___a1042449d1e54b0ec6116d4b6730f5619}{manager}};}
+\DoxyCodeLine{00539\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structamg__mem__head__t___ab6a7b5bae94256cdc64ddb41c06b30bb}{chunk\_size}};}
+\DoxyCodeLine{00540\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structamg__mem__head__t___ab45b7365944dfec382641e1665a108ec}{p\_size}};}
+\DoxyCodeLine{00541\ \}\ \mbox{\hyperlink{amg_8h_ae31ff4f61f728134fa16e75e6cd3f338}{amg\_mem\_head\_t}};}
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\#ifndef\ AMG\_CHUNKED\_MEMORY\_E}}
+\DoxyCodeLine{00543\ \textcolor{preprocessor}{\#define\ AMG\_CHUNKED\_MEMORY\_E\ 1}}
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00545\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{amg_8h_a8b48eb572e208ce40094d9655ab4646c}{size\_of\_amg\_mem\_head}};}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\#define\ A\_VALUEP(B,i)\ ((B).valuep[i])}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\#define\ A\_DP(B,i)\ ((B).dp[i])}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\#if\ AMG\_CHUNKED\_MEMORY\_E}}
+\DoxyCodeLine{00549\ \textcolor{preprocessor}{\#define\ A\_EP(\_E\_,i,SQRn\_ceqn)\ ((((amg\_mem\_head\_t\ *)\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ((char\ *)(\_E\_)-\/size\_of\_amg\_mem\_head))-\/>p)[i])}}
+\DoxyCodeLine{00551\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00552\ \textcolor{preprocessor}{\#define\ A\_EP(\_E\_,i,SQRn\_ceqn)\ ((\_E\_)+\ (i)*SQRn\_ceqn)}}
+\DoxyCodeLine{00553\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00555\ \textcolor{preprocessor}{\#define\ A\_VALUEP(B,i)\ ((B).value\ +\ (i)*(B).SQRn\_ceqn)}}
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\#define\ A\_DP(B,i)\ ((B).d\ +\ (i)*(B).SQRn\_ceqn)}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#define\ A\_EP(\_E\_,i,SQRn\_ceqn)\ ((\_E\_)+\ (i)*SQRn\_ceqn)}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\#define\ ZERO\_A\_VALUEP(B,i)\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00561\ \textcolor{preprocessor}{\ \ if(1\ ==\ (B).n\_ceqn)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\ \ \ \ *(A\_VALUEP((B),i))\ =\ 0.0;\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00563\ \textcolor{preprocessor}{\ \ else\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00564\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\ \ \ \ \ \ real\ *\ PTR\_RESTRICT\ \_r\ =\ A\_VALUEP((B),i);\ \(\backslash\)}}
+\DoxyCodeLine{00566\ \textcolor{preprocessor}{\ \ \ \ \ \ int\ \_n\ =\ SQR((B).n\_ceqn);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\ \ \ \ \ \ int\ \_i;\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\ \ \ \ \ \ for(\_i=0;\_i<\_n;\_i++)\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\ \ \_r[\_i]\ =\ 0.0;\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\#define\ ZERO\_A\_DP(B,i)\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\ \ if(1\ ==\ (B).n\_ceqn)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\ \ \ \ *(A\_DP((B),i))\ =\ 0.0;\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\ \ else\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\ \ \ \ \ \ real\ *\ PTR\_RESTRICT\ \_r\ =\ A\_DP((B),i);\ \(\backslash\)}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\ \ \ \ \ \ int\ \_n\ =\ SQR((B).n\_ceqn);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\ \ \ \ \ \ int\ \_i;\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\ \ \ \ \ \ for(\_i=0;\_i<\_n;\_i++)\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\ \ \_r[\_i]\ =\ 0.0;\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#define\ get\_amg\_local\_buf(required\_size)\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\ \ (amg\_local\_buf\ =\ Resize\_Vector\_AMG(\&amg\_local\_buf,\ \&amg\_local\_buf\_size,\ (required\_size),\ 1,\ \_\_FILE\_\_,\ \_\_LINE\_\_))}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#define\ free\_amg\_local\_buf(p)}}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00589\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Reset\_Parallel\_AMG\_Timers(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00590\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_Parallel\_AMG\_Timers(\textcolor{keywordtype}{int}\ *cycles,}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *sweeps,}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *exchanges,}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *global\_solve\_count,}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *global\_solve\_time,}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *solve\_count,}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *solve\_time,}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *global\_matrix\_size,}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *early\_protection\_stage1\_count,}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *early\_protection\_stage2\_count);}
+\DoxyCodeLine{00600\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ AMG\_Exchange(\mbox{\hyperlink{struct_system}{System}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00601\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Exchange\_Solution(\mbox{\hyperlink{struct_system}{System}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00602\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Exchange\_Indices(\mbox{\hyperlink{struct_system}{System}}\ *,\ \textcolor{keywordtype}{int}\ array[]);}
+\DoxyCodeLine{00603\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Need\_Exchange\_Solution\ (\mbox{\hyperlink{struct_system}{System}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00604\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ alloc\_solution\_exchange\_buffers(\mbox{\hyperlink{struct_system}{System}}\ *s,\ \textcolor{keywordtype}{int}\ n\_ceqn);}
+\DoxyCodeLine{00605\ }
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00607\ }
+\DoxyCodeLine{00608\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{amg_8h_a4aa443a6b97c4d0b97472f551363fcf0}{Malloc\_Additional\_Smoother\_Memory}}(\mbox{\hyperlink{struct_a_m_g___controls}{AMG\_Controls}}\ *,\ \mbox{\hyperlink{struct_level}{Level}}\ *);}
+\DoxyCodeLine{00609\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_aad737f78927e483d218ffd20ae86bf9c}{Allocate\_Level\_Array}}(\mbox{\hyperlink{struct_a_m_g___controls}{AMG\_Controls}}\ *);}
+\DoxyCodeLine{00610\ \textcolor{preprocessor}{\#if\ RP\_AMG\_V5}}
+\DoxyCodeLine{00611\ \textcolor{preprocessor}{\#\ include\ "{}\mbox{\hyperlink{amg__v5_8h}{amg\_v5.h}}"{}}}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00615\ \textcolor{comment}{/*\ BCGSTAB\ */}}
+\DoxyCodeLine{00616\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00617\ \{}
+\DoxyCodeLine{00618\ \ \ \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210a8a57163e163f13a0cf0d27f2b5f3b33b}{STABILIZATION\_NONE}},}
+\DoxyCodeLine{00619\ \ \ \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210abee7d165413de7e0251273555a2ce8aa}{STABILIZATION\_BCGSTAB}},}
+\DoxyCodeLine{00620\ \ \ \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210a3721592df2489ba875a8365cac7b353b}{STABILIZATION\_RPM}},}
+\DoxyCodeLine{00621\ \ \ \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210accca409ea886e2e198ba104ae1ba6f81}{STABILIZATION\_CG}},}
+\DoxyCodeLine{00622\ \ \ \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210a3a0d12585eb9776065b842a5ece697f0}{STABILIZATION\_GMRES}}}
+\DoxyCodeLine{00623\ \}\ \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210}{AMG\_Stabilization}};}
+\DoxyCodeLine{00624\ }
+\DoxyCodeLine{00625\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a96d83e5dfa76ef50065991fae464d396}{freeLevels}}(\mbox{\hyperlink{struct_level}{Level}}\ *f);}
+\DoxyCodeLine{00626\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a0e3ae5aad31d9cc9acd14c7a8c550af3}{destroy\_coarse\_levels}}\ (\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ regroup);}
+\DoxyCodeLine{00627\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_ab474bf861878b53a87e92c517393d2f8}{Desctroy\_All\_Coarse\_Levels}}(\textcolor{keywordtype}{int}\ sys\_id);}
+\DoxyCodeLine{00628\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a9ccd2abf8849783451d961ea142b32a3}{Init\_AMG\_Status}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00629\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a0444fd1ec6676bda6d2339c407b34028}{Disable\_Laplace\_Coarsening\_Regrouping}}(\textcolor{keywordtype}{int}\ sys\_id);}
+\DoxyCodeLine{00630\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{amg_8h_a8bf8d618d5de09af9ed10bc5464db2df}{Make\_DO\_Coarse\_Level}}(\mbox{\hyperlink{struct_level}{Level}}\ \ \ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ level,\ \textcolor{keywordtype}{int}\ m);}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\#\ \ define\ AMG\_MALLOC(x)\ offset\_malloc((x),\ \_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\#\ \ define\ AMG\_REALLOC(x,y)\ offset\_realloc((x),\ (y),\_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\#\ \ define\ AMG\_CALLOC(x,y)\ offset\_calloc((x),\ (y),\_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#\ \ define\ AMG\_FREE(x)\ offset\_free((x),\ \_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \textcolor{keyword}{extern}\ amg\_laplace\_t\ \mbox{\hyperlink{amg_8h_affe1fc1c6b3cec9d4ec7b2e12e021d5a}{amg\_laplace}};}
+\DoxyCodeLine{00638\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{amg_8h_a84546360264779ee7bd0addb5530dd43}{make\_coarse\_level\_wrapper}}(\mbox{\hyperlink{struct_level}{Level}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{struct_a_m_g___controls}{AMG\_Controls}}\ *);}
+\DoxyCodeLine{00639\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{struct_level}{Level}}\ *\mbox{\hyperlink{amg_8h_aee34e037c3b4cbcd24287b72237a6c6e}{Get\_AMG\_Level\_Array}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00640\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{amg_8h_a34006360bddc42edfc18ca8b3ad50ec1}{is\_nan}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ f);}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a606e2bc9ec6db19710c94b0d896ac65c}{Fill\_Neighbor\_Map}}(\mbox{\hyperlink{struct_matrix}{Matrix}}\ *A);}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00645\ \textcolor{keywordtype}{void}\ Set\_UD\_Smoother\_Context(\textcolor{keywordtype}{int}\ ilvst,\ \textcolor{keywordtype}{int}\ ilvnd,\ \textcolor{keywordtype}{int}\ status);}
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00647\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_aa6048fc2fdea59af10efbc8d4f7eb40a}{Get\_User\_Defined\_Smoother}}(\textcolor{keywordtype}{char}\ *info);}
+\DoxyCodeLine{00648\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{amg_8h_a01ce4c0887400b59d2630aadce359153}{Get\_User\_Defined\_Linear\_Solver}}(\textcolor{keywordtype}{int}\ sys\_id,\ \textcolor{keywordtype}{char}\ *info);}
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_AMG\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

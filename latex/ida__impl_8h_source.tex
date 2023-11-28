@@ -1,0 +1,491 @@
+\doxysection{ida\+\_\+impl.\+h}
+\hypertarget{ida__impl_8h_source}{}\label{ida__impl_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_impl.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_impl.h}}
+\mbox{\hyperlink{ida__impl_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.15\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2009/09/09\ 22:25:05\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer(s):\ Allan\ G.\ Taylor,\ Alan\ C.\ Hindmarsh,\ Radu\ Serban,}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ and\ Aaron\ Collier\ @\ LLNL}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2002,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ This\ is\ the\ header\ file\ (private\ version)\ for\ the\ main\ IDA\ solver.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#ifndef\ \_IDA\_IMPL\_H}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ \_IDA\_IMPL\_H}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <stdarg.h>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{ida_8h}{ida/ida.h}}>}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{/*\ }}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ \ \ M\ A\ I\ N\ \ \ \ I\ N\ T\ E\ G\ R\ A\ T\ O\ R\ \ \ \ M\ E\ M\ O\ R\ Y\ \ \ \ B\ L\ O\ C\ K}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{/*\ Basic\ IDA\ constants\ */}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ HMAX\_INV\_DEFAULT\ RCONST(0.0)\ }\textcolor{comment}{/*\ hmax\_inv\ default\ value\ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ MAXORD\_DEFAULT\ \ \ 5\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ maxord\ default\ value\ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ MXORDP1\ \ \ \ \ \ \ \ \ \ 6\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ max.\ number\ of\ N\_Vectors\ in\ phi\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ MXSTEP\_DEFAULT\ \ \ 500\ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ mxstep\ default\ value\ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ Types\ :\ struct\ IDAMemRec,\ IDAMem}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ The\ type\ IDAMem\ is\ type\ pointer\ to\ struct\ IDAMemRec.\ This}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ structure\ contains\ fields\ to\ keep\ track\ of\ problem\ state.}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMemRec}}\ \{}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_ad6f69cb93eeeda0af5f46afe8a9b383c}{ida\_uround}};\ \ \ \ \textcolor{comment}{/*\ machine\ unit\ roundoff\ */}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \textcolor{comment}{/*\ Problem\ Specification\ Data\ */}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{ida_8h_ace05a26fc7a6d6802a8b923bc2e28247}{IDAResFn}}\ \ \ \ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_ac559b094bc7a7b8a9de4f84719965049}{ida\_res}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ F(t,y(t),y'(t))=0;\ the\ function\ F\ \ \ \ \ */}}
+\DoxyCodeLine{00059\ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{struct_i_d_a_mem_rec_ae66526f0cdc0a37746588a7daff5fad8}{ida\_user\_data}};\ \ \ \ \ \ \textcolor{comment}{/*\ user\ pointer\ passed\ to\ res\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00060\ \ \ \ \ }
+\DoxyCodeLine{00061\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_a7a68ef7f22a4e6db64cca9e66378d370}{ida\_itol}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ itol\ =\ IDA\_SS,\ IDA\_SV,\ IDA\_WF,\ IDA\_NN\ */}}
+\DoxyCodeLine{00062\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_aaea08f5190430fb89b3d1a2a04e0a7dd}{ida\_rtol}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ relative\ tolerance\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_a0f69f987bc7d54858e7ee02f3d392fca}{ida\_Satol}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ scalar\ absolute\ tolerance\ \ \ \ \ \ \ \ \ \ \ \ \ */}\ \ }
+\DoxyCodeLine{00064\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \ \ \ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_a7eef3a6583dee795e49c3e8d588224dd}{ida\_Vatol}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ vector\ absolute\ tolerance\ \ \ \ \ \ \ \ \ \ \ \ \ */}\ \ }
+\DoxyCodeLine{00065\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_affcecc6513df7967130e7afbeaddbfa4}{ida\_user\_efun}};\ \ \ \ \ \ \textcolor{comment}{/*\ TRUE\ if\ user\ provides\ efun\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00066\ \ \ \mbox{\hyperlink{ida_8h_a546a78227a1a206434875d634cf65d54}{IDAEwtFn}}\ \ \ \ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_a3fd233d863ce16cd7e51338391abdd06}{ida\_efun}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ function\ to\ set\ ewt\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00067\ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{struct_i_d_a_mem_rec_a30c8988dfbd4e74b5bfe93217ded76c8}{ida\_edata}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ user\ pointer\ passed\ to\ efun\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00068\ \ \ }
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_ae6ebab9c9487c3858a5661e567237c66}{ida\_setupNonNull}};\ \ \ \textcolor{comment}{/*\ Does\ setup\ do\ something?\ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_ad7cec711f7d2fb462e1add0193c37e57}{ida\_constraintsSet}};\ \textcolor{comment}{/*\ constraints\ vector\ present:\ }}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ do\ constraints\ calc\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00073\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \ \ \ \mbox{\hyperlink{struct_i_d_a_mem_rec_a5349211fcd581a046390894e8492a0a8}{ida\_suppressalg}};\ \ \ \ \textcolor{comment}{/*\ true\ means\ suppress\ algebraic\ vars}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in\ local\ error\ tests\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \textcolor{comment}{/*\ Divided\ differences\ array\ and\ associated\ minor\ arrays\ */}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a4aa4ba3d86b403c8d80e8bc1927c5745}{ida\_phi}}[\mbox{\hyperlink{ida__impl_8h_addbf1dafd1c1d7d9b8d1f9625ba2cdbc}{MXORDP1}}];\ \ \ \textcolor{comment}{/*\ phi\ =\ (maxord+1)\ arrays\ of\ divided\ differences\ */}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a3af7345e4b3986583926efa8db9b0d91}{ida\_psi}}[\mbox{\hyperlink{ida__impl_8h_addbf1dafd1c1d7d9b8d1f9625ba2cdbc}{MXORDP1}}];\ \ \ \textcolor{comment}{/*\ differences\ in\ t\ (sums\ of\ recent\ step\ sizes)\ \ \ */}}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a3f176595068c45802b4308ab1797b83e}{ida\_alpha}}[\mbox{\hyperlink{ida__impl_8h_addbf1dafd1c1d7d9b8d1f9625ba2cdbc}{MXORDP1}}];\ \textcolor{comment}{/*\ ratios\ of\ current\ stepsize\ to\ psi\ values\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a8169cc703995b91f971c3f0c1b426c06}{ida\_beta}}[\mbox{\hyperlink{ida__impl_8h_addbf1dafd1c1d7d9b8d1f9625ba2cdbc}{MXORDP1}}];\ \ \textcolor{comment}{/*\ ratios\ of\ current\ to\ previous\ product\ of\ psi's\ */}}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_ac681ed994cca5fa217456ac049c1dc56}{ida\_sigma}}[\mbox{\hyperlink{ida__impl_8h_addbf1dafd1c1d7d9b8d1f9625ba2cdbc}{MXORDP1}}];\ \textcolor{comment}{/*\ product\ successive\ alpha\ values\ and\ factorial\ \ */}}
+\DoxyCodeLine{00084\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a4defe3892d60094bef92b9acaf0718f4}{ida\_gamma}}[\mbox{\hyperlink{ida__impl_8h_addbf1dafd1c1d7d9b8d1f9625ba2cdbc}{MXORDP1}}];\ \textcolor{comment}{/*\ sum\ of\ reciprocals\ of\ psi\ values\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \textcolor{comment}{/*\ N\_Vectors\ */}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a5f6d016fa76e1dc2654d986e09d16d5c}{ida\_ewt}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ error\ weight\ vector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a465025656e66b8cad31459849fb5f178}{ida\_yy}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ work\ space\ for\ y\ vector\ (=\ user's\ yret)\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a30d9426105ef0f575ae6a5a8cf057f0a}{ida\_yp}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ work\ space\ for\ y'\ vector\ (=\ user's\ ypret)\ \ \ \ \ \ */}}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aacf2954342bfb2fef25ba42ddcc36a3f}{ida\_delta}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ residual\ vector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a2cecfeb825641ab5836e5120120b19c4}{ida\_id}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ bit\ vector\ for\ diff./algebraic\ components\ \ \ \ \ \ */}}
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a0f88624737d4cf4b9a359a193169b3ac}{ida\_constraints}};\ \textcolor{comment}{/*\ vector\ of\ inequality\ constraint\ options\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_af4ca4cf79af2d18ae1d57a1ccd16ecc2}{ida\_savres}};\ \ \ \ \ \ \textcolor{comment}{/*\ saved\ residual\ vector\ (=\ tempv1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a4f1daa2dcbd6b3091c3f0c178ebc3229}{ida\_ee}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ accumulated\ corrections\ to\ y\ vector,\ but}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ set\ equal\ to\ estimated\ local\ errors\ upon}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ successful\ return\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00098\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aa0c2bca2569b435446d83e4b3951151d}{ida\_mm}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ mask\ vector\ in\ constraints\ tests\ (=\ tempv2)\ \ \ \ */}}
+\DoxyCodeLine{00099\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a0ac35eb8fdb698c86439e952251ed300}{ida\_tempv1}};\ \ \ \ \ \ \textcolor{comment}{/*\ work\ space\ vector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00100\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aa06fab69f3e0f40da76cd259d496265f}{ida\_tempv2}};\ \ \ \ \ \ \textcolor{comment}{/*\ work\ space\ vector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00101\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a51f7f289fc02c2dd8ae3058abb245253}{ida\_ynew}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ work\ vector\ for\ y\ in\ IDACalcIC\ (=\ tempv2)\ \ \ \ \ \ */}}
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a8bc8197774ccc34623aa6a0770ddda90}{ida\_ypnew}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ work\ vector\ for\ yp\ in\ IDACalcIC\ (=\ ee)\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a0a1f270a28af4a9b10cc7599aef3c516}{ida\_delnew}};\ \ \ \ \ \ \textcolor{comment}{/*\ work\ vector\ for\ delta\ in\ IDACalcIC\ (=\ phi[2])\ \ */}}
+\DoxyCodeLine{00104\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a9f2bf0187786ece15a67b4eedfc45c81}{ida\_dtemp}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ work\ vector\ in\ IDACalcIC\ (=\ phi[3])\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \textcolor{comment}{/*\ Variables\ for\ use\ by\ IDACalcIC*/}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aa1b2d7a95ee45e74ed911ad5472d8dc5}{ida\_t0}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ initial\ t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a052e1a160ca98d71e7af745ea748fb56}{ida\_yy0}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ initial\ y\ vector\ (user-\/supplied).\ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a973c9382861763640cbcd378e9b25ef0}{ida\_yp0}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ initial\ y'\ vector\ (user-\/supplied).\ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_adf12942bd13017099fb59d3020556e96}{ida\_icopt}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ IC\ calculation\ user\ option\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00113\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a67850974766d28a911861813aa57d454}{ida\_lsoff}};\ \ \ \ \textcolor{comment}{/*\ IC\ calculation\ linesearch\ turnoff\ option\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00114\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a8c610d7283debb8c2d6ea34aae667e37}{ida\_maxnh}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max.\ number\ of\ h\ tries\ in\ IC\ calculation\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00115\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a04987e33067ef679375c542f7258231b}{ida\_maxnj}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max.\ number\ of\ J\ tries\ in\ IC\ calculation\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00116\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a9396eb853c4a7bd2b78d08ad3486c351}{ida\_maxnit}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max.\ number\ of\ Netwon\ iterations\ in\ IC\ calc.\ \ \ */}}
+\DoxyCodeLine{00117\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a2ab87eec42e8cbb16941e86e2eb6e299}{ida\_nbacktr}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ IC\ linesearch\ backtrack\ operations\ \ \ */}}
+\DoxyCodeLine{00118\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a0e7387b7451e639cc29ccf5874b35f66}{ida\_sysindex}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ computed\ system\ index\ (0\ or\ 1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aa7cb6aa01b2459825227c7789bbefe08}{ida\_epiccon}};\ \ \ \ \ \textcolor{comment}{/*\ IC\ nonlinear\ convergence\ test\ constant\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aa40f5c412991e2a78d34b2711a806ddb}{ida\_steptol}};\ \ \ \ \ \textcolor{comment}{/*\ minimum\ Newton\ step\ size\ in\ IC\ calculation\ \ \ \ \ */}}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_ae0408630b523fc536acfc7f81c9602c1}{ida\_tscale}};\ \ \ \ \ \ \textcolor{comment}{/*\ time\ scale\ factor\ =\ abs(tout1\ -\/\ t0)\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \textcolor{comment}{/*\ Tstop\ information\ */}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_ab7af07a52cafa9de2771480397971171}{ida\_tstopset}};}
+\DoxyCodeLine{00126\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a0fee22c19ccc5df96eaedd17ae45409c}{ida\_tstop}};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \textcolor{comment}{/*\ Step\ Data\ */}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a94ec46599bc5dc0d2e7985b68dbdee3f}{ida\_kk}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ current\ BDF\ method\ order\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00131\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a578b19486b938585ac7f43b3a965f99c}{ida\_kused}};\ \ \ \ \ \textcolor{comment}{/*\ method\ order\ used\ on\ last\ successful\ step\ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00132\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a6f713b7397f3b16505d8899e7d50b3cc}{ida\_knew}};\ \ \ \ \ \ \textcolor{comment}{/*\ order\ for\ next\ step\ from\ order\ decrease\ decision\ \ \ \ \ \ */}}
+\DoxyCodeLine{00133\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a7e06e5d546c3ea1f2e76f7735634fa51}{ida\_phase}};\ \ \ \ \ \textcolor{comment}{/*\ flag\ to\ trigger\ step\ doubling\ in\ first\ few\ steps\ \ \ \ \ \ */}}
+\DoxyCodeLine{00134\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a2de5b25d000c5d91b68f88c2267f1a14}{ida\_ns}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ counts\ steps\ at\ fixed\ stepsize\ and\ order\ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_af67edb08d5684d0e6aceb1a66e50cb2f}{ida\_hin}};\ \ \ \ \ \ \textcolor{comment}{/*\ initial\ step\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a1f8adbdc09e627f7936d08a714021d37}{ida\_h0u}};\ \ \ \ \ \ \textcolor{comment}{/*\ actual\ initial\ stepsize\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00138\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aec6a2e107a89c9de278110b93272c12e}{ida\_hh}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ current\ step\ size\ h\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00139\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a9415d0078d92439c6f7b407f93410dad}{ida\_hused}};\ \ \ \ \textcolor{comment}{/*\ step\ size\ used\ on\ last\ successful\ step\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_abe846231275e991d3c5b2944644701d1}{ida\_rr}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ rr\ =\ hnext\ /\ hused\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00141\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a72bbde5137b4687fb290484e09ba1010}{ida\_tn}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ current\ internal\ value\ of\ t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00142\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a8e9bc47842a448000b7fe47be12c98f2}{ida\_tretlast}};\ \textcolor{comment}{/*\ value\ of\ tret\ previously\ returned\ by\ IDASolve\ \ \ \ \ */}}
+\DoxyCodeLine{00143\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a5e4ea7a5c9f57c8adc4fa5743ac6dbea}{ida\_cj}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ current\ value\ of\ scalar\ (-\/alphas/hh)\ in\ Jacobian\ \ */}}
+\DoxyCodeLine{00144\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aa800ae4a461f73880832e19fa0a95230}{ida\_cjlast}};\ \ \ \textcolor{comment}{/*\ cj\ value\ saved\ from\ last\ successful\ step\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00145\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a38837a1241652cdc0ead1d3d1d5f760a}{ida\_cjold}};\ \ \ \ \textcolor{comment}{/*\ cj\ value\ saved\ from\ last\ call\ to\ lsetup\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00146\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a677d7174239d8fb5f9c0a16300bf339f}{ida\_cjratio}};\ \ \textcolor{comment}{/*\ ratio\ of\ cj\ values:\ cj/cjold\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00147\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_ac010c53c21a40e4e4e44b4123b277826}{ida\_ss}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ scalar\ used\ in\ Newton\ iteration\ convergence\ test\ \ */}}
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a77de905bb8bcdb03535b5ddfbde42d13}{ida\_epsNewt}};\ \ \textcolor{comment}{/*\ test\ constant\ in\ Newton\ convergence\ test\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00149\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a108e6c265a3bb9eedac4411b36003f40}{ida\_epcon}};\ \ \ \ \textcolor{comment}{/*\ coeficient\ of\ the\ Newton\ covergence\ test\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00150\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_abbeebbe726b4ded6ea04a128f398499b}{ida\_toldel}};\ \ \ \textcolor{comment}{/*\ tolerance\ in\ direct\ test\ on\ Newton\ corrections\ \ \ \ */}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \textcolor{comment}{/*\ Limits\ */}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aac89a523995260101d18216fb9d13dda}{ida\_maxncf}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max\ numer\ of\ convergence\ failures\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00155\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a855da8aba8b44fabbff23fb9a49a8610}{ida\_maxcor}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max\ number\ of\ Newton\ corrections\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00156\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_afafb91e75a314c6acf9558d5f04a435c}{ida\_maxnef}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max\ number\ of\ error\ test\ failures\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a4e87da788ba55a17f851633569354503}{ida\_maxord}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max\ value\ of\ method\ order\ k:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00159\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_addb83ab33984150a0ac8264ac2a8fef2}{ida\_maxord\_alloc}};\ \ \textcolor{comment}{/*\ value\ of\ maxord\ used\ when\ allocating\ memory\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00160\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_adf145a1d9eb3817af65004c3306cec58}{ida\_mxstep}};\ \ \ \textcolor{comment}{/*\ max\ number\ of\ internal\ steps\ for\ one\ user\ call\ \ \ \ */}}
+\DoxyCodeLine{00161\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a36738142c43c229357c0eed942443cbb}{ida\_hmax\_inv}};\ \textcolor{comment}{/*\ inverse\ of\ max.\ step\ size\ hmax\ (default\ =\ 0.0)\ \ \ \ */}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \textcolor{comment}{/*\ Counters\ */}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a2493f6d3a2221a3fe08395d4629a1a28}{ida\_nst}};\ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ internal\ steps\ taken\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00166\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a9292b4305b804bdc0dc57a08f56e9d77}{ida\_nre}};\ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ function\ (res)\ calls\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00167\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a2273ea6cc081c8d9d9281598c6c9424a}{ida\_ncfn}};\ \ \ \ \ \textcolor{comment}{/*\ number\ of\ corrector\ convergence\ failures\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00168\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a8b02199946c582ec1bbc3ecb2986a61b}{ida\_netf}};\ \ \ \ \ \textcolor{comment}{/*\ number\ of\ error\ test\ failures\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00169\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_ae2aae21f78e670da9517a75d3cbb40dd}{ida\_nni}};\ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ Newton\ iterations\ performed\ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00170\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a7d35e38a8098f2b549f0d1e6de437de4}{ida\_nsetups}};\ \ \textcolor{comment}{/*\ number\ of\ lsetup\ calls\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \textcolor{comment}{/*\ Space\ requirements\ for\ IDA\ */}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a176c94888164e7d49f9d679e26c8785b}{ida\_lrw1}};\ \ \ \ \ \textcolor{comment}{/*\ no.\ of\ realtype\ words\ in\ 1\ N\_Vector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00175\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aa5914b3b7d9f31eb75275c3142966239}{ida\_liw1}};\ \ \ \ \ \textcolor{comment}{/*\ no.\ of\ integer\ words\ in\ 1\ N\_Vector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00176\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_ae35c2f028245b31f004040013d12a838}{ida\_lrw}};\ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ realtype\ words\ in\ IDA\ work\ vectors\ \ \ \ \ \ */}}
+\DoxyCodeLine{00177\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a75b43042fb5dfff9b78d5fa36ed73802}{ida\_liw}};\ \ \ \ \ \ \textcolor{comment}{/*\ no.\ of\ integer\ words\ in\ IDA\ work\ vectors\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a689092744b6e79ceb5e8cd0d5eee4ddd}{ida\_tolsf}};\ \ \ \ \textcolor{comment}{/*\ tolerance\ scale\ factor\ (saved\ value)\ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \textcolor{comment}{/*\ Error\ handler\ function\ and\ error\ ouput\ file\ */}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{ida_8h_afafd7a22dd74107fabb7d00ea1287dbd}{IDAErrHandlerFn}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aa18915ab9def665415db5fc9e8f52e0b}{ida\_ehfun}};\ \ \textcolor{comment}{/*\ Error\ messages\ are\ handled\ by\ ehfun\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00184\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{struct_i_d_a_mem_rec_aa411004d35280886fd48fbb3e05043e0}{ida\_eh\_data}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ dats\ pointer\ passed\ to\ ehfun\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00185\ \ \ FILE\ *\mbox{\hyperlink{struct_i_d_a_mem_rec_a611558ef1b2cb35e18d731c554aac944}{ida\_errfp}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ IDA\ error\ messages\ are\ sent\ to\ errfp\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \textcolor{comment}{/*\ Flags\ to\ verify\ correct\ calling\ sequence\ */}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a3a52853da70b8d0a9b774b4663c6ad39}{ida\_SetupDone}};\ \ \textcolor{comment}{/*\ set\ to\ FALSE\ by\ IDAMalloc\ and\ IDAReInit}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ set\ to\ TRUE\ by\ IDACalcIC\ or\ IDASolve\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a20e16eeb6bac5882862161256d34f539}{ida\_VatolMallocDone}};}
+\DoxyCodeLine{00193\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a97b1c1a22d6fda1b58a98aa6dfb623a3}{ida\_constraintsMallocDone}};}
+\DoxyCodeLine{00194\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_afb518f4b379c0ee1dfefc93389700b31}{ida\_idMallocDone}};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a683caa7240c20437feffacf5044ede79}{ida\_MallocDone}};\ \textcolor{comment}{/*\ set\ to\ FALSE\ by\ IDACreate}}
+\DoxyCodeLine{00197\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ set\ to\ TRUE\ by\ IDAMAlloc}}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tested\ by\ IDAReInit\ and\ IDASolve\ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \textcolor{comment}{/*\ Linear\ Solver\ Data\ */}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \textcolor{comment}{/*\ Linear\ Solver\ functions\ to\ be\ called\ */}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ int\ (*\mbox{\hyperlink{struct_i_d_a_mem_rec_ad0bbd1178b7b7843614e0d75f42662e8}{ida\_linit}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMemRec}}\ *idamem);}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ int\ (*\mbox{\hyperlink{struct_i_d_a_mem_rec_a4e46bbcac54a32a7de52a9805a4caeba}{ida\_lsetup}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMemRec}}\ *idamem,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ yyp,\ }
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ ypp,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ resp,\ }
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tempv1,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tempv2,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tempv3);\ }
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ int\ (*\mbox{\hyperlink{struct_i_d_a_mem_rec_aa3853dafe25971e30e7c44f3d92bff9c}{ida\_lsolve}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMemRec}}\ *idamem,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ b,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ weight,}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ ycur,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ ypcur,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ rescur);}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ int\ (*\mbox{\hyperlink{struct_i_d_a_mem_rec_a7d5ff1d408f5c267f5605ea0b6e7b70e}{ida\_lperf}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMemRec}}\ *idamem,\ \textcolor{keywordtype}{int}\ perftask);}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ int\ (*\mbox{\hyperlink{struct_i_d_a_mem_rec_a78daa833c525b3b140c402d35e5b104c}{ida\_lfree}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMemRec}}\ *idamem);}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \textcolor{comment}{/*\ Linear\ Solver\ specific\ memory\ */}}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{struct_i_d_a_mem_rec_a8bc12b63a3838c1cd06fef755a71d8fa}{ida\_lmem}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \textcolor{comment}{/*\ Flag\ to\ indicate\ successful\ ida\_linit\ call\ */}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_adcfe00c08bde1d2179b9dc5e3b0cf4d5}{ida\_linitOK}};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \textcolor{comment}{/*\ Rootfinding\ Data\ */}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \mbox{\hyperlink{ida_8h_a00bc10e269ba8d109f4d1269a53a36ba}{IDARootFn}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_ab008167d4ab4aa93d2bd3bbe942ff2eb}{ida\_gfun}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ Function\ g\ for\ roots\ sought\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00228\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_acd869ed241b7633ce5ef7b07ccdaa738}{ida\_nrtfn}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ components\ of\ g\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00229\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_i_d_a_mem_rec_a1183d699421a3255e96eb79951930b7f}{ida\_iroots}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ array\ for\ root\ information\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00230\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_i_d_a_mem_rec_ac1615b7b579212332dd4807386623f0b}{ida\_rootdir}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ array\ specifying\ direction\ of\ zero-\/crossing\ \ \ \ \ */}}
+\DoxyCodeLine{00231\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a71fe756d69696020302ad500388d0c77}{ida\_tlo}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ nearest\ endpoint\ of\ interval\ in\ root\ search\ \ \ \ \ */}}
+\DoxyCodeLine{00232\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a13f57231e4ffd5c5bd1df60e4ae4eaef}{ida\_thi}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ farthest\ endpoint\ of\ interval\ in\ root\ search\ \ \ \ */}}
+\DoxyCodeLine{00233\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_aa63fa2a48f83d0db9a07f7880fb7fd91}{ida\_trout}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ t\ return\ value\ from\ rootfinder\ routine\ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00234\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{struct_i_d_a_mem_rec_a9412de7133833775818ca4ea6e5091e5}{ida\_glo}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ saved\ array\ of\ g\ values\ at\ t\ =\ tlo\ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00235\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{struct_i_d_a_mem_rec_a1a7242b144f8a9bdebf0ff822f2bd15d}{ida\_ghi}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ saved\ array\ of\ g\ values\ at\ t\ =\ thi\ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00236\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{struct_i_d_a_mem_rec_a38fdeae1aa7528e60cbdae13ff54a490}{ida\_grout}};\ \ \ \ \ \ \textcolor{comment}{/*\ array\ of\ g\ values\ at\ t\ =\ trout\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00237\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a6ca7f591198c03698ee3d7cdf57f0b05}{ida\_toutc}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ copy\ of\ tout\ (if\ NORMAL\ mode)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00238\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a9670ed915d3dc942cbf7bc7a12c9e080}{ida\_ttol}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ tolerance\ on\ root\ location\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00239\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a265cf894b12536e6ecf504f188a6b962}{ida\_taskc}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ copy\ of\ parameter\ itask\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00240\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a05664dc4502c592483df5ec7f2923fad}{ida\_irfnd}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ flag\ showing\ whether\ last\ step\ had\ a\ root\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00241\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_a2003dd1db24483d83ecdaf3c98aa3c6b}{ida\_nge}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ counter\ for\ g\ evaluations\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00242\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ *\mbox{\hyperlink{struct_i_d_a_mem_rec_aa4a5472ce9e99bc64948a7c5523ad468}{ida\_gactive}};\ \textcolor{comment}{/*\ array\ with\ active/inactive\ event\ functions\ \ \ \ \ \ */}}
+\DoxyCodeLine{00243\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_i_d_a_mem_rec_afd12ca2c574a6aa21c0f82f9b2a99dc7}{ida\_mxgnull}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ warning\ messages\ about\ possible\ g==0\ \ */}}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \}\ *\mbox{\hyperlink{ida__impl_8h_a47968eecaefd81f8b70742eb09b1c609}{IDAMem}};}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00249\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00250\ \textcolor{comment}{\ *\ \ \ \ \ I\ N\ T\ E\ R\ F\ A\ C\ E\ \ \ T\ O\ \ \ \ L\ I\ N\ E\ A\ R\ \ \ S\ O\ L\ V\ E\ R\ S\ \ \ \ \ }}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00252\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00255\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00256\ \textcolor{comment}{\ *\ int\ (*ida\_linit)(IDAMem\ IDA\_mem);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00257\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00258\ \textcolor{comment}{\ *\ The\ purpose\ of\ ida\_linit\ is\ to\ allocate\ memory\ for\ the\ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00259\ \textcolor{comment}{\ *\ solver-\/specific\ fields\ in\ the\ structure\ *(idamem-\/>ida\_lmem)\ and\ }}
+\DoxyCodeLine{00260\ \textcolor{comment}{\ *\ perform\ any\ needed\ initializations\ of\ solver-\/specific\ memory,\ \ \ }}
+\DoxyCodeLine{00261\ \textcolor{comment}{\ *\ such\ as\ counters/statistics.\ An\ (*ida\_linit)\ should\ return\ \ \ \ \ \ }}
+\DoxyCodeLine{00262\ \textcolor{comment}{\ *\ 0\ if\ it\ has\ successfully\ initialized\ the\ IDA\ linear\ solver\ and\ }}
+\DoxyCodeLine{00263\ \textcolor{comment}{\ *\ a\ non-\/zero\ value\ otherwise.\ If\ an\ error\ does\ occur,\ an\ appropriate}}
+\DoxyCodeLine{00264\ \textcolor{comment}{\ *\ message\ should\ be\ sent\ to\ the\ error\ handler\ function.}}
+\DoxyCodeLine{00265\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00266\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00269\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00270\ \textcolor{comment}{\ *\ int\ (*ida\_lsetup)(IDAMem\ IDA\_mem,\ N\_Vector\ yyp,\ N\_Vector\ ypp,\ \ \ }}
+\DoxyCodeLine{00271\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ N\_Vector\ resp,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ N\_Vector\ tempv1,\ N\_Vector\ tempv2,\ N\_Vector\ tempv3);\ \ }}
+\DoxyCodeLine{00273\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00274\ \textcolor{comment}{\ *\ The\ job\ of\ ida\_lsetup\ is\ to\ prepare\ the\ linear\ solver\ for\ \ \ \ \ \ \ }}
+\DoxyCodeLine{00275\ \textcolor{comment}{\ *\ subsequent\ calls\ to\ ida\_lsolve.\ Its\ parameters\ are\ as\ follows:\ \ }}
+\DoxyCodeLine{00276\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00277\ \textcolor{comment}{\ *\ idamem\ -\/\ problem\ memory\ pointer\ of\ type\ IDAMem.\ See\ the\ big\ \ \ \ \ }}
+\DoxyCodeLine{00278\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ typedef\ earlier\ in\ this\ file.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00279\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00280\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00281\ \textcolor{comment}{\ *\ yyp\ \ \ -\/\ the\ predicted\ y\ vector\ for\ the\ current\ IDA\ internal\ \ \ \ \ }}
+\DoxyCodeLine{00282\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ step.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00283\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00284\ \textcolor{comment}{\ *\ ypp\ \ \ -\/\ the\ predicted\ y'\ vector\ for\ the\ current\ IDA\ internal\ \ \ \ }}
+\DoxyCodeLine{00285\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ step.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ *\ resp\ \ -\/\ F(tn,\ yyp,\ ypp).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00289\ \textcolor{comment}{\ *\ tempv1,\ tempv2,\ tempv3\ -\/\ temporary\ N\_Vectors\ provided\ for\ use\ \ \ }}
+\DoxyCodeLine{00290\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ by\ ida\_lsetup.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00291\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00292\ \textcolor{comment}{\ *\ The\ ida\_lsetup\ routine\ should\ return\ 0\ if\ successful,}}
+\DoxyCodeLine{00293\ \textcolor{comment}{\ *\ a\ positive\ value\ for\ a\ recoverable\ error,\ and\ a\ negative\ value\ }}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ *\ for\ an\ unrecoverable\ error.}}
+\DoxyCodeLine{00295\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00296\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00299\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00300\ \textcolor{comment}{\ *\ int\ (*ida\_lsolve)(IDAMem\ IDA\_mem,\ N\_Vector\ b,\ N\_Vector\ weight,\ \ }}
+\DoxyCodeLine{00301\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ N\_Vector\ ycur,\ N\_Vector\ ypcur,\ N\_Vector\ rescur);\ \ }}
+\DoxyCodeLine{00302\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00303\ \textcolor{comment}{\ *\ ida\_lsolve\ must\ solve\ the\ linear\ equation\ P\ x\ =\ b,\ where\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00304\ \textcolor{comment}{\ *\ P\ is\ some\ approximation\ to\ the\ system\ Jacobian\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00305\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ J\ =\ (dF/dy)\ +\ cj\ (dF/dy')\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00306\ \textcolor{comment}{\ *\ evaluated\ at\ (tn,ycur,ypcur)\ and\ the\ RHS\ vector\ b\ is\ input.\ \ \ \ \ }}
+\DoxyCodeLine{00307\ \textcolor{comment}{\ *\ The\ N-\/vector\ ycur\ contains\ the\ solver's\ current\ approximation\ \ \ }}
+\DoxyCodeLine{00308\ \textcolor{comment}{\ *\ to\ y(tn),\ ypcur\ contains\ that\ for\ y'(tn),\ and\ the\ vector\ rescur\ }}
+\DoxyCodeLine{00309\ \textcolor{comment}{\ *\ contains\ the\ N-\/vector\ residual\ F(tn,ycur,ypcur).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00310\ \textcolor{comment}{\ *\ The\ solution\ is\ to\ be\ returned\ in\ the\ vector\ b.\ }}
+\DoxyCodeLine{00311\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00312\ \textcolor{comment}{\ *\ The\ ida\_lsolve\ routine\ should\ return\ 0\ if\ successful,}}
+\DoxyCodeLine{00313\ \textcolor{comment}{\ *\ a\ positive\ value\ for\ a\ recoverable\ error,\ and\ a\ negative\ value\ }}
+\DoxyCodeLine{00314\ \textcolor{comment}{\ *\ for\ an\ unrecoverable\ error.}}
+\DoxyCodeLine{00315\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00316\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00319\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00320\ \textcolor{comment}{\ *\ int\ (*ida\_lperf)(IDAMem\ IDA\_mem,\ int\ perftask);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00321\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00322\ \textcolor{comment}{\ *\ ida\_lperf\ is\ called\ two\ places\ in\ IDA\ where\ linear\ solver\ \ \ \ \ \ \ }}
+\DoxyCodeLine{00323\ \textcolor{comment}{\ *\ performance\ data\ is\ required\ by\ IDA.\ For\ perftask\ =\ 0,\ an\ \ \ \ \ \ \ }}
+\DoxyCodeLine{00324\ \textcolor{comment}{\ *\ initialization\ of\ performance\ variables\ is\ performed,\ while\ for\ }}
+\DoxyCodeLine{00325\ \textcolor{comment}{\ *\ perftask\ =\ 1,\ the\ performance\ is\ evaluated.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00326\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00327\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00330\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00331\ \textcolor{comment}{\ *\ int\ (*ida\_lfree)(IDAMem\ IDA\_mem);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00332\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00333\ \textcolor{comment}{\ *\ ida\_lfree\ should\ free\ up\ any\ memory\ allocated\ by\ the\ linear\ \ \ \ \ }}
+\DoxyCodeLine{00334\ \textcolor{comment}{\ *\ solver.\ This\ routine\ is\ called\ once\ a\ problem\ has\ been\ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00335\ \textcolor{comment}{\ *\ completed\ and\ the\ linear\ solver\ is\ no\ longer\ needed.\ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00336\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00337\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00340\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00341\ \textcolor{comment}{\ *\ \ \ I\ D\ A\ \ \ \ I\ N\ T\ E\ R\ N\ A\ L\ \ \ F\ U\ N\ C\ T\ I\ O\ N\ S}}
+\DoxyCodeLine{00342\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00343\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \textcolor{comment}{/*\ Prototype\ of\ internal\ ewtSet\ function\ */}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__impl_8h_a1502aad5f00d8ce66cc3b84c3db52a1a}{IDAEwtSet}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ ycur,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ weight,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \textcolor{comment}{/*\ High\ level\ error\ handler\ */}}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{ida__impl_8h_a8401cec99cd95b3d7264659b629c9583}{IDAProcessError}}(\mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMem}}\ IDA\_mem,\ }
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ error\_code,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *module,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fname,\ }
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *msgfmt,\ ...);}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \textcolor{comment}{/*\ Prototype\ of\ internal\ errHandler\ function\ */}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{ida__impl_8h_a2fa9da29b2ffeebc20e65c44e6418e3c}{IDAErrHandler}}(\textcolor{keywordtype}{int}\ error\_code,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *module,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}},\ }
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{dbgmsg_8h_a98858dd5dea59756cfe716f0168de035}{msg}},\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00361\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00362\ \textcolor{comment}{\ *\ I\ D\ A\ \ \ \ E\ R\ R\ O\ R\ \ \ \ M\ E\ S\ S\ A\ G\ E\ S}}
+\DoxyCodeLine{00363\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00364\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#if\ defined(SUNDIALS\_EXTENDED\_PRECISION)}}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\#define\ MSG\_TIME\ "{}t\ =\ \%Lg,\ "{}}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_H\ "{}t\ =\ \%Lg\ and\ h\ =\ \%Lg,\ "{}}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_INT\ "{}t\ =\ \%Lg\ is\ not\ between\ tcur\ -\/\ hu\ =\ \%Lg\ and\ tcur\ =\ \%Lg."{}}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_TOUT\ "{}tout\ =\ \%Lg"{}}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_TSTOP\ "{}tstop\ =\ \%Lg"{}}}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\#elif\ defined(SUNDIALS\_DOUBLE\_PRECISION)}}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\#define\ MSG\_TIME\ "{}t\ =\ \%lg,\ "{}}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_H\ "{}t\ =\ \%lg\ and\ h\ =\ \%lg,\ "{}}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_INT\ "{}t\ =\ \%lg\ is\ not\ between\ tcur\ -\/\ hu\ =\ \%lg\ and\ tcur\ =\ \%lg."{}}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_TOUT\ "{}tout\ =\ \%lg"{}}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_TSTOP\ "{}tstop\ =\ \%lg"{}}}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\#define\ MSG\_TIME\ "{}t\ =\ \%g,\ "{}}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_H\ "{}t\ =\ \%g\ and\ h\ =\ \%g,\ "{}}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_INT\ "{}t\ =\ \%g\ is\ not\ between\ tcur\ -\/\ hu\ =\ \%g\ and\ tcur\ =\ \%g."{}}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_TOUT\ "{}tout\ =\ \%g"{}}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#define\ MSG\_TIME\_TSTOP\ "{}tstop\ =\ \%g"{}}}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \textcolor{comment}{/*\ General\ errors\ */}}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#define\ MSG\_MEM\_FAIL\ \ \ \ \ \ \ "{}A\ memory\ request\ failed."{}}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#define\ MSG\_NO\_MEM\ \ \ \ \ \ \ \ \ "{}ida\_mem\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#define\ MSG\_NO\_MALLOC\ \ \ \ \ \ "{}Attempt\ to\ call\ before\ IDAMalloc."{}}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_NVECTOR\ \ \ \ "{}A\ required\ vector\ operation\ is\ not\ implemented."{}}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \textcolor{comment}{/*\ Initialization\ errors\ */}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#define\ MSG\_Y0\_NULL\ \ \ \ \ \ \ \ "{}y0\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#define\ MSG\_YP0\_NULL\ \ \ \ \ \ \ "{}yp0\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_ITOL\ \ \ \ \ \ \ "{}Illegal\ value\ for\ itol.\ The\ legal\ values\ are\ IDA\_SS,\ IDA\_SV,\ and\ IDA\_WF."{}}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#define\ MSG\_RES\_NULL\ \ \ \ \ \ \ "{}res\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_RTOL\ \ \ \ \ \ \ "{}reltol\ <\ 0\ illegal."{}}}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#define\ MSG\_ATOL\_NULL\ \ \ \ \ \ "{}abstol\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_ATOL\ \ \ \ \ \ \ "{}Some\ abstol\ component\ <\ 0.0\ illegal."{}}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#define\ MSG\_ROOT\_FUNC\_NULL\ "{}g\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#define\ MSG\_MISSING\_ID\ \ \ \ \ "{}id\ =\ NULL\ but\ suppressalg\ option\ on."{}}}
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\#define\ MSG\_NO\_TOLS\ \ \ \ \ \ \ \ "{}No\ integration\ tolerances\ have\ been\ specified."{}}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\#define\ MSG\_FAIL\_EWT\ \ \ \ \ \ \ "{}The\ user-\/provide\ EwtSet\ function\ failed."{}}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_EWT\ \ \ \ \ \ \ \ "{}Some\ initial\ ewt\ component\ =\ 0.0\ illegal."{}}}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\#define\ MSG\_Y0\_FAIL\_CONSTR\ "{}y0\ fails\ to\ satisfy\ constraints."{}}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\#define\ MSG\_LSOLVE\_NULL\ \ \ \ "{}The\ linear\ solver's\ solve\ routine\ is\ NULL."{}}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#define\ MSG\_LINIT\_FAIL\ \ \ \ \ "{}The\ linear\ solver's\ init\ routine\ failed."{}}}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \textcolor{comment}{/*\ IDACalcIC\ error\ messages\ */}}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\#define\ MSG\_IC\_BAD\_ICOPT\ \ \ "{}icopt\ has\ an\ illegal\ value."{}}}
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#define\ MSG\_IC\_MISSING\_ID\ \ "{}id\ =\ NULL\ conflicts\ with\ icopt."{}}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#define\ MSG\_IC\_TOO\_CLOSE\ \ \ "{}tout1\ too\ close\ to\ t0\ to\ attempt\ initial\ condition\ calculation."{}}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#define\ MSG\_IC\_BAD\_ID\ \ \ \ \ \ "{}id\ has\ illegal\ values."{}}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#define\ MSG\_IC\_BAD\_EWT\ \ \ \ \ "{}Some\ initial\ ewt\ component\ =\ 0.0\ illegal."{}}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#define\ MSG\_IC\_RES\_NONREC\ \ "{}The\ residual\ function\ failed\ unrecoverably.\ "{}}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#define\ MSG\_IC\_RES\_FAIL\ \ \ \ "{}The\ residual\ function\ failed\ at\ the\ first\ call.\ "{}}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#define\ MSG\_IC\_SETUP\_FAIL\ \ "{}The\ linear\ solver\ setup\ failed\ unrecoverably."{}}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#define\ MSG\_IC\_SOLVE\_FAIL\ \ "{}The\ linear\ solver\ solve\ failed\ unrecoverably."{}}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#define\ MSG\_IC\_NO\_RECOVERY\ "{}The\ residual\ routine\ or\ the\ linear\ setup\ or\ solve\ routine\ had\ a\ recoverable\ error,\ but\ IDACalcIC\ was\ unable\ to\ recover."{}}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#define\ MSG\_IC\_FAIL\_CONSTR\ "{}Unable\ to\ satisfy\ the\ inequality\ constraints."{}}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#define\ MSG\_IC\_FAILED\_LINS\ "{}The\ linesearch\ algorithm\ failed\ with\ too\ small\ a\ step."{}}}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#define\ MSG\_IC\_CONV\_FAILED\ "{}Newton/Linesearch\ algorithm\ failed\ to\ converge."{}}}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \textcolor{comment}{/*\ IDASolve\ error\ messages\ */}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\#define\ MSG\_YRET\_NULL\ \ \ \ \ \ "{}yret\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\#define\ MSG\_YPRET\_NULL\ \ \ \ \ "{}ypret\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#define\ MSG\_TRET\_NULL\ \ \ \ \ \ "{}tret\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_ITASK\ \ \ \ \ \ "{}itask\ has\ an\ illegal\ value."{}}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\#define\ MSG\_TOO\_CLOSE\ \ \ \ \ \ "{}tout\ too\ close\ to\ t0\ to\ start\ integration."{}}}
+\DoxyCodeLine{00441\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_HINIT\ \ \ \ \ \ "{}Initial\ step\ is\ not\ towards\ tout."{}}}
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_TSTOP\ \ \ \ \ \ "{}The\ value\ "{}\ MSG\_TIME\_TSTOP\ "{}\ is\ behind\ current\ "{}\ MSG\_TIME\ "{}in\ the\ direction\ of\ integration."{}}}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#define\ MSG\_CLOSE\_ROOTS\ \ \ \ "{}Root\ found\ at\ and\ very\ near\ "{}\ MSG\_TIME\ "{}."{}}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\#define\ MSG\_MAX\_STEPS\ \ \ \ \ \ "{}At\ "{}\ MSG\_TIME\ "{},\ mxstep\ steps\ taken\ before\ reaching\ tout."{}\ }}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{\#define\ MSG\_EWT\_NOW\_FAIL\ \ \ "{}At\ "{}\ MSG\_TIME\ "{}the\ user-\/provide\ EwtSet\ function\ failed."{}}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#define\ MSG\_EWT\_NOW\_BAD\ \ \ \ "{}At\ "{}\ MSG\_TIME\ "{}some\ ewt\ component\ has\ become\ <=\ 0.0."{}}}
+\DoxyCodeLine{00447\ \textcolor{preprocessor}{\#define\ MSG\_TOO\_MUCH\_ACC\ \ \ "{}At\ "{}\ MSG\_TIME\ "{}too\ much\ accuracy\ requested."{}}}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_K\ \ \ \ \ \ \ \ \ \ "{}Illegal\ value\ for\ k."{}}}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#define\ MSG\_NULL\_DKY\ \ \ \ \ \ \ "{}dky\ =\ NULL\ illegal."{}}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_T\ \ \ \ \ \ \ \ \ \ "{}Illegal\ value\ for\ t."{}\ MSG\_TIME\_INT}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_TOUT\ \ \ \ \ \ \ "{}Trouble\ interpolating\ at\ "{}\ MSG\_TIME\_TOUT\ "{}.\ tout\ too\ far\ back\ in\ direction\ of\ integration."{}}}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#define\ MSG\_ERR\_FAILS\ \ \ \ \ \ "{}At\ "{}\ MSG\_TIME\_H\ "{}the\ error\ test\ failed\ repeatedly\ or\ with\ |h|\ =\ hmin."{}}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\#define\ MSG\_CONV\_FAILS\ \ \ \ \ "{}At\ "{}\ MSG\_TIME\_H\ "{}the\ corrector\ convergence\ failed\ repeatedly\ or\ with\ |h|\ =\ hmin."{}}}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\#define\ MSG\_SETUP\_FAILED\ \ \ "{}At\ "{}\ MSG\_TIME\ "{}the\ linear\ solver\ setup\ failed\ unrecoverably."{}}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\#define\ MSG\_SOLVE\_FAILED\ \ \ "{}At\ "{}\ MSG\_TIME\ "{}the\ linear\ solver\ solve\ failed\ unrecoverably."{}}}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\#define\ MSG\_REP\_RES\_ERR\ \ \ \ "{}At\ "{}\ MSG\_TIME\ "{}repeated\ recoverable\ residual\ errors."{}}}
+\DoxyCodeLine{00459\ \textcolor{preprocessor}{\#define\ MSG\_RES\_NONRECOV\ \ \ "{}At\ "{}\ MSG\_TIME\ "{}the\ residual\ function\ failed\ unrecoverably."{}}}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#define\ MSG\_FAILED\_CONSTR\ \ "{}At\ "{}\ MSG\_TIME\ "{}unable\ to\ satisfy\ inequality\ constraints."{}}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\#define\ MSG\_RTFUNC\_FAILED\ \ "{}At\ "{}\ MSG\_TIME\ "{},\ the\ rootfinding\ routine\ failed\ in\ an\ unrecoverable\ manner."{}}}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\#define\ MSG\_NO\_ROOT\ \ \ \ \ \ \ \ "{}Rootfinding\ was\ not\ initialized."{}}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\#define\ MSG\_INACTIVE\_ROOTS\ "{}At\ the\ end\ of\ the\ first\ step,\ there\ are\ still\ some\ root\ functions\ identically\ 0.\ This\ warning\ will\ not\ be\ issued\ again."{}}}
+\DoxyCodeLine{00464\ }
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \textcolor{comment}{/*\ IDASet*\ /\ IDAGet*\ error\ messages\ */}}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\#define\ MSG\_NEG\_MAXORD\ \ \ \ \ "{}maxord\ <=\ 0\ illegal."{}}}
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_MAXORD\ \ \ \ \ "{}Illegal\ attempt\ to\ increase\ maximum\ order."{}}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#define\ MSG\_NEG\_HMAX\ \ \ \ \ \ \ "{}hmax\ <\ 0\ illegal."{}}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#define\ MSG\_NEG\_EPCON\ \ \ \ \ \ "{}epcon\ <=\ 0.0\ illegal."{}}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_CONSTR\ \ \ \ \ "{}Illegal\ values\ in\ constraints\ vector."{}}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_EPICCON\ \ \ \ "{}epiccon\ <=\ 0.0\ illegal."{}}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_MAXNH\ \ \ \ \ \ "{}maxnh\ <=\ 0\ illegal."{}}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_MAXNJ\ \ \ \ \ \ "{}maxnj\ <=\ 0\ illegal."{}}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_MAXNIT\ \ \ \ \ "{}maxnit\ <=\ 0\ illegal."{}}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\#define\ MSG\_BAD\_STEPTOL\ \ \ \ "{}steptol\ <=\ 0.0\ illegal."{}}}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\#define\ MSG\_TOO\_LATE\ \ \ \ \ \ \ "{}IDAGetConsistentIC\ can\ only\ be\ called\ before\ IDASolve."{}}}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00482\ \}}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

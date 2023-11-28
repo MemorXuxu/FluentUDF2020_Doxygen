@@ -1,0 +1,25 @@
+var test__hermite__e_8py =
+[
+    [ "TestConstants", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_constants.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_constants" ],
+    [ "TestArithmetic", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_arithmetic.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_arithmetic" ],
+    [ "TestEvaluation", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_evaluation.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_evaluation" ],
+    [ "TestIntegral", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_integral.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_integral" ],
+    [ "TestDerivative", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_derivative.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_derivative" ],
+    [ "TestVander", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_vander.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_vander" ],
+    [ "TestFitting", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_fitting.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_fitting" ],
+    [ "TestCompanion", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_companion.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_companion" ],
+    [ "TestGauss", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_gauss.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_gauss" ],
+    [ "TestMisc", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_misc.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_misc" ],
+    [ "trim", "test__hermite__e_8py.html#a3ffbf17a0448e85855b21f2163c17183", null ],
+    [ "He0", "test__hermite__e_8py.html#afb66cf2cf06eb625ec3bbc2ce3573f88", null ],
+    [ "He1", "test__hermite__e_8py.html#a4c271005cc3fa7fdc919870bf90afc80", null ],
+    [ "He2", "test__hermite__e_8py.html#a6b625c777a40e9954e7e7f6ce0f464c9", null ],
+    [ "He3", "test__hermite__e_8py.html#aae993f717d0c8e729652da96df1ad380", null ],
+    [ "He4", "test__hermite__e_8py.html#aa64412af799b590fffa464b1f70f8686", null ],
+    [ "He5", "test__hermite__e_8py.html#a82f53421fd7ce1f101014300ea66cd26", null ],
+    [ "He6", "test__hermite__e_8py.html#ae5e1de7fad89a60c6bbaa8283b845c06", null ],
+    [ "He7", "test__hermite__e_8py.html#a989d4614b573c3f313ff8a4c514ec4bb", null ],
+    [ "He8", "test__hermite__e_8py.html#a1ab1251454786c15a4d007ca1e02339e", null ],
+    [ "He9", "test__hermite__e_8py.html#a77d6d9b80c1f2aaf38f5c408f8998d67", null ],
+    [ "Helist", "test__hermite__e_8py.html#a581ec643ccaf74a2ecae17d88d9e8efa", null ]
+];

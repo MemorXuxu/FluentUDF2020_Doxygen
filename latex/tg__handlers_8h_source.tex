@@ -1,0 +1,415 @@
+\doxysection{tg\+\_\+handlers.\+h}
+\hypertarget{tg__handlers_8h_source}{}\label{tg__handlers_8h_source}\index{fluent20.1.0/tgrid/src/tg\_handlers.h@{fluent20.1.0/tgrid/src/tg\_handlers.h}}
+\mbox{\hyperlink{tg__handlers_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Exported\ handlers}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ TG\_HANDLERS\_H}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ TG\_HANDLERS\_H}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <malloc.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{std_8h}{std.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tginstance_8h}{tginstance.h}}"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ Progress,\ interrupt\ and\ signal\ handlers}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ TG\_PROGRESS\_MESSAGE\_SIZE\ 1024}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{tg__handlers_8h_a02c1aac29525ade4a362031e5dd53605}{TGProgressHandler}})(\textcolor{keywordtype}{char}\ *,\ double);}
+\DoxyCodeLine{00023\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{tg__handlers_8h_ab8d65d172e6efc66d080c60567fef86a}{TGInterruptHandler}})(void);}
+\DoxyCodeLine{00024\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{tg__handlers_8h_ac0d87f4b38279d2613c45c00e59fd038}{TGSignalHandler}})(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__handlers_8h_a2e9ab44e5b23efd9c60e0caf19a8f34e}{ErrorCode}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{tg__handlers_8h_a59c973f8580fd748c36dc0006b411d9a}{TGErrorHandler}})(\mbox{\hyperlink{tg__handlers_8h_a2e9ab44e5b23efd9c60e0caf19a8f34e}{ErrorCode}});}
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{tg__handlers_8h_a12207844386eb02e37536fbd82bb810d}{TGMessageHandler}})(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ Error\ handling}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00034\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cda7c7e2948d6f7b5fdefdf46abcf02a477}{TGE\_NORMAL}}\ =\ 0x0,}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cda8c21ebcd6a2ea066e3060a931492fa34}{TGE\_FATAL}}\ =\ 0x1,}
+\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cda07e9e866ebabebcd805db2f24f9d97cb}{TGE\_FAILURE}}\ =\ 0x2,}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cda0b349ccc961f3026d394e5796c2fd751}{TGE\_INTERRUPT}}\ =\ 0x4,}
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cda66eb6e53e2da6b6ba13732077c3c4a4f}{TGE\_FPEXCEPTION}}\ =\ \ 0x8,}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cdad407670792d19d4abe8f0df54dd5b87f}{TGE\_END\_OF\_FILE}}\ =\ 0x10,}
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cda48746f7a2d481742eded815b2425f43c}{TGE\_END\_OF\_LIST}}\ =\ \ 0x20,}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cdab36cec0dcc81ef557926ae48456b9b83}{TGE\_READ}}\ =\ 0x40,}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cdabd0be33361917a0a5945cf39afa0515f}{TGE\_WRITE}}\ =\ 0x80,}
+\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cda0c56718729559baaf7587a6ae48c216d}{TGE\_ABORT}}\ =\ 0x100,}
+\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac12627b43234a2c5005eca7a2a0a88cda415bdb5334419858f936b82e39c1ac06}{TGE\_NERRS}}\ =\ 10\ \ \textcolor{comment}{/*\ number\ of\ errors\ */}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00050\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_abe4eb8a7f480877e96248c1c2b2b96a4a88ed3b20ab66840fe91a66937882b618}{TP\_UNKNOWN}},}
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_abe4eb8a7f480877e96248c1c2b2b96a4abbac4318a099c00f1df05cf9ef0e80a9}{TP\_ERRORCODE}},}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_abe4eb8a7f480877e96248c1c2b2b96a4a5094ff49929e687f780e54835cf66ea2}{TP\_WARNINGCODE}},}
+\DoxyCodeLine{00054\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_abe4eb8a7f480877e96248c1c2b2b96a4ab669d6354304d089c77da326988f4c3d}{TP\_NODE}},}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_abe4eb8a7f480877e96248c1c2b2b96a4af11149cf9b05b6d296d8f219cd887229}{TP\_EDGE}},}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_abe4eb8a7f480877e96248c1c2b2b96a4ae4ad8ba3b75296656aa6162b2308bbd4}{TP\_FACE}},}
+\DoxyCodeLine{00057\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_abe4eb8a7f480877e96248c1c2b2b96a4af0275f2933e94cb7182acdbc62b191c2}{TP\_CELL}},}
+\DoxyCodeLine{00058\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_abe4eb8a7f480877e96248c1c2b2b96a4a131634ac87eb7f765a73cb174a483e1c}{TP\_THREAD}},}
+\DoxyCodeLine{00059\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_abe4eb8a7f480877e96248c1c2b2b96a4ac8c362789fa38c72d28655606ac0a38f}{TP\_LOCATION}}}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ ERRSIZE\ 1}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ WRNSIZE\ 1024}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ DATASIZE\ 10}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ MSGSZ\ 1024}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__msg__data}{tg\_msg\_data}}\ \mbox{\hyperlink{structtg__msg__data}{MSG\_Data}};}
+\DoxyCodeLine{00069\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__msg__report}{tg\_msg\_report}}\ \mbox{\hyperlink{structtg__msg__report}{MSG\_Report}};}
+\DoxyCodeLine{00070\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__err__report}{tg\_err\_report}}\ \mbox{\hyperlink{structtg__err__report}{ERR\_Report}};}
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__wrn__report}{tg\_wrn\_report}}\ \mbox{\hyperlink{structtg__wrn__report}{WRN\_Report}};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__msg__data}{tg\_msg\_data}}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__msg__data_ac765329451135abec74c45e1897abf26}{type}};}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__msg__data_a7441ef0865bcb3db9b8064dd7375c1ea}{id}};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structtg__msg__data_aa75938b7e0ed6ea92eec28d597b49505}{loc}}[3];}
+\DoxyCodeLine{00078\ \};}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__msg__report}{tg\_msg\_report}}}
+\DoxyCodeLine{00081\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__msg__report_ae1568bbed99b0c7bb6f5fd423db1b295}{mess\_code}};}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__msg__report_ae9c5fb8da744021c1cf07f9492161182}{number\_of\_data}};}
+\DoxyCodeLine{00084\ \ \ \ \ \mbox{\hyperlink{structtg__msg__data}{MSG\_Data}}\ \mbox{\hyperlink{structtg__msg__report_aa1d7d3c69f5f8d67271dc2b7459d8a61}{mess\_data}}[\mbox{\hyperlink{tg__handlers_8h_acb383144a04ad304680b840cd65af5a5}{DATASIZE}}];}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtg__msg__report_a7a9c46e1bf990b0ab61a739e5b7c9d7f}{message}}[\mbox{\hyperlink{tg__handlers_8h_af7e3e3ff5bdea6f2dd261476f01e18c1}{MSGSZ}}];}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__err__report}{tg\_err\_report}}}
+\DoxyCodeLine{00089\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__err__report_a523f28af91244fa40b3014900684eb53}{ierr}};}
+\DoxyCodeLine{00091\ \ \ \ \ \mbox{\hyperlink{structtg__msg__report}{MSG\_Report}}\ \mbox{\hyperlink{structtg__err__report_a232293fb2ab2951ad2b05e9df5438605}{errors}}[\mbox{\hyperlink{tg__handlers_8h_a7e3b11d941bb723d7b7c157ef50a182b}{ERRSIZE}}];}
+\DoxyCodeLine{00092\ \};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__wrn__report}{tg\_wrn\_report}}}
+\DoxyCodeLine{00095\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__wrn__report_add93902329dc64e034f72b63cc9ba4d1}{iwrn}};}
+\DoxyCodeLine{00097\ \ \ \ \ \mbox{\hyperlink{structtg__msg__report}{MSG\_Report}}\ \mbox{\hyperlink{structtg__wrn__report_aab4e3f9f0b3a0662445b17737cf7fb8c}{warnings}}[\mbox{\hyperlink{tg__handlers_8h_abb3f19d03fac92ed4604ef7ef87b6873}{WRNSIZE}}];}
+\DoxyCodeLine{00098\ \};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__extern__tg__handlers}{\_tg\_extern\_tg\_handlers}}}
+\DoxyCodeLine{00101\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_af3551fa42be623a58d0980d86cc87fee}{\_tg\_interruptable}};}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_a6af2138b83097e524de23ff3ea89a15e}{\_tg\_interrupted}};}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{void}\ *(*\_TG\_Malloc\_Function2)(size\_t,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ int);}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{void}\ *(*\_TG\_Realloc\_Function2)(\textcolor{keywordtype}{void}\ *,\ size\_t,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ int);}
+\DoxyCodeLine{00107\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_ac17e93db9aff2007a6af6997fce458b4}{\_TG\_Free\_Function2}})(\textcolor{keywordtype}{void}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ int);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{void}\ *(*\_TG\_Malloc\_Function)(size\_t);}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{void}\ *(*\_TG\_Realloc\_Function)(\textcolor{keywordtype}{void}\ *,\ size\_t);}
+\DoxyCodeLine{00111\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_a38a41e842c505d634abeec6718743b21}{\_TG\_Free\_Function}})(\textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_afec8c17105048939f6d9f72815d4891f}{\_TG\_Error\_Function}})(\mbox{\hyperlink{tg__handlers_8h_a2e9ab44e5b23efd9c60e0caf19a8f34e}{ErrorCode}},\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00114\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_acc388612261557039c3cc5881f54b8e8}{\_TG\_Parallel\_Error\_Function}})(\mbox{\hyperlink{tg__handlers_8h_a2e9ab44e5b23efd9c60e0caf19a8f34e}{ErrorCode}},\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_a02c1aac29525ade4a362031e5dd53605}{TGProgressHandler}}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_aa04c59da1201de9798bd06909a3b7e41}{\_TG\_Progress\_Function}};}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_af085d450559dbbc0ddc33866b1ff3c3e}{\_TG\_Progress\_Level}};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_ae07b6ccec3b53bf6d453359572f54d0e}{\_TG\_Draw\_Poly\_Function}})\ (int,\ \textcolor{keywordtype}{float}[][3]);}
+\DoxyCodeLine{00120\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_ae00991aa1b7fd1a149b2abe6c9d4c22f}{\_TG\_Draw\_Open\_Function}})\ (void);}
+\DoxyCodeLine{00121\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_adcb14550c2ad4b3ca23e390af3c7f16e}{\_TG\_Draw\_Close\_Function}})\ (void);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ int\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_aead5d0c821dc5589e0858ec40f1fd405}{\_TG\_Interrupts\_Enabled}})(void);}
+\DoxyCodeLine{00124\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_a8e0d8fe94694f3faba4d6b1e0f5809cc}{\_TG\_Enable\_Interrupts}})(void);}
+\DoxyCodeLine{00125\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_ae5d6f18c9bec54f91ac5723bc97eb379}{\_TG\_Disable\_Interrupts}})(void);}
+\DoxyCodeLine{00126\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab8d65d172e6efc66d080c60567fef86a}{TGInterruptHandler}}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_aeb3bd93b7b506fde531ba410da401d4d}{\_TG\_Interrupt\_Function}};}
+\DoxyCodeLine{00127\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__tg__extern__tg__handlers_a6ec1a1046d97f15e33d42aa0908d08b7}{\_TG\_Reset\_Interrupt}})\ (void);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac0d87f4b38279d2613c45c00e59fd038}{TGSignalHandler}}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_a42998ee18e13f4b4a6800d58ef109517}{\_TG\_Signal\_Function}};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_a12207844386eb02e37536fbd82bb810d}{TGMessageHandler}}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_a7b1d02beea6d416cdeb079a394953f3d}{\_TG\_Print\_Function}};}
+\DoxyCodeLine{00132\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_a12207844386eb02e37536fbd82bb810d}{TGMessageHandler}}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_ae425ca66be30c12d5290dbbe1c2fad25}{\_TG\_Warning\_Function}};}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_ab8ccc52ed1578b6bf20ee594b5577ace}{\_TG\_Verbosity\_Level}};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_ab88003ffebbf75a8705d7269c9271188}{\_TG\_Omp\_Num\_Threads}};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_a04d45a43ed2a851555a897d2b1c5bd9a}{\_TG\_Omp\_Fixed\_Num\_Threads}};}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_a12e4ba950c0b5795238e6833d76439f1}{\_TG\_Debug\_Level}};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \mbox{\hyperlink{structtg__err__report}{ERR\_Report}}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_adeb8e5ee91e6c1bbc5e6f245b9540bed}{\_error\_data}};}
+\DoxyCodeLine{00143\ \ \ \ \ \mbox{\hyperlink{structtg__wrn__report}{WRN\_Report}}\ \mbox{\hyperlink{struct__tg__extern__tg__handlers_a6f2e3225698fd8c23db9b370b2377e9a}{\_warning\_data}};}
+\DoxyCodeLine{00144\ \};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ extern\_tg\_handlers(field)\ EXTERN\_INSTANCE\_VAR(tg\_handlers,\ field)}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ tg\_interruptable\ extern\_tg\_handlers(\_tg\_interruptable)}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ tg\_interrupted\ extern\_tg\_handlers(\_tg\_interrupted)}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ TG\_Malloc\_Function2\ extern\_tg\_handlers(\_TG\_Malloc\_Function2)}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ TG\_Realloc\_Function2\ extern\_tg\_handlers(\_TG\_Realloc\_Function2)}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ TG\_Free\_Function2\ extern\_tg\_handlers(\_TG\_Free\_Function2)}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ TG\_Malloc\_Function\ extern\_tg\_handlers(\_TG\_Malloc\_Function)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#define\ TG\_Realloc\_Function\ extern\_tg\_handlers(\_TG\_Realloc\_Function)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ TG\_Free\_Function\ extern\_tg\_handlers(\_TG\_Free\_Function)}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ TG\_Error\_Function\ extern\_tg\_handlers(\_TG\_Error\_Function)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ TG\_Parallel\_Error\_Function\ extern\_tg\_handlers(\_TG\_Parallel\_Error\_Function)}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ TG\_Progress\_Function\ extern\_tg\_handlers(\_TG\_Progress\_Function)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ TG\_Progress\_Level\ extern\_tg\_handlers(\_TG\_Progress\_Level)}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ TG\_Draw\_Poly\_Function\ extern\_tg\_handlers(\_TG\_Draw\_Poly\_Function)}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ TG\_Draw\_Open\_Function\ extern\_tg\_handlers(\_TG\_Draw\_Open\_Function)}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ TG\_Draw\_Close\_Function\ extern\_tg\_handlers(\_TG\_Draw\_Close\_Function)}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ TG\_Interrupts\_Enabled\ extern\_tg\_handlers(\_TG\_Interrupts\_Enabled)}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#define\ TG\_Enable\_Interrupts\ extern\_tg\_handlers(\_TG\_Enable\_Interrupts)}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ TG\_Disable\_Interrupts\ extern\_tg\_handlers(\_TG\_Disable\_Interrupts)}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ TG\_Interrupt\_Function\ extern\_tg\_handlers(\_TG\_Interrupt\_Function)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ TG\_Reset\_Interrupt\ extern\_tg\_handlers(\_TG\_Reset\_Interrupt)}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ TG\_Signal\_Function\ extern\_tg\_handlers(\_TG\_Signal\_Function)}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ TG\_Print\_Function\ extern\_tg\_handlers(\_TG\_Print\_Function)}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ TG\_Warning\_Function\ extern\_tg\_handlers(\_TG\_Warning\_Function)}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ TG\_Verbosity\_Level\ extern\_tg\_handlers(\_TG\_Verbosity\_Level)}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#define\ TG\_Omp\_Num\_Threads\ extern\_tg\_handlers(\_TG\_Omp\_Num\_Threads)}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#define\ TG\_Omp\_Fixed\_Num\_Threads\ extern\_tg\_handlers(\_TG\_Omp\_Fixed\_Num\_Threads)}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#\ define\ TG\_Debug\_Level\ extern\_tg\_handlers(\_TG\_Debug\_Level)}}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#define\ error\_data\ extern\_tg\_handlers(\_error\_data)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#define\ warning\_data\ extern\_tg\_handlers(\_warning\_data)}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00192\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00193\ \{}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *(*TG\_Malloc\_Hook)(size\_t);}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *(*TG\_Realloc\_Hook)(\textcolor{keywordtype}{void}\ *,\ size\_t);}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ void\ (*\mbox{\hyperlink{tg__handlers_8h_a4334e5d675b3cfacfc73c8c900d87530}{TG\_Free\_Hook}})(\textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \mbox{\hyperlink{tginstance_8h_adaf6e5f72f916fc6075db32ad85c8f8d}{EXTERN\_INSTANCE\_PROTOTYPE}}(tg\_handlers);}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tg__handlers_8h_a44527c96d1d392a7f988c4a6c981305e}{TG\_Malloc\_Function\_Default}}(\textcolor{keywordtype}{size\_t},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tg__handlers_8h_ab18fe3a105efe5effde3839dd294f7ee}{TG\_Malloc1}}(\textcolor{keywordtype}{size\_t},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tg__handlers_8h_ab4dd194a284a984f681c9e69710a78ba}{TG\_Realloc\_Function\_Default}}(\textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{size\_t},\textcolor{keyword}{const}\ \ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tg__handlers_8h_afbcce4bf2ad5e76e4c95ae3705496b7a}{TG\_Realloc1}}(\textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{size\_t},\textcolor{keyword}{const}\ \ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*);}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_afee22bd2d08fa8299234793216a3645f}{TG\_Free\_Function\_Default}}(\textcolor{keywordtype}{void}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a89e4919ca3110c5643af741552142222}{TG\_Free1}}(\textcolor{keywordtype}{void}\ *,\textcolor{keyword}{const}\ \ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*);}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a40a829c6fa9f31c1df808501534da729}{\_TG\_Set\_Peak\_Memory\_Report\_Min\_Size}}(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_ab9d8064dd10e8c240269ee821116afa5}{\_TG\_Mem\_Check\_Peak\_Enable}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_adef3edbca56ddd37541c7b5aa58f6327}{\_TG\_Mem\_Check\_Proc\_Analysis}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_ac6c95fbfea74fe367727ab53ee740985}{\_TG\_Mem\_Check\_Small\_Allocations}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_acce1e14195df470e11d848cd057f133f}{TG\_Progress\_Function\_Default}}(\textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a64710a03d05d38da363a040204844f01}{TG\_Progress}}(\textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a9fcd8b8b8c0e11803f611a529cbc73a1}{TG\_Progress\_Set\_Level}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_adac0a16efdf0d5bd35913860a148e88d}{TG\_Draw\_Open\_Default}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_ab6b78f4705d72247d177667a0264b7d0}{TG\_Draw\_Close\_Default}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a33bcf5d9004894b186bc9b3bd2a8908a}{TG\_Draw\_Poly\_Default}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{float}\ [][3]);}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a18a3905b5ee5537cd105f3cafc86e163}{TG\_Draw\_Open}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_ae843af4baa0aaad79b050e0e31a76e34}{TG\_Draw\_Close}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a9410400dda320877860c85ae391a3f6f}{TG\_Draw\_Poly}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{float}[][3]);}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__handlers_8h_ae530b9404a5cbb3a96091aa9e3c416fd}{TG\_Interrupts\_Enabled\_Default}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a42d51e0a8f24860d9416449bae0aeaf7}{TG\_Enable\_Interrupts\_Default}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a76fc4dec99529f420404768681143451}{TG\_Disable\_Interrupts\_Default}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a0d48413c7ba559943a6707c1456547dc}{TG\_Reset\_Interrupt\_Function\_Default}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__handlers_8h_a9d046482ccb19c1a95fae2102ee5e12d}{TG\_Interrupt\_Function\_Default}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__handlers_8h_a388d7e9f82753002133c1e10100ea782}{TG\_Interruptions}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__handlers_8h_abd2e642c3bcd70b80d0c1949cbdb3e72}{TG\_Check\_Interrupt}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_af95c33b44bf3b0104601cf4557032a8a}{TG\_Signal\_Function\_Default}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_afbf9960d39d3ce3c1c9eab6cc969ba09}{TG\_Signal\_Install}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a158403d8b383216291bc9a0baed6b487}{TG\_Signal\_Install1}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a18c3ac31b7d07cce048d7aba5004a784}{TG\_Signal\_Restore}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_aeda59dda8b0800e58c63d423dadd985b}{TG\_Print\_Function\_Default}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a26774fb5f12b09f15e4bf59d27b0e8c8}{TG\_Warning\_Function\_Default}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_aceb22497f8e9bfb11ba6bc1dee161d8e}{TG\_Message\_Set\_Verbosity}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a4b0f5d94fa37b46d5b472e48c6731529}{TG\_Set\_Omp\_Num\_Threads}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__handlers_8h_a0b1ed0b9a0d88e1941717d5f84977230}{\_TG\_Compute\_Omp\_Num\_Threads}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tg__handlers_8h_a212d05a2b38590360bf4745acd6669b3}{TG\_Get\_Omp\_Max\_Threads}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a313c152cab37c7b901cf63417c709d7c}{TG\_Sync\_Omp\_Vars}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a59efeaaf492a4025458a2c22fc660ede}{TG\_Debug\_Set\_Level}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_aa82a0d5a42e76177a6097f943d87e97d}{TG\_Clear\_Error}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a0b90ee7d1b6f7e283bc0bbc1f0341d2f}{TG\_Get\_Number\_Of\_Errors}}(\textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_ada18954f5ee487ad91815f43b050820e}{TG\_Get\_Error\_Code}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_aaeba4cc654df06abe949d3edc92f8c46}{TG\_Get\_Number\_Of\_Error\_Data}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_adad6dc75cef99edfcdfce95ba466bfa0}{TG\_Get\_Error\_Data}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__msg__data}{MSG\_Data}}\ *);}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_ad994b621f7d1c2f9ee4acc286ab537a3}{TG\_Clear\_Warning}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a67c1a3c4834905426e0a4570977ac6d7}{TG\_Get\_Number\_Of\_Warnings}}(\textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_ac8887e3207e4cf67b390aaa99df970bb}{TG\_Get\_Warning\_Code}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a97bdf3562aed65667fe770b20e6c85a6}{TG\_Get\_Number\_Of\_Warning\_Data}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a716e159e13da154dbbe7680197559d50}{TG\_Get\_Warning\_Data}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__msg__data}{MSG\_Data}}\ *);}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_af01d3e22b48a1fd9bccb5507a7a37cf7}{\_TG\_Mem\_Check\_Init}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_abdf67a8ae2e55aad85c6d43632f2f66e}{\_TG\_Mem\_Check\_Enable}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_ae0aff30f68c27359d2930f27121a9f87}{\_TG\_Mem\_Check\_Free}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_af25168873151cf2fc7ba5b32868c1325}{\_TG\_Mem\_Check\_Report}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_a18ab7f004c777499a3ab902d78e04dd2}{\_TG\_Set\_MYTG\_HANDLE}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__handlers_8h_aedd9b4d249f64d4ebfd14705c60ea7d0}{\_TG\_Print\_Memory\_Usage}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00271\ \}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \textcolor{comment}{/*\ error\ and\ warning\ codes\ */}}
+\DoxyCodeLine{00275\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00276\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a467b30f201f459cb4243c7fd45375c4c}{EC\_SUCCESS}},}
+\DoxyCodeLine{00278\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a3521421151e1951fdcdf0f4198fb655f}{EC\_GENERIC\_ERROR}},}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a94ac4fc2227417a1c85194aa9cd5d763}{EC\_OUT\_OF\_MEMORY\_ERROR}},}
+\DoxyCodeLine{00281\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a71640a3afc13c97474e0a3270baf2b76}{EC\_2DBL\_GATHER\_BASE\_EDGES}},}
+\DoxyCodeLine{00282\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a4de588366386c038ef89029a7947c799}{EC\_2DBL\_ADDING\_LAYERS}},}
+\DoxyCodeLine{00283\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a56527c9ac1ed2090c396f809d80e5909}{EC\_2DBL\_POST\_LAYER\_PROCESS}},}
+\DoxyCodeLine{00284\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a9cf85d502645deea63e701915d63265b}{EC\_3DBL\_PERIODIC\_MISMATCH}},\ \textcolor{comment}{/*\ if\ prism\ settings\ are\ mis-\/matching\ */}}
+\DoxyCodeLine{00285\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a8ec64f3b868465591de8cfbe1c260467}{EC\_3DBL\_WRONG\_EXTRUSION\_DIRECTION}},\ \textcolor{comment}{/*\ growing\ prism\ layers\ in\ wrong}}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ direction\ on\ reported\ face\ zone\ */}}
+\DoxyCodeLine{00287\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a95cfefb733403b54adb4a707bcd0cc82}{EC\_3DBL\_NO\_LAYERS\_GENERATED}},\ \ \textcolor{comment}{/*\ No\ prism\ layers\ generated\ at\ all}}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ as\ all\ nodes\ are\ ignored\ */}}
+\DoxyCodeLine{00289\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a59287e0a97e064828bc98df3cbbfa478}{EC\_3DBL\_RETRIANGULATE\_FROZEN\_ZONE}},\ \textcolor{comment}{/*\ A\ reported\ zone\ which\ is\ flagged\ as}}
+\DoxyCodeLine{00290\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ frozen\ is\ set\ for\ retriangulation\ */}}
+\DoxyCodeLine{00291\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a1814d71dbab0d35574d25ffd1c2af76a}{EC\_3DBL\_NON\_MANIFOLD\_BASE}},\ \ \ \ \textcolor{comment}{/*\ There\ is\ an\ invalid\ manifold}}
+\DoxyCodeLine{00292\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ around\ the\ reported\ node\ */}}
+\DoxyCodeLine{00293\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a9130c251c70859e958743ee3c491de28}{EC\_3DBL\_PROJECTION\_FAILURE}},\ \ \ \textcolor{comment}{/*\ Projection\ failure\ at\ reported\ node}}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ because\ of\ local\ manifold\ shape\ */}}
+\DoxyCodeLine{00295\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581aaeb2a73b402972cc6ca80bfce4f4e32d}{EC\_3DBL\_SHORT\_ADJACENT\_EDGE}},\ \ \textcolor{comment}{/*\ Adjacent\ edge\ thread\ is\ shorter\ than}}
+\DoxyCodeLine{00296\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prism\ height\ -\/\ allow\ local\ stairstepping\ */}}
+\DoxyCodeLine{00297\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ad68f52037ed354f3f1b79f75fdc6b542}{EC\_3DBL\_INVALID\_ADJACENT\_QUAD}},\ \textcolor{comment}{/*\ Adjacent\ quad\ is\ connected\ to\ more\ than}}
+\DoxyCodeLine{00298\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ one\ base\ face\ -\/\ cannot\ support\ currently*/}}
+\DoxyCodeLine{00299\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a2bfdf6c19ac4e59cb43f34ae0900fd45}{EC\_PYRAMID\_PROXIMITY\_FACE\_INTERSECTION}},\ \textcolor{comment}{/*\ A\ pyramid\ cannot\ be\ created\ on\ the}}
+\DoxyCodeLine{00300\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reported\ face\ without\ intersecting}}
+\DoxyCodeLine{00301\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ face\ in\ proximity\ */}}
+\DoxyCodeLine{00302\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a70895eadc412c8ebafec8c72909315da}{EC\_PYRAMID\_NBR\_FACE\_INTERSECTION}},\ \textcolor{comment}{/*\ A\ neighbor\ face\ is\ too\ close\ to\ reported}}
+\DoxyCodeLine{00303\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ base\ face\ to\ create\ a\ non-\/intersecting}}
+\DoxyCodeLine{00304\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pyramid\ cell\ */}}
+\DoxyCodeLine{00305\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a9df1e4a84a5909428beb607e95a68a58}{EC\_RETRI\_IMPRINT\_OUTSIDE\_TARGET\_ZONE}},\ \textcolor{comment}{/*\ Retriangulation\ -\/\ imprinted\ zone}}
+\DoxyCodeLine{00306\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ extends\ out\ of\ target\ zone\ */}}
+\DoxyCodeLine{00307\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a5b25d3c0dbb3144cad2c4c95054b40c1}{EC\_RETRI\_NON\_TRIANGULAR\_ZONE}},\ \textcolor{comment}{/*\ Cannot\ retriangulate\ a\ non-\/traingular\ zone\ */}}
+\DoxyCodeLine{00308\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581afb9d0a4a5549c1c8fbe0ff726bf5f037}{EC\_RETRI\_NON\_MANIFOLD\_ZONE}},\ \ \ \textcolor{comment}{/*\ Cannot\ retriangulate\ a\ non-\/manifold\ zone\ */}}
+\DoxyCodeLine{00309\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a34ae424189d45a6d9ea6984c9f603f0a}{EC\_RETRI\_QUAD\_FACE\_SPLIT}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Cannot\ split\ quad\ face*/}}
+\DoxyCodeLine{00310\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581afcc972b8b8ebaa67003cfcd415928ac3}{EC\_RETRI\_CELL\_BOUNDARY\_SPLIT}},\ \textcolor{comment}{/*\ Splitting\ edge\ connected\ to\ a\ cell*/}}
+\DoxyCodeLine{00311\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a283e3b87c88106e063d1a2f80135bed8}{EC\_TET\_INITIALIZATION\_FAILED}},}
+\DoxyCodeLine{00312\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a0499be8ec766aa1dfb63a8936f493e01}{EC\_WA\_NO\_BOUNDING\_CELL}},}
+\DoxyCodeLine{00313\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ad48552f403f12a75270c4b0280eb527f}{EC\_WA\_DUPLICATE\_NODES}},}
+\DoxyCodeLine{00314\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ac756bfea596858962b5eaffa48baec54}{EC\_WA\_EDGE\_INTERSECT\_FACE}},}
+\DoxyCodeLine{00315\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a8d17a7d92baf82a46d5f7121eccb1e3e}{EC\_WA\_DUPLICATE\_FACES}},}
+\DoxyCodeLine{00316\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a4bb6ff037ad5b98816e3b9f7a11d61b1}{EC\_SF\_BGRID\_GENERAL}},}
+\DoxyCodeLine{00317\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ab2e064b6cab8850809b186f7576c619d}{EC\_SF\_EVAL\_GENERAL}},}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581aac865a0d7aad4beeffe50b50629d34b7}{EC\_THREAD\_STATUS\_NOT\_USER}},}
+\DoxyCodeLine{00320\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a8b495f2f699a966824fdce22e9d192a0}{EC\_THREAD\_STATUS\_NOT\_TEMPORARY}},}
+\DoxyCodeLine{00321\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a26eb3ef3fc706fc5b1148385611548b1}{EC\_THREAD\_ID\_IN\_USE}},}
+\DoxyCodeLine{00322\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a4239bdc9bc1271d59e079106b020b081}{EC\_THREAD\_NAME\_IN\_USE}},}
+\DoxyCodeLine{00323\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a1300d28bfde1c50d0ef42606388753f9}{EC\_THREAD\_ID\_INVALID}},}
+\DoxyCodeLine{00324\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ad1348c2e0a7696c37d3ca2072dce1e6d}{EC\_THREAD\_STATUS\_NOT\_SAME}},}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a492c63dbe66639c9bdea9b0e3f2bf3f0}{EC\_PARAMETER\_OUT\_OF\_BOUNDS}},}
+\DoxyCodeLine{00327\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a349a8d082facee69177fb6e5491804ad}{EC\_PARAMETER\_INVALID}},}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{comment}{/*\ GoCart\ Errors\ */}}
+\DoxyCodeLine{00330\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581abb1b6bd0162ac1c6518a88d167c83b5f}{EC\_REFSIZE\_GREATER\_MIN\_DOMAIN\_EXTENTS}},}
+\DoxyCodeLine{00331\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a87cddfd5c1d3d6d2ff0a0e841e066cab}{EC\_INITIAL\_CELL\_COUNT\_EXCEEDED\_LIMIT}},}
+\DoxyCodeLine{00332\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a4146e95115f67c32f5f224a43e0cb8b4}{EC\_MAX\_CELL\_LENGTH\_EXCEEDED}},}
+\DoxyCodeLine{00333\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a290a427567a1bf77373d2dfa4c9c659f}{EC\_NO\_GEOMETRY\_FACE\_ZONES}},}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ad064fb1fae35c4cd427d0aea85408dd8}{EC\_SURFACE\_MORPHING\_FAILED}},}
+\DoxyCodeLine{00336\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a021c2a7222840324c3fc41e465ce8626}{EC\_VOLUME\_MORPHING\_FAILED}},}
+\DoxyCodeLine{00337\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a34e822bcfb6a9b167fcc321efa7f4224}{EC\_VOLUME\_MORPHING\_REPAIR\_FAILED}},}
+\DoxyCodeLine{00338\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ad38b5b92216e768cdcb9681406161777}{EC\_PROBLEMATIC\_INPUT\_MESH}},}
+\DoxyCodeLine{00339\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a8284002bab2ace0a5101b6e1e07848b1}{EC\_POST\_INFLATION\_FAILED}},}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{comment}{/*\ marker\ for\ scheme\ errors.\ All\ error\ codes\ generated\ from\ scheme\ must\ be}}
+\DoxyCodeLine{00342\ \textcolor{comment}{\ \ \ \ added\ after\ this\ */}}
+\DoxyCodeLine{00343\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a8091ff4aff25a8754f138e265e7c1eb6}{EC\_SCHEME\_ERRORS}},}
+\DoxyCodeLine{00344\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ab01139c8fbdec251fe957962cddeb266}{EC\_PRISM\_NOT\_DEFINED\_AROUND\_CELL\_ZONES}},}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{comment}{/*\ Surfer\ Errors*/}}
+\DoxyCodeLine{00347\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581aa013c5b9012e7c37398506e2758ebded}{EC\_SURFER\_GENERAL\_ERROR}},\ \ \textcolor{comment}{/*\ General\ error\ like\ KDTree\ search\ failed\ etc\ */}}
+\DoxyCodeLine{00348\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a178400bb48a466f6c8c3f956231f1cd7}{EC\_SURFER\_MAX\_AREA}},\ \ \ \ \ \ \ \textcolor{comment}{/*\ remeshed\ area\ more\ than\ input\ mesh\ area\ */}}
+\DoxyCodeLine{00349\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ab4f318740093e0eaf9a9680fb8454d52}{EC\_SURFER\_MIN\_AREA}},\ \ \ \ \ \ \ \textcolor{comment}{/*\ remeshed\ area\ less\ than\ input\ mesh\ area\ */}}
+\DoxyCodeLine{00350\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a09aa89ee902e2c62167c6d2c0ab39457}{EC\_SURFER\_AFT\_FAILED}},\ \ \ \ \ \ \textcolor{comment}{/*\ AFT\ failed\ at\ given\ location\ */}}
+\DoxyCodeLine{00351\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ab56d9d26f097d5dc1c1450f3019430c6}{EC\_SURFER\_INITIAL\_FRONT\_PROBLEM}},\ \textcolor{comment}{/*\ Initial\ front\ problem\ at\ given\ location*/}}
+\DoxyCodeLine{00352\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a3f38f4963a2993246a85cdd756524a22}{EC\_SURFER\_MULTI\_FACE}},\ \ \ \ \textcolor{comment}{/*\ Surfer\ multi\ face\ created\ at\ given\ location\ */}}
+\DoxyCodeLine{00353\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581ab852ee6d4b3b4d62236f8e095c30e93e}{EC\_SURFER\_DUPLICATE\_FACE}},\ \ \ \ \textcolor{comment}{/*\ Surfer\ duplicate\ face\ created\ at\ given\ location\ */}}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581aac004c2a75fbebc3473ed895e02cceab}{EC\_SIGSEGV}},}
+\DoxyCodeLine{00356\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a9a940cff967bb6bb17e1192b0513ffce}{EC\_SIGABRT}},}
+\DoxyCodeLine{00357\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a577ceefccc33e8d287a36ea097bdf78d}{EC\_SIGINT}},}
+\DoxyCodeLine{00358\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a080a0f7a4899958f6615f763bc436a7f}{EC\_SIGFPE}},}
+\DoxyCodeLine{00359\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a81de2dc70d41b7a04bfbfe608ac77c0d}{EC\_AIT\_OVERLAP\_ALONG\_MULTI}},}
+\DoxyCodeLine{00360\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a90e9148202c5ee0d4d8f497210ec773c}{EC\_TRIANGULATION\_FAILED}},\ \textcolor{comment}{/*\ Cannot\ triangulate\ a\ plane\ */}}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581a450a66d3f4ca7008207c68ce94d89d70}{EC\_SURFER\_LAYERED\_QUAD\_FAILED}},\ \textcolor{comment}{/*\ Cannot\ create\ layered\ quads\ */}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581adc50841a7d1322bf5077131e889f7ddc}{EC\_NO\_OF\_ERRORS}}}
+\DoxyCodeLine{00365\ \}\ \mbox{\hyperlink{tg__handlers_8h_ac83f6ffd35d457f428023de4e622e581}{Error\_Code\_Type}};}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00368\ \{}
+\DoxyCodeLine{00369\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a99eef09e097b4245257090e66d81132b}{WC\_GENERAL\_WARNING}},}
+\DoxyCodeLine{00370\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a9496e759bcf59ee60ac9ce3837865816}{WC\_2DBL\_LAYER\_GENERATION\_STOPPED}},}
+\DoxyCodeLine{00371\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0aad34635b591d31b10808c6041c19e589}{WC\_3DBL\_ALL\_FACES\_IGNORED\_ON\_ZONE}},\ \textcolor{comment}{/*\ All\ faces\ are\ ignored\ for\ inflation}}
+\DoxyCodeLine{00372\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\ generation\ on\ this\ zone\ */}}
+\DoxyCodeLine{00373\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a376a79179cc46b29b92fdd72837bb619}{WC\_3DBL\_STAIRSTEPPING\_SWITCHED\_ON}},\ \textcolor{comment}{/*\ Stairstepping\ had\ to\ be\ switched\ on\ */}}
+\DoxyCodeLine{00374\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a23c5327136cc6002f71aeef12f5ec633}{WC\_3DBL\_LAYER\_GENERATION\_STOPPED}},\ \ \textcolor{comment}{/*\ Inflation\ layer\ generation\ stopped}}
+\DoxyCodeLine{00375\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ after\ growing\ some\ layers\ */}}
+\DoxyCodeLine{00376\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a381000607936a2b48e445dbb215b3ea5}{WC\_BOI\_PROCESSING\_FAILED}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ boi\ processing\ failure\ */}}
+\DoxyCodeLine{00377\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a9507159c97b09cdfe561bb472fa194f0}{WC\_PROBLEMATIC\_INPUT\_THREAD}},\ \ \ \ \ \ \ \textcolor{comment}{/*\ skipping\ problematic\ threads\ not}}
+\DoxyCodeLine{00378\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ following\ topology\ rules\ during}}
+\DoxyCodeLine{00379\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ post\ prism\ growth\ */}}
+\DoxyCodeLine{00380\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0aa9335cf72ac6d19251a135c20f331567}{WC\_3DBL\_NON\_MANIFOLD\_BASE}},\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ There\ is\ an\ invalid\ manifold}}
+\DoxyCodeLine{00381\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ around\ the\ reported\ node\ */}}
+\DoxyCodeLine{00382\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0acfff4a98b2180799376b54ebec90517f}{WC\_3DBL\_NO\_LAYERS\_GENERATED}},\ \ \ \ \ \ \ \textcolor{comment}{/*\ No\ prism\ layers\ generated\ at\ all}}
+\DoxyCodeLine{00383\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ as\ all\ nodes\ are\ ignored\ */}}
+\DoxyCodeLine{00384\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a8eb010a905673620fe2d91b2b3171c50}{WC\_PRISM\_OFFSET\_SHRINK\_LIMITED}},\ \ \ \ \textcolor{comment}{/*\ The\ node\ offset\ shrink\ was\ limited}}
+\DoxyCodeLine{00385\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ since\ the\ aspect\ ratio\ hit\ the\ maximum\ */}}
+\DoxyCodeLine{00386\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0ab454d619794e9ca00100a944dc97a843}{WC\_RETRI\_IMPRINT\_OUTSIDE\_TARGET\_ZONE}},\ \textcolor{comment}{/*\ Retriangulation\ -\/\ imprinted\ zone}}
+\DoxyCodeLine{00387\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ extends\ out\ of\ target\ zone\ */}}
+\DoxyCodeLine{00388\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0afdf159a0a8c76190c4861bf94ff34d0d}{WC\_RETRI\_NON\_TRIANGULAR\_ZONE}},\ \textcolor{comment}{/*\ Cannot\ retriangulate\ a\ non-\/traingular\ zone\ */}}
+\DoxyCodeLine{00389\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a6344a817c15bc2be406214304957e363}{WC\_RETRI\_NON\_MANIFOLD\_ZONE}},\ \ \ \textcolor{comment}{/*\ Cannot\ retriangulate\ a\ non-\/manifold\ zone\ */}}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{comment}{/*\ marker\ for\ scheme\ generated\ warnings.\ All\ warnings\ generated\ from\ scheme}}
+\DoxyCodeLine{00393\ \textcolor{comment}{\ \ \ \ \ \ \ must\ be\ added\ after\ this\ */}}
+\DoxyCodeLine{00394\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a209d553b3c3ae122e5490ca3053ca796}{WC\_SCHEME\_WARNINGS}},}
+\DoxyCodeLine{00395\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a52130555a7a9b162158bced51da17f41}{WC\_SURFER\_MULTI\_FACE}},\ \ \ \ \textcolor{comment}{/*\ Surfer\ multi\ face\ created\ at\ given\ location\ */}}
+\DoxyCodeLine{00396\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a3e5458678ce3506d26bff58235b1651f}{WC\_SURFER\_DUPLICATE\_FACE}},\ \ \ \ \textcolor{comment}{/*\ Surfer\ duplicate\ face\ created\ at\ given\ location\ */}}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \ \ \ \ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0a470c44957e8c87b1d3071645c9d8b3fa}{WC\_NO\_OF\_WARNINGS}}}
+\DoxyCodeLine{00400\ \}\ \mbox{\hyperlink{tg__handlers_8h_ab76ebc72039da9e293d362e05c708ac0}{Warning\_Code\_Type}};}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ TG\_HANDLERS\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ }
+
+\end{DoxyCode}

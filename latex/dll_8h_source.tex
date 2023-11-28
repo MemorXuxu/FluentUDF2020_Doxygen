@@ -1,0 +1,91 @@
+\doxysection{dll.\+h}
+\hypertarget{dll_8h_source}{}\label{dll_8h_source}\index{fluent20.1.0/cortex/src/dll.h@{fluent20.1.0/cortex/src/dll.h}}
+\mbox{\hyperlink{dll_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_CORTEX\_DLL\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_CORTEX\_DLL\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ Define\ DLL\_EXPORT\ to\ indicate\ whether\ a\ global}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ symbol\ is\ to\ be\ exported\ or\ imported.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ This\ is\ really\ only\ useful\ for\ windows\ DLLs\ but}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ the\ DLL\_EXPORT\ macro\ should\ in\ the\ declarations}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ of\ all\ intentionally\ exported\ symbols.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ For\ UNIX\ it\ will\ be\ undefined,\ for\ Windows\ it}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ will\ specify\ either\ dllexport\ or\ dllimport\ as}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ given\ by\ the\ xxxx\_EXPORTING\ macro.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ add\ known\ archs\ that\ don't\ support\ dynamic\ linking\ */}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#if\ defined\ (\_aix414)\ ||\ defined\ (fugitsu)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ define\ NO\_DYNAMIC\_LINKING\ 1}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{/*\ FLUENT\ */}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#if\ (defined(\_WIN32)\ ||\ defined\ (WIN64))\ \&\&\ !defined(UDFCONFIG\_H)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ \ ifdef\ FLUENT\_EXPORTING}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ define\ FLUENT\_EXPORT\ \_\_declspec(dllexport)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#\ define\ FLUENT\_EXPORT\ \_\_declspec(dllimport)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#\ \ define\ FLUENT\_EXPORT}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{/*\ UDFs\ and\ other\ DLLs\ */}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#if\ (defined(\_WIN32)\ ||\ defined\ (WIN64))}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#\ \ ifdef\ UDF\_EXPORTING}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#\ define\ UDF\_EXPORT\ \_\_declspec(dllexport)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00043\ \textcolor{comment}{/*\ we\ can't\ implicitly\ import\ from\ unknown\ UDFs\ */}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#\ define\ UDF\_EXPORT\ }\textcolor{comment}{/*\ \_\_declspec(dllimport)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#\ \ define\ UDF\_EXPORT}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{/*\ C++\ */}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#\ define\ EXTERNC\ extern\ "{}C"{}}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#\ define\ EXTERNC}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{/*\ system-\/independent\ DLL\ calls\ */}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#if\ !defined(UDFCONFIG\_H)}}
+\DoxyCodeLine{00059\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ \ Not\ for\ UDF\ consumption,first\ because\ they\ should'nt}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ \ have\ to\ load\ DLLs\ with\ this\ mechanism\ and\ second\ because}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ \ the\ stdarg.h\ inclusion\ fails\ with\ interpreted\ UDFs}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#include\ <stdarg.h>}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{dll_8h_aefcf8ce0eadb4a9bf19817d6fe0de129}{CX\_DLL\_PTF\_void}})\ ();\ \textcolor{comment}{/*\ pointer\ to\ function\ returnning\ void\ */}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00068\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00069\ \{}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#if\ !(defined(\_WIN32)\ ||\ defined\ (WIN64))}}
+\DoxyCodeLine{00072\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{dll_8h_ac1c9838bb3c10e986994f311ef135cef}{CX\_DLL\_OpenLib\_Globally}}(\textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{char}\ *dir,\ \textcolor{keywordtype}{int}\ items,\ ...);}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00074\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{dll_8h_add42309dedcb22f32c56572223368a92}{CX\_DLL\_OpenLib}}(\textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{char}\ *dir,\ \textcolor{keywordtype}{int}\ items,\ ...);}
+\DoxyCodeLine{00075\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dll_8h_a491e1998afd6b10b60189034341b2118}{CX\_DLL\_CloseLib}}(\textcolor{keywordtype}{void}\ *lib);}
+\DoxyCodeLine{00076\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{dll_8h_aefcf8ce0eadb4a9bf19817d6fe0de129}{CX\_DLL\_PTF\_void}}\ \mbox{\hyperlink{dll_8h_aa8b4921816b9def5e0934da0344bdd6b}{CX\_DLL\_GetProc}}(\textcolor{keywordtype}{void}\ *lib,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00077\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{dll_8h_a6369a0af25d5b7ab643a6bb3de1039b5}{CX\_DLL\_GetData}}(\textcolor{keywordtype}{void}\ *lib,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00078\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{dll_8h_a890c5181476263f5f89c088dd6c32a23}{CX\_DLL\_GetError}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00079\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dll_8h_a0be50d61c16a8b5a2009e585ce47cf8c}{RegFile}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file);}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00081\ \}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_CORTEX\_DLL\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00085\ }
+
+\end{DoxyCode}

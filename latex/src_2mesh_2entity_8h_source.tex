@@ -1,0 +1,461 @@
+\doxysection{entity.\+h}
+\hypertarget{src_2mesh_2entity_8h_source}{}\label{src_2mesh_2entity_8h_source}\index{fluent20.1.0/src/mesh/entity.h@{fluent20.1.0/src/mesh/entity.h}}
+\mbox{\hyperlink{src_2mesh_2entity_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ ENTITY\_H}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ ENTITY\_H}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{/*\ We\ should\ keep\ these\ structures\ in\ sync\ with\ entity0.h\ in\ PRIME/tgrid}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ so\ that\ the\ data\ structures\ can\ be\ shared\ between\ Solver\ and\ Meshing\ */}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ mesh\ connectivity\ */}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ define\ \_ND\_\ 3}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#\ define\ MAX\_NODES\_PER\_CELL\ 20}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ define\ MAX\_NODES\_PER\_POLY\_CELL\ 4095}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#\ define\ MAX\_FACES\_PER\_CELL\ 6}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#\ define\ MAX\_FACES\_PER\_POLY\_CELL\ 4095}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ define\ MAX\_NODES\_PER\_FACE\ 8}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ define\ MAX\_NODES\_PER\_EDGE\ 3}}
+\DoxyCodeLine{00019\ \textcolor{comment}{/*\ In\ cortex/cxsurf.h\ redefined\ \ MAX\_NODES\_PER\_POLY\_FACE}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ as\ CX\_MAX\_NODES\_PER\_POLY\_FACE\ =\ 256.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ Please\ keep\ both\ values\ in\ sync.*/}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ define\ MAX\_NODES\_PER\_POLY\_FACE\ 256}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ define\ MAX\_EDGES\_PER\_FACE\ 4}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ define\ MAX\_EDGES\_PER\_CELL\ 12}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#\ define\ MAX\_KIDS\_PER\_FACE\ 4}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#\ if\ LEAN\_MEM\_TEST}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#\ \ define\ MAX\_KIDS\_PER\_CELL\ 1}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ \ define\ MAX\_KIDS\_PER\_CELL\ 10}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#\ define\ \_ND\_\ 2}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#\ define\ MAX\_NODES\_PER\_CELL\ 4}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#\ define\ MAX\_FACES\_PER\_CELL\ 4}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#\ define\ MAX\_NODES\_PER\_FACE\ 2}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#\ define\ MAX\_NODES\_PER\_EDGE\ 1}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#\ define\ MAX\_EDGES\_PER\_FACE\ 1}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#\ define\ MAX\_EDGES\_PER\_CELL\ 4}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#\ define\ MAX\_KIDS\_PER\_FACE\ 2}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#\ define\ MAX\_KIDS\_PER\_CELL\ 4}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ MAX\_NBORS\_PER\_EDGE\ 2}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ MAX\_NBORS\_PER\_FACE\ 2}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ MAX\_FACES\_PER\_FACE\ 4}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ LINEAR\_EDGE\_NNODES\ 2}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ LINEAR3\_EDGE\_NNODES\ 3}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ TRI\_NNODES\ \ 3}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ TRI\_NFACES\ 3}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ TRI6\_NNODES\ 6}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ TRI6\_NFACES\ 3}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ QUAD\_NNODES\ 4}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ QUAD\_NFACES\ 4}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ QUAD8\_NNODES\ 8}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ QUAD8\_NFACES\ 4}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ TET\_NNODES\ 4}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ TET\_NFACES\ 4}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ TET10\_NNODES\ 10}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ TET10\_NFACES\ 4}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ HEX\_NNODES\ 8}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ HEX\_NFACES\ 6}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ HEX20\_NNODES\ 20}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ HEX20\_NFACES\ 6}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ WEDGE\_NNODES\ 6}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ WEDGE\_NFACES\ 5}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ WEDGE15\_NNODES\ 15}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ WEDGE15\_NFACES\ 5}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ PYRAMID\_NNODES\ 5}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ PYRAMID\_NFACES\ 5}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ PYRAMID13\_NNODES\ 13}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ PYRAMID13\_NFACES\ 5}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ \ \ \ \ TET\_NEDGES\ 6}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ \ \ \ \ HEX\_NEDGES\ 12}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ \ \ WEDGE\_NEDGES\ 9}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ PYRAMID\_NEDGES\ 8}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__node__struct}{\_tg\_node\_struct}}\ \mbox{\hyperlink{struct__tg__node__struct}{Node}};}
+\DoxyCodeLine{00093\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__face__struct}{\_tg\_face\_struct}}\ \mbox{\hyperlink{struct__tg__face__struct}{Face}};}
+\DoxyCodeLine{00094\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__cell__struct}{\_tg\_cell\_struct}}\ \mbox{\hyperlink{struct__tg__cell__struct}{Cell}};}
+\DoxyCodeLine{00095\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__struct}{thread\_struct}}\ \mbox{\hyperlink{structthread__struct}{Thread}};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#\ if\ PARALLEL}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#\ \ if\ USE\_INT64}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#\ \ \ if\ \_NT}}
+\DoxyCodeLine{00100\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}};}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00102\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}};}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00105\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}};}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00108\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}};}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#if\ RP\_POLYHEDRA}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{comment}{/*\ Union\ defined\ to\ handle\ int\ to\ pointer\ conversion\ on\ 64bit\ m/c\ */}}
+\DoxyCodeLine{00114\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union}}
+\DoxyCodeLine{00115\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{long}\ cxi;}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{void}\ *p;}
+\DoxyCodeLine{00119\ \}\ IdPtr\ ;}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{char}\ Storage;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keyword}{struct\ }c\_cell\_struct}
+\DoxyCodeLine{00124\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00126\ \ \ \ \ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *nodes[\mbox{\hyperlink{src_2mesh_2entity_8h_ab9a7ea69069c02dc9a2ced30c51556cd}{MAX\_NODES\_PER\_CELL}}];}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__tg__face__struct}{Face}}\ *faces[\mbox{\hyperlink{src_2mesh_2entity_8h_ab9a7ea69069c02dc9a2ced30c51556cd}{MAX\_NODES\_PER\_CELL}}\ +\ \mbox{\hyperlink{src_2mesh_2entity_8h_af743945a91b509f670abe212aa993cce}{MAX\_FACES\_PER\_CELL}}];}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__tg__cell__struct}{Cell}}\ *cells[\mbox{\hyperlink{src_2mesh_2entity_8h_ab9a7ea69069c02dc9a2ced30c51556cd}{MAX\_NODES\_PER\_CELL}}\ +\ \mbox{\hyperlink{src_2mesh_2entity_8h_af743945a91b509f670abe212aa993cce}{MAX\_FACES\_PER\_CELL}}];}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__entity__struct}{\_tg\_entity\_struct}}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ *entities[\mbox{\hyperlink{src_2mesh_2entity_8h_ab9a7ea69069c02dc9a2ced30c51556cd}{MAX\_NODES\_PER\_CELL}}\ +\ \mbox{\hyperlink{src_2mesh_2entity_8h_af743945a91b509f670abe212aa993cce}{MAX\_FACES\_PER\_CELL}}];}
+\DoxyCodeLine{00132\ \ \ \ \ \}\ nf;}
+\DoxyCodeLine{00133\ \};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{keyword}{struct\ }f\_face\_struct}
+\DoxyCodeLine{00136\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00138\ \ \ \ \ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *nodes[\mbox{\hyperlink{src_2mesh_2entity_8h_a92f6341b57f1d515f28922d236f1d9db}{MAX\_NODES\_PER\_FACE}}\ +\ \mbox{\hyperlink{src_2mesh_2entity_8h_a959d7a9f4e69e13c82cd0a36a5dec0fb}{MAX\_NBORS\_PER\_FACE}}];}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ IdPtr\ inodes[\mbox{\hyperlink{src_2mesh_2entity_8h_a92f6341b57f1d515f28922d236f1d9db}{MAX\_NODES\_PER\_FACE}}\ +\ \mbox{\hyperlink{src_2mesh_2entity_8h_a959d7a9f4e69e13c82cd0a36a5dec0fb}{MAX\_NBORS\_PER\_FACE}}];}
+\DoxyCodeLine{00141\ \ \ \ \ \}\ nf;}
+\DoxyCodeLine{00142\ \};}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{struct\ }e\_edge\_struct}
+\DoxyCodeLine{00145\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00147\ \ \ \ \ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *nodes[\mbox{\hyperlink{src_2mesh_2entity_8h_a1fbd92ffcdcb8457899d7328584c2d44}{MAX\_NODES\_PER\_EDGE}}\ +\ \mbox{\hyperlink{src_2mesh_2entity_8h_a0aa46450530dd5762ec51dd1867c9e72}{MAX\_NBORS\_PER\_EDGE}}];}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ IdPtr\ *inodes[\mbox{\hyperlink{src_2mesh_2entity_8h_a1fbd92ffcdcb8457899d7328584c2d44}{MAX\_NODES\_PER\_EDGE}}\ +\ \mbox{\hyperlink{src_2mesh_2entity_8h_a0aa46450530dd5762ec51dd1867c9e72}{MAX\_NBORS\_PER\_EDGE}}];}
+\DoxyCodeLine{00150\ \ \ \ \ \}\ nf;}
+\DoxyCodeLine{00151\ \};}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__list__entity}{\_tg\_list\_entity}}}
+\DoxyCodeLine{00155\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__list__entity_a6abc161817251aab6c0dad0b349b10a7}{prev}};}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__list__entity_a7e9b025a318c17178e3b9542ed34b568}{next}};}
+\DoxyCodeLine{00158\ \};}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__entity__struct}{\_tg\_entity\_struct}}}
+\DoxyCodeLine{00161\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{struct__tg__entity__struct_a335277a4a6e36f65ea9af8c76e641d74}{id}};}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__entity__struct_ac92588540e8c1d014a08cd8a45462b19}{flags}};}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__entity__struct_aad9657edb0f84e2254025aecf781d166}{idx}};}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__entity__struct_ae37ce2bec11e42a2eca62b33360a4867}{kind}};}
+\DoxyCodeLine{00166\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{struct__tg__entity__struct_a743989b66f3b52f1eda2a8498a93da0b}{thread}};}
+\DoxyCodeLine{00167\ \};}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__node__struct}{\_tg\_node\_struct}}}
+\DoxyCodeLine{00170\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{struct__tg__node__struct_a335277a4a6e36f65ea9af8c76e641d74}{id}};}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__node__struct_ac92588540e8c1d014a08cd8a45462b19}{flags}};}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__node__struct_aad9657edb0f84e2254025aecf781d166}{idx}};}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__node__struct_ae37ce2bec11e42a2eca62b33360a4867}{kind}};}
+\DoxyCodeLine{00175\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{struct__tg__node__struct_a743989b66f3b52f1eda2a8498a93da0b}{thread}};}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct__tg__node__struct_a03402a938be9bed64a7899943ceb7e26}{x}}[\mbox{\hyperlink{src_2mesh_2entity_8h_ae3b756ddf447550cdd5cdb149755b49d}{\_ND\_}}];}
+\DoxyCodeLine{00177\ \};}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__edge__struct}{\_tg\_edge\_struct}}}
+\DoxyCodeLine{00180\ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{struct__tg__edge__struct_a335277a4a6e36f65ea9af8c76e641d74}{id}};}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__edge__struct_ac92588540e8c1d014a08cd8a45462b19}{flags}};}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__edge__struct_aad9657edb0f84e2254025aecf781d166}{idx}};}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__edge__struct_ae37ce2bec11e42a2eca62b33360a4867}{kind}};}
+\DoxyCodeLine{00185\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{struct__tg__edge__struct_a743989b66f3b52f1eda2a8498a93da0b}{thread}};}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#if\ RP\_POLYHEDRA}}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{struct\ }e\_edge\_struct\ e;}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00189\ \ \ \ \ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *\mbox{\hyperlink{struct__tg__edge__struct_a4e731d3a900b68d4ae219817f5a19b4b}{v0}},\ *\mbox{\hyperlink{struct__tg__edge__struct_aa18729405396279d361c59a74a89d095}{v1}};}
+\DoxyCodeLine{00190\ \ \ \ \ \mbox{\hyperlink{struct__tg__face__struct}{Face}}\ *\mbox{\hyperlink{struct__tg__edge__struct_a232378d034ea9a1a8f7f97778b91da4c}{f0}},\ *\mbox{\hyperlink{struct__tg__edge__struct_a625aa224691f65e2631a41fb54127762}{f1}};}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00192\ \};}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__face__struct}{\_tg\_face\_struct}}}
+\DoxyCodeLine{00195\ \{}
+\DoxyCodeLine{00196\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{struct__tg__face__struct_a335277a4a6e36f65ea9af8c76e641d74}{id}};}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__face__struct_ac92588540e8c1d014a08cd8a45462b19}{flags}};}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__face__struct_aad9657edb0f84e2254025aecf781d166}{idx}};}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__face__struct_ae37ce2bec11e42a2eca62b33360a4867}{kind}};}
+\DoxyCodeLine{00200\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{struct__tg__face__struct_a743989b66f3b52f1eda2a8498a93da0b}{thread}};}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#if\ RP\_POLYHEDRA}}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keyword}{struct\ }f\_face\_struct\ f;}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00204\ \ \ \ \ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *\mbox{\hyperlink{struct__tg__face__struct_a67015f6e649d0a5d02bb943e0a6da7e6}{nodes}}[\mbox{\hyperlink{src_2mesh_2entity_8h_a92f6341b57f1d515f28922d236f1d9db}{MAX\_NODES\_PER\_FACE}}];}
+\DoxyCodeLine{00205\ \ \ \ \ \mbox{\hyperlink{struct__tg__cell__struct}{Cell}}\ *\mbox{\hyperlink{struct__tg__face__struct_a1514dbac2ba1ae1a3a52acc95d4cc509}{c0}},\ *\mbox{\hyperlink{struct__tg__face__struct_a8b50ebe328e35fd5c38bed63c37aebce}{c1}};}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00207\ \};}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__cell__struct}{\_tg\_cell\_struct}}}
+\DoxyCodeLine{00210\ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{struct__tg__cell__struct_a335277a4a6e36f65ea9af8c76e641d74}{id}};}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__cell__struct_ac92588540e8c1d014a08cd8a45462b19}{flags}};}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__cell__struct_aad9657edb0f84e2254025aecf781d166}{idx}};}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__cell__struct_ae37ce2bec11e42a2eca62b33360a4867}{kind}};}
+\DoxyCodeLine{00215\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{struct__tg__cell__struct_a743989b66f3b52f1eda2a8498a93da0b}{thread}};}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#if\ RP\_POLYHEDRA}}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{struct\ }c\_cell\_struct\ c;}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00219\ \ \ \ \ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *\mbox{\hyperlink{struct__tg__cell__struct_a3329d2831bb4b240df0edaaa75a71c2c}{nodes}}[\mbox{\hyperlink{src_2mesh_2entity_8h_ab9a7ea69069c02dc9a2ced30c51556cd}{MAX\_NODES\_PER\_CELL}}];}
+\DoxyCodeLine{00220\ \ \ \ \ \mbox{\hyperlink{struct__tg__face__struct}{Face}}\ *\mbox{\hyperlink{struct__tg__cell__struct_a2e18e48ef8e1fa6fc0f0f766c1855a6b}{faces}}[\mbox{\hyperlink{src_2mesh_2entity_8h_af743945a91b509f670abe212aa993cce}{MAX\_FACES\_PER\_CELL}}];}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00222\ \};}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ ENTITY\_ID1(s)\ (((struct\ \_tg\_entity\_struct\ *)(s))-\/>id)}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ NODE\_ID1(s)\ ENTITY\_ID1(s)}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ EDGE\_ID1(s)\ ENTITY\_ID1(s)}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ FACE\_ID1(s)\ ENTITY\_ID1(s)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ CELL\_ID1(s)\ ENTITY\_ID1(s)}}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ ENTITY\_FLAGS(s)\ (((struct\ \_tg\_entity\_struct\ *)(s))-\/>flags)}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ ENTITY\_FLAG(s,mask)\ (ENTITY\_FLAGS(s)\ \&\ (mask))}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ ENTITY\_FLAGS\_ALL(s,\ mask)\ ((ENTITY\_FLAGS(s)\ \&\ (mask))\ ==\ (mask))}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ SET\_ENTITY\_FLAGS(s,mask)\ ENTITY\_FLAGS(s)\ |=\ (mask)}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#define\ CLEAR\_ENTITY\_FLAGS(s,mask)\ ENTITY\_FLAGS(s)\ \&=\ \string~(mask)}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ TOGGLE\_ENTITY\_FLAGS(s,mask)\ ENTITY\_FLAGS(s)\ \string^=\ (mask)}}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ ENTITY\_SV\_IDX(e)\ (((struct\ \_tg\_entity\_struct\ *)(e))-\/>idx)}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ ENTITY\_THREAD2(e)\ (((struct\ \_tg\_entity\_struct\ *)(e))-\/>thread)}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ LEFT\ 0}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#define\ RIGHT\ 1}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ OTHER\_HAND(h)\ (h?LEFT:RIGHT)}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#if\ RP\_POLYHEDRA}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#\ define\ E\_NEIGH(s)\ ((Face\ **)(EDGE\_NODES(s)+EDGE\_NNODES(s)))}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#\ define\ F\_NEIGH(s)\ ((Cell\ **)(FACE\_NODES(s)+FACE\_NNODES(s)))}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#\ define\ EDGE\_NODES(s)\ ((s)-\/>e.nf.nodes)}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#\ define\ E\_INODES(s)\ \ \ ((s)-\/>e.nf.inodes)}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#\ define\ FACE\_NODES(s)\ ((s)-\/>f.nf.nodes)}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#\ define\ F\_INODES(s)\ \ \ ((s)-\/>f.nf.inodes)}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#\ define\ CELL\_NODES(s)\ ((s)-\/>c.nf.nodes)}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#\ define\ CELL\_FACES(s)\ ((s)-\/>c.nf.faces+CELL\_NNODES(s))}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#\ define\ C\_ENTITIES(s)\ ((s)-\/>c.nf.entities+CELL\_NNODES(s))}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#\ define\ C\_CELLS(s)\ \ \ \ ((s)-\/>c.nf.cells+CELL\_NNODES(s))}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#\ define\ OTHER\_FACE(f,e)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\ \ \ \ (LEFT\_E\_NEIGHBOR(e)\ ==\ (f)\ ?\ RIGHT\_E\_NEIGHBOR(e)\ :\ LEFT\_E\_NEIGHBOR(e))}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#\ define\ E\_HAS\_NEIGHBORS(e)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\ \ \ \ (!NULLP(LEFT\_E\_NEIGHBOR(e))\ ||\ !NULLP(RIGHT\_E\_NEIGHBOR(e)))}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#\ define\ E\_HAS\_NO\_NEIGHBORS(e)\ (!HAS\_NEIGHBORS(e))}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#\ define\ E\_NEIGHBORS\_FULL(e)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\ \ \ \ (!NULLP(LEFT\_E\_NEIGHBOR(e))\ \&\&\ !NULLP(RIGHT\_E\_NEIGHBOR(e)))}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#\ define\ ForEachEdgeNeighbor(f,e,h)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\ \ \ \ for\ (f=E\_NEIGH(e)[h=0];\ h<2;\ ++h,f=E\_NEIGH(e)[1])}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#\ define\ E\_INEIGH(s)\ ((IdPtr\ *)(E\_INODES(s)+EDGE\_NNODES(s)))}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#\ define\ EDGE\_INEIGHBOR(s,h)\ \ \ \ (E\_INEIGH(s)[h]).i}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#\ define\ LEFT\_E\_INEIGHBOR(s)\ \ \ \ (E\_INEIGH(s)[LEFT]).i}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#\ define\ RIGHT\_E\_INEIGHBOR(s)\ \ \ (E\_INEIGH(s)[RIGHT]).i}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#\ define\ LEFT\_E\_XNEIGHBOR(s)\ \ \ \ (E\_INEIGH(s)[LEFT]).cxi}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#\ define\ RIGHT\_E\_XNEIGHBOR(s)\ \ \ (E\_INEIGH(s)[RIGHT]).cxi}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#\ define\ SET\_E\_INEIGHBOR(s,h,n)\ (E\_INEIGH(s)[h].i\ =\ n)}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#\ define\ OTHER\_FACE\_X(f,e)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\ \ \ \ (LEFT\_E\_XNEIGHBOR(e)\ ==\ (f)\ ?\ RIGHT\_E\_XNEIGHBOR(e)\ :\ LEFT\_E\_XNEIGHBOR(e))}}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#\ define\ OTHER\_CELL(c,f)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\ \ \ \ \ (LEFT\_F\_NEIGHBOR(f)\ ==\ (c)\ ?\ RIGHT\_F\_NEIGHBOR(f)\ :\ LEFT\_F\_NEIGHBOR(f))}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#\ define\ F\_HAS\_NEIGHBORS(f)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\ \ \ \ \ (!NULLP(LEFT\_F\_NEIGHBOR(f))\ ||\ !NULLP(RIGHT\_F\_NEIGHBOR(f)))}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#\ define\ F\_HAS\_NO\_NEIGHBORS(f)\ (!F\_HAS\_NEIGHBORS(f))}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#\ define\ F\_NEIGHBORS\_FULL(f)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\ \ \ \ \ (!NULLP(LEFT\_F\_NEIGHBOR(f))\ \&\&\ !NULLP(RIGHT\_F\_NEIGHBOR(f)))}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#\ define\ ForEachFaceNeighbor(c,f,h)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\ \ \ \ \ for\ (c=F\_NEIGH(f)[h=0];\ h<2;\ ++h,c=F\_NEIGH(f)[1])}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#\ define\ F\_INEIGH(s)\ ((IdPtr\ *)(F\_INODES(s)+FACE\_NNODES(s)))}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#\ define\ FACE\_INEIGHBOR(s,h)\ \ \ \ (F\_INEIGH(s)[h]).i}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#\ define\ LEFT\_F\_INEIGHBOR(s)\ \ \ \ (F\_INEIGH(s)[LEFT]).i}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#\ define\ RIGHT\_F\_INEIGHBOR(s)\ \ \ (F\_INEIGH(s)[RIGHT]).i}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#\ define\ LEFT\_F\_XNEIGHBOR(s)\ \ \ \ (F\_INEIGH(s)[LEFT]).cxi}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#\ define\ RIGHT\_F\_XNEIGHBOR(s)\ \ \ (F\_INEIGH(s)[RIGHT]).cxi}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#\ define\ SET\_F\_INEIGHBOR(s,h,n)\ (F\_INEIGH(s)[h].i\ =\ n)}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#\ define\ OTHER\_CELL\_X(c,f)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\ \ \ \ (LEFT\_F\_XNEIGHBOR(f)\ ==\ (c)\ ?\ RIGHT\_F\_XNEIGHBOR(f)\ :\ LEFT\_F\_XNEIGHBOR(f))}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#\ define\ OTHER\_NODE(v,e)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\ \ \ \ ((EDGE\_NODE(e,0)==v)\ ?\ EDGE\_NODE(e,1)\ :\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\ \ \ \ ((EDGE\_NODE(e,1)==v)\ ?\ EDGE\_NODE(e,0)\ :\ NULL))}}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#\ define\ EDGE\_NODES(e)\ ((Node\ **)\&(e-\/>v0))}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#\ define\ FACE\_NODES(f)\ (f-\/>nodes)}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#\ define\ E\_NEIGH(e)\ ((Face\ **)\&(e-\/>f0))}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#\ define\ F\_NEIGH(f)\ ((Cell\ **)\&(f-\/>c0))}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#\ define\ CELL\_NODES(c)\ (c-\/>nodes)}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#\ define\ CELL\_FACES(c)\ (c-\/>faces)}}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#define\ EDGE\_NEIGHBOR(s,h)\ \ \ \ \ (E\_NEIGH(s)[h])}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\#define\ LEFT\_E\_NEIGHBOR(s)\ \ \ \ \ (E\_NEIGH(s)[LEFT])}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#define\ RIGHT\_E\_NEIGHBOR(s)\ \ \ \ (E\_NEIGH(s)[RIGHT])}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#define\ SET\_E\_NEIGHBOR(s,h,n)\ \ (E\_NEIGH(s)[h]\ =\ (n))}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#define\ FACE\_NEIGHBOR(s,h)\ \ \ \ \ (F\_NEIGH(s)[h])}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#define\ LEFT\_F\_NEIGHBOR(s)\ \ \ \ \ (F\_NEIGH(s)[LEFT])}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#define\ RIGHT\_F\_NEIGHBOR(s)\ \ \ \ (F\_NEIGH(s)[RIGHT])}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#define\ SET\_F\_NEIGHBOR(s,h,n)\ \ (F\_NEIGH(s)[h]\ =\ (n))}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#define\ NODE\_COORD1(v)\ ((v)-\/>x)}}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00327\ \textcolor{comment}{\ *\ e-\/>kind(32\ bits)\ ==\ [\ 6\ bits\ -\/>\ entity\ type\ \ \ \ \ ]}}
+\DoxyCodeLine{00328\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\ 1\ bit\ \ -\/>\ cart\ entity\ flag]}}
+\DoxyCodeLine{00329\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\ 1\ bit\ \ -\/>\ bl\ entity\ flag\ \ ]}}
+\DoxyCodeLine{00330\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [12\ bits\ -\/>\ entity\ nfaces\ \ \ ]}}
+\DoxyCodeLine{00331\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [12\ bits\ -\/>\ entity\ nnodes\ \ \ ]}}
+\DoxyCodeLine{00332\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ ENTITY\_KIND(s)\ (((struct\ \_tg\_entity\_struct\ *)(s))-\/>kind)}}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#define\ NNODES\_MASK\ 0xfff}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ NFACES\_MASK\ 0xfff000}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\#define\ NFACES\_SHIFT\ 12}}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#define\ ENTITY\_TYPE\_MASK\ 0xfc000000}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#define\ ENTITY\_TYPE\_SHIFT\ 26}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#define\ BL\_ENTITY\_FLAG\ 0x1000000}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#define\ SET\_BL\_ENTITY(e)\ \ \ (ENTITY\_KIND(e)\ |=\ \ BL\_ENTITY\_FLAG)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#define\ CLEAR\_BL\_ENTITY(e)\ (ENTITY\_KIND(e)\ \&=\ \string~BL\_ENTITY\_FLAG)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ BL\_ENTITY(e)\ \ \ \ \ \ \ (ENTITY\_KIND(e)\ \&\ \ \ BL\_ENTITY\_FLAG)}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ CART\_ENTITY\_FLAG\ 0x2000000}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#define\ SET\_CART\_ENTITY(e)\ \ \ (ENTITY\_KIND(e)\ |=\ \ CART\_ENTITY\_FLAG)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#define\ CLEAR\_CART\_ENTITY(e)\ (ENTITY\_KIND(e)\ \&=\ \string~CART\_ENTITY\_FLAG)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\#define\ CART\_ENTITY(e)\ \ \ \ \ \ \ (ENTITY\_KIND(e)\ \&\ \ \ CART\_ENTITY\_FLAG)}}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#define\ ENTITY\_NNODES(e)\ ((int)((ENTITY\_KIND(e))\ \&\ NNODES\_MASK))}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#define\ ENTITY\_NFACES(e)\ ((int)(((ENTITY\_KIND(e))\ \&\ NFACES\_MASK)\ >>\ NFACES\_SHIFT))}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#define\ ENTITY\_TYPE(e)\ \(\backslash\)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\ \ \ \ ((int)(((ENTITY\_KIND(e))\ \&\ ENTITY\_TYPE\_MASK)\ >>\ ENTITY\_TYPE\_SHIFT))}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#define\ SET\_ENTITY\_NNODES(e,\ nn)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\ \ \ \ ENTITY\_KIND(e)\ =\ ((ENTITY\_KIND(e)\ \&\ \string~NNODES\_MASK)\ |\ nn)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\#define\ SET\_ENTITY\_NFACES(e,\ nf)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\ \ \ \ ENTITY\_KIND(e)\ =\ ((ENTITY\_KIND(e)\ \&\ \string~NFACES\_MASK)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ ((nf)\ <<\ NFACES\_SHIFT))}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#define\ INIT\_ENTITY\_KIND(e)\ (ENTITY\_KIND(e)\ =\ 0)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\#define\ SET\_ENTITY\_TYPE(e,\ n)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\ \ \ \ ENTITY\_KIND(e)\ =\ ((ENTITY\_KIND(e)\ \&\ \string~ENTITY\_TYPE\_MASK)\ \ \(\backslash\)}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ ((n)\ <<\ ENTITY\_TYPE\_SHIFT))}}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\#define\ EDGE\_NNODES\ ENTITY\_NNODES}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#define\ FACE\_NNODES\ ENTITY\_NNODES}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\#define\ CELL\_NNODES\ ENTITY\_NNODES}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\#define\ CELL\_NFACES\ ENTITY\_NFACES}}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\#define\ NODE\_TYPE\ ENTITY\_TYPE}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\#define\ EDGE\_TYPE\ ENTITY\_TYPE}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\#define\ FACE\_TYPE\ ENTITY\_TYPE}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#define\ CELL\_TYPE\ ENTITY\_TYPE}}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\#define\ SET\_EDGE\_NNODES\ SET\_ENTITY\_NNODES}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#define\ SET\_FACE\_NNODES\ SET\_ENTITY\_NNODES}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\#define\ SET\_CELL\_NNODES\ SET\_ENTITY\_NNODES}}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#define\ SET\_CELL\_NFACES\ SET\_ENTITY\_NFACES}}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\#define\ SET\_NODE\_TYPE\ SET\_ENTITY\_TYPE}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#define\ SET\_EDGE\_TYPE\ SET\_ENTITY\_TYPE}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#define\ SET\_FACE\_TYPE\ SET\_ENTITY\_TYPE}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#define\ SET\_CELL\_TYPE\ SET\_ENTITY\_TYPE}}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00391\ \{}
+\DoxyCodeLine{00392\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a97f905ac94bfebd46e50e32c7389e6eba8d27916dc25b8983df407efc1cf303f8}{SIMPLE\_NODE}}\ \ =\ 0,\ \ \ \ \textcolor{comment}{/*\ the\ default\ node\ type\ */}}
+\DoxyCodeLine{00393\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a97f905ac94bfebd46e50e32c7389e6eba997a67f52ad7ba4deae41641a64c7316}{HARD\_NODE}}\ \ \ \ =\ 1,\ \ \ \ \textcolor{comment}{/*\ immovable\ node\ */}}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{comment}{/*\ to\ be\ safe,\ I(kmb)\ am\ skipping\ 2\ and\ 3\ as\ node\ types\ \ because}}
+\DoxyCodeLine{00396\ \textcolor{comment}{\ \ \ \ \ *\ GEOMESH\ sometimes\ \ writes\ 2\ and\ 3\ as\ node\ types,\ refer\ to}}
+\DoxyCodeLine{00397\ \textcolor{comment}{\ \ \ \ \ *\ the\ comment\ above\ \_tg\_etype2memtype\ definition.\ */}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a97f905ac94bfebd46e50e32c7389e6eba0bfcf03c40e69203d16f5af5b8dc7fb7}{FEATURE\_NODE}}\ =\ 4,\ \ \ \ \textcolor{comment}{/*\ node\ that\ can\ be\ moved\ along\ feature\ edges\ */}}
+\DoxyCodeLine{00400\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a97f905ac94bfebd46e50e32c7389e6eba3cd351001d413c668dd6acee4491f4ee}{HANGING\_NODE}}\ =\ 5,\ \ \ \ \textcolor{comment}{/*\ mid\ (bridge)\ nodes\ */}}
+\DoxyCodeLine{00401\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a97f905ac94bfebd46e50e32c7389e6eba800e09b73aa90091991ed09f72bf1a41}{FROZEN\_NODE}}\ \ =\ 6,}
+\DoxyCodeLine{00402\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a97f905ac94bfebd46e50e32c7389e6ebac2450268fe3c08ece93f3bf2ae4a01c6}{N\_NODE\_TYPES}}}
+\DoxyCodeLine{00403\ \};}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00406\ \{}
+\DoxyCodeLine{00407\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a9b29769343da78881f442e657eb62b6eab5d8c5f1a54e4b45c41e0c787a5ad317}{LINEAR\_EDGE}}\ \ =\ 0,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 2\ nodes\ */}}
+\DoxyCodeLine{00408\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a9b29769343da78881f442e657eb62b6ea592fa360d4dbe862fdc5bdc70bf0ea5e}{LINEAR3\_EDGE}}\ =\ 1,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ quadratic\ edge\ with\ 3\ nodes\ */}}
+\DoxyCodeLine{00409\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a9b29769343da78881f442e657eb62b6eae410e79b45ef741513fe36c6fff892ff}{N\_EDGE\_TYPES}}}
+\DoxyCodeLine{00410\ \};}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00413\ \{}
+\DoxyCodeLine{00414\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a1e8054db89feba236b2235d16d0bd1ada341bc07005f3295b5562690e285ebc1d}{MIXED\_FACE}}\ \ =\ 0,}
+\DoxyCodeLine{00415\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a1e8054db89feba236b2235d16d0bd1ada723d2b5118100fc91d225c2bd852ebaa}{LINEAR\_FACE}}\ =\ 2,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 2\ nodes,\ 0\ edges\ */}}
+\DoxyCodeLine{00416\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a1e8054db89feba236b2235d16d0bd1adade8b7c07c99ac4f5a74082075c930643}{TRI\_FACE}}\ \ \ \ =\ 3,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 3\ nodes,\ 3\ edges\ */}}
+\DoxyCodeLine{00417\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a1e8054db89feba236b2235d16d0bd1ada3a8f87da4a0a504a1d804749999b658e}{QUAD\_FACE}}\ \ \ =\ 4,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 4\ nodes,\ 4\ edges\ */}}
+\DoxyCodeLine{00418\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a1e8054db89feba236b2235d16d0bd1adac6deeffe9d218ab79d133836b079541e}{POLY\_FACE}}\ \ \ =\ 5,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ arbitrary\ number\ of\ nodes/edges\ */}}
+\DoxyCodeLine{00419\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a1e8054db89feba236b2235d16d0bd1ada650c69c399ca0ca2c7440403293e702a}{TRI6\_FACE}}\ \ \ =\ 6,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Quadratic\ Triangle\ with\ 3\ midside\ nodes\ */}}
+\DoxyCodeLine{00420\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a1e8054db89feba236b2235d16d0bd1ada79d2b4fb685476dcbd27d2889206c435}{QUAD8\_FACE}}\ \ =\ 7,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Quadratic\ Quad\ with\ 4\ midside\ nodes\ */}}
+\DoxyCodeLine{00421\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a1e8054db89feba236b2235d16d0bd1adaecc6c9c955c7ce6dfe64d56ea4c32241}{N\_FACE\_TYPES}}}
+\DoxyCodeLine{00422\ \};}
+\DoxyCodeLine{00423\ }
+\DoxyCodeLine{00424\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00425\ \{}
+\DoxyCodeLine{00426\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a3d683bb61490c28ed362b942156640c0}{MIXED\_CELL}}\ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00427\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66ab364eebed5f834627dcdd3c326167b43}{TRI\_CELL}}\ \ \ \ \ \ \ =\ 1,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 3\ nodes,\ 3\ faces\ */}}
+\DoxyCodeLine{00428\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a62f1e20241b27d8ad02e38950cb5c3e6}{TET\_CELL}}\ \ \ \ \ \ \ =\ 2,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 4\ nodes,\ 4\ faces\ */}}
+\DoxyCodeLine{00429\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a4b78174e3f384583e76c919edb16e593}{QUAD\_CELL}}\ \ \ \ \ \ =\ 3,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 4\ nodes,\ 4\ faces\ */}}
+\DoxyCodeLine{00430\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a82e31d8c440a5db066de6e87a6effc26}{HEX\_CELL}}\ \ \ \ \ \ \ =\ 4,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 8\ nodes,\ 6\ faces\ */}}
+\DoxyCodeLine{00431\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a1f039d14f7e17c6680a13b9f0bbd205f}{PYRAMID\_CELL}}\ \ \ =\ 5,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 5\ nodes,\ 5\ faces\ */}}
+\DoxyCodeLine{00432\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a600568d0ff859ac6b269bcaa6d71fcfd}{WEDGE\_CELL}}\ \ \ \ \ =\ 6,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 6\ nodes,\ 5\ faces\ */}}
+\DoxyCodeLine{00433\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a4ee673bdce837be2369ae66b84106679}{POLY\_CELL}}\ \ \ \ \ \ =\ 7,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ support\ for\ write\ only\ */}}
+\DoxyCodeLine{00434\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a5f1577c169d33ea864d9a736e2260689}{GHOST\_CELL}}\ \ \ \ \ =\ 8,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 2\ nodes,\ 1\ face\ (only\ for\ 2D)\ */}}
+\DoxyCodeLine{00435\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a1f7a2059180860b764e002ac21eead99}{TET10\_CELL}}\ \ \ \ \ =\ 9,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 10\ nodes,\ 4\ faces\ -\/\ quadratic\ tet\ */}}
+\DoxyCodeLine{00436\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66af1a0eadcda8c1e5309207c4517e47886}{HEX20\_CELL}}\ \ \ \ \ =\ 10,\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 20\ nodes,\ 6\ faces\ -\/\ quadratic\ hex\ */}}
+\DoxyCodeLine{00437\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66a0ea1f9d8dcb952da6680e748fc896fd4}{PYRAMID13\_CELL}}\ =\ 11,\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 13\ nodes,\ 5\ faces\ -\/\ quadratic\ pyramid\ */}}
+\DoxyCodeLine{00438\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66ab28f9cb112dbdec873787337271d9af3}{WEDGE15\_CELL}}\ \ \ =\ 12,\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 15\ nodes,\ 5\ faces\ -\/\ quadratic\ wedge\ */}}
+\DoxyCodeLine{00439\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a4f79453548dc20926be4b5a000ecbd66ab2eff5e2e952ed10adb515644a05c3c4}{N\_CELL\_TYPES}}}
+\DoxyCodeLine{00440\ \};}
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00442\ \textcolor{comment}{/*\ \_D\_\ is\ number\ of\ dimensions\ */}}
+\DoxyCodeLine{00443\ \textcolor{comment}{/*\ \_N\_\ is\ the\ number\ of\ nodes,\ faces,\ neighbors\ of\ an\ n-\/simplex\ */}}
+\DoxyCodeLine{00444\ \textcolor{comment}{/*\ \_E\_\ is\ the\ number\ of\ edges\ */}}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{\#if\ RP\_2D}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#\ define\ \_D\_\ 2}}
+\DoxyCodeLine{00447\ \textcolor{preprocessor}{\#\ define\ \_N\_\ 3}}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\#\ define\ \_E\_\ 3}}
+\DoxyCodeLine{00449\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#\ define\ \_D\_\ 3}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#\ define\ \_N\_\ 4}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#\ define\ \_E\_\ 6}}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ ENTITY\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

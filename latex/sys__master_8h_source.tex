@@ -1,0 +1,2620 @@
+\doxysection{sys\+\_\+master.\+h}
+\hypertarget{sys__master_8h_source}{}\label{sys__master_8h_source}\index{fluent20.1.0/client/src/sys\_master.h@{fluent20.1.0/client/src/sys\_master.h}}
+\mbox{\hyperlink{sys__master_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ sys\_master\_included}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ sys\_master\_included\ 1}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ general\ pre\ settings}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#if\ GPROF\_ENABLED}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#\ \ define\ C\_SWITCH\_OPTIMIZE\ -\/pg}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/pg}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ sys\_debug}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ define\ sys\_debug\ 0}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#if\ sys\_debug}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ \ if\ sys\_lnx86\ ||\ sys\_lnx86\_rh8}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/g3\ -\/Wall\ -\/ansi\ -\/pedantic\ -\/Wmissing-\/prototypes}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_ultra}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/g\ -\/ftrap=invalid}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_lnia64}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/g\ -\/O0\ \ \ }\textcolor{comment}{/*\ for\ Intel\ cc\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#\ \ \ \ \ if\ sys\_lnamd64\ \&\&\ (!defined(\_INTEL\_CC)\ ||\ \_INTEL\_CC)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/g3\ -\/w1\ -\/Wall\ -\/Wsign-\/compare\ -\/Wcheck\ -\/Wuninitialized\ -\/Wreturn-\/type\ -\/Wunused\ -\/Wcomment\ -\/Wdeprecated\ -\/Wmissing-\/prototypes\ -\/Wpointer-\/arith\ -\/Wshadow\ -\/Wp64\ -\/diag-\/disable\ 193,810,869,981,1419,2259\ -\/qopenmp}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#\ \ \ \ \ else}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ sys\_linmic}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/g\ -\/O0\ -\/qopenmp\ -\/mmic}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/g\ -\/O0}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#\ \ \ \ \ endif}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ C\_SWITCH\_OPTIMIZE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#\ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#\ \ if\ sys\_lnamd64\ \&\&\ (!defined(\_INTEL\_CC)\ ||\ \_INTEL\_CC)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/g\ -\/qopenmp}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_linmic}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/g\ -\/qopenmp\ -\/mmic}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/g\ -\/O0}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_debug\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ sys\_linux\ (sys\_lnx86\ ||\ sys\_lnarm\ ||\ sys\_lnia64\ ||\ sys\_lnamd64\ ||\ sys\_linmic\ ||\ sys\_lop64\ ||\ sys\_lnarm64)}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{/*\ Note:\ archaic\ platforms\ not\ listed\ here\ */}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ sys\_unix\ (sys\_ultra\ ||\ sys\_ultra\_64\ ||\ sys\_solaris\ ||\ sys\_fujitsu\_pp\ ||\ sys\_hpux11\ ||\ sys\_hpux11\_64\ ||\ sys\_hpux11\_ia64\ ||\ sys\_aix51\ ||\ sys\_aix51\_64\ ||\ sys\_irix65\_mips4\ ||\ irix65\_mips4\_64)}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ Sun\ Microsystems:}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ sys\_ultrag\ (gcc\ -\/g\ -\/Wall)}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#ifndef\ sys\_ultrag}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#\ define\ sys\_ultrag\ 0}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#if\ sys\_ultrag}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ ultrag}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#if\ sys\_ultrag}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#\ define\ \_solaris\ 1}}
+\DoxyCodeLine{00085\ \textcolor{comment}{/*\#\ define\ WORKING\_CXX\ 1*/}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#\ ifndef\ SYSV}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#\ \ define\ SYSV\ 1}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#\ \ ifndef\ CC\_}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#\ \ \ define\ CC\_\ gcc}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#\ \ ifdef\ CPP\_}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#\ \ \ undef\ CPP\_}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#\ \ define\ CPP\_\ gcc\ -\/E}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#\ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#\ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/Dsun\ -\/Dsparc\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#\ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_SYSTEM\ -\/Wall\ -\/Dlint}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#\ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/g}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#\ \ ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_SWITCH\_PIC\ -\/fpic}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#\ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/g}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_GEN}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_GEN\ -\/lgen}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{00129\ \textcolor{comment}{/*\ -\/L\ doesn't\ affect\ runtime\ library\ search\ path;\ need\ to\ do:}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ \ setenv\ LD\_LIBRARY\_PATH\ \$\{LD\_LIBRARY\_PATH\}:/usr/ucblib\ */}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\ -\/L/usr/ucblib\ -\/lrpcsoc\ -\/lsocket\ -\/lnsl\ -\/lresolv\ LIBS\_GEN\ -\/lm}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SYSTEM\_NODE}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\_NODE\ -\/L/usr/ucblib\ -\/lsocket\ -\/lnsl\ LIBS\_GEN\ -\/lm}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SMPI}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SMPI\ -\/lpmpich\ -\/lmpich\ -\/lthread}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00141\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\#\ \ define\ LIBS\_GR\ -\/lcxg\ -\/lXext\ -\/lxgl}}
+\DoxyCodeLine{00143\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#\ \ define\ LIBS\_GUI\ -\/lXm\ -\/lXt\ -\/lX11\ -\/lgen}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#\ \ ifndef\ CXX\_FLAGS}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ CXX\_FLAGS}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#\ else\ }\textcolor{comment}{/*\ not\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{comment}{/*\ missing\ prototypes\ */}}
+\DoxyCodeLine{00152\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ cbrt(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00153\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ finite(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00154\ \textcolor{comment}{/*extern\ int\ isnan(double);\ */}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{comment}{/*\ ANSI\ prototypes\ for\ stdio.h\ functions\ not\ declared\ in\ Sun\ version.\ */}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#\ \ include\ <stdio.h>}}
+\DoxyCodeLine{00158\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ putw\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i,\ FILE\ *);}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_ultrag\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ *\ Sun\ Microsystems:}}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ *\ sys\_solaris,\ sys\_ultra,\ sys\_ultra\_64}}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#ifndef\ sys\_solaris}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#\ define\ sys\_solaris\ 0}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#if\ sys\_solaris}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ solaris}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#ifndef\ sys\_ultra}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#\ define\ sys\_ultra\ 0}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#if\ sys\_ultra}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ ultra}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#ifndef\ sys\_ultra\_64}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#\ define\ sys\_ultra\_64\ 0}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#if\ sys\_ultra\_64}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ ultra\_64}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#if\ (sys\_solaris\ ||\ sys\_ultra\ ||\ sys\_ultra\_64)}}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#\ define\ \_solaris\ 1}}
+\DoxyCodeLine{00194\ \textcolor{comment}{/*\#define\ WORKING\_CXX\ 1*/}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#\ ifndef\ SYSV}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#\ \ define\ SYSV\ 1}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#\ define\ CC\_\ /opt/SUNWspro/bin/cc}}
+\DoxyCodeLine{00202\ \textcolor{comment}{/*\ \#\ define\ CC\_\ /usr/local/packages/forte/8.0/SUNWspro/bin/cc\ */}}
+\DoxyCodeLine{00203\ \textcolor{comment}{/*\ \#\ define\ CC\_\ /usr/local/solaris/opt/forte8/SUNWspro/bin/cc\ */}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#\ ifndef\ FORTE6\_OPTS}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#\ \ define\ FORTE6\_OPTS\ 0}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#\ ifndef\ FORTE7\_OPTS}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#\ \ define\ FORTE7\_OPTS\ 0}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#\ ifndef\ STUDIO8\_OPTS}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#\ \ define\ STUDIO8\_OPTS\ 1}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#\ \ ifndef\ NBIT\_SWITCH}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_ultra\_64}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#\ \ \ \ if\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ ||\ STUDIO8\_OPTS}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ NBIT\_SWITCH\ -\/xarch=v9a}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ NBIT\_SWITCH\ -\/xarch=v9}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#\ \ \ \ endif\ }\textcolor{comment}{/*\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_ultra}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#\ \ \ \ \ if\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ ||\ STUDIO8\_OPTS\ \ }\textcolor{comment}{/*\ NOTE\ -\/\ needed\ for\ SUN\ HPC\ 3.0\ 32-\/bit,\ but\ it\ breaks\ our\ old\ version\ of\ Purify\ -\/\ change\ back\ when\ we\ upgrade\ purify\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ NBIT\_SWITCH\ -\/xarch=v8plusa}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#\ \ \ \ \ else}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ NBIT\_SWITCH}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#\ \ \ \ \ endif\ }\textcolor{comment}{/*\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ NBIT\_SWITCH}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#\ \ if\ sys\_ultra\_64}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{comment}{/*\ -\/lrt\ needed\ for\ nanosleep\ */}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{00245\ \textcolor{comment}{/*\ -\/L\ doesn't\ affect\ runtime\ library\ search\ path;\ need\ to\ do:}}
+\DoxyCodeLine{00246\ \textcolor{comment}{\ \ \ setenv\ LD\_LIBRARY\_PATH\ \$\{LD\_LIBRARY\_PATH\}:/usr/ucblib/sparcv9\ */}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#\ \ \ \ if\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ ||\ STUDIO8\_OPTS}}
+\DoxyCodeLine{00248\ \textcolor{comment}{/*\ -\/lm\ added\ for\ unresolved\ math\ symbols\ in\ auxiliary\ libraries\ */}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SYSTEM\ -\/L/usr/ucblib/sparcv9\ -\/lgen\ -\/lrpcsoc\ -\/lsocket\ -\/lnsl\ -\/lresolv\ -\/lmopt\ -\/lm\ -\/lsunmath\ -\/lrt}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SYSTEM\ -\/L/usr/ucblib/sparcv9\ -\/lgen\ -\/lrpcsoc\ -\/lsocket\ -\/lnsl\ -\/lresolv\ -\/lm\ -\/lsunmath\ -\/lrt}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#\ \ \ \ endif\ }\textcolor{comment}{/*\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LIBS\_SYSTEM\_NODE}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#\ \ \ \ if\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ ||\ STUDIO8\_OPTS}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SYSTEM\_NODE\ -\/L/usr/ucblib/sparcv9\ -\/lgen\ -\/lsocket\ -\/lnsl\ \ -\/L/usr/lib/sparcv9\ -\/lmopt\ -\/lm\ -\/lsunmath\ -\/lrt}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SYSTEM\_NODE\ -\/L/usr/ucblib/sparcv9\ -\/lgen\ -\/lsocket\ -\/lnsl\ \ -\/L/usr/lib/sparcv9\ -\/lm\ -\/lsunmath\ -\/lrt}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#\ \ \ \ endif\ }\textcolor{comment}{/*\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ sys\_ultra\_64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#\ \ if\ (sys\_ultra\ ||\ sys\_ultra\_64)}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{comment}{/*\ Override\ just\ the\ things\ that\ differ\ from\ sys\_solaris\ */}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#\ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#\ \ \ if\ STUDIO8\_OPTS}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/fast\ -\/xtarget=ultra3\ -\/xsfpconst\ -\/xalias\_level=strong\ -\/xrestrict\ -\/xprefetch\_level=2\ -\/W2,-\/Apf:pdl=1\ -\/W2,-\/Apf:outer\ -\/Wc,-\/Qlp-\/ol=1}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#\ \ \ \ \ \ if\ sys\_ultra\_64}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/xtarget=ultra3\ -\/xmaxopt=5\ -\/xprefetch\_level=2\ -\/W2,-\/Apf:pdl=1\ -\/W2,-\/Apf:outer\ -\/Wc,-\/Qlp-\/ol=1}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#\ \ \ \ \ \ else}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/fast\ -\/xtarget=ultra3\ -\/xmaxopt=5\ -\/xprefetch\_level=2\ -\/W2,-\/Apf:pdl=1\ -\/W2,-\/Apf:outer\ -\/Wc,-\/Qlp-\/ol=1}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#\ \ \ \ \ \ endif}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#\ \ \ elif\ FORTE7\_OPTS}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/fast\ -\/xtarget=ultra3\ -\/xunroll=4\ -\/xsfpconst\ -\/xalias\_level=strong\ -\/xrestrict=Smooth1\ -\/xmaxopt}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#\ \ \ elif\ FORTE6\_OPTS}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/fast\ -\/xO4\ -\/xtarget=ultra2\ -\/xalias\_level=strong\ -\/xrestrict=smooth\ -\/xrestrict=get\_residual\ -\/xmaxopt}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/fast\ -\/xO4\ -\/xtarget=ultra\ }\textcolor{comment}{/*\ x04\ tgrid\ performance\ boost\ over\ x03,\ fixes\ periodic\ dp\ bug\ CustQ\ \#8230\ on\ ultra\_64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#\ \ \ endif\ }\textcolor{comment}{/*\ FORTE6\_OPTS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ C\_SWITCH\_OPTIMIZE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#\ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/xO4\ -\/s}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CXX\_FLAGS}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ CXX\_FLAGS}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ (sys\_ultra\ ||\ sys\_ultra\_64)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \textcolor{comment}{/*\ Assume\ SunPro\ C\ for\ Solaris\ 2.x.\ \ Use\ ANSI\ with\ typical\ Sun\ defines.\ */}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#\ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#\ \ \ if\ FORTE7\_OPTS\ ||\ STUDIO8\_OPTS}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/D\_\_svr4\_\_\ -\/Dsparc\ -\/Dsun\ -\/Dunix\ -\/D\_\_sparc}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/Xc\ -\/D\_\_svr4\_\_\ -\/Dsparc\ -\/Dsun\ -\/Dunix\ -\/D\_\_sparc}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#\ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_SYSTEM\ NBIT\_SWITCH\ -\/v\ }\textcolor{comment}{/*\ strict\ semantic\ and\ lint-\/like\ checks\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#\ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/fast\ -\/xtarget=ss10\ -\/xO3}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_ultra\_64}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ NBIT\_SWITCH\ -\/L/usr/lib/sparcv9}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ NBIT\_SWITCH}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#\ \ ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_SWITCH\_PIC\ -\/KPIC}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SHARED\ -\/G}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_GEN}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_GEN\ -\/lgen}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{00337\ \textcolor{comment}{/*\ -\/L\ doesn't\ affect\ runtime\ library\ search\ path;\ need\ to\ do:}}
+\DoxyCodeLine{00338\ \textcolor{comment}{\ \ setenv\ LD\_LIBRARY\_PATH\ \$\{LD\_LIBRARY\_PATH\}:/usr/ucblib\ */}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#\ \ \ if\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ ||\ STUDIO8\_OPTS}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_SYSTEM\ -\/L/usr/ucblib\ -\/lrpcsoc\ -\/lsocket\ -\/lnsl\ -\/lresolv\ LIBS\_GEN\ -\/lmopt\ -\/lm\ -\/lsunmath}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_SYSTEM\ -\/L/usr/ucblib\ -\/lrpcsoc\ -\/lsocket\ -\/lnsl\ -\/lresolv\ LIBS\_GEN\ -\/lm\ -\/lsunmath}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#\ \ \ endif\ }\textcolor{comment}{/*\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SYSTEM\_NODE}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#\ \ \ if\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ ||\ STUDIO8\_OPTS}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_SYSTEM\_NODE\ -\/L/usr/ucblib\ -\/lsocket\ -\/lnsl\ LIBS\_GEN\ -\/lmopt\ -\/lm\ -\/lsunmath}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_SYSTEM\_NODE\ -\/L/usr/ucblib\ -\/lsocket\ -\/lnsl\ LIBS\_GEN\ -\/lm}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#\ \ \ endif\ }\textcolor{comment}{/*\ FORTE6\_OPTS\ ||\ FORTE7\_OPTS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \textcolor{comment}{/*\ Updating\ Libs\ to\ MPICH\ 1.2.4\ */}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SMPI}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LIBS\_NMPI\ -\/lmpich\ -\/lthread\ \ -\/lrt\ \ -\/laio}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LIBS\_SMPI\ \ -\/lmpich\ -\/lthread\ -\/lrt\ \ -\/laio}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00359\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00360\ \textcolor{comment}{\#\ \ define\ LIBS\_GR\ -\/lcxg\ -\/lXext\ -\/lxgl}}
+\DoxyCodeLine{00361\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#\ \ define\ LIBS\_GUI\ -\/lXm\ -\/lXt\ -\/lX11\ -\/lgen}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\#\ else\ }\textcolor{comment}{/*\ not\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{comment}{/*\ missing\ prototypes\ */}}
+\DoxyCodeLine{00367\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ cbrt(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00368\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ finite(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00369\ \textcolor{comment}{/*extern\ int\ isnan(double);\ */}}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \textcolor{comment}{/*\ ANSI\ prototypes\ for\ stdio.h\ functions\ not\ declared\ in\ Sun\ version.\ */}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\#\ \ include\ <stdio.h>}}
+\DoxyCodeLine{00373\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ putw\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i,\ FILE\ *);}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00376\ }
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ (sys\_solaris\ ||\ sys\_ultra\ ||\ sys\_ultra\_64)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{00380\ \textcolor{comment}{\ *\ Fujitsu\ Prime\ Power}}
+\DoxyCodeLine{00381\ \textcolor{comment}{\ *\ sys\_fujitsu\_pp}}
+\DoxyCodeLine{00382\ \textcolor{comment}{******************************************************/}}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\#ifndef\ sys\_fujitsu\_pp}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\#\ define\ sys\_fujitsu\_pp\ 0}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#if\ sys\_fujitsu\_pp}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ fujitsu\_pp}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\#if\ sys\_fujitsu\_pp}}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#\ define\ CC\_\ /opt/FSUNf90/bin/fcc}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#ifdef\ CPP\_}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\#\ undef\ CPP\_}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#define\ CPP\_\ /opt/FSUNf90/bin/fcc\ -\/E}}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#ifndef\ unix}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#\ define\ unix\ 1}}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#\ \ define\ NBIT\_SWITCH\ -\/xarch=v9}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/DSUN\ -\/DSOLARIS\ -\/DSUN64\ -\/DHAL\ -\/DNDEBUG\ -\/DOS64BIT\ -\/DDPRCSN\ -\/D\_fujitsu\_pp}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#\ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/Kfast\_GP=2,prefetch,V9\ -\/I/opt/FJSVmpi2/include/sparcv9}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ C\_SWITCH\_SYSTEM\ -\/I/opt/FJSVmpi2/include/sparcv9}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00425\ \textcolor{comment}{/*\ for\ 64-\/bit\ addressing}}
+\DoxyCodeLine{00426\ \textcolor{comment}{\#\ define\ C\_SWITCH\_OPTIMIZE\ -\/Kfast,SPARC64\_GP,V9}}
+\DoxyCodeLine{00427\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00428\ \textcolor{comment}{/*\ opt2\ options}}
+\DoxyCodeLine{00429\ \textcolor{comment}{\#\ define\ C\_SWITCH\_OPTIMIZE\ -\/Kfast\_GP=2}}
+\DoxyCodeLine{00430\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00431\ \textcolor{comment}{/*\ opt3\ options}}
+\DoxyCodeLine{00432\ \textcolor{comment}{\#\ define\ C\_SWITCH\_OPTIMIZE\ -\/Kfast,SPARC64\_GP,V8PLUS}}
+\DoxyCodeLine{00433\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00434\ \textcolor{comment}{/*\ hybrid\ optimization\ on\ fujitsu\_pp\ */}}
+\DoxyCodeLine{00435\ \textcolor{comment}{/*\ This\ FLAG\ should\ be\ set\ for\ compiling\ storage.c\ */}}
+\DoxyCodeLine{00436\ \textcolor{comment}{/*\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/Kfast,SPARC64\_GP,V9\ */}}
+\DoxyCodeLine{00437\ }
+\DoxyCodeLine{00438\ \textcolor{comment}{/*\ Higher\ level\ Optimization\ flags,\ should\ be\ turned\ off\ for\ storage.c\ */}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ \ \ -\/Kfast\_GP=2,prefetch,V9}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00447\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ NBIT\_SWITCH\ -\/dy\ -\/KV9}}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#ifndef\ LIBS\_VMPI}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_VMPI\ -\/L/opt/FSUNaprun/lib/sparcv9\ \ \ \ \ \ -\/L/opt/FJSVmpi2/lib/sprcv9\ -\/lmpi\ -\/lmpl}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{\#ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LIBS\_SYSTEM\ -\/L/opt/FSUNf90/lib/sparcv9\ -\/lfj90f\ -\/lfj90\ -\/lfj90f\ \(\backslash\)}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/L/usr/lib/sparcv9\ -\/lelf\ \(\backslash\)}}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/L/usr/ucblib\ -\/L/usr/ucblib/sparcv9\ -\/L/usr/lib/sparcv9\ \(\backslash\)}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/lrpcsoc\ -\/lsocket\ -\/lnsl\ -\/lresolv\ -\/lgen\ -\/lm}}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ sys\_fujitsu\_pp\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{00463\ \textcolor{comment}{\ *\ Hal\ Computer}}
+\DoxyCodeLine{00464\ \textcolor{comment}{\ *\ sys\_sol24s64}}
+\DoxyCodeLine{00465\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{\#ifndef\ sys\_sol24s64}}
+\DoxyCodeLine{00467\ \textcolor{preprocessor}{\#\ define\ sys\_sol24s64\ 0}}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#if\ sys\_sol24s64}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ sol24s64}}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#\ define\ \_solaris\ 1}}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#\ ifndef\ SYSV}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\#\ \ define\ SYSV\ 1}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\#\ \ ifndef\ HAL\_COMPILE\_FCC}}
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\#\ \ \ define\ HAL\_COMPILE\_FCC\ 0}}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#\ \ ifndef\ HAL\_COMPILE\_HCC}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\#\ \ \ define\ HAL\_COMPILE\_HCC\ 0}}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#\ \ ifndef\ HAL\_COMPILE\_SUN}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\#\ \ \ define\ HAL\_COMPILE\_SUN\ 1}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \textcolor{comment}{/*\ Override\ just\ the\ things\ that\ differ\ from\ s\_solaris.h.\ */}}
+\DoxyCodeLine{00492\ }
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\#\ \ if\ HAL\_COMPILE\_FCC}}
+\DoxyCodeLine{00494\ }
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CC\_}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#\ \ \ \ define\ CC\_\ /opt/FSUNf90/bin/fcc}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\#\ \ \ ifdef\ CPP\_}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\#\ \ \ \ undef\ CPP\_}}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\#\ \ \ define\ CPP\_\ /opt/FSUNf90/bin/fcc\ -\/E}}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O4}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_SYSTEM\ -\/Kfast,V8PLUS,eval\ -\/v}}
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00510\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O4}}
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/Kfast,V8PLUS,gs,eval\ -\/L../../lib/sol24s64}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ HAL\_COMPILE\_FCC\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\#\ \ if\ HAL\_COMPILE\_HCC}}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CC\_}}
+\DoxyCodeLine{00521\ \textcolor{preprocessor}{\#\ \ \ \ define\ CC\_\ /opt/HALClang/bin/hcc}}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00523\ \textcolor{preprocessor}{\#\ \ \ ifdef\ CPP\_}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\#\ \ \ \ undef\ CPP\_}}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#\ \ \ define\ CPP\_\ /opt/HALClang/bin/hcc\ -\/E}}
+\DoxyCodeLine{00527\ }
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O4}}
+\DoxyCodeLine{00531\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_SYSTEM\ -\/KV8plus\ -\/v}}
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00535\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O4}}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/KV8plus\ -\/L../../lib/sol24s64}}
+\DoxyCodeLine{00540\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00541\ }
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ HAL\_COMPILE\_HCC\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\#\ \ if\ HAL\_COMPILE\_SUN}}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_\ /opt/HALClang/bin/hcc}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00549\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O4}}
+\DoxyCodeLine{00551\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00552\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00553\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/KV8plus\ -\/L../../lib/sol24s64}}
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CC\_}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#\ \ \ \ define\ CC\_\ /opt/SUNWspro/bin/cc}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00559\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/fast\ -\/xtarget=ultra\ -\/xO3}}
+\DoxyCodeLine{00561\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00563\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/Xc\ -\/D\_\_svr4\_\_\ -\/Dsparc\ -\/Dsun\ -\/Dunix\ -\/D\_\_sparc}}
+\DoxyCodeLine{00564\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00566\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_SYSTEM\ -\/v\ }\textcolor{comment}{/*\ strict\ semantic\ and\ lint-\/like\ checks\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ HAL\_COMPILE\_SUN\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\#\ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\#\ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/Xa}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00576\ }
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\ -\/L/usr/ucblib\ -\/lrpcsoc\ -\/lsocket\ -\/lnsl\ -\/lresolv\ -\/lgen\ -\/lm}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SYSTEM\_NODE}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\_NODE\ -\/L/usr/ucblib\ -\/lsocket\ -\/lnsl\ -\/lgen\ -\/lm}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00584\ }
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SMPI}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SMPI\ -\/lpmpich\ -\/lmpich\ -\/lthread}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00588\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00589\ \textcolor{comment}{\#\ \ define\ LIBS\_GR\ -\/lcxg\ -\/lXext\ -\/lxgl}}
+\DoxyCodeLine{00590\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\#\ \ define\ LIBS\_GUI\ -\/lXm\ -\/lXt\ -\/lX11\ -\/lgen}}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \textcolor{preprocessor}{\#\ else\ }\textcolor{comment}{/*\ not\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00595\ \textcolor{comment}{/*\ missing\ prototypes\ */}}
+\DoxyCodeLine{00596\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ cbrt(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00597\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ finite(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00598\ \textcolor{comment}{/*extern\ int\ isnan(double);\ */}}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \textcolor{comment}{/*\ ANSI\ prototypes\ for\ stdio.h\ functions\ not\ declared\ in\ Sun\ version.\ */}}
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\#\ \ include\ <stdio.h>}}
+\DoxyCodeLine{00602\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ putw\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ i,\ FILE\ *);}
+\DoxyCodeLine{00603\ }
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00605\ }
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_sol24s64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00607\ }
+\DoxyCodeLine{00608\ }
+\DoxyCodeLine{00609\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{00610\ \textcolor{comment}{\ *\ Hewlett-\/Packard:}}
+\DoxyCodeLine{00611\ \textcolor{comment}{\ *\ sys\_hpux10p8,\ sys\_hpux10pa1,\ sys\_hp700,\ sys\_hpux11,}}
+\DoxyCodeLine{00612\ \textcolor{comment}{\ *\ sys\_hpux11\_64,\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00613\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#ifndef\ sys\_hp700}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\#\ define\ sys\_hp700\ 0}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#if\ sys\_hp700}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ hp700}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\#ifndef\ sys\_hpux10pa1}}
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\#\ define\ sys\_hpux10pa1\ 0}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\#if\ sys\_hpux10pa1}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ hpux10pa1}}
+\DoxyCodeLine{00626\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00627\ }
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#ifndef\ sys\_hpux10p8}}
+\DoxyCodeLine{00629\ \textcolor{preprocessor}{\#\ define\ sys\_hpux10p8\ 0}}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00631\ \textcolor{preprocessor}{\#if\ sys\_hpux10p8}}
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ hpux10p8}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#ifndef\ sys\_sppux5pa2}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\#\ define\ sys\_sppux5pa2\ 0}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\#if\ sys\_sppux5pa2}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ sppux5pa2}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \textcolor{preprocessor}{\#ifndef\ sys\_hpux11}}
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\#\ define\ sys\_hpux11\ 0}}
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00645\ \textcolor{preprocessor}{\#if\ sys\_hpux11}}
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ hpux11}}
+\DoxyCodeLine{00647\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00648\ }
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\#ifndef\ sys\_hpux11\_64}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\#\ define\ sys\_hpux11\_64\ 0}}
+\DoxyCodeLine{00651\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\#if\ sys\_hpux11\_64}}
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ hpux11\_64}}
+\DoxyCodeLine{00654\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\#ifndef\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\#\ define\ sys\_hpux11\_ia64\ 0}}
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\#if\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ hpux11\_ia64}}
+\DoxyCodeLine{00661\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00662\ }
+\DoxyCodeLine{00663\ \textcolor{preprocessor}{\#if\ (sys\_hpux11\ ||\ sys\_hpux11\_64\ ||\ sys\_hpux10p8\ ||\ sys\_sppux5pa2\ ||\ sys\_hpux10pa1\ ||\ sys\_hp700\ ||\ sys\_hpux11\_ia64)}}
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00665\ \textcolor{preprocessor}{\#\ define\ HPUX\ 1}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#\ ifndef\ unix}}
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\#\ \ define\ unix\ 1}}
+\DoxyCodeLine{00668\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\#\ if\ sys\_hp700}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\#\ \ define\ cbrt(\_x)\ pow(\_x,\ 1.0/3.0)}}
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00673\ }
+\DoxyCodeLine{00674\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00675\ \textcolor{comment}{\#if\ (sys\_hpux11\ ||\ sys\_hpux11\_64\ ||\ sys\_hpux10p8\ ||\ sys\_hpux11\_ia64)}}
+\DoxyCodeLine{00676\ \textcolor{comment}{\#\ \ define\ WORKING\_CXX\ 1}}
+\DoxyCodeLine{00677\ \textcolor{comment}{\#endif}}
+\DoxyCodeLine{00678\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ }
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\#\ \ if\ sys\_hpux11\ ||\ sys\_hpux11\_64\ ||\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00683\ \textcolor{comment}{/*\ Override\ just\ the\ things\ that\ differ\ from\ sys\_hp700.\ */}}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\#\ \ \ define\ CC\ /opt/ansic/bin/cc}}
+\DoxyCodeLine{00685\ \textcolor{preprocessor}{\#\ \ \ define\ CC\_\ /opt/ansic/bin/cc}}
+\DoxyCodeLine{00686\ \textcolor{preprocessor}{\#\ \ \ define\ CXX\_\ /opt/aCC/bin/aCC}}
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\#\ \ \ define\ CPP\_ARG\_CXX\ -\/c\ +m}}
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{\#\ \ \ define\ CXX\_FLAGS\ -\/Aa\ -\/I/opt/aCC/include}}
+\DoxyCodeLine{00689\ \textcolor{comment}{/*\ -\/I/opt/aCC/include/iostream\ */}}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\#\ \ \ define\ LD\_SWITCH\_CXX\ -\/Aa}}
+\DoxyCodeLine{00691\ }
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00693\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_hpux11\_64\ ||\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00694\ \textcolor{comment}{/*\ +e\ needed\ to\ pthreads\ */}}
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\#\ \ \ \ \ \ if\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ C\_SWITCH\_SYSTEM\ +DD64\ +DSitanium2\ -\/Ae}}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\#\ \ \ \ \ \ else}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ define\ C\_SWITCH\_SYSTEM\ +DD64\ -\/w\ +e\ -\/Wp,-\/H84000}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\#\ \ \ \ \ \ endif}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_SYSTEM\ +DS2.0a\ +DA2.0N\ -\/w\ -\/Wp,-\/H84000}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00704\ }
+\DoxyCodeLine{00705\ \textcolor{comment}{/*\ add\ +O3\ to\ work-\/around\ +O2\ compiler\ bugs\ */}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_hpux11\_64}}
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ +O3\ +Optrs\_ansi}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00710\ \textcolor{preprocessor}{\#\ \ \ \ \ if\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ +O3\ +Odataprefetch\ +Onolimit\ +Onoinfo\ +Oinitcheck\ +Ofltacc=relaxed\ +Optrs\_ansi\ +Ointeger\_overflow=moderate}}
+\DoxyCodeLine{00712\ \textcolor{preprocessor}{\#\ \ \ \ \ else}}
+\DoxyCodeLine{00713\ \textcolor{comment}{/*\ removed\ +Onolimit\ for\ hpux11\ due\ to\ problems\ with\ dev3\ running\ */}}
+\DoxyCodeLine{00714\ \textcolor{comment}{/*\ out\ of\ memory\ when\ compiling\ prop.c\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ +O3\ +Odataprefetch\ +Olibcalls\ +Optrs\_ansi}}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{\#\ \ \ \ \ endif}}
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\#\ \ \ endif\ }\textcolor{comment}{/*\ C\_SWITCH\_OPTIMIZE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00719\ }
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_PGO}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ C\_SWITCH\_PGO}}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00724\ \textcolor{preprocessor}{\#\ \ \ endif\ }\textcolor{comment}{/*\ C\_SWITCH\_PGO\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00725\ }
+\DoxyCodeLine{00726\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{00727\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ CPP\_SWITCH\_PIC\ +z}}
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_SHARED\ -\/b}}
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00732\ }
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00734\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_hpux11\_64\ ||\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#\ \ \ \ \ if\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/Ae\ +DD64\ +DSitanium2\ +O3\ -\/Wl,+FP,vzoD\ -\/Wl,+pd,4M\ -\/Wl,+pi,4M\ +Onoprocelim}}
+\DoxyCodeLine{00737\ \textcolor{preprocessor}{\#\ \ \ \ \ \ if\ 1}}
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ LIBS\_SYSTEM\ -\/l:libm.a\ -\/lnsl\ -\/lcl}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#\ \ \ \ \ \ else}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ LIBS\_SYSTEM\ -\/lm\ -\/lnsl\ -\/lcl}}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\#\ \ \ \ \ \ endif}}
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{\#\ \ \ \ \ else}}
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LD\_SWITCH\_SYSTEM\ +DD64\ -\/Wl,+FP,D\ -\/Wl,+s}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#\ \ \ \ \ endif}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/N\ -\/Q\ -\/Wl,-\/E\ -\/Wl,+FP,D\ -\/Wl,+s}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00748\ \textcolor{preprocessor}{\#\ \ \ endif\ }\textcolor{comment}{/*\ LD\_SWITCH\_SYSTEM\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00749\ }
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{00751\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_hpux11\_64\ ||\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00752\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SYSTEM\ -\/lm\ -\/lnsl\ -\/lcl}}
+\DoxyCodeLine{00753\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SYSTEM\ -\/lrpcsoc\ -\/lm\ -\/lnsl\ -\/lcl}}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LIBS\_VMPI}}
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_hpux11\_ia64}}
+\DoxyCodeLine{00759\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_VMPI\ -\/L/opt/mpi/lib/hpux64\ -\/lmpi}}
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\#\ \ \ \ elif\ sys\_hpux11\_64}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_VMPI\ -\/L/opt/mpi/lib/pa20\_64\ -\/lmpi\ -\/l:libclic\_csi.a}}
+\DoxyCodeLine{00762\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{00763\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_VMPI\ -\/L/opt/mpi/lib/pa1.1\ -\/lmpi}}
+\DoxyCodeLine{00764\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ sys\_hpux11\ ||\ sys\_hpux11\_64\ ||\ sys\_hpux11\_ia64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00767\ }
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\#\ \ if\ sys\_hpux10p8\ ||\ sys\_sppux5pa2}}
+\DoxyCodeLine{00769\ \textcolor{comment}{/*\ Override\ just\ the\ things\ that\ differ\ from\ sys\_hp700.\ */}}
+\DoxyCodeLine{00770\ }
+\DoxyCodeLine{00771\ \textcolor{comment}{/*\ o.k.\ for\ hpux10p8\ but\ is\ this\ true\ for\ sppux5pa2??\ */}}
+\DoxyCodeLine{00772\ \textcolor{preprocessor}{\#\ \ \ define\ CXX\_\ /opt/aCC/bin/aCC}}
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#\ \ \ define\ CPP\_ARG\_CXX\ -\/c\ +m}}
+\DoxyCodeLine{00774\ \textcolor{preprocessor}{\#\ \ \ define\ CXX\_FLAGS\ +DS2.0a\ +DA2.0N\ -\/I/opt/aCC/include}}
+\DoxyCodeLine{00775\ \textcolor{comment}{/*\ -\/I/opt/aCC/include/iostream\ */}}
+\DoxyCodeLine{00776\ \textcolor{preprocessor}{\#\ \ \ define\ LD\_SWITCH\_CXX\ -\/Aa}}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \textcolor{preprocessor}{\#\ \ \ ifdef\ CC\_}}
+\DoxyCodeLine{00779\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00780\ \textcolor{comment}{/*\ add\ +Onolimit\ for\ chip.c\ optimization\ */}}
+\DoxyCodeLine{00781\ \textcolor{comment}{/*\ add\ +Olibcalls\ for\ fabs()\ optimization\ */}}
+\DoxyCodeLine{00782\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00783\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_SYSTEM\ +DS2.0a\ +DA2.0N}}
+\DoxyCodeLine{00784\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00786\ \textcolor{comment}{/*\ change\ +O2\ to\ +O3\ to\ work-\/around\ +O2\ compiler\ bugs\ (CR935)\ */}}
+\DoxyCodeLine{00787\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ +O3\ +Onolimit\ +Olibcalls\ +Optrs\_ansi}}
+\DoxyCodeLine{00788\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00789\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00790\ }
+\DoxyCodeLine{00791\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00792\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/Q\ -\/Wl,+FP,D,-\/E}}
+\DoxyCodeLine{00793\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00794\ }
+\DoxyCodeLine{00795\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_sppux5pa2}}
+\DoxyCodeLine{00796\ \textcolor{comment}{/*\ Override\ just\ the\ things\ that\ differ\ from\ sys\_hpux10p8\ */}}
+\DoxyCodeLine{00797\ }
+\DoxyCodeLine{00798\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ AR\_}}
+\DoxyCodeLine{00799\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ AR\_\ /usr/bin/ar}}
+\DoxyCodeLine{00800\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SYSTEM\ -\/lV3\ -\/lm}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00805\ }
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LIBS\_VMPI}}
+\DoxyCodeLine{00807\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_VMPI\ -\/L/opt/mpi/lib/pa1.1\ -\/lmpi\ -\/lcnx\_syscall\ /lib/libail.sl}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00809\ \textcolor{preprocessor}{\#\ \ \ endif\ }\textcolor{comment}{/*\ sys\_sppux5pa2\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00810\ }
+\DoxyCodeLine{00811\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ sys\_hpux10p8\ ||\ sys\_sppux5pa2\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00812\ }
+\DoxyCodeLine{00813\ \textcolor{preprocessor}{\#\ \ ifndef\ CC\_}}
+\DoxyCodeLine{00814\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/Aa\ -\/D\_HPUX\_SOURCE}}
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00817\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00818\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00819\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00820\ }
+\DoxyCodeLine{00821\ \textcolor{comment}{/*\ add\ +Onolimit\ for\ chip.c\ optimization\ */}}
+\DoxyCodeLine{00822\ \textcolor{comment}{/*\ 99-\/04-\/07,\ tlt:\ removed\ +Onolimit\ to\ fix\ CustQ\ Defect\ \#8507\ */}}
+\DoxyCodeLine{00823\ \textcolor{comment}{/*\ add\ +Olibcalls\ for\ fabs()\ optimization\ */}}
+\DoxyCodeLine{00824\ \textcolor{comment}{/*\ add\ +O3\ to\ work-\/around\ +O2\ compiler\ bugs\ */}}
+\DoxyCodeLine{00825\ \textcolor{comment}{/*\ 99-\/08-\/25,\ tlt:\ added\ +Onolimit;\ fixed\ CustQ\ \#8507\ with\ pragma\ in\ prop.c\ */}}
+\DoxyCodeLine{00826\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00827\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ +O3\ +Onolimit\ +Olibcalls}}
+\DoxyCodeLine{00828\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00829\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00830\ }
+\DoxyCodeLine{00831\ \textcolor{comment}{/*\ for\ >\ 1\ GB\ memory\ allocation\ */}}
+\DoxyCodeLine{00832\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00833\ \textcolor{preprocessor}{\#\ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/N\ -\/Q\ -\/Wl,-\/E}}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00835\ }
+\DoxyCodeLine{00836\ \textcolor{comment}{/*\ for\ single-\/process\ versions\ */}}
+\DoxyCodeLine{00837\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_GUI}}
+\DoxyCodeLine{00838\ \textcolor{preprocessor}{\#\ \ \ define\ LD\_SWITCH\_GUI\ -\/L/usr/lib/Motif1.2\ -\/L/usr/lib/X11R5}}
+\DoxyCodeLine{00839\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00840\ }
+\DoxyCodeLine{00841\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00842\ \textcolor{comment}{\#\ \ ifndef\ LIBS\_GR}}
+\DoxyCodeLine{00843\ \textcolor{comment}{\#\ \ \ define\ LIBS\_GR\ -\/lhoops610}}
+\DoxyCodeLine{00844\ \textcolor{comment}{\#\ \ endif}}
+\DoxyCodeLine{00845\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00846\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_GUI}}
+\DoxyCodeLine{00847\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_GUI\ -\/lXwindow\ -\/lsb\ -\/ldld\ -\/lXhp11\ -\/lXext\ -\/lXmu}}
+\DoxyCodeLine{00848\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00849\ }
+\DoxyCodeLine{00850\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_DL}}
+\DoxyCodeLine{00851\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_DL\ -\/ldld}}
+\DoxyCodeLine{00852\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00853\ }
+\DoxyCodeLine{00854\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00855\ }
+\DoxyCodeLine{00856\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ (sys\_hpux11\ ||\ sys\_hpux11\_64\ ||\ sys\_hpux10p8\ ||\ sys\_sppux5pa2\ ||\ sys\_hpux10pa1\ ||\ sys\_hp700\ ||\ sys\_hpux11\_ia64)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00857\ }
+\DoxyCodeLine{00858\ }
+\DoxyCodeLine{00859\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{00860\ \textcolor{comment}{\ *\ Silicon\ Graphics:}}
+\DoxyCodeLine{00861\ \textcolor{comment}{\ *\ sys\_irix5,\ sys\_irix6r8,\ sys\_irix6r10}}
+\DoxyCodeLine{00862\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{00863\ \textcolor{preprocessor}{\#ifndef\ sys\_irix5}}
+\DoxyCodeLine{00864\ \textcolor{preprocessor}{\#\ define\ sys\_irix5\ 0}}
+\DoxyCodeLine{00865\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00866\ \textcolor{preprocessor}{\#if\ sys\_irix5}}
+\DoxyCodeLine{00867\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ irix5}}
+\DoxyCodeLine{00868\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00869\ }
+\DoxyCodeLine{00870\ \textcolor{preprocessor}{\#ifndef\ sys\_irix6r8}}
+\DoxyCodeLine{00871\ \textcolor{preprocessor}{\#\ define\ sys\_irix6r8\ 0}}
+\DoxyCodeLine{00872\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00873\ \textcolor{preprocessor}{\#if\ sys\_irix6r8}}
+\DoxyCodeLine{00874\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ irix6r8}}
+\DoxyCodeLine{00875\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00876\ }
+\DoxyCodeLine{00877\ \textcolor{preprocessor}{\#ifndef\ sys\_irix6r8\_64}}
+\DoxyCodeLine{00878\ \textcolor{preprocessor}{\#\ define\ sys\_irix6r8\_64\ 0}}
+\DoxyCodeLine{00879\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00880\ \textcolor{preprocessor}{\#if\ sys\_irix6r8\_64}}
+\DoxyCodeLine{00881\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ irix6r8\_64}}
+\DoxyCodeLine{00882\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00883\ }
+\DoxyCodeLine{00884\ \textcolor{preprocessor}{\#ifndef\ sys\_irix6r10}}
+\DoxyCodeLine{00885\ \textcolor{preprocessor}{\#\ define\ sys\_irix6r10\ 0}}
+\DoxyCodeLine{00886\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00887\ \textcolor{preprocessor}{\#if\ sys\_irix6r10}}
+\DoxyCodeLine{00888\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ irix6r10}}
+\DoxyCodeLine{00889\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00890\ }
+\DoxyCodeLine{00891\ \textcolor{preprocessor}{\#ifndef\ sys\_irix6r10\_64}}
+\DoxyCodeLine{00892\ \textcolor{preprocessor}{\#\ define\ sys\_irix6r10\_64\ 0}}
+\DoxyCodeLine{00893\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00894\ \textcolor{preprocessor}{\#if\ sys\_irix6r10\_64}}
+\DoxyCodeLine{00895\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ irix6r10\_64}}
+\DoxyCodeLine{00896\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00897\ }
+\DoxyCodeLine{00898\ \textcolor{preprocessor}{\#ifndef\ sys\_irix65}}
+\DoxyCodeLine{00899\ \textcolor{preprocessor}{\#\ define\ sys\_irix65\ 0}}
+\DoxyCodeLine{00900\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00901\ \textcolor{preprocessor}{\#if\ sys\_irix65}}
+\DoxyCodeLine{00902\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ irix65}}
+\DoxyCodeLine{00903\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00904\ }
+\DoxyCodeLine{00905\ \textcolor{preprocessor}{\#ifndef\ sys\_irix65\_mips4}}
+\DoxyCodeLine{00906\ \textcolor{preprocessor}{\#\ define\ sys\_irix65\_mips4\ 0}}
+\DoxyCodeLine{00907\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00908\ \textcolor{preprocessor}{\#if\ sys\_irix65\_mips4}}
+\DoxyCodeLine{00909\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ irix65\_mips4}}
+\DoxyCodeLine{00910\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00911\ }
+\DoxyCodeLine{00912\ }
+\DoxyCodeLine{00913\ \textcolor{preprocessor}{\#ifndef\ sys\_irix65\_64}}
+\DoxyCodeLine{00914\ \textcolor{preprocessor}{\#\ define\ sys\_irix65\_64\ 0}}
+\DoxyCodeLine{00915\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00916\ \textcolor{preprocessor}{\#if\ sys\_irix65\_64}}
+\DoxyCodeLine{00917\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ irix65\_64}}
+\DoxyCodeLine{00918\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00919\ }
+\DoxyCodeLine{00920\ \textcolor{preprocessor}{\#ifndef\ sys\_irix65\_mips4\_64}}
+\DoxyCodeLine{00921\ \textcolor{preprocessor}{\#\ define\ sys\_irix65\_mips4\_64\ 0}}
+\DoxyCodeLine{00922\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00923\ \textcolor{preprocessor}{\#if\ sys\_irix65\_mips4\_64}}
+\DoxyCodeLine{00924\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ irix65\_mips4\_64}}
+\DoxyCodeLine{00925\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00926\ }
+\DoxyCodeLine{00927\ \textcolor{preprocessor}{\#if\ (sys\_irix6r8\ ||\ sys\_irix6r10\ ||\ sys\_irix65\ ||\ sys\_irix65\_mips4)}}
+\DoxyCodeLine{00928\ \textcolor{preprocessor}{\#\ define\ irix\_32\ 1}}
+\DoxyCodeLine{00929\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00930\ \textcolor{preprocessor}{\#\ define\ irix\_32\ 0}}
+\DoxyCodeLine{00931\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00932\ }
+\DoxyCodeLine{00933\ \textcolor{preprocessor}{\#if\ (sys\_irix6r8\_64\ ||\ sys\_irix6r10\_64\ ||\ sys\_irix65\_64\ ||\ sys\_irix65\_mips4\_64)}}
+\DoxyCodeLine{00934\ \textcolor{preprocessor}{\#\ define\ irix\_64\ 1}}
+\DoxyCodeLine{00935\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00936\ \textcolor{preprocessor}{\#\ define\ irix\_64\ 0}}
+\DoxyCodeLine{00937\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00938\ }
+\DoxyCodeLine{00939\ \textcolor{preprocessor}{\#if\ (sys\_irix65\ ||\ sys\_irix65\_64)}}
+\DoxyCodeLine{00940\ \textcolor{preprocessor}{\#\ define\ irix\_mips3\ 1}}
+\DoxyCodeLine{00941\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00942\ \textcolor{preprocessor}{\#\ define\ irix\_mips3\ 0}}
+\DoxyCodeLine{00943\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00944\ }
+\DoxyCodeLine{00945\ \textcolor{preprocessor}{\#if\ (sys\_irix6r8\ ||\ sys\_irix6r8\_64\ ||\ sys\_irix6r10\ ||\ sys\_irix6r10\_64\ ||\ sys\_irix65\_mips4\ ||\ sys\_irix65\_mips4\_64)}}
+\DoxyCodeLine{00946\ \textcolor{preprocessor}{\#\ define\ irix\_mips4\ 1}}
+\DoxyCodeLine{00947\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00948\ \textcolor{preprocessor}{\#\ define\ irix\_mips4\ 0}}
+\DoxyCodeLine{00949\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00950\ }
+\DoxyCodeLine{00951\ \textcolor{preprocessor}{\#if\ (irix5\ ||\ irix\_32\ ||\ irix\_64)}}
+\DoxyCodeLine{00952\ }
+\DoxyCodeLine{00953\ \textcolor{preprocessor}{\#\ define\ unix\ 1}}
+\DoxyCodeLine{00954\ \textcolor{preprocessor}{\#\ define\ IRIX\ 1}}
+\DoxyCodeLine{00955\ }
+\DoxyCodeLine{00956\ \textcolor{comment}{/*\ use\ longjmp\ that\ restores\ signal\ mask\ */}}
+\DoxyCodeLine{00957\ \textcolor{preprocessor}{\#\ define\ \_BSD\_SIGNALS}}
+\DoxyCodeLine{00958\ }
+\DoxyCodeLine{00959\ \textcolor{preprocessor}{\#\ ifndef\ LINT\_FLAGS}}
+\DoxyCodeLine{00960\ \textcolor{preprocessor}{\#\ \ define\ LINT\_FLAGS}}
+\DoxyCodeLine{00961\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00962\ }
+\DoxyCodeLine{00963\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{00964\ }
+\DoxyCodeLine{00965\ }
+\DoxyCodeLine{00966\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_DL}}
+\DoxyCodeLine{00967\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_DL}}
+\DoxyCodeLine{00968\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00969\ }
+\DoxyCodeLine{00970\ \textcolor{preprocessor}{\#\ \ if\ sys\_irix5}}
+\DoxyCodeLine{00971\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00972\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/xansi\ -\/D\_\_STDC\_\_}}
+\DoxyCodeLine{00973\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00974\ }
+\DoxyCodeLine{00975\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{00976\ \textcolor{comment}{/*\ Sample\ compiler\ error:}}
+\DoxyCodeLine{00977\ \textcolor{comment}{\ *\ \ ccom:\ Internal:\ out\ of\ tree\ space;\ increase\ default\ option:\ -\/Wf,-\/XNh1000}}
+\DoxyCodeLine{00978\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00979\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_SYSTEM\ -\/Wf,-\/XNh3000}}
+\DoxyCodeLine{00980\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00981\ }
+\DoxyCodeLine{00982\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{00983\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O\ -\/Olimit\ 2000}}
+\DoxyCodeLine{00984\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00985\ }
+\DoxyCodeLine{00986\ \textcolor{comment}{/*\ for\ single\ process\ versions\ */}}
+\DoxyCodeLine{00987\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LIBS\_GUI}}
+\DoxyCodeLine{00988\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_GUI\ -\/lXm\ -\/lXt\ -\/lX11\ -\/lPW}}
+\DoxyCodeLine{00989\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00990\ }
+\DoxyCodeLine{00991\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00992\ \textcolor{comment}{\#\ \ \ ifndef\ LIBS\_GR}}
+\DoxyCodeLine{00993\ \textcolor{comment}{\#\ \ \ \ define\ LIBS\_GR\ -\/lhoops610\ -\/lXext\ -\/lfm\ -\/lspaceball\ -\/lXi}}
+\DoxyCodeLine{00994\ \textcolor{comment}{\#\ \ \ endif}}
+\DoxyCodeLine{00995\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00996\ }
+\DoxyCodeLine{00997\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{00998\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_SYSTEM\ -\/lgen\ -\/lm\ -\/lsun\ -\/lfpe}}
+\DoxyCodeLine{00999\ \textcolor{comment}{/*\ removed\ because\ of\ memory\ leak:\ -\/lmalloc\ */}}
+\DoxyCodeLine{01000\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01001\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ sys\_irix5\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01002\ }
+\DoxyCodeLine{01003\ \textcolor{comment}{/*\ any\ irix6\ */}}
+\DoxyCodeLine{01004\ \textcolor{preprocessor}{\#\ \ if\ (irix\_32\ ||\ irix\_64)}}
+\DoxyCodeLine{01005\ \textcolor{preprocessor}{\#\ \ \ define\ HAVE\_CPP\_M\ 1}}
+\DoxyCodeLine{01006\ }
+\DoxyCodeLine{01007\ \textcolor{preprocessor}{\#\ \ \ ifndef\ NBIT\_SWITCH}}
+\DoxyCodeLine{01008\ \textcolor{preprocessor}{\#\ \ \ \ if\ irix\_64}}
+\DoxyCodeLine{01009\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ NBIT\_SWITCH\ -\/64}}
+\DoxyCodeLine{01010\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{01011\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ NBIT\_SWITCH\ -\/n32}}
+\DoxyCodeLine{01012\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01013\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01014\ }
+\DoxyCodeLine{01015\ \textcolor{preprocessor}{\#\ \ \ ifndef\ MIPS\_SWITCH}}
+\DoxyCodeLine{01016\ \textcolor{preprocessor}{\#\ \ \ \ if\ irix\_mips4}}
+\DoxyCodeLine{01017\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ MIPS\_SWITCH\ -\/mips4}}
+\DoxyCodeLine{01018\ \textcolor{preprocessor}{\#\ \ \ \ elif\ irix\_mips3}}
+\DoxyCodeLine{01019\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ MIPS\_SWITCH\ -\/mips3}}
+\DoxyCodeLine{01020\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01021\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01022\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01023\ \textcolor{comment}{\#\ \ \ ifndef\ LIBS\_GR}}
+\DoxyCodeLine{01024\ \textcolor{comment}{\#\ \ \ \ define\ LIBS\_GR\ -\/lhoops610\ -\/ltiff\ -\/lmpeg\ -\/limage\ -\/ljpeg}}
+\DoxyCodeLine{01025\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01026\ \textcolor{comment}{/*\ \ -\/lXi\ -\/lfm\ -\/lspaceball\ */}}
+\DoxyCodeLine{01027\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01028\ \textcolor{comment}{\#\ \ \ endif}}
+\DoxyCodeLine{01029\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01030\ }
+\DoxyCodeLine{01031\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_irix6r8\ ||\ sys\_irix6r8\_64}}
+\DoxyCodeLine{01032\ \textcolor{comment}{/*\ needed\ for\ MPICH\ 1.1\ */}}
+\DoxyCodeLine{01033\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LIBS\_SMPI}}
+\DoxyCodeLine{01034\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SMPI\ -\/lmpi}}
+\DoxyCodeLine{01035\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01036\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LIBS\_NMPI}}
+\DoxyCodeLine{01037\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_NMPI\ -\/lmpi}}
+\DoxyCodeLine{01038\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01039\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01041\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_irix65\_mips4\_64}}
+\DoxyCodeLine{01042\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LIBS\_VMPI}}
+\DoxyCodeLine{01043\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_VMPI\ -\/lmpi\ -\/lsma}}
+\DoxyCodeLine{01044\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01045\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01046\ }
+\DoxyCodeLine{01047\ \textcolor{comment}{/*\ irix65\ */}}
+\DoxyCodeLine{01048\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_irix65\ ||\ sys\_irix65\_64}}
+\DoxyCodeLine{01049\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01050\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O2\ -\/OPT:IEEE\_arithmetic=1:roundoff=3:Olimit=8000\ -\/LNO:fusion=2:fission=0}}
+\DoxyCodeLine{01051\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01052\ \textcolor{preprocessor}{\#\ \ \ elif\ sys\_irix65\_mips4\ ||\ sys\_irix65\_mips4\_64}}
+\DoxyCodeLine{01053\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01054\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/OPT:IEEE\_arithmetic=3:roundoff=3:Olimit=8000\ -\/LNO:fusion=2:fission=0:prefetch=2}}
+\DoxyCodeLine{01055\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01056\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01057\ }
+\DoxyCodeLine{01058\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_irix65\ ||\ sys\_irix65\_64\ ||\ sys\_irix65\_mips4\ ||\ sys\_irix65\_mips4\_64}}
+\DoxyCodeLine{01059\ }
+\DoxyCodeLine{01060\ \textcolor{comment}{/*\ \#\ \ \ \ define\ WORKING\_CXX\ 1\ */}}
+\DoxyCodeLine{01061\ }
+\DoxyCodeLine{01062\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01063\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_SYSTEM\ -\/signed\ -\/woff\ 1174,1552,3187,1185\ NBIT\_SWITCH\ MIPS\_SWITCH}}
+\DoxyCodeLine{01064\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01065\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01066\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O2}}
+\DoxyCodeLine{01067\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01068\ }
+\DoxyCodeLine{01069\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{01070\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ CPP\_SWITCH\_PIC\ -\/KPIC}}
+\DoxyCodeLine{01071\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01072\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{01073\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{01074\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01075\ \textcolor{comment}{/*\ remove\ warnings:}}
+\DoxyCodeLine{01076\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ 85\ (def\ of\ ...\ in\ ...\ preempts\ def\ in\ ...)}}
+\DoxyCodeLine{01077\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ 134\ (weak\ def\ of\ ...\ in\ ...\ \ preempts\ ...)}}
+\DoxyCodeLine{01078\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01079\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01080\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_SYSTEM\ NBIT\_SWITCH\ MIPS\_SWITCH\ -\/LD\_MSG:off=85,134}}
+\DoxyCodeLine{01081\ \textcolor{comment}{/*\ -\/Wl,-\/woff,85\ -\/Wl,-\/woff,134\ */}}
+\DoxyCodeLine{01082\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01083\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01084\ }
+\DoxyCodeLine{01085\ }
+\DoxyCodeLine{01086\ \textcolor{comment}{/*\ irix62\ */}}
+\DoxyCodeLine{01087\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_irix6r10\ ||\ sys\_irix6r10\_64}}
+\DoxyCodeLine{01088\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01089\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O2\ -\/OPT:fold\_arith\_limit=3500:IEEE\_arithmetic=3:roundoff=3:Olimit=8000\ -\/LNO:fusion=2:fission=0:prefetch=2}}
+\DoxyCodeLine{01090\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01091\ }
+\DoxyCodeLine{01092\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01093\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O2}}
+\DoxyCodeLine{01094\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01095\ }
+\DoxyCodeLine{01096\ \textcolor{preprocessor}{\#\ \ \ elif\ sys\_irix6r8\ ||\ sys\_irix6r8\_64\ \ }\textcolor{comment}{/*\ irix61\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01097\ }
+\DoxyCodeLine{01098\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01099\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/OPT:fold\_arith\_limit=3500\ -\/OPT:IEEE\_arithmetic=3:roundoff=3\ -\/LNO:fusion=2:fission=0:prefetch=2}}
+\DoxyCodeLine{01100\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01101\ }
+\DoxyCodeLine{01102\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01103\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3}}
+\DoxyCodeLine{01104\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01105\ \textcolor{preprocessor}{\#\ \ \ endif\ }\textcolor{comment}{/*\ irix62\ or\ irix61\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01106\ }
+\DoxyCodeLine{01107\ }
+\DoxyCodeLine{01108\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01109\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_SYSTEM\ NBIT\_SWITCH\ MIPS\_SWITCH\ }\textcolor{comment}{/*\ -\/fullwarn\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01110\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01111\ }
+\DoxyCodeLine{01112\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01113\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ NBIT\_SWITCH\ MIPS\_SWITCH}}
+\DoxyCodeLine{01114\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01115\ }
+\DoxyCodeLine{01116\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{01117\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ CPP\_SWITCH\_PIC\ -\/KPIC}}
+\DoxyCodeLine{01118\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01119\ }
+\DoxyCodeLine{01120\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{01121\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{01122\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01123\ }
+\DoxyCodeLine{01124\ \textcolor{comment}{/*\ for\ single\ process\ versions\ */}}
+\DoxyCodeLine{01125\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LIBS\_GUI}}
+\DoxyCodeLine{01126\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_GUI\ -\/lXm\ -\/lXt\ -\/lX11\ -\/lPW}}
+\DoxyCodeLine{01127\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01128\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01129\ \textcolor{comment}{\#\ \ \ ifndef\ LIBS\_GR}}
+\DoxyCodeLine{01130\ \textcolor{comment}{\#\ \ \ \ define\ LIBS\_GR\ -\/lhoops610\ -\/lXext\ -\/lfm}}
+\DoxyCodeLine{01131\ \textcolor{comment}{\#\ \ \ endif}}
+\DoxyCodeLine{01132\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01133\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{01134\ \textcolor{preprocessor}{\#\ \ \ \ if\ sys\_irix6r8\_64}}
+\DoxyCodeLine{01135\ \textcolor{comment}{/*\ Do\ NOT\ use\ -\/lfastm\ on\ IRIX\ 6.1\ because\ it\ has\ a\ bug\ in\ which}}
+\DoxyCodeLine{01136\ \textcolor{comment}{\ *\ atan2(-\/1,1e-\/18)\ produces\ a\ result\ with\ the\ wrong\ sign.}}
+\DoxyCodeLine{01137\ \textcolor{comment}{\ *\ This\ was\ breaking\ tgrid3.0\ on\ irix6r8\_64.\ */}}
+\DoxyCodeLine{01138\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SYSTEM\ -\/lgen\ -\/lm}}
+\DoxyCodeLine{01139\ \textcolor{preprocessor}{\#\ \ \ \ else}}
+\DoxyCodeLine{01140\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LIBS\_SYSTEM\ -\/lgen\ -\/lfastm\ -\/lm}}
+\DoxyCodeLine{01141\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01142\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01143\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ sys\_irix6xxx\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01144\ }
+\DoxyCodeLine{01145\ }
+\DoxyCodeLine{01146\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01147\ }
+\DoxyCodeLine{01148\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ (sys\_irix5\ ||\ sys\_irix6r8\ ||\ sys\_irix6r8\_64\ ||\ sys\_irix6r10\ ||\ sys\_irix6r10\_64\ ...)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01149\ }
+\DoxyCodeLine{01150\ }
+\DoxyCodeLine{01151\ }
+\DoxyCodeLine{01152\ \textcolor{comment}{/***************************************************************************}}
+\DoxyCodeLine{01153\ \textcolor{comment}{\ *\ IBM:}}
+\DoxyCodeLine{01154\ \textcolor{comment}{\ *\ sys\_aix414,\ sys\_aix420,\ sys\_ibmsp,\ sys\_aix41pow2,\ sys\_aix43,\ sys\_aix43\_64}}
+\DoxyCodeLine{01155\ \textcolor{comment}{\ ***************************************************************************/}}
+\DoxyCodeLine{01156\ \textcolor{preprocessor}{\#ifndef\ sys\_aix414}}
+\DoxyCodeLine{01157\ \textcolor{preprocessor}{\#\ define\ sys\_aix414\ 0}}
+\DoxyCodeLine{01158\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01159\ \textcolor{preprocessor}{\#if\ sys\_aix414}}
+\DoxyCodeLine{01160\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ aix414}}
+\DoxyCodeLine{01161\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01162\ }
+\DoxyCodeLine{01163\ \textcolor{preprocessor}{\#ifndef\ sys\_aix420}}
+\DoxyCodeLine{01164\ \textcolor{preprocessor}{\#\ define\ sys\_aix420\ 0}}
+\DoxyCodeLine{01165\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01166\ \textcolor{preprocessor}{\#if\ sys\_aix420}}
+\DoxyCodeLine{01167\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ aix420}}
+\DoxyCodeLine{01168\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01169\ }
+\DoxyCodeLine{01170\ \textcolor{preprocessor}{\#ifndef\ sys\_aix43}}
+\DoxyCodeLine{01171\ \textcolor{preprocessor}{\#\ define\ sys\_aix43\ 0}}
+\DoxyCodeLine{01172\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01173\ \textcolor{preprocessor}{\#if\ sys\_aix43}}
+\DoxyCodeLine{01174\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ aix43}}
+\DoxyCodeLine{01175\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01176\ }
+\DoxyCodeLine{01177\ \textcolor{preprocessor}{\#ifndef\ sys\_aix43\_64}}
+\DoxyCodeLine{01178\ \textcolor{preprocessor}{\#\ define\ sys\_aix43\_64\ 0}}
+\DoxyCodeLine{01179\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01180\ \textcolor{preprocessor}{\#if\ sys\_aix43\_64}}
+\DoxyCodeLine{01181\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ aix43\_64}}
+\DoxyCodeLine{01182\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01183\ }
+\DoxyCodeLine{01184\ \textcolor{preprocessor}{\#ifndef\ sys\_power3}}
+\DoxyCodeLine{01185\ \textcolor{preprocessor}{\#\ define\ sys\_power3\ 0}}
+\DoxyCodeLine{01186\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01187\ \textcolor{preprocessor}{\#if\ sys\_power3}}
+\DoxyCodeLine{01188\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ power3}}
+\DoxyCodeLine{01189\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01190\ }
+\DoxyCodeLine{01191\ \textcolor{preprocessor}{\#ifndef\ sys\_power3\_64}}
+\DoxyCodeLine{01192\ \textcolor{preprocessor}{\#\ define\ sys\_power3\_64\ 0}}
+\DoxyCodeLine{01193\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01194\ \textcolor{preprocessor}{\#if\ sys\_power3\_64}}
+\DoxyCodeLine{01195\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ power3\_64}}
+\DoxyCodeLine{01196\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01197\ }
+\DoxyCodeLine{01198\ \textcolor{preprocessor}{\#ifndef\ sys\_aix51}}
+\DoxyCodeLine{01199\ \textcolor{preprocessor}{\#\ define\ sys\_aix51\ 0}}
+\DoxyCodeLine{01200\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01201\ \textcolor{preprocessor}{\#if\ sys\_aix51}}
+\DoxyCodeLine{01202\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ aix51}}
+\DoxyCodeLine{01203\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01204\ }
+\DoxyCodeLine{01205\ \textcolor{preprocessor}{\#ifndef\ sys\_aix51\_64}}
+\DoxyCodeLine{01206\ \textcolor{preprocessor}{\#\ define\ sys\_aix51\_64\ 0}}
+\DoxyCodeLine{01207\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01208\ \textcolor{preprocessor}{\#if\ sys\_aix51\_64}}
+\DoxyCodeLine{01209\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ aix51\_64}}
+\DoxyCodeLine{01210\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01211\ }
+\DoxyCodeLine{01212\ \textcolor{preprocessor}{\#ifndef\ sys\_ibmsp}}
+\DoxyCodeLine{01213\ \textcolor{preprocessor}{\#\ define\ sys\_ibmsp\ 0}}
+\DoxyCodeLine{01214\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01215\ \textcolor{preprocessor}{\#if\ sys\_ibmsp}}
+\DoxyCodeLine{01216\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ ibmsp}}
+\DoxyCodeLine{01217\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01218\ }
+\DoxyCodeLine{01219\ \textcolor{preprocessor}{\#if\ (sys\_aix414\ ||\ sys\_aix420\ ||\ sys\_aix43\ ||\ sys\_aix43\_64\ ||\ sys\_ibmsp\ ||\ sys\_power3\ ||\ sys\_power3\_64\ ||\ sys\_aix51\ ||\ sys\_aix51\_64)}}
+\DoxyCodeLine{01220\ }
+\DoxyCodeLine{01221\ \textcolor{preprocessor}{\#\ ifndef\ \_AIX}}
+\DoxyCodeLine{01222\ \textcolor{preprocessor}{\#\ \ define\ \_AIX\ 1}}
+\DoxyCodeLine{01223\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01224\ }
+\DoxyCodeLine{01225\ \textcolor{preprocessor}{\#\ ifndef\ unix}}
+\DoxyCodeLine{01226\ \textcolor{preprocessor}{\#\ \ define\ unix\ 1}}
+\DoxyCodeLine{01227\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01228\ }
+\DoxyCodeLine{01229\ \textcolor{comment}{/*\ need\ the\ following\ for\ <sys/types.h>\ to\ include\ <sys/select.h>\ in\ event.c\ */}}
+\DoxyCodeLine{01230\ \textcolor{preprocessor}{\#\ if\ sys\_aix420}}
+\DoxyCodeLine{01231\ \textcolor{preprocessor}{\#\ \ ifndef\ \_BSD}}
+\DoxyCodeLine{01232\ \textcolor{preprocessor}{\#\ \ \ define\ \_BSD\ 1}}
+\DoxyCodeLine{01233\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01234\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01235\ \textcolor{preprocessor}{\#\ ifndef\ \_ALL\_SOURCE}}
+\DoxyCodeLine{01236\ \textcolor{preprocessor}{\#\ \ define\ \_ALL\_SOURCE\ 1}}
+\DoxyCodeLine{01237\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01238\ }
+\DoxyCodeLine{01239\ \textcolor{comment}{/*\ IBM\ decide\ to\ have\ their\ cpp\ output\ "{}\#line\ 222\ filename"{}\ instead\ of}}
+\DoxyCodeLine{01240\ \textcolor{comment}{\ *\ "{}\#\ 222\ filename"{}\ like\ everyone\ else\ so\ the\ default\ DEP\_GEN\ doesn't}}
+\DoxyCodeLine{01241\ \textcolor{comment}{\ *\ work.\ \ In\ addition,\ they\ provide\ cpp\ -\/M,\ but\ it\ creates\ a\ .u\ file}}
+\DoxyCodeLine{01242\ \textcolor{comment}{\ *\ instead\ of\ writing\ to\ stdout.\ \ Very\ nice.\ */}}
+\DoxyCodeLine{01243\ \textcolor{preprocessor}{\#\ define\ DEP\_GEN(src)(\$(CPP)\ -\/M\ \$(CPPFLAGS)\ src\ >\ /dev/null;\ cat\ \$*.u;\ rm\ \$*.u)}}
+\DoxyCodeLine{01244\ }
+\DoxyCodeLine{01245\ }
+\DoxyCodeLine{01246\ }
+\DoxyCodeLine{01247\ \textcolor{preprocessor}{\#\ if\ (sys\_aix414\ ||\ sys\_ibmsp)}}
+\DoxyCodeLine{01248\ \textcolor{preprocessor}{\#\ \ ifndef\ DL\_AVAILABLE}}
+\DoxyCodeLine{01249\ \textcolor{preprocessor}{\#\ \ \ define\ DL\_AVAILABLE\ 0}}
+\DoxyCodeLine{01250\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_DL}}
+\DoxyCodeLine{01251\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01252\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01253\ \textcolor{preprocessor}{\#\ \ ifndef\ DL\_AVAILABLE}}
+\DoxyCodeLine{01254\ \textcolor{preprocessor}{\#\ \ \ define\ DL\_AVAILABLE\ 1}}
+\DoxyCodeLine{01255\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01256\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01257\ }
+\DoxyCodeLine{01258\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{01259\ }
+\DoxyCodeLine{01260\ \textcolor{preprocessor}{\#\ \ if\ sys\_ibmsp}}
+\DoxyCodeLine{01261\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CC\_}}
+\DoxyCodeLine{01262\ \textcolor{preprocessor}{\#\ \ \ \ define\ CC\_\ mpcc}}
+\DoxyCodeLine{01263\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01264\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01265\ }
+\DoxyCodeLine{01266\ \textcolor{preprocessor}{\#\ \ if\ sys\_aix51\ ||\ sys\_aix51\_64\ ||\ sys\_power3\_64}}
+\DoxyCodeLine{01267\ \textcolor{preprocessor}{\#\ \ \ ifndef\ CC\_}}
+\DoxyCodeLine{01268\ \textcolor{preprocessor}{\#\ \ \ \ define\ CC\_\ cc\_r}}
+\DoxyCodeLine{01269\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01270\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01271\ }
+\DoxyCodeLine{01272\ \textcolor{preprocessor}{\#\ \ ifndef\ NBIT\_SWITCH}}
+\DoxyCodeLine{01273\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_aix43\_64\ ||\ sys\_power3\_64\ ||\ sys\_aix51\_64}}
+\DoxyCodeLine{01274\ \textcolor{preprocessor}{\#\ \ \ \ define\ NBIT\_SWITCH\ -\/q64}}
+\DoxyCodeLine{01275\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{01276\ \textcolor{preprocessor}{\#\ \ \ \ define\ NBIT\_SWITCH}}
+\DoxyCodeLine{01277\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01278\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01279\ }
+\DoxyCodeLine{01280\ \textcolor{preprocessor}{\#\ \ if\ sys\_aix43\ ||\ sys\_aix43\_64\ ||\ sys\_power3\ ||\ sys\_power3\_64\ ||\ sys\_aix51\ ||\ sys\_aix51\_64}}
+\DoxyCodeLine{01281\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{01282\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_SYSTEM\ -\/lmass\ -\/lm\ -\/lcxbt\ -\/lxlf90}}
+\DoxyCodeLine{01283\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01284\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01285\ }
+\DoxyCodeLine{01286\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_VMPI}}
+\DoxyCodeLine{01287\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_aix43\ ||\ sys\_aix43\_64\ ||\ sys\_power3}}
+\DoxyCodeLine{01288\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_VMPI\ -\/binitfini:poe\_remote\_main\ -\/lmpi\ -\/lvtd\ -\/v\ -\/L/usr/lpp/ppe.poe/lib\ -\/L/usr/lpp/ppe.poe/lib/ip}}
+\DoxyCodeLine{01289\ \textcolor{preprocessor}{\#\ \ \ elif\ sys\_power3\_64}}
+\DoxyCodeLine{01290\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_VMPI\ -\/I../../multiport/packages/power3\_64/vmpi/prpq/ppe.poe/include\ -\/binitfini:poe\_remote\_main\ -\/lmpi\_r\ -\/lvtd\_r\ -\/L../../multiport/packages/power3\_64/vmpi/prpq/ppe.poe/lib\ -\/L../../multiport/packages/power3\_64/vmpi/prpq/ppe.poe/lib/ip}}
+\DoxyCodeLine{01291\ \textcolor{preprocessor}{\#\ \ \ elif\ sys\_aix51\_64\ ||\ sys\_aix51}}
+\DoxyCodeLine{01292\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_VMPI\ -\/I/usr/lpp/ppe.poe/include\ -\/binitfini:poe\_remote\_main\ -\/lmpi\_r\ -\/lvtd\_r\ -\/I/usr/lpp/ssp/css/include\ -\/llapi\_r\ -\/v\ -\/lpthreads\ -\/L/usr/lpp/ppe.poe/lib/threads\ -\/L/usr/lpp/ppe.poe/lib\ -\/L/usr/lpp/ppe.poe/lib/ip}}
+\DoxyCodeLine{01293\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{01294\ \textcolor{preprocessor}{\#\ \ \ \ define\ LIBS\_VMPI\ -\/lmpi\ -\/I/usr/lpp/ppe.poe/include\ -\/v\ -\/L/usr/lpp/ppe.poe/lib\ -\/L/usr/lpp/ppe.poe/lib/ip\ -\/F/usr/lpp/ppe.poe/lib/poe.cfg}}
+\DoxyCodeLine{01295\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01296\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01297\ }
+\DoxyCodeLine{01298\ \textcolor{preprocessor}{\#\ \ if\ sys\_power3\ ||\ sys\_power3\_64\ ||\ sys\_aix43\_64\ ||\ sys\_aix51\ ||\ sys\_aix51\_64}}
+\DoxyCodeLine{01299\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01300\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_SYSTEM\ -\/qlanglvl=ansi\ -\/qmaxmem=-\/1\ -\/qarch=pwr4\ -\/qtune=balanced\ -\/qfloat=hssngl\ -\/qansialias\ -\/qnolm\ -\/qalign=natural\ NBIT\_SWITCH}}
+\DoxyCodeLine{01301\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01302\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01303\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/DAIX\_C\_OPT\_PRAGMA}}
+\DoxyCodeLine{01304\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01305\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01306\ }
+\DoxyCodeLine{01307\ \textcolor{preprocessor}{\#\ \ if\ sys\_aix43}}
+\DoxyCodeLine{01308\ \textcolor{preprocessor}{\#\ \ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01309\ \textcolor{comment}{/*\ maxmem\ increase\ from\ default\ of\ 2000\ needed\ for\ some\ optimizations\ */}}
+\DoxyCodeLine{01310\ \textcolor{preprocessor}{\#\ \ \ \ define\ C\_SWITCH\_SYSTEM\ -\/qlanglvl=ansi\ -\/qmaxmem=-\/1\ -\/qnolm\ -\/qalign=natural\ NBIT\_SWITCH}}
+\DoxyCodeLine{01311\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01312\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01313\ }
+\DoxyCodeLine{01314\ \textcolor{preprocessor}{\#\ \ if\ DL\_AVAILABLE}}
+\DoxyCodeLine{01315\ \textcolor{preprocessor}{\#if\ sys\_aix51\_64}}
+\DoxyCodeLine{01316\ \textcolor{preprocessor}{\#\ \ \ define\ DL\_OPTS\ -\/brtl\ -\/bexpfull}}
+\DoxyCodeLine{01317\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01318\ \textcolor{preprocessor}{\#\ \ \ define\ DL\_OPTS\ -\/brtl\ -\/bexpall}}
+\DoxyCodeLine{01319\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01320\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{01321\ \textcolor{preprocessor}{\#\ \ \ define\ DL\_OPTS}}
+\DoxyCodeLine{01322\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01323\ }
+\DoxyCodeLine{01324\ \textcolor{comment}{/*\ override\ the\ system\ 256M\ process\ size\ limit\ */}}
+\DoxyCodeLine{01325\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01326\ \textcolor{preprocessor}{\#\ \ \ if\ sys\_aix43\_64\ ||\ sys\_power3\_64\ ||\ sys\_aix51\_64}}
+\DoxyCodeLine{01327\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ DL\_OPTS\ -\/bmaxdata:0x8000000000\ NBIT\_SWITCH\ -\/b\ lpdata\ -\/qsmp=omp}}
+\DoxyCodeLine{01328\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{01329\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SYSTEM\ DL\_OPTS\ -\/bmaxdata:0x80000000\ NBIT\_SWITCH\ -\/b\ lpdata}}
+\DoxyCodeLine{01330\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01331\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01332\ }
+\DoxyCodeLine{01333\ \textcolor{comment}{/*\ for\ single-\/process\ versions\ */}}
+\DoxyCodeLine{01334\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01335\ \textcolor{comment}{\#\ \ ifndef\ LIBS\_GR}}
+\DoxyCodeLine{01336\ \textcolor{comment}{\#\ \ \ define\ LIBS\_GR\ -\/lhoops610\ -\/lXext}}
+\DoxyCodeLine{01337\ \textcolor{comment}{\#\ \ endif}}
+\DoxyCodeLine{01338\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01339\ \textcolor{comment}{/*\ -\/wP\ turn\ off\ function\ prototype\ messages\ */}}
+\DoxyCodeLine{01340\ \textcolor{comment}{/*\ -\/Nn\ increase\ size\ of\ symbol\ table\ */}}
+\DoxyCodeLine{01341\ \textcolor{preprocessor}{\#\ \ define\ LINT\_FLAGS\ -\/h\ -\/wP\ -\/Nn3000}}
+\DoxyCodeLine{01342\ }
+\DoxyCodeLine{01343\ \textcolor{preprocessor}{\#\ \ if\ sys\_aix43\_64\ ||\ sys\_power3\_64\ ||\ sys\_aix51\_64}}
+\DoxyCodeLine{01344\ \textcolor{preprocessor}{\#\ \ \ define\ AR\_\ ar\ -\/X64}}
+\DoxyCodeLine{01345\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01346\ }
+\DoxyCodeLine{01347\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01348\ }
+\DoxyCodeLine{01349\ }
+\DoxyCodeLine{01350\ \textcolor{preprocessor}{\#\ if\ sys\_aix43\ ||\ sys\_aix43\_64\ ||\ sys\_power3\ ||\ sys\_power3\_64\ ||\ sys\_aix51\ ||\ sys\_aix51\_64}}
+\DoxyCodeLine{01351\ }
+\DoxyCodeLine{01352\ \textcolor{preprocessor}{\#\ \ ifdef\ MAKEFILE}}
+\DoxyCodeLine{01353\ \textcolor{comment}{/*\ really\ only\ good\ for\ aix43+\ */}}
+\DoxyCodeLine{01354\ \textcolor{preprocessor}{\#\ \ \ define\ DEP\_GENCXX(src)(\$(CXX)\ -\/c\ -\/M\ -\/w\ \$(CXXFLAGS)\ src\ >\ /dev/null;\ /bin/cat\ \$*.u;\ /bin/rm}}
+\DoxyCodeLine{01355\ \textcolor{preprocessor}{\#\ \ \ define\ CXX\_\ /usr/vacpp/bin/xlC}}
+\DoxyCodeLine{01356\ \textcolor{preprocessor}{\#\ \ \ define\ CXX\_FLAGS\ -\/I/usr/vacpp/include}}
+\DoxyCodeLine{01357\ \textcolor{comment}{/*\ -\/D\_\_IOC\_ANSI\_STREAM\ */}}
+\DoxyCodeLine{01358\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01359\ \textcolor{comment}{\ \ c++\ may\ need\ a\ different\ langlvl}}
+\DoxyCodeLine{01360\ \textcolor{comment}{\ \ \ \ c:\ \ \ \ ansi,\ extended\ ;;;\ feature}}
+\DoxyCodeLine{01361\ \textcolor{comment}{\ \ \ \ c++:\ \ ansi,\ extended}}
+\DoxyCodeLine{01362\ \textcolor{comment}{\ \ \ \ c++\ features:}}
+\DoxyCodeLine{01363\ \textcolor{comment}{\ \ \ \ \ \ \ \ typdefclass,\ ansifor,\ newexcp,\ redefmac}}
+\DoxyCodeLine{01364\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01365\ \textcolor{preprocessor}{\#\ \ \ ifndef\ LD\_SWITCH\_CXX}}
+\DoxyCodeLine{01366\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_CXX\ -\/brtl}}
+\DoxyCodeLine{01367\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01368\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01369\ }
+\DoxyCodeLine{01370\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01371\ }
+\DoxyCodeLine{01372\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ (sys\_aix414\ ||\ sys\_aix420\ ||\ sys\_ibmsp\ ||\ sys\_aix43\ ||\ sys\_aix43\_64\ ||\ sys\_power3\ ||\ sys\_power3\_64\ ||\ sys\_aix51\_64)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01373\ }
+\DoxyCodeLine{01374\ }
+\DoxyCodeLine{01375\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{01376\ \textcolor{comment}{\ *\ Digital:}}
+\DoxyCodeLine{01377\ \textcolor{comment}{\ *\ sys\_alpha,\ sys\_dec32a}}
+\DoxyCodeLine{01378\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{01379\ \textcolor{preprocessor}{\#ifndef\ sys\_alpha}}
+\DoxyCodeLine{01380\ \textcolor{preprocessor}{\#\ define\ sys\_alpha\ 0}}
+\DoxyCodeLine{01381\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01382\ \textcolor{preprocessor}{\#if\ sys\_alpha}}
+\DoxyCodeLine{01383\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ alpha}}
+\DoxyCodeLine{01384\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01385\ }
+\DoxyCodeLine{01386\ \textcolor{preprocessor}{\#ifndef\ sys\_dec32}}
+\DoxyCodeLine{01387\ \textcolor{preprocessor}{\#\ define\ sys\_dec32\ 0}}
+\DoxyCodeLine{01388\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01389\ \textcolor{preprocessor}{\#if\ sys\_dec32}}
+\DoxyCodeLine{01390\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ dec32}}
+\DoxyCodeLine{01391\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01392\ }
+\DoxyCodeLine{01393\ \textcolor{preprocessor}{\#if\ (sys\_alpha\ ||\ sys\_dec32a)}}
+\DoxyCodeLine{01394\ }
+\DoxyCodeLine{01395\ \textcolor{preprocessor}{\#\ define\ HAVE\_CPP\_M\ 1}}
+\DoxyCodeLine{01396\ }
+\DoxyCodeLine{01397\ \textcolor{preprocessor}{\#\ define\ WORKING\_CXX\ 1}}
+\DoxyCodeLine{01398\ }
+\DoxyCodeLine{01399\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{01400\ }
+\DoxyCodeLine{01401\ \textcolor{preprocessor}{\#\ \ define\ CXX\_\ cxx}}
+\DoxyCodeLine{01402\ \textcolor{preprocessor}{\#\ \ ifndef\ CXX\_FLAGS}}
+\DoxyCodeLine{01403\ \textcolor{preprocessor}{\#\ \ \ define\ CXX\_FLAGS\ -\/newcxx\ -\/std1\ -\/fast\ -\/O4\ -\/arch\ ev5\ -\/tune\ ev6\ -\/g3\ -\/D\_REENTRANT}}
+\DoxyCodeLine{01404\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01405\ }
+\DoxyCodeLine{01406\ \textcolor{preprocessor}{\#\ \ ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01407\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_SYSTEM\ -\/std1\ -\/Olimit\ 1500\ }\textcolor{comment}{/*\ Use\ ANSI\ C.,\ Optimization\ limit*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01408\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01409\ }
+\DoxyCodeLine{01410\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{01411\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{01412\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01413\ }
+\DoxyCodeLine{01414\ \textcolor{preprocessor}{\#\ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01415\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/std1\ -\/fast\ -\/O4\ -\/arch\ ev5\ -\/tune\ ev6\ -\/g3\ -\/D\_REENTRANT}}
+\DoxyCodeLine{01416\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01417\ }
+\DoxyCodeLine{01418\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01419\ \textcolor{preprocessor}{\#\ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/g3\ -\/O2}}
+\DoxyCodeLine{01420\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01421\ }
+\DoxyCodeLine{01422\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_DL}}
+\DoxyCodeLine{01423\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_DL}}
+\DoxyCodeLine{01424\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01425\ }
+\DoxyCodeLine{01426\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01427\ }
+\DoxyCodeLine{01428\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ (sys\_alpha\ ||\ sys\_dec32a)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01429\ }
+\DoxyCodeLine{01430\ }
+\DoxyCodeLine{01431\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{01432\ \textcolor{comment}{\ *\ Windows\ NT:}}
+\DoxyCodeLine{01433\ \textcolor{comment}{\ *\ sys\_ntx86,\ sys\_win64,\ sys\_ntalpha}}
+\DoxyCodeLine{01434\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{01435\ }
+\DoxyCodeLine{01436\ \textcolor{preprocessor}{\#if\ (sys\_ntx86\ ||sys\_win64\ ||\ sys\_ntalpha)}}
+\DoxyCodeLine{01437\ \textcolor{preprocessor}{\#\ if\ sys\_ntx86}}
+\DoxyCodeLine{01438\ \textcolor{preprocessor}{\#\ \ define\ ARCH\_NAME\ ntx86}}
+\DoxyCodeLine{01439\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01440\ \textcolor{preprocessor}{\#\ if\ sys\_win64}}
+\DoxyCodeLine{01441\ \textcolor{preprocessor}{\#\ \ define\ ARCH\_NAME\ win64}}
+\DoxyCodeLine{01442\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01443\ \textcolor{preprocessor}{\#\ if\ sys\_ntalpha}}
+\DoxyCodeLine{01444\ \textcolor{preprocessor}{\#\ \ define\ ARCH\_NAME\ ntalpha}}
+\DoxyCodeLine{01445\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01446\ }
+\DoxyCodeLine{01447\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4135)\ }\textcolor{comment}{/*\ conversion\ between\ different\ integral\ types\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01448\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4136)\ }\textcolor{comment}{/*\ conversion\ between\ different\ floating-\/point\ types\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01449\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4244)\ }\textcolor{comment}{/*\ conversion\ between\ different\ floating-\/point\ types\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01450\ }
+\DoxyCodeLine{01451\ \textcolor{comment}{/*\ NT\ says\ these\ routines\ are\ not\ ansi-\/standard\ */}}
+\DoxyCodeLine{01452\ \textcolor{preprocessor}{\#define\ chdir\ \ \ \_chdir}}
+\DoxyCodeLine{01453\ \textcolor{preprocessor}{\#define\ getcwd\ \ \_getcwd}}
+\DoxyCodeLine{01454\ \textcolor{preprocessor}{\#define\ getpid\ \ \_getpid}}
+\DoxyCodeLine{01455\ \textcolor{preprocessor}{\#define\ stat\ \ \ \ \_stat}}
+\DoxyCodeLine{01456\ \textcolor{preprocessor}{\#define\ strdup\ \ \_strdup}}
+\DoxyCodeLine{01457\ \textcolor{preprocessor}{\#define\ S\_IFDIR\ \_S\_IFDIR}}
+\DoxyCodeLine{01458\ }
+\DoxyCodeLine{01459\ \textcolor{preprocessor}{\#ifndef\ MS\_WINDOWS}}
+\DoxyCodeLine{01460\ \textcolor{preprocessor}{\#\ define\ MS\_WINDOWS\ 1}}
+\DoxyCodeLine{01461\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01462\ }
+\DoxyCodeLine{01463\ \textcolor{preprocessor}{\#ifndef\ SECURITY\_KEY}}
+\DoxyCodeLine{01464\ \textcolor{preprocessor}{\#\ define\ SECURITY\_KEY\ 0}}
+\DoxyCodeLine{01465\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01466\ }
+\DoxyCodeLine{01467\ \textcolor{preprocessor}{\#define\ DL\_AVAILABLE\ 1}}
+\DoxyCodeLine{01468\ }
+\DoxyCodeLine{01469\ \textcolor{comment}{/*\ cube-\/root\ for\ systems\ that\ don't\ have\ it\ */}}
+\DoxyCodeLine{01470\ \textcolor{comment}{/*\ Visual\ Studio\ 2012\ onwards\ has\ cbrt,\ so\ define\ for\ earlier\ versions\ only.\ */}}
+\DoxyCodeLine{01471\ \textcolor{preprocessor}{\#ifndef\ \_\_PGI}}
+\DoxyCodeLine{01472\ \textcolor{preprocessor}{\#if\ \_MSC\_VER\ <\ 1700}}
+\DoxyCodeLine{01473\ \textcolor{preprocessor}{\#define\ cbrt(\_x)\ pow(\_x,\ 1.0/3.0)}}
+\DoxyCodeLine{01474\ \textcolor{preprocessor}{\#elif\ \ \_MSC\_VER\ <\ 1900}}
+\DoxyCodeLine{01475\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ cbrt(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{01476\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \ cbrtf(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{01477\ \textcolor{comment}{/*\ \ extern\ double\ cbrt(double);\ */}}
+\DoxyCodeLine{01478\ \textcolor{comment}{/*\ \ extern\ float\ \ cbrtf(float)i;\ */}}
+\DoxyCodeLine{01479\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01480\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01481\ }
+\DoxyCodeLine{01482\ \textcolor{preprocessor}{\#define\ \_CRT\_SECURE\_NO\_DEPRECATE\ 1}}
+\DoxyCodeLine{01483\ \textcolor{preprocessor}{\#define\ \_CRT\_NONSTDC\_NO\_DEPRECATE\ 1}}
+\DoxyCodeLine{01484\ }
+\DoxyCodeLine{01485\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ (sys\_ntx86\ ||sys\_win64\ ||\ sys\_ntalpha)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01486\ }
+\DoxyCodeLine{01487\ }
+\DoxyCodeLine{01488\ }
+\DoxyCodeLine{01489\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{01490\ \textcolor{comment}{\ *\ LINUX\ IA32}}
+\DoxyCodeLine{01491\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{01492\ \textcolor{preprocessor}{\#ifndef\ sys\_lnx86}}
+\DoxyCodeLine{01493\ \textcolor{preprocessor}{\#\ if\ sys\_lnx86\_rh8}}
+\DoxyCodeLine{01494\ \textcolor{preprocessor}{\#\ \ define\ sys\_lnx86\ 1}}
+\DoxyCodeLine{01495\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01496\ \textcolor{preprocessor}{\#\ \ define\ sys\_lnx86\ 0}}
+\DoxyCodeLine{01497\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01498\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01499\ \textcolor{preprocessor}{\#ifndef\ sys\_lnx86\_rh8}}
+\DoxyCodeLine{01500\ \textcolor{preprocessor}{\#\ define\ sys\_lnx86\_rh8\ 0}}
+\DoxyCodeLine{01501\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01502\ }
+\DoxyCodeLine{01503\ \textcolor{preprocessor}{\#if\ sys\_lnx86\ ||\ sys\_lnx86\_rh8}}
+\DoxyCodeLine{01504\ \textcolor{preprocessor}{\#\ define\ \_linux\ 1}}
+\DoxyCodeLine{01505\ \textcolor{preprocessor}{\#if\ sys\_lnx86\_rh8}}
+\DoxyCodeLine{01506\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ lnx86\_rh8}}
+\DoxyCodeLine{01507\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01508\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ lnx86}}
+\DoxyCodeLine{01509\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01510\ \textcolor{preprocessor}{\#\ define\ LIBS\_CHIP\ -\/lfl}}
+\DoxyCodeLine{01511\ \textcolor{preprocessor}{\#\ define\ CPP\_ARG\_CXX\ -\/MM}}
+\DoxyCodeLine{01512\ }
+\DoxyCodeLine{01513\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{01514\ }
+\DoxyCodeLine{01515\ \textcolor{preprocessor}{\#\ \ ifndef\ USE\_INTEL\_COMPILER}}
+\DoxyCodeLine{01516\ \textcolor{preprocessor}{\#\ \ \ ifdef\ \_INTEL\_CC}}
+\DoxyCodeLine{01517\ \textcolor{preprocessor}{\#\ \ \ \ define\ USE\_INTEL\_COMPILER\ \_INTEL\_CC\ \ }\textcolor{comment}{/*\ 1\ for\ Intel\ compiler,\ 0\ for\ gcc\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01518\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{01519\ \textcolor{preprocessor}{\#\ \ \ \ define\ USE\_INTEL\_COMPILER\ 0\ \ }\textcolor{comment}{/*\ 1\ for\ Intel\ compiler,\ 0\ for\ gcc\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01520\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01521\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01522\ }
+\DoxyCodeLine{01523\ \textcolor{preprocessor}{\#\ \ ifdef\ CPP\_}}
+\DoxyCodeLine{01524\ \textcolor{preprocessor}{\#\ \ \ undef\ CPP\_}}
+\DoxyCodeLine{01525\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01526\ }
+\DoxyCodeLine{01527\ \textcolor{preprocessor}{\#\ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01528\ \textcolor{preprocessor}{\#\ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/D\_POSIX\_SOURCE\ -\/D\_lnx86\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{01529\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01530\ }
+\DoxyCodeLine{01531\ \textcolor{preprocessor}{\#\ \ ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{01532\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_SWITCH\_PIC\ -\/fpic}}
+\DoxyCodeLine{01533\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01534\ }
+\DoxyCodeLine{01535\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{01536\ \textcolor{preprocessor}{\#\ \ \ \ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{01537\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01538\ }
+\DoxyCodeLine{01539\ \textcolor{preprocessor}{\#\ \ if\ USE\_INTEL\_COMPILER}}
+\DoxyCodeLine{01540\ }
+\DoxyCodeLine{01541\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ CPP\_}}
+\DoxyCodeLine{01542\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ CPP\_\ /opt/intel8-\/old/bin/icc\ -\/E}}
+\DoxyCodeLine{01543\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01544\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ CC\_}}
+\DoxyCodeLine{01545\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ CC\_\ /opt/intel8-\/old/bin/icc}}
+\DoxyCodeLine{01546\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01547\ }
+\DoxyCodeLine{01548\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01549\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/ansi\ -\/ansi\_alias\ -\/tpp7\ -\/O3\ -\/restrict}}
+\DoxyCodeLine{01550\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01551\ }
+\DoxyCodeLine{01552\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01553\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_SYSTEM\ \ -\/ansi\ -\/static-\/libcxa\ -\/rdynamic\ -\/restrict}}
+\DoxyCodeLine{01554\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01555\ }
+\DoxyCodeLine{01556\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01557\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/tpp7\ -\/O3\ -\/restrict}}
+\DoxyCodeLine{01558\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01559\ }
+\DoxyCodeLine{01560\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{01561\ }
+\DoxyCodeLine{01562\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifndef\ \ GCC\_ROOT}}
+\DoxyCodeLine{01563\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ ifdef\ USE\_OLD\_GCC}}
+\DoxyCodeLine{01564\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GCC\_ROOT\ "{}/usr"{}}}
+\DoxyCodeLine{01565\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{01566\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GCC\_ROOT\ "{}/usr/local/fluent/develop/packages12.0/gcc/lnx86"{}}}
+\DoxyCodeLine{01567\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{01568\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{01569\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifndef\ CPP\_}}
+\DoxyCodeLine{01570\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ define\ CPP\_\ GCC\_ROOT/bin/cpp}}
+\DoxyCodeLine{01571\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{01572\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifndef\ CC\_}}
+\DoxyCodeLine{01573\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ define\ CC\_\ \ GCC\_ROOT/bin/gcc}}
+\DoxyCodeLine{01574\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{01575\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifndef\ CXX\_}}
+\DoxyCodeLine{01576\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ define\ CXX\_\ GCC\_ROOT/bin/g++}}
+\DoxyCodeLine{01577\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{01578\ }
+\DoxyCodeLine{01579\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01580\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/pedantic}}
+\DoxyCodeLine{01581\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01582\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01583\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3}}
+\DoxyCodeLine{01584\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01585\ }
+\DoxyCodeLine{01586\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01587\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/rdynamic}}
+\DoxyCodeLine{01588\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{01589\ }
+\DoxyCodeLine{01590\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ USE\_INTEL\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01591\ }
+\DoxyCodeLine{01592\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{01593\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\ -\/lm}}
+\DoxyCodeLine{01594\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01595\ }
+\DoxyCodeLine{01596\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01597\ }
+\DoxyCodeLine{01598\ \textcolor{preprocessor}{\#\ ifndef\ \_\_INTEL\_COMPILER}}
+\DoxyCodeLine{01599\ \textcolor{comment}{/*\ Linux\ libm-\/ieee754\ math\ library\ has\ a\ buggy\ cube-\/root\ routine\ */}}
+\DoxyCodeLine{01600\ \textcolor{preprocessor}{\#\ \ define\ cbrt(\_x)\ pow(\_x,\ 1.0/3.0)}}
+\DoxyCodeLine{01601\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01602\ }
+\DoxyCodeLine{01603\ \textcolor{preprocessor}{\#\ if\ (((sys\_debug)\ ||\ !(\_INTEL\_CC))\ \&\&\ (!\_UDF))}}
+\DoxyCodeLine{01604\ \textcolor{preprocessor}{\#\ \ \ ifndef\ \_\_cplusplus}}
+\DoxyCodeLine{01605\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ cbrt(\_x)\ pow(\_x,\ 1.0/3.0)}}
+\DoxyCodeLine{01606\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{01607\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01608\ }
+\DoxyCodeLine{01609\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_lnx86\ sys\_lnx86\_rh8\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01610\ }
+\DoxyCodeLine{01611\ }
+\DoxyCodeLine{01612\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{01613\ \textcolor{comment}{\ *\ LINUX\ x86\_64}}
+\DoxyCodeLine{01614\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{01615\ \textcolor{preprocessor}{\#ifndef\ sys\_lnamd64}}
+\DoxyCodeLine{01616\ \textcolor{preprocessor}{\#\ define\ sys\_lnamd64\ 0}}
+\DoxyCodeLine{01617\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01618\ }
+\DoxyCodeLine{01619\ \textcolor{preprocessor}{\#if\ sys\_lnamd64}}
+\DoxyCodeLine{01620\ }
+\DoxyCodeLine{01621\ \textcolor{preprocessor}{\#define\ \_linux\ 1}}
+\DoxyCodeLine{01622\ }
+\DoxyCodeLine{01623\ \textcolor{preprocessor}{\#if\ CLMAKE}}
+\DoxyCodeLine{01624\ \textcolor{preprocessor}{\#\ ifndef\ \_INTEL\_CC}}
+\DoxyCodeLine{01625\ \textcolor{preprocessor}{\#\ define\ \_INTEL\_CC\ 0}}
+\DoxyCodeLine{01626\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01627\ \textcolor{preprocessor}{\#\ define\ PATH\_PREFIX\ ../../../..}}
+\DoxyCodeLine{01628\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01629\ \textcolor{preprocessor}{\#\ ifndef\ \_INTEL\_CC}}
+\DoxyCodeLine{01630\ \textcolor{preprocessor}{\#\ \ define\ \_INTEL\_CC\ 1}}
+\DoxyCodeLine{01631\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01632\ \textcolor{preprocessor}{\#if\ TG\_MESH\_PATH}}
+\DoxyCodeLine{01633\ \textcolor{preprocessor}{\#\ define\ PATH\_PREFIX\ ../../../../..}}
+\DoxyCodeLine{01634\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01635\ \textcolor{preprocessor}{\#\ define\ PATH\_PREFIX\ ../../../..}}
+\DoxyCodeLine{01636\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01637\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01638\ }
+\DoxyCodeLine{01639\ \textcolor{preprocessor}{\#define\ USE\_INTEL\_COMPILER\ \_INTEL\_CC}}
+\DoxyCodeLine{01640\ }
+\DoxyCodeLine{01641\ \textcolor{preprocessor}{\#define\ ARCH\_NAME\ lnamd64}}
+\DoxyCodeLine{01642\ \textcolor{preprocessor}{\#define\ LIBS\_CHIP\ -\/lfl}}
+\DoxyCodeLine{01643\ }
+\DoxyCodeLine{01644\ \textcolor{preprocessor}{\#define\ CPP\_ARG\_CXX\ -\/MM}}
+\DoxyCodeLine{01645\ }
+\DoxyCodeLine{01646\ \textcolor{preprocessor}{\#ifdef\ MAKEFILE}}
+\DoxyCodeLine{01647\ }
+\DoxyCodeLine{01648\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{01649\ \textcolor{preprocessor}{\#define\ CC\_\ \ /opt/gcc-\/perf/bin/gcc}}
+\DoxyCodeLine{01650\ \textcolor{preprocessor}{\#define\ CPP\_\ /opt/gcc-\/perf/bin/cpp}}
+\DoxyCodeLine{01651\ \textcolor{preprocessor}{\#define\ CXX\_\ /opt/gcc-\/perf/bin/c++}}
+\DoxyCodeLine{01652\ }
+\DoxyCodeLine{01653\ \textcolor{preprocessor}{\#define\ CC\_\ \ /usr/local/packages/pgi/linux86-\/64/5.1/bin/pgcc}}
+\DoxyCodeLine{01654\ \textcolor{preprocessor}{\#define\ CPP\_\ /usr/local/packages/pgi/linux86-\/64/5.1/bin/pgcc}}
+\DoxyCodeLine{01655\ \textcolor{preprocessor}{\#define\ CXX\_\ /usr/local/packages/pgi/linux86-\/64/5.1/bin/pgCC}}
+\DoxyCodeLine{01656\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01657\ }
+\DoxyCodeLine{01658\ \textcolor{preprocessor}{\#ifndef\ GCC\_ROOT}}
+\DoxyCodeLine{01659\ \textcolor{preprocessor}{\#\ define\ GCC\_ROOT\ PATH\_PREFIX"{}/FBU\_Dependencies/thirdparty/compilers/gcc/linx64"{}}}
+\DoxyCodeLine{01660\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01661\ \textcolor{preprocessor}{\#ifndef\ ICC\_ROOT}}
+\DoxyCodeLine{01662\ \textcolor{preprocessor}{\#\ define\ ICC\_ROOT\ PATH\_PREFIX"{}/FBU\_Dependencies/thirdparty/compilers/intel/linx64/bin"{}}}
+\DoxyCodeLine{01663\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01664\ }
+\DoxyCodeLine{01665\ \textcolor{preprocessor}{\#ifndef\ CPP\_}}
+\DoxyCodeLine{01666\ \textcolor{preprocessor}{\#\ define\ CPP\_\ \ GCC\_ROOT"{}/bin/cpp"{}}}
+\DoxyCodeLine{01667\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01668\ }
+\DoxyCodeLine{01669\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{01670\ \textcolor{preprocessor}{\#\ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01671\ \textcolor{preprocessor}{\#\ \ define\ CC\_\ \ ICC\_ROOT"{}/icc"{}}}
+\DoxyCodeLine{01672\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01673\ \textcolor{preprocessor}{\#\ \ define\ CC\_\ \ GCC\_ROOT"{}/bin/gcc"{}}}
+\DoxyCodeLine{01674\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01675\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01676\ }
+\DoxyCodeLine{01677\ \textcolor{preprocessor}{\#ifndef\ CXX\_}}
+\DoxyCodeLine{01678\ \textcolor{preprocessor}{\#\ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01679\ \textcolor{preprocessor}{\#\ \ define\ CXX\_\ ICC\_ROOT"{}/icpc"{}}}
+\DoxyCodeLine{01680\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01681\ \textcolor{preprocessor}{\#\ \ define\ CXX\_\ \ GCC\_ROOT"{}/bin/c++"{}}}
+\DoxyCodeLine{01682\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01683\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01684\ }
+\DoxyCodeLine{01685\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01686\ \textcolor{preprocessor}{\#\ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01687\ \textcolor{preprocessor}{\#\ \ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/D\_POSIX\_SOURCE\ -\/D\_lnamd64\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{01688\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01689\ \textcolor{preprocessor}{\#\ \ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/D\_POSIX\_SOURCE\ -\/D\_lnamd64\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{01690\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01691\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01692\ }
+\DoxyCodeLine{01693\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{01694\ \textcolor{preprocessor}{\#\ \ define\ CPP\_SWITCH\_PIC\ -\/fpic}}
+\DoxyCodeLine{01695\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01696\ }
+\DoxyCodeLine{01697\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{01698\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{01699\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01700\ }
+\DoxyCodeLine{01701\ }
+\DoxyCodeLine{01702\ \textcolor{preprocessor}{\#\ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01703\ \textcolor{preprocessor}{\#\ \ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01704\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/restrict\ \ -\/ip\ -\/w\ -\/vec-\/report0\ -\/qopenmp}}
+\DoxyCodeLine{01705\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{01706\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/march=k8}}
+\DoxyCodeLine{01707\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01708\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01709\ }
+\DoxyCodeLine{01710\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01711\ \textcolor{preprocessor}{\#\ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01712\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3\ -\/qopenmp}}
+\DoxyCodeLine{01713\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01714\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3\ -\/march=k8}}
+\DoxyCodeLine{01715\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01716\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01717\ }
+\DoxyCodeLine{01718\ \textcolor{preprocessor}{\#\ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01719\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_SYSTEM\ -\/rdynamic\ }\textcolor{comment}{/*\ for\ compiled\ udfs,\ dlopen()\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01720\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01721\ }
+\DoxyCodeLine{01722\ \textcolor{preprocessor}{\#\ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{01723\ \textcolor{preprocessor}{\#\ \ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01724\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\ -\/limf\ -\/lintlc}}
+\DoxyCodeLine{01725\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{01726\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\ -\/lm}}
+\DoxyCodeLine{01727\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01728\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01729\ }
+\DoxyCodeLine{01730\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01731\ }
+\DoxyCodeLine{01732\ \textcolor{preprocessor}{\#\ if\ ((\ \ \ }\textcolor{comment}{/*\ (sys\_debug)\ ||\ -\/-\/-\/\ Why?\ */}\textcolor{preprocessor}{\ \ \ !(\_INTEL\_CC))\ \&\&\ (!\_UDF))}}
+\DoxyCodeLine{01733\ \textcolor{preprocessor}{\#\ \ ifndef\ \_\_cplusplus}}
+\DoxyCodeLine{01734\ \textcolor{preprocessor}{\#\ \ \ define\ cbrt(\_x)\ pow(\_x,\ 1.0/3.0)}}
+\DoxyCodeLine{01735\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01736\ \textcolor{preprocessor}{\#\ elif\ \_INTEL\_CC}}
+\DoxyCodeLine{01737\ \textcolor{comment}{/*\ Jochen\ 2017-\/6-\/01:\ We've\ been\ using\ cbrt\ from\ the\ library\ without\ prototype\ for\ many\ years,}}
+\DoxyCodeLine{01738\ \textcolor{comment}{\ *\ ignoring\ the\ compiler\ warning\ about\ the\ function\ being\ implicitly\ defined.\ Now\ we\ want}}
+\DoxyCodeLine{01739\ \textcolor{comment}{\ *\ to\ get\ rid\ of\ this\ warning.\ Just\ for\ that,\ I\ do\ not\ want\ to\ switch\ to\ C99,\ nor\ set}}
+\DoxyCodeLine{01740\ \textcolor{comment}{\ *\ \_\_PURE\_INTEL\_C99\_HEADERS\_\_\ or\ unset\ \_\_linux\_\_\ before\ 'include\ "{}..."{}'-\/ing\ math.h..:}}
+\DoxyCodeLine{01741\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01742\ \textcolor{preprocessor}{\#\ \ ifndef\ \_\_cplusplus}}
+\DoxyCodeLine{01743\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ cbrt(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{01744\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \ cbrtf(\textcolor{keywordtype}{float});}
+\DoxyCodeLine{01745\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01746\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01747\ }
+\DoxyCodeLine{01748\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_lnamd64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01749\ }
+\DoxyCodeLine{01750\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{01751\ \textcolor{comment}{\ *\ LINUX\ Intel\ MIC\ platform}}
+\DoxyCodeLine{01752\ \textcolor{comment}{\ *\ For\ MIC\ native\ compilation,\ only\ Node\ process\ will\ be\ compiled.}}
+\DoxyCodeLine{01753\ \textcolor{comment}{\ *\ Host\ process\ will\ be\ from\ lnamd64}}
+\DoxyCodeLine{01754\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{01755\ \textcolor{preprocessor}{\#ifndef\ sys\_linmic}}
+\DoxyCodeLine{01756\ \textcolor{preprocessor}{\#\ define\ sys\_linmic\ 0}}
+\DoxyCodeLine{01757\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01758\ }
+\DoxyCodeLine{01759\ \textcolor{preprocessor}{\#if\ sys\_linmic}}
+\DoxyCodeLine{01760\ }
+\DoxyCodeLine{01761\ \textcolor{preprocessor}{\#define\ \_linux\ 1}}
+\DoxyCodeLine{01762\ }
+\DoxyCodeLine{01763\ \textcolor{preprocessor}{\#if\ CLMAKE}}
+\DoxyCodeLine{01764\ \textcolor{preprocessor}{\#\ ifndef\ \_INTEL\_CC}}
+\DoxyCodeLine{01765\ \textcolor{preprocessor}{\#\ define\ \_INTEL\_CC\ 1}}
+\DoxyCodeLine{01766\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01767\ \textcolor{preprocessor}{\#\ define\ PATH\_PREFIX\ ../../../..}}
+\DoxyCodeLine{01768\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01769\ \textcolor{preprocessor}{\#\ ifndef\ \_INTEL\_CC}}
+\DoxyCodeLine{01770\ \textcolor{preprocessor}{\#\ \ define\ \_INTEL\_CC\ 1}}
+\DoxyCodeLine{01771\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01772\ \textcolor{preprocessor}{\#\ define\ PATH\_PREFIX\ ../../../../..}}
+\DoxyCodeLine{01773\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01774\ }
+\DoxyCodeLine{01775\ \textcolor{preprocessor}{\#define\ USE\_INTEL\_COMPILER\ \_INTEL\_CC}}
+\DoxyCodeLine{01776\ }
+\DoxyCodeLine{01777\ \textcolor{preprocessor}{\#define\ ARCH\_NAME\ linmic}}
+\DoxyCodeLine{01778\ \textcolor{comment}{/*\#define\ LIBS\_CHIP\ -\/lfl\ */}}
+\DoxyCodeLine{01779\ }
+\DoxyCodeLine{01780\ \textcolor{preprocessor}{\#\ define\ CHIP\_AVAILABLE\ 0}}
+\DoxyCodeLine{01781\ }
+\DoxyCodeLine{01782\ \textcolor{preprocessor}{\#define\ CPP\_ARG\_CXX\ -\/MM}}
+\DoxyCodeLine{01783\ }
+\DoxyCodeLine{01784\ \textcolor{preprocessor}{\#ifdef\ MAKEFILE}}
+\DoxyCodeLine{01785\ }
+\DoxyCodeLine{01786\ \textcolor{comment}{/*\ For\ now\ GCC\ definitions\ are\ just\ place\ holders,\ need\ to\ be\ updated\ once\ GCC\ has\ MIC\ support\ */}}
+\DoxyCodeLine{01787\ \textcolor{preprocessor}{\#ifndef\ GCC\_ROOT}}
+\DoxyCodeLine{01788\ \textcolor{preprocessor}{\#\ define\ GCC\_ROOT\ PATH\_PREFIX"{}/FBU\_Dependencies/thirdparty/compilers/gcc/linx64"{}}}
+\DoxyCodeLine{01789\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01790\ \textcolor{preprocessor}{\#ifndef\ ICC\_ROOT}}
+\DoxyCodeLine{01791\ \textcolor{preprocessor}{\#\ define\ ICC\_ROOT\ PATH\_PREFIX"{}/FBU\_Dependencies/thirdparty/compilers/intel/linx64/bin"{}}}
+\DoxyCodeLine{01792\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01793\ }
+\DoxyCodeLine{01794\ \textcolor{preprocessor}{\#ifndef\ CPP\_}}
+\DoxyCodeLine{01795\ \textcolor{preprocessor}{\#\ define\ CPP\_\ \ GCC\_ROOT"{}/bin/cpp"{}}}
+\DoxyCodeLine{01796\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01797\ }
+\DoxyCodeLine{01798\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{01799\ \textcolor{preprocessor}{\#\ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01800\ \textcolor{preprocessor}{\#\ \ define\ CC\_\ \ ICC\_ROOT"{}/icc"{}}}
+\DoxyCodeLine{01801\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01802\ \textcolor{preprocessor}{\#\ \ define\ CC\_\ \ GCC\_ROOT"{}/bin/gcc"{}}}
+\DoxyCodeLine{01803\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01804\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01805\ }
+\DoxyCodeLine{01806\ \textcolor{preprocessor}{\#ifndef\ CXX\_}}
+\DoxyCodeLine{01807\ \textcolor{preprocessor}{\#\ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01808\ \textcolor{preprocessor}{\#\ \ define\ CXX\_\ ICC\_ROOT"{}/icpc"{}}}
+\DoxyCodeLine{01809\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01810\ \textcolor{preprocessor}{\#\ \ define\ CXX\_\ \ GCC\_ROOT"{}/bin/c++"{}}}
+\DoxyCodeLine{01811\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01812\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01813\ }
+\DoxyCodeLine{01814\ \textcolor{comment}{/*\ Use\ -\/D\_lnamd64\ for\ MIC\ also\ */}}
+\DoxyCodeLine{01815\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01816\ \textcolor{preprocessor}{\#\ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01817\ \textcolor{preprocessor}{\#\ \ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/D\_POSIX\_SOURCE\ -\/D\_lnamd64\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{01818\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01819\ \textcolor{preprocessor}{\#\ \ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/D\_POSIX\_SOURCE\ -\/D\_lnamd64\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{01820\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01821\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01822\ }
+\DoxyCodeLine{01823\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{01824\ \textcolor{preprocessor}{\#\ \ define\ CPP\_SWITCH\_PIC\ -\/fpic}}
+\DoxyCodeLine{01825\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01826\ }
+\DoxyCodeLine{01827\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{01828\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{01829\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01830\ }
+\DoxyCodeLine{01831\ }
+\DoxyCodeLine{01832\ \textcolor{preprocessor}{\#\ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01833\ \textcolor{preprocessor}{\#\ \ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01834\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/restrict\ \ -\/ip\ -\/w\ -\/vec-\/report0\ -\/qopenmp\ -\/mmic}}
+\DoxyCodeLine{01835\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{01836\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/march=k8}}
+\DoxyCodeLine{01837\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01838\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01839\ }
+\DoxyCodeLine{01840\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01841\ \textcolor{preprocessor}{\#\ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01842\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3\ -\/qopenmp\ -\/mmic}}
+\DoxyCodeLine{01843\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01844\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3\ -\/march=k8}}
+\DoxyCodeLine{01845\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01846\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01847\ }
+\DoxyCodeLine{01848\ \textcolor{preprocessor}{\#\ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01849\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_SYSTEM\ -\/rdynamic\ }\textcolor{comment}{/*\ for\ compiled\ udfs,\ dlopen()\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01850\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01851\ }
+\DoxyCodeLine{01852\ \textcolor{preprocessor}{\#\ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{01853\ \textcolor{preprocessor}{\#\ \ if\ \_INTEL\_CC}}
+\DoxyCodeLine{01854\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\ -\/limf\ -\/lintlc}}
+\DoxyCodeLine{01855\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{01856\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\ -\/lm}}
+\DoxyCodeLine{01857\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01858\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01859\ }
+\DoxyCodeLine{01860\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01861\ }
+\DoxyCodeLine{01862\ \textcolor{preprocessor}{\#\ if\ (((sys\_debug)\ ||\ !(\_INTEL\_CC))\ \&\&\ (!\_UDF))}}
+\DoxyCodeLine{01863\ \textcolor{preprocessor}{\#\ \ ifndef\ \_\_cplusplus}}
+\DoxyCodeLine{01864\ \textcolor{preprocessor}{\#\ \ \ define\ cbrt(\_x)\ pow(\_x,\ 1.0/3.0)}}
+\DoxyCodeLine{01865\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{01866\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01867\ }
+\DoxyCodeLine{01868\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_linmic\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01869\ }
+\DoxyCodeLine{01870\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{01871\ \textcolor{comment}{\ *\ IBM\ Linux\ on\ Power\ platform}}
+\DoxyCodeLine{01872\ \textcolor{comment}{\ *\ Only\ Node\ process\ will\ be\ compiled.}}
+\DoxyCodeLine{01873\ \textcolor{comment}{\ *\ Host\ process\ will\ be\ used\ from\ lnamd64}}
+\DoxyCodeLine{01874\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{01875\ \textcolor{preprocessor}{\#ifndef\ sys\_lop64}}
+\DoxyCodeLine{01876\ \textcolor{preprocessor}{\#\ define\ sys\_lop64\ 0}}
+\DoxyCodeLine{01877\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01878\ }
+\DoxyCodeLine{01879\ \textcolor{preprocessor}{\#if\ sys\_lop64}}
+\DoxyCodeLine{01880\ }
+\DoxyCodeLine{01881\ \textcolor{preprocessor}{\#define\ \_linux\ 1}}
+\DoxyCodeLine{01882\ }
+\DoxyCodeLine{01883\ \textcolor{preprocessor}{\#if\ CLMAKE}}
+\DoxyCodeLine{01884\ \textcolor{preprocessor}{\#\ define\ PATH\_PREFIX\ ../../../..}}
+\DoxyCodeLine{01885\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01886\ \textcolor{preprocessor}{\#\ define\ PATH\_PREFIX\ ../../../../..}}
+\DoxyCodeLine{01887\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01888\ }
+\DoxyCodeLine{01889\ \textcolor{preprocessor}{\#\ ifndef\ \_IBM\_CC}}
+\DoxyCodeLine{01890\ \textcolor{preprocessor}{\#\ define\ \_IBM\_CC\ 0}}
+\DoxyCodeLine{01891\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01892\ }
+\DoxyCodeLine{01893\ \textcolor{preprocessor}{\#define\ ARCH\_NAME\ lop64}}
+\DoxyCodeLine{01894\ \textcolor{preprocessor}{\#\ define\ CHIP\_AVAILABLE\ 0}}
+\DoxyCodeLine{01895\ }
+\DoxyCodeLine{01896\ \textcolor{preprocessor}{\#define\ CPP\_ARG\_CXX\ -\/MM}}
+\DoxyCodeLine{01897\ }
+\DoxyCodeLine{01898\ \textcolor{preprocessor}{\#ifdef\ MAKEFILE}}
+\DoxyCodeLine{01899\ }
+\DoxyCodeLine{01900\ \textcolor{preprocessor}{\#ifndef\ IBM\_ROOT}}
+\DoxyCodeLine{01901\ \textcolor{comment}{/*\#\ define\ GCC\_ROOT\ PATH\_PREFIX"{}/FBU\_Dependencies/thirdparty/compilers/gcc/lop64"{}\ */}}
+\DoxyCodeLine{01902\ \textcolor{preprocessor}{\#\ define\ IBM\_ROOT\ "{}/bin"{}}}
+\DoxyCodeLine{01903\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01904\ }
+\DoxyCodeLine{01905\ \textcolor{preprocessor}{\#ifndef\ GCC\_ROOT}}
+\DoxyCodeLine{01906\ \textcolor{comment}{/*\#\ define\ GCC\_ROOT\ PATH\_PREFIX"{}/FBU\_Dependencies/thirdparty/compilers/gcc/lop64"{}\ */}}
+\DoxyCodeLine{01907\ \textcolor{preprocessor}{\#\ define\ GCC\_ROOT\ "{}/usr"{}}}
+\DoxyCodeLine{01908\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01909\ }
+\DoxyCodeLine{01910\ \textcolor{comment}{/*\#ifndef\ CPP\_}}
+\DoxyCodeLine{01911\ \textcolor{comment}{\ \#if\ \_IBM\_CC}}
+\DoxyCodeLine{01912\ \textcolor{comment}{\ \ \#\ define\ CPP\_\ \ IBM\_ROOT"{}/cpp"{}}}
+\DoxyCodeLine{01913\ \textcolor{comment}{\ \#else}}
+\DoxyCodeLine{01914\ \textcolor{comment}{\ \ \#\ define\ CPP\_\ \ GCC\_ROOT"{}/bin/cpp"{}}}
+\DoxyCodeLine{01915\ \textcolor{comment}{\ \#endif}}
+\DoxyCodeLine{01916\ \textcolor{comment}{\#endif\ */}}
+\DoxyCodeLine{01917\ }
+\DoxyCodeLine{01918\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{01919\ \textcolor{preprocessor}{\#\ if\ \_IBM\_CC}}
+\DoxyCodeLine{01920\ \textcolor{preprocessor}{\#\ \ define\ CC\_\ \ IBM\_ROOT"{}/xlc"{}}}
+\DoxyCodeLine{01921\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01922\ \textcolor{preprocessor}{\#\ \ define\ CC\_\ \ GCC\_ROOT"{}/bin/gcc"{}}}
+\DoxyCodeLine{01923\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01924\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01925\ }
+\DoxyCodeLine{01926\ \textcolor{preprocessor}{\#ifndef\ CXX\_}}
+\DoxyCodeLine{01927\ \textcolor{preprocessor}{\#\ if\ \_IBM\_CC}}
+\DoxyCodeLine{01928\ \textcolor{preprocessor}{\#\ \ define\ CXX\_\ \ IBM\_ROOT"{}/xlC"{}}}
+\DoxyCodeLine{01929\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01930\ \textcolor{preprocessor}{\#\ \ define\ CXX\_\ \ GCC\_ROOT"{}/bin/c++"{}}}
+\DoxyCodeLine{01931\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01932\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01933\ }
+\DoxyCodeLine{01934\ \textcolor{comment}{/*\ Use\ -\/D\_lnamd64\ */}}
+\DoxyCodeLine{01935\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01936\ \textcolor{preprocessor}{\#\ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/D\_POSIX\_SOURCE\ -\/D\_lnamd64\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{01937\ \textcolor{comment}{/*\#\ define\ CPP\_SWITCH\_SYSTEM\ -\/qlanglvl=ansi\ -\/qmaxmem=-\/1\ -\/qtune=balanced\ \ -\/qansialias\ -\/qnolm\ -\/qalign=natural\ -\/D\_POSIX\_SOURCE\ -\/D\_lop64\ -\/Dlinux\ -\/Dunix\ -\/DSYSV\ */}}
+\DoxyCodeLine{01938\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01939\ }
+\DoxyCodeLine{01940\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{01941\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{01942\ \textcolor{preprocessor}{\#\ define\ CPP\_SWITCH\_PIC\ -\/fpic}}
+\DoxyCodeLine{01943\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01944\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01945\ }
+\DoxyCodeLine{01946\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{01947\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{01948\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01949\ }
+\DoxyCodeLine{01950\ }
+\DoxyCodeLine{01951\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01952\ \textcolor{preprocessor}{\#\ if\ \_IBM\_CC}}
+\DoxyCodeLine{01953\ \textcolor{preprocessor}{\#\ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3}}
+\DoxyCodeLine{01954\ \textcolor{comment}{/*\ \#\ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/DAIX\_C\_OPT\_PRAGMA*/}}
+\DoxyCodeLine{01955\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01956\ \textcolor{preprocessor}{\#\ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3\ -\/mpowerpc64}}
+\DoxyCodeLine{01957\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01958\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01959\ }
+\DoxyCodeLine{01960\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{01961\ \textcolor{preprocessor}{\#\ if\ \_IBM\_CC}}
+\DoxyCodeLine{01962\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3}}
+\DoxyCodeLine{01963\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01964\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3\ -\/mpowerpc64}}
+\DoxyCodeLine{01965\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01966\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01967\ }
+\DoxyCodeLine{01968\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{01969\ \textcolor{preprocessor}{\#\ if\ \_IBM\_CC}}
+\DoxyCodeLine{01970\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_SYSTEM\ -\/brtl\ -\/bexpfull\ -\/q64\ -\/qsmp=omp\ }\textcolor{comment}{/*\ -\/bmaxdata:0x8000000000\ -\/b\ lpdata\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01971\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{01972\ \textcolor{preprocessor}{\#\ \ define\ LD\_SWITCH\_SYSTEM\ -\/rdynamic}}
+\DoxyCodeLine{01973\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01974\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01975\ }
+\DoxyCodeLine{01976\ \textcolor{preprocessor}{\#\ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{01977\ \textcolor{preprocessor}{\#\ \ define\ LIBS\_SYSTEM\ -\/lm}}
+\DoxyCodeLine{01978\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01979\ }
+\DoxyCodeLine{01980\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{01981\ \textcolor{preprocessor}{\#ifndef\ AR\_}}
+\DoxyCodeLine{01982\ \textcolor{preprocessor}{\#\ if\ \_IBM\_CC}}
+\DoxyCodeLine{01983\ \textcolor{preprocessor}{\#\ \ define\ AR\_\ ar\ -\/X6}}
+\DoxyCodeLine{01984\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{01985\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01986\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01987\ }
+\DoxyCodeLine{01988\ \textcolor{preprocessor}{\#\ \ \ define\ DEP\_GENCXX(src)(\$(CXX)\ -\/c\ -\/M\ -\/w\ \$(CXXFLAGS)\ src\ >\ /dev/null;\ /bin/cat\ \$*.u;\ /bin/rm}}
+\DoxyCodeLine{01989\ }
+\DoxyCodeLine{01990\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01991\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_lop64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01992\ }
+\DoxyCodeLine{01993\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{01994\ \textcolor{comment}{\ *\ Linux\ on\ ARM\ platform}}
+\DoxyCodeLine{01995\ \textcolor{comment}{\ *\ Only\ Node\ process\ will\ be\ compiled.}}
+\DoxyCodeLine{01996\ \textcolor{comment}{\ *\ Host\ process\ will\ be\ used\ from\ lnamd64}}
+\DoxyCodeLine{01997\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{01998\ \textcolor{preprocessor}{\#ifndef\ sys\_lnarm64}}
+\DoxyCodeLine{01999\ \textcolor{preprocessor}{\#\ define\ sys\_lnarm64\ 0}}
+\DoxyCodeLine{02000\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02001\ }
+\DoxyCodeLine{02002\ \textcolor{preprocessor}{\#if\ sys\_lnarm64}}
+\DoxyCodeLine{02003\ }
+\DoxyCodeLine{02004\ \textcolor{preprocessor}{\#define\ \_linux\ 1}}
+\DoxyCodeLine{02005\ }
+\DoxyCodeLine{02006\ \textcolor{preprocessor}{\#if\ CLMAKE}}
+\DoxyCodeLine{02007\ \textcolor{preprocessor}{\#\ define\ PATH\_PREFIX\ ../../../..}}
+\DoxyCodeLine{02008\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{02009\ \textcolor{preprocessor}{\#\ define\ PATH\_PREFIX\ ../../../../..}}
+\DoxyCodeLine{02010\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02011\ }
+\DoxyCodeLine{02012\ \textcolor{preprocessor}{\#define\ ARCH\_NAME\ lnarm64}}
+\DoxyCodeLine{02013\ \textcolor{preprocessor}{\#\ define\ CHIP\_AVAILABLE\ 0}}
+\DoxyCodeLine{02014\ }
+\DoxyCodeLine{02015\ \textcolor{preprocessor}{\#define\ CPP\_ARG\_CXX\ -\/MM}}
+\DoxyCodeLine{02016\ }
+\DoxyCodeLine{02017\ \textcolor{preprocessor}{\#ifdef\ MAKEFILE}}
+\DoxyCodeLine{02018\ }
+\DoxyCodeLine{02019\ \textcolor{preprocessor}{\#ifndef\ GCC\_ROOT}}
+\DoxyCodeLine{02020\ \textcolor{preprocessor}{\#\ define\ GCC\_ROOT\ "{}/opt/rh/devtoolset-\/7/root/usr"{}}}
+\DoxyCodeLine{02021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02022\ }
+\DoxyCodeLine{02023\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{02024\ \textcolor{preprocessor}{\#\ define\ CC\_\ \ GCC\_ROOT"{}/bin/gcc"{}}}
+\DoxyCodeLine{02025\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02026\ }
+\DoxyCodeLine{02027\ \textcolor{preprocessor}{\#ifndef\ CXX\_}}
+\DoxyCodeLine{02028\ \textcolor{preprocessor}{\#\ define\ CXX\_\ \ GCC\_ROOT"{}/bin/c++"{}}}
+\DoxyCodeLine{02029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02030\ }
+\DoxyCodeLine{02031\ \textcolor{comment}{/*\ Use\ -\/D\_lnamd64\ */}}
+\DoxyCodeLine{02032\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02033\ \textcolor{preprocessor}{\#\ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/D\_POSIX\_SOURCE\ -\/D\_lnamd64\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{02034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02035\ }
+\DoxyCodeLine{02036\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{02037\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{02038\ \textcolor{preprocessor}{\#\ define\ CPP\_SWITCH\_PIC\ -\/fpic}}
+\DoxyCodeLine{02039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02040\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02041\ }
+\DoxyCodeLine{02042\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{02043\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{02044\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02045\ }
+\DoxyCodeLine{02046\ }
+\DoxyCodeLine{02047\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02048\ \textcolor{preprocessor}{\#\ define\ C\_SWITCH\_OPTIMIZE\ -\/O3}}
+\DoxyCodeLine{02049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02050\ }
+\DoxyCodeLine{02051\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02052\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3\ }}
+\DoxyCodeLine{02053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02054\ }
+\DoxyCodeLine{02055\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02056\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_SYSTEM\ -\/rdynamic}}
+\DoxyCodeLine{02057\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02058\ }
+\DoxyCodeLine{02059\ \textcolor{preprocessor}{\#\ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{02060\ \textcolor{preprocessor}{\#\ \ define\ LIBS\_SYSTEM\ -\/lm}}
+\DoxyCodeLine{02061\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{02062\ }
+\DoxyCodeLine{02063\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{02064\ \textcolor{preprocessor}{\#ifndef\ AR\_}}
+\DoxyCodeLine{02065\ \textcolor{preprocessor}{\#\ if\ \_IBM\_CC}}
+\DoxyCodeLine{02066\ \textcolor{preprocessor}{\#\ \ define\ AR\_\ ar\ -\/X6}}
+\DoxyCodeLine{02067\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{02068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02069\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02070\ }
+\DoxyCodeLine{02071\ \textcolor{preprocessor}{\#\ \ \ define\ DEP\_GENCXX(src)(\$(CXX)\ -\/c\ -\/M\ -\/w\ \$(CXXFLAGS)\ src\ >\ /dev/null;\ /bin/cat\ \$*.u;\ /bin/rm}}
+\DoxyCodeLine{02072\ }
+\DoxyCodeLine{02073\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02074\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_lnarm64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02075\ }
+\DoxyCodeLine{02076\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{02077\ \textcolor{comment}{\ *\ LINUX\ IA64}}
+\DoxyCodeLine{02078\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{02079\ \textcolor{preprocessor}{\#ifndef\ sys\_lnia64}}
+\DoxyCodeLine{02080\ \textcolor{preprocessor}{\#\ define\ sys\_lnia64\ 0}}
+\DoxyCodeLine{02081\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02082\ }
+\DoxyCodeLine{02083\ \textcolor{preprocessor}{\#if\ sys\_lnia64}}
+\DoxyCodeLine{02084\ \textcolor{preprocessor}{\#\ define\ \_linux\ 1}}
+\DoxyCodeLine{02085\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ lnia64}}
+\DoxyCodeLine{02086\ }
+\DoxyCodeLine{02087\ \textcolor{preprocessor}{\#\ define\ CHIP\_AVAILABLE\ 0}}
+\DoxyCodeLine{02088\ }
+\DoxyCodeLine{02089\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{02090\ }
+\DoxyCodeLine{02091\ \textcolor{preprocessor}{\#\ \ ifndef\ DL\_AVAILABLE}}
+\DoxyCodeLine{02092\ \textcolor{preprocessor}{\#\ \ \ define\ DL\_AVAILABLE\ 0}}
+\DoxyCodeLine{02093\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_DL\ -\/ldl}}
+\DoxyCodeLine{02094\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02095\ }
+\DoxyCodeLine{02096\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_VMPI}}
+\DoxyCodeLine{02097\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_VMPI\ -\/lmpi}}
+\DoxyCodeLine{02098\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02099\ }
+\DoxyCodeLine{02100\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_MPORT}}
+\DoxyCodeLine{02101\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_MPORT\ -\/lmport\ -\/lpthread}}
+\DoxyCodeLine{02102\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02103\ }
+\DoxyCodeLine{02104\ \textcolor{preprocessor}{\#\ \ ifndef\ USE\_INTEL\_COMPILER}}
+\DoxyCodeLine{02105\ \textcolor{preprocessor}{\#\ \ \ define\ USE\_INTEL\_COMPILER\ 1\ \ }\textcolor{comment}{/*\ 1\ for\ Intel\ compiler,\ 0\ for\ gcc\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02106\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02107\ }
+\DoxyCodeLine{02108\ \textcolor{preprocessor}{\#\ \ ifdef\ CPP\_}}
+\DoxyCodeLine{02109\ \textcolor{preprocessor}{\#\ \ \ undef\ CPP\_}}
+\DoxyCodeLine{02110\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02111\ }
+\DoxyCodeLine{02112\ \textcolor{preprocessor}{\#\ \ if\ CLMAKE}}
+\DoxyCodeLine{02113\ \textcolor{preprocessor}{\#\ \ \ \ define\ PATH\_PREFIX\ ../..}}
+\DoxyCodeLine{02114\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{02115\ \textcolor{preprocessor}{\#\ \ \ \ define\ PATH\_PREFIX\ ../../..}}
+\DoxyCodeLine{02116\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02117\ }
+\DoxyCodeLine{02118\ \textcolor{preprocessor}{\#\ \ if\ USE\_INTEL\_COMPILER}}
+\DoxyCodeLine{02119\ }
+\DoxyCodeLine{02120\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_\ PATH\_PREFIX"{}/packages15.0/intel/lnia64/cc/11.1.069/bin/ia64"{}/icc\ -\/E}}
+\DoxyCodeLine{02121\ \textcolor{preprocessor}{\#\ \ \ \ define\ HAVE\_CPP\_M\ 1}}
+\DoxyCodeLine{02122\ }
+\DoxyCodeLine{02123\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ CC\_}}
+\DoxyCodeLine{02124\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ CC\_\ PATH\_PREFIX"{}/packages15.0/intel/lnia64/cc/11.1.069/bin/ia64"{}/icc}}
+\DoxyCodeLine{02125\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02126\ }
+\DoxyCodeLine{02127\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02128\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/D\_lnia64\ -\/D\_POSIX\_SOURCE\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{02129\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02130\ }
+\DoxyCodeLine{02131\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ CPP\_SWITCH\_PIC}}
+\DoxyCodeLine{02132\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ CPP\_SWITCH\_PIC\ -\/fpic}}
+\DoxyCodeLine{02133\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02134\ }
+\DoxyCodeLine{02135\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_SHARED}}
+\DoxyCodeLine{02136\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ LD\_SWITCH\_SHARED\ -\/shared}}
+\DoxyCodeLine{02137\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02138\ }
+\DoxyCodeLine{02139\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02140\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/mtune=itanium2\ -\/ftz\ -\/O2}}
+\DoxyCodeLine{02141\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02142\ }
+\DoxyCodeLine{02143\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ INTEL\_SPECIAL\_FLAGS}}
+\DoxyCodeLine{02144\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ INTEL\_SPECIAL\_FLAGS\ -\/std=c99\ -\/ansi\_alias\ -\/restrict\ \(\backslash\)}}
+\DoxyCodeLine{02145\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/mP2OPT\_disam\_exact\_local\_refs=T\ \(\backslash\)}}
+\DoxyCodeLine{02146\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/ip\ \(\backslash\)}}
+\DoxyCodeLine{02147\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/IPF\_fp\_relaxed\ \(\backslash\)}}
+\DoxyCodeLine{02148\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/IPF\_fp\_speculation\ safe\ \(\backslash\)}}
+\DoxyCodeLine{02149\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/Qoption,c,-\/ip\_ninl\_min\_stats=15\ \(\backslash\)}}
+\DoxyCodeLine{02150\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/Qoption,c,-\/ip\_ninl\_max\_stats=1000\ \(\backslash\)}}
+\DoxyCodeLine{02151\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/Qoption,c,-\/ip\_ninl\_max\_total\_stats=10000\ \(\backslash\)}}
+\DoxyCodeLine{02152\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/w}}
+\DoxyCodeLine{02153\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02154\ }
+\DoxyCodeLine{02155\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ INTEL\_SPECIAL1\_FLAGS}}
+\DoxyCodeLine{02156\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ INTEL\_SPECIAL1\_FLAGS\ -\/std=c99\ -\/restrict\ \(\backslash\)}}
+\DoxyCodeLine{02157\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/mP2OPT\_disam\_exact\_local\_refs=T\ \(\backslash\)}}
+\DoxyCodeLine{02158\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/ip\ \(\backslash\)}}
+\DoxyCodeLine{02159\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/IPF\_fp\_relaxed\ \(\backslash\)}}
+\DoxyCodeLine{02160\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/IPF\_fp\_speculation\ safe\ \(\backslash\)}}
+\DoxyCodeLine{02161\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/Qoption,c,-\/ip\_ninl\_min\_stats=15\ \(\backslash\)}}
+\DoxyCodeLine{02162\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/Qoption,c,-\/ip\_ninl\_max\_stats=1000\ \(\backslash\)}}
+\DoxyCodeLine{02163\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/Qoption,c,-\/ip\_ninl\_max\_total\_stats=10000\ \(\backslash\)}}
+\DoxyCodeLine{02164\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/w}}
+\DoxyCodeLine{02165\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02166\ }
+\DoxyCodeLine{02167\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02168\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_SYSTEM\ \ -\/ansi\ -\/static-\/libcxa\ -\/u\ SV\_Get\_Var\ -\/rdynamic}}
+\DoxyCodeLine{02169\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02170\ }
+\DoxyCodeLine{02171\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02172\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/mtune=itanium2\ -\/ftz\ -\/O2}}
+\DoxyCodeLine{02173\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02174\ }
+\DoxyCodeLine{02175\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{02176\ }
+\DoxyCodeLine{02177\ \textcolor{preprocessor}{\#\ \ \ \ define\ CPP\_\ /usr/bin/cpp}}
+\DoxyCodeLine{02178\ }
+\DoxyCodeLine{02179\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ CC\_}}
+\DoxyCodeLine{02180\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ CC\_\ gcc}}
+\DoxyCodeLine{02181\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02182\ }
+\DoxyCodeLine{02183\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02184\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/D\_lnia64\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{02185\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02186\ }
+\DoxyCodeLine{02187\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02188\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O3}}
+\DoxyCodeLine{02189\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02190\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02191\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O3}}
+\DoxyCodeLine{02192\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02193\ }
+\DoxyCodeLine{02194\ \textcolor{preprocessor}{\#\ \ \ \ define\ INTEL\_SPECIAL\_FLAGS}}
+\DoxyCodeLine{02195\ }
+\DoxyCodeLine{02196\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02197\ \textcolor{preprocessor}{\#\ \ \ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/rdynamic}}
+\DoxyCodeLine{02198\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{02199\ }
+\DoxyCodeLine{02200\ \textcolor{preprocessor}{\#\ \ endif\ }\textcolor{comment}{/*\ USE\_INTEL\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02201\ }
+\DoxyCodeLine{02202\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{02203\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\ -\/lm}}
+\DoxyCodeLine{02204\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02205\ }
+\DoxyCodeLine{02206\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02207\ }
+\DoxyCodeLine{02208\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_lnia64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02209\ }
+\DoxyCodeLine{02210\ }
+\DoxyCodeLine{02211\ }
+\DoxyCodeLine{02212\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{02213\ \textcolor{comment}{\ *\ LINUX\ ARM\ (Intel\ StrongARM\ CPU)}}
+\DoxyCodeLine{02214\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{02215\ \textcolor{preprocessor}{\#ifndef\ sys\_lnarm}}
+\DoxyCodeLine{02216\ \textcolor{preprocessor}{\#\ define\ sys\_lnarm\ 0}}
+\DoxyCodeLine{02217\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02218\ }
+\DoxyCodeLine{02219\ \textcolor{preprocessor}{\#if\ sys\_lnarm}}
+\DoxyCodeLine{02220\ \textcolor{preprocessor}{\#\ define\ \_linux\ 1}}
+\DoxyCodeLine{02221\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ lnarm}}
+\DoxyCodeLine{02222\ }
+\DoxyCodeLine{02223\ \textcolor{preprocessor}{\#\ ifdef\ MAKEFILE}}
+\DoxyCodeLine{02224\ }
+\DoxyCodeLine{02225\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{02226\ \textcolor{preprocessor}{\#\ define\ CC\_\ /home/packages/\(\backslash\)linux-\/arm/skiff/local/bin/arm-\/\(\backslash\)linux-\/gcc}}
+\DoxyCodeLine{02227\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02228\ \textcolor{preprocessor}{\#ifndef\ AR\_}}
+\DoxyCodeLine{02229\ \textcolor{preprocessor}{\#\ define\ AR\_\ /home/packages/\(\backslash\)linux-\/arm/skiff/local/bin/arm-\/\(\backslash\)linux-\/ar}}
+\DoxyCodeLine{02230\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02231\ }
+\DoxyCodeLine{02232\ \textcolor{preprocessor}{\#\ \ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02233\ \textcolor{preprocessor}{\#\ \ \ define\ CPP\_SWITCH\_SYSTEM\ -\/ansi\ -\/D\_lnarm\ -\/Dlinux\ -\/Dunix\ -\/DSYSV}}
+\DoxyCodeLine{02234\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02235\ }
+\DoxyCodeLine{02236\ \textcolor{preprocessor}{\#\ \ ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02237\ \textcolor{preprocessor}{\#\ \ \ define\ C\_SWITCH\_OPTIMIZE\ -\/O2}}
+\DoxyCodeLine{02238\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02239\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02240\ \textcolor{preprocessor}{\#\ \ \ define\ LD\_SWITCH\_OPTIMIZE\ -\/O2}}
+\DoxyCodeLine{02241\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02242\ }
+\DoxyCodeLine{02243\ \textcolor{preprocessor}{\#\ \ ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02244\ \textcolor{preprocessor}{\#\ \ \ define\ LD\_SWITCH\_SYSTEM\ -\/rdynamic\ }\textcolor{comment}{/*\ for\ compiled\ udfs,\ dlopen()\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02245\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02246\ }
+\DoxyCodeLine{02247\ \textcolor{preprocessor}{\#\ \ ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{02248\ \textcolor{preprocessor}{\#\ \ \ define\ LIBS\_SYSTEM\ -\/lm}}
+\DoxyCodeLine{02249\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{02250\ }
+\DoxyCodeLine{02251\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02252\ }
+\DoxyCodeLine{02253\ \textcolor{preprocessor}{\#\ define\ cbrt(\_x)\ pow(\_x,\ 1.0/3.0)}}
+\DoxyCodeLine{02254\ }
+\DoxyCodeLine{02255\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_lnarm\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02256\ }
+\DoxyCodeLine{02257\ }
+\DoxyCodeLine{02258\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{02259\ \textcolor{comment}{\ *\ Fujitsu\ VPP}}
+\DoxyCodeLine{02260\ \textcolor{comment}{\ *\ sys\_fujitsu}}
+\DoxyCodeLine{02261\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{02262\ \textcolor{preprocessor}{\#ifndef\ sys\_fujitsu}}
+\DoxyCodeLine{02263\ \textcolor{preprocessor}{\#\ define\ sys\_fujitsu\ 0}}
+\DoxyCodeLine{02264\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02265\ \textcolor{preprocessor}{\#if\ sys\_fujitsu}}
+\DoxyCodeLine{02266\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ fujitsu}}
+\DoxyCodeLine{02267\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02268\ }
+\DoxyCodeLine{02269\ \textcolor{preprocessor}{\#if\ sys\_fujitsu}}
+\DoxyCodeLine{02270\ }
+\DoxyCodeLine{02271\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{02272\ \textcolor{preprocessor}{\#\ define\ CC\_\ vcc}}
+\DoxyCodeLine{02273\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02274\ }
+\DoxyCodeLine{02275\ \textcolor{preprocessor}{\#ifndef\ unix}}
+\DoxyCodeLine{02276\ \textcolor{preprocessor}{\#\ define\ unix\ 1}}
+\DoxyCodeLine{02277\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02278\ }
+\DoxyCodeLine{02279\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02280\ \textcolor{preprocessor}{\#\ define\ CPP\_SWITCH\_SYSTEM\ -\/D\_\_svr4\_\_\ -\/Dunix}}
+\DoxyCodeLine{02281\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02282\ }
+\DoxyCodeLine{02283\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02284\ \textcolor{preprocessor}{\#\ define\ C\_SWITCH\_SYSTEM\ -\/I/usr/lang/mpi/include}}
+\DoxyCodeLine{02285\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02286\ }
+\DoxyCodeLine{02287\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02288\ \textcolor{preprocessor}{\#\ define\ C\_SWITCH\_OPTIMIZE\ -\/Wv,-\/sc\ -\/O\ -\/K3,a4}}
+\DoxyCodeLine{02289\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02290\ }
+\DoxyCodeLine{02291\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02292\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02293\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02294\ }
+\DoxyCodeLine{02295\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02296\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_SYSTEM\ -\/dy}}
+\DoxyCodeLine{02297\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02298\ }
+\DoxyCodeLine{02299\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{02300\ \textcolor{preprocessor}{\#\ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02301\ \textcolor{preprocessor}{\#\ \ define\ CPP\_SWITCH\_SYSTEM\ -\/Xc\ -\/D\_\_svr4\_\_\ -\/Dunix\ -\/I/usr/lang/mpi/include}}
+\DoxyCodeLine{02302\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{02303\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02304\ }
+\DoxyCodeLine{02305\ \textcolor{preprocessor}{\#ifndef\ LIBS\_VMPI}}
+\DoxyCodeLine{02306\ \textcolor{preprocessor}{\#\ define\ LIBS\_VMPI\ -\/Wl,-\/P\ -\/L/usr/lang/mpi/lib\ -\/lmpi\ -\/lmp\ -\/lpx\ -\/lelf}}
+\DoxyCodeLine{02307\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02308\ }
+\DoxyCodeLine{02309\ \textcolor{preprocessor}{\#ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{02310\ \textcolor{preprocessor}{\#\ define\ LIBS\_SYSTEM\ \ -\/L/usr/lang/lib\ -\/lfj90f\ -\/lfj90\ -\/lfj90f\ -\/lfj90fv\ \(\backslash\)}}
+\DoxyCodeLine{02311\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/L/usr/uxplib\ -\/lvfl\ \(\backslash\)}}
+\DoxyCodeLine{02312\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/L/usr/ucblib\ -\/lrpcsoc\ -\/lsocket\ -\/lnsl\ -\/lresolv\ -\/lgen\ -\/lm}}
+\DoxyCodeLine{02313\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02314\ }
+\DoxyCodeLine{02315\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ sys\_fujitsu\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02316\ }
+\DoxyCodeLine{02317\ }
+\DoxyCodeLine{02318\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{02319\ \textcolor{comment}{\ *\ NEC\ SX-\/4:}}
+\DoxyCodeLine{02320\ \textcolor{comment}{\ *\ sys\_necsx}}
+\DoxyCodeLine{02321\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{02322\ \textcolor{preprocessor}{\#ifndef\ sys\_necsx}}
+\DoxyCodeLine{02323\ \textcolor{preprocessor}{\#\ define\ sys\_necsx\ 0}}
+\DoxyCodeLine{02324\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02325\ \textcolor{preprocessor}{\#if\ sys\_necsx}}
+\DoxyCodeLine{02326\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ necsx}}
+\DoxyCodeLine{02327\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02328\ }
+\DoxyCodeLine{02329\ \textcolor{preprocessor}{\#if\ sys\_necsx}}
+\DoxyCodeLine{02330\ }
+\DoxyCodeLine{02331\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{02332\ \textcolor{preprocessor}{\#\ define\ CC\_\ sxcc}}
+\DoxyCodeLine{02333\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02334\ }
+\DoxyCodeLine{02335\ \textcolor{preprocessor}{\#ifndef\ LD\_}}
+\DoxyCodeLine{02336\ \textcolor{preprocessor}{\#\ define\ LD\_\ sxf90}}
+\DoxyCodeLine{02337\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02338\ }
+\DoxyCodeLine{02339\ \textcolor{preprocessor}{\#ifndef\ AR\_}}
+\DoxyCodeLine{02340\ \textcolor{preprocessor}{\#\ define\ AR\_\ sxar}}
+\DoxyCodeLine{02341\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02342\ }
+\DoxyCodeLine{02343\ \textcolor{preprocessor}{\#ifndef\ DL\_AVAILABLE}}
+\DoxyCodeLine{02344\ \textcolor{preprocessor}{\#\ define\ DL\_AVAILABLE\ 0}}
+\DoxyCodeLine{02345\ \textcolor{preprocessor}{\#\ define\ LIBS\_DL}}
+\DoxyCodeLine{02346\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02347\ }
+\DoxyCodeLine{02348\ \textcolor{preprocessor}{\#ifndef\ unix}}
+\DoxyCodeLine{02349\ \textcolor{preprocessor}{\#\ define\ unix\ 1}}
+\DoxyCodeLine{02350\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02351\ }
+\DoxyCodeLine{02352\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02353\ \textcolor{preprocessor}{\#\ define\ CPP\_SWITCH\_SYSTEM\ -\/D\_\_svr4\_\_\ -\/Dunix}}
+\DoxyCodeLine{02354\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02355\ }
+\DoxyCodeLine{02356\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02357\ \textcolor{preprocessor}{\#\ define\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02358\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02359\ }
+\DoxyCodeLine{02360\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02361\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02362\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02363\ }
+\DoxyCodeLine{02364\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02365\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_SYSTEM\ -\/acct\ -\/float0}}
+\DoxyCodeLine{02366\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02367\ }
+\DoxyCodeLine{02368\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02369\ \textcolor{preprocessor}{\#\ define\ C\_SWITCH\_SYSTEM\ -\/hfloat0\ -\/D\_BUILTIN\_\ -\/pvctl,altcode=loopcnt,loopcnt=10000000}}
+\DoxyCodeLine{02370\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02371\ }
+\DoxyCodeLine{02372\ \textcolor{preprocessor}{\#ifndef\ CC\_}}
+\DoxyCodeLine{02373\ \textcolor{preprocessor}{\#\ ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02374\ \textcolor{preprocessor}{\#\ \ define\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02375\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{02376\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02377\ }
+\DoxyCodeLine{02378\ \textcolor{preprocessor}{\#ifndef\ LIBS\_GEN}}
+\DoxyCodeLine{02379\ \textcolor{preprocessor}{\#\ define\ LIBS\_GEN\ -\/lgen}}
+\DoxyCodeLine{02380\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02381\ }
+\DoxyCodeLine{02382\ \textcolor{preprocessor}{\#ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{02383\ \textcolor{preprocessor}{\#\ define\ LIBS\_SYSTEM\ LIBS\_GEN\ -\/lm}}
+\DoxyCodeLine{02384\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02385\ }
+\DoxyCodeLine{02386\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ sys\_necsx\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02387\ }
+\DoxyCodeLine{02388\ }
+\DoxyCodeLine{02389\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{02390\ \textcolor{comment}{\ *\ Hitachi\ SR2201:}}
+\DoxyCodeLine{02391\ \textcolor{comment}{\ *\ sys\_hiux}}
+\DoxyCodeLine{02392\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{02393\ }
+\DoxyCodeLine{02394\ \textcolor{preprocessor}{\#ifndef\ sys\_hiux}}
+\DoxyCodeLine{02395\ \textcolor{preprocessor}{\#\ define\ sys\_hiux\ 0}}
+\DoxyCodeLine{02396\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02397\ \textcolor{preprocessor}{\#if\ sys\_hiux}}
+\DoxyCodeLine{02398\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ hiux}}
+\DoxyCodeLine{02399\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02400\ }
+\DoxyCodeLine{02401\ \textcolor{preprocessor}{\#if\ sys\_hiux}}
+\DoxyCodeLine{02402\ }
+\DoxyCodeLine{02403\ \textcolor{preprocessor}{\#ifndef\ DL\_AVAILABLE}}
+\DoxyCodeLine{02404\ \textcolor{preprocessor}{\#\ define\ DL\_AVAILABLE\ 0}}
+\DoxyCodeLine{02405\ \textcolor{preprocessor}{\#\ define\ LIBS\_DL}}
+\DoxyCodeLine{02406\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02407\ }
+\DoxyCodeLine{02408\ \textcolor{preprocessor}{\#ifdef\ MAKEFILE}}
+\DoxyCodeLine{02409\ }
+\DoxyCodeLine{02410\ }
+\DoxyCodeLine{02411\ \textcolor{preprocessor}{\#ifndef\ CPP\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02412\ \textcolor{preprocessor}{\#\ define\ CPP\_SWITCH\_SYSTEM\ -\/Aa\ -\/Dunix}}
+\DoxyCodeLine{02413\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02414\ }
+\DoxyCodeLine{02415\ }
+\DoxyCodeLine{02416\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02417\ \textcolor{preprocessor}{\#\ define\ C\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02418\ \textcolor{comment}{/*\#\ define\ C\_SWITCH\_OPTIMIZE\ +O3\ -\/Wc,-\/h\ +Oprefetch\ +DB*/}}
+\DoxyCodeLine{02419\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02420\ }
+\DoxyCodeLine{02421\ \textcolor{preprocessor}{\#ifndef\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02422\ \textcolor{preprocessor}{\#\ \ define\ C\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02423\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02424\ }
+\DoxyCodeLine{02425\ }
+\DoxyCodeLine{02426\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02427\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_OPTIMIZE}}
+\DoxyCodeLine{02428\ \textcolor{comment}{/*\#\ define\ LD\_SWITCH\_OPTIMIZE\ +O3\ -\/Wc,-\/h\ +Oprefetch\ +DB*/}}
+\DoxyCodeLine{02429\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02430\ }
+\DoxyCodeLine{02431\ \textcolor{preprocessor}{\#ifndef\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02432\ \textcolor{preprocessor}{\#\ define\ LD\_SWITCH\_SYSTEM}}
+\DoxyCodeLine{02433\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02434\ }
+\DoxyCodeLine{02435\ \textcolor{preprocessor}{\#ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{02436\ \textcolor{preprocessor}{\#\ define\ LIBS\_SYSTEM\ \ \ -\/lm}}
+\DoxyCodeLine{02437\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02438\ }
+\DoxyCodeLine{02439\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ MAKEFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02440\ }
+\DoxyCodeLine{02441\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ sys\_hiux\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{02442\ }
+\DoxyCodeLine{02443\ }
+\DoxyCodeLine{02444\ \textcolor{comment}{/******************************************************}}
+\DoxyCodeLine{02445\ \textcolor{comment}{\ *\ Cray:}}
+\DoxyCodeLine{02446\ \textcolor{comment}{\ *\ sys\_cray\_T3E}}
+\DoxyCodeLine{02447\ \textcolor{comment}{\ ******************************************************/}}
+\DoxyCodeLine{02448\ \textcolor{preprocessor}{\#ifndef\ sys\_cray\_T3E}}
+\DoxyCodeLine{02449\ \textcolor{preprocessor}{\#\ define\ sys\_cray\_T3E\ 0}}
+\DoxyCodeLine{02450\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02451\ \textcolor{preprocessor}{\#if\ sys\_cray\_T3E}}
+\DoxyCodeLine{02452\ \textcolor{preprocessor}{\#\ define\ ARCH\_NAME\ cray\_T3E}}
+\DoxyCodeLine{02453\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02454\ }
+\DoxyCodeLine{02455\ \textcolor{preprocessor}{\#if\ sys\_cray\_T3E}}
+\DoxyCodeLine{02456\ }
+\DoxyCodeLine{02457\ \textcolor{preprocessor}{\#define\ HAVE\_CPP\_M\ 1}}
+\DoxyCodeLine{02458\ }
+\DoxyCodeLine{02459\ \textcolor{preprocessor}{\#define\ RANLIB\_\ /bin/true}}
+\DoxyCodeLine{02460\ }
+\DoxyCodeLine{02461\ \textcolor{preprocessor}{\#ifndef\ DL\_AVAILABLE}}
+\DoxyCodeLine{02462\ \textcolor{preprocessor}{\#\ define\ DL\_AVAILABLE\ 0}}
+\DoxyCodeLine{02463\ \textcolor{preprocessor}{\#\ define\ LIBS\_DL}}
+\DoxyCodeLine{02464\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02465\ }
+\DoxyCodeLine{02466\ \textcolor{preprocessor}{\#if\ MAKEFILE}}
+\DoxyCodeLine{02467\ }
+\DoxyCodeLine{02468\ \textcolor{comment}{/*\ use\ latest\ Cray\ C\ compiler\ for\ Rob's\ PVP\ optimizations\ */}}
+\DoxyCodeLine{02469\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{02470\ CC\ =\ /\ rain\ /\ u3\ /\ bjh\ /\ latest5.0\ /\ cc}
+\DoxyCodeLine{02471\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02472\ }
+\DoxyCodeLine{02473\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Cray\ cpp\ gives\ "{}\#\ line\ 000"{}\ instead\ of\ "{}\#\ 0000"{}\ */}}
+\DoxyCodeLine{02474\ \textcolor{preprocessor}{\#define\ DEP\_GEN(src)\$(CPP)\ -\/M\ \$(CPPFLAGS)\ src|sed\ -\/n\ 's/\string^\#\ line\ [0-\/9][0-\/9]*\ "{}\(\backslash\)([\string^"{}]*\(\backslash\))"{}.*/\$*.o:\ \(\backslash\)1/p'|sort\ -\/u}}
+\DoxyCodeLine{02475\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{02476\ \textcolor{preprocessor}{\#ifndef\ LIBS\_GEN}}
+\DoxyCodeLine{02477\ \textcolor{preprocessor}{\#\ define\ LIBS\_GEN\ -\/lgen}}
+\DoxyCodeLine{02478\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02479\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{02480\ \textcolor{preprocessor}{\#ifndef\ LIBS\_SYSTEM}}
+\DoxyCodeLine{02481\ \textcolor{preprocessor}{\#\ define\ LIBS\_SYSTEM\ LIBS\_GEN\ -\/lm}}
+\DoxyCodeLine{02482\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02483\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{02484\ \textcolor{preprocessor}{\#endif\ /*\ MAKEFILE\ */}}
+\DoxyCodeLine{02485\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{02486\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{02487\ \textcolor{preprocessor}{\ \ \ \ \ \ \ /*\ cube-\/root\ for\ systems\ that\ don't\ have\ it\ */}}
+\DoxyCodeLine{02488\ \textcolor{preprocessor}{\#define\ cbrt(\_x)\ pow(\_x,\ 1.0/3.0)}}
+\DoxyCodeLine{02489\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{02490\ \textcolor{preprocessor}{\#ifndef\ CRAY\_PVP}}
+\DoxyCodeLine{02491\ \textcolor{preprocessor}{\#\ define\ CRAY\_PVP\ 0}}
+\DoxyCodeLine{02492\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02493\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{02494\ \textcolor{preprocessor}{\#endif\ /*\ sys\_cray\_T3E\ */}}
+\DoxyCodeLine{02495\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{02496\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{02497\ \textcolor{preprocessor}{}\textcolor{comment}{\ \ \ \ \ \ \ /******************************************************}}
+\DoxyCodeLine{02498\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ Cray\ J90,\ C90:}}
+\DoxyCodeLine{02499\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ sys\_cray\_J90,\ sys\_cray\_C90}}
+\DoxyCodeLine{02500\ \textcolor{comment}{\ \ \ \ \ \ \ \ ******************************************************/}}
+\DoxyCodeLine{02501\ \#ifndef\ sys\_cray\_J90}
+\DoxyCodeLine{02502\ \#\ define\ sys\_cray\_J90\ 0}
+\DoxyCodeLine{02503\ \#endif}
+\DoxyCodeLine{02504\ \#ifndef\ sys\_cray\_C90}
+\DoxyCodeLine{02505\ \#\ define\ sys\_cray\_C90\ 0}
+\DoxyCodeLine{02506\ \#endif}
+\DoxyCodeLine{02507\ \#if\ sys\_cray\_J90}
+\DoxyCodeLine{02508\ \#\ define\ ARCH\_NAME\ cray\_J90}
+\DoxyCodeLine{02509\ \#endif}
+\DoxyCodeLine{02510\ \#if\ sys\_cray\_C90}
+\DoxyCodeLine{02511\ \#\ define\ ARCH\_NAME\ cray\_C90}
+\DoxyCodeLine{02512\ \#endif}
+\DoxyCodeLine{02513\ }
+\DoxyCodeLine{02514\ \#if\ sys\_cray\_J90\ ||\ sys\_cray\_C90}
+\DoxyCodeLine{02515\ }
+\DoxyCodeLine{02516\ \#ifdef\ CPP\_}
+\DoxyCodeLine{02517\ \#\ undef\ CPP\_}
+\DoxyCodeLine{02518\ \#endif}
+\DoxyCodeLine{02519\ \#define\ CPP\_\ /opt/ctl/bin/cpp}
+\DoxyCodeLine{02520\ \#define\ HAVE\_CPP\_M\ 1}
+\DoxyCodeLine{02521\ }
+\DoxyCodeLine{02522\ \#ifndef\ DL\_AVAILABLE}
+\DoxyCodeLine{02523\ \#\ define\ DL\_AVAILABLE\ 0}
+\DoxyCodeLine{02524\ \#\ define\ LIBS\_DL}
+\DoxyCodeLine{02525\ \#endif}
+\DoxyCodeLine{02526\ }
+\DoxyCodeLine{02527\ \#ifdef\ MAKEFILE}
+\DoxyCodeLine{02528\ }
+\DoxyCodeLine{02529\ \#\ define\ RANLIB\_\ /bin/true}
+\DoxyCodeLine{02530\ }
+\DoxyCodeLine{02531\ \#ifndef\ CC\_}
+\DoxyCodeLine{02532\ \#\ define\ CC\_\ /opt/ctl/bin/cc}
+\DoxyCodeLine{02533\ \#endif}
+\DoxyCodeLine{02534\ }
+\DoxyCodeLine{02535\ \#ifndef\ C\_SWITCH\_OPTIMIZE}
+\DoxyCodeLine{02536\ \#\ define\ C\_SWITCH\_OPTIMIZE\ -\/O}
+\DoxyCodeLine{02537\ \#endif}
+\DoxyCodeLine{02538\ }
+\DoxyCodeLine{02539\ \#ifndef\ LD\_SWITCH\_OPTIMIZE}
+\DoxyCodeLine{02540\ \#\ define\ LD\_SWITCH\_OPTIMIZE}
+\DoxyCodeLine{02541\ \#endif}
+\DoxyCodeLine{02542\ }
+\DoxyCodeLine{02543\ \#ifndef\ LD\_SWITCH\_SYSTEM}
+\DoxyCodeLine{02544\ \#\ define\ LD\_SWITCH\_SYSTEM}
+\DoxyCodeLine{02545\ \#endif}
+\DoxyCodeLine{02546\ }
+\DoxyCodeLine{02547\ \#ifndef\ C\_SWITCH\_SYSTEM}
+\DoxyCodeLine{02548\ \#\ define\ C\_SWITCH\_SYSTEM\ -\/Dlint}
+\DoxyCodeLine{02549\ \#endif}
+\DoxyCodeLine{02550\ }
+\DoxyCodeLine{02551\ \#ifndef\ LIBS\_GEN}
+\DoxyCodeLine{02552\ \#\ define\ LIBS\_GEN\ -\/lgen}
+\DoxyCodeLine{02553\ \#endif}
+\DoxyCodeLine{02554\ }
+\DoxyCodeLine{02555\ \#ifndef\ LIBS\_SYSTEM}
+\DoxyCodeLine{02556\ \#\ define\ LIBS\_SYSTEM\ LIBS\_GEN\ -\/lm}
+\DoxyCodeLine{02557\ \#endif}
+\DoxyCodeLine{02558\ }
+\DoxyCodeLine{02559\ \#endif\ /*\ MAKEFILE\ */}
+\DoxyCodeLine{02560\ }
+\DoxyCodeLine{02561\ \ \ \ \ \ \ \ /*\ cube-\/root\ for\ systems\ that\ don't\ have\ it\ */}
+\DoxyCodeLine{02562\ \#define\ cbrt(\_x)\ pow(\_x,\ 1.0/3.0)}
+\DoxyCodeLine{02563\ }
+\DoxyCodeLine{02564\ \#endif\ \ /*\ sys\_cray\_J90\ ||\ sys\_cray\_C90\ */}
+\DoxyCodeLine{02565\ }
+\DoxyCodeLine{02566\ }
+\DoxyCodeLine{02567\ \textcolor{comment}{\ \ \ \ \ \ \ /******************************************************}}
+\DoxyCodeLine{02568\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ general\ post\ settings}}
+\DoxyCodeLine{02569\ \textcolor{comment}{\ \ \ \ \ \ \ \ ******************************************************/}}
+\DoxyCodeLine{02570\ \#ifndef\ GRAPHICS}
+\DoxyCodeLine{02571\ \#\ define\ GRAPHICS\ 1}
+\DoxyCodeLine{02572\ \#endif}
+\DoxyCodeLine{02573\ \#ifndef\ SEEM}
+\DoxyCodeLine{02574\ \#\ define\ SEEM\ 1}
+\DoxyCodeLine{02575\ \#endif}
+\DoxyCodeLine{02576\ \#ifndef\ CORTEX}
+\DoxyCodeLine{02577\ \#\ define\ CORTEX\ 1}
+\DoxyCodeLine{02578\ \#endif}
+\DoxyCodeLine{02579\ }
+\DoxyCodeLine{02580\ \#ifndef\ LICENSE\_MANAGER}
+\DoxyCodeLine{02581\ \#\ define\ LICENSE\_MANAGER\ 1}
+\DoxyCodeLine{02582\ \#endif}
+\DoxyCodeLine{02583\ }
+\DoxyCodeLine{02584\ \#ifndef\ CHIP\_AVAILABLE}
+\DoxyCodeLine{02585\ \#\ define\ CHIP\_AVAILABLE\ 1}
+\DoxyCodeLine{02586\ \#endif}
+\DoxyCodeLine{02587\ \#ifndef\ LD\_SWITCH\_CXX}
+\DoxyCodeLine{02588\ \#\ define\ LD\_SWITCH\_CXX}
+\DoxyCodeLine{02589\ \#endif}
+\DoxyCodeLine{02590\ }
+\DoxyCodeLine{02591\ \#ifndef\ CPP\_SWITCH\_PIC}
+\DoxyCodeLine{02592\ \#\ define\ CPP\_SWITCH\_PIC}
+\DoxyCodeLine{02593\ \#endif}
+\DoxyCodeLine{02594\ }
+\DoxyCodeLine{02595\ \#ifndef\ LD\_SWITCH\_SHARED}
+\DoxyCodeLine{02596\ \#\ define\ LD\_SWITCH\_SHARED}
+\DoxyCodeLine{02597\ \#endif}
+\DoxyCodeLine{02598\ }
+\DoxyCodeLine{02599\ }
+\DoxyCodeLine{02600\ \#if\ !CHIP\_AVAILABLE}
+\DoxyCodeLine{02601\ \#\ ifndef\ LIBS\_CHIP}
+\DoxyCodeLine{02602\ \#\ \ define\ LIBS\_CHIP}
+\DoxyCodeLine{02603\ \#\ endif}
+\DoxyCodeLine{02604\ \#endif}
+\DoxyCodeLine{02605\ }
+\DoxyCodeLine{02606\ \#ifndef\ WORKING\_CXX}
+\DoxyCodeLine{02607\ \#\ define\ WORKING\_CXX\ 0}
+\DoxyCodeLine{02608\ \#endif}
+\DoxyCodeLine{02609\ }
+\DoxyCodeLine{02610\ \#if\ WORKING\_CXX}
+\DoxyCodeLine{02611\ \#\ define\ LD\_\ CXX}
+\DoxyCodeLine{02612\ \#endif}
+\DoxyCodeLine{02613\ }
+\DoxyCodeLine{02614\ \#endif\ /*\ sys\_master\_included\ */}
+
+\end{DoxyCode}

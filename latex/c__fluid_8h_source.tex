@@ -1,0 +1,413 @@
+\doxysection{c\+\_\+fluid.\+h}
+\hypertarget{c__fluid_8h_source}{}\label{c__fluid_8h_source}\index{fluent20.1.0/src/numerics/c\_fluid.h@{fluent20.1.0/src/numerics/c\_fluid.h}}
+\mbox{\hyperlink{c__fluid_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_C\_FLUID\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_C\_FLUID\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{syn__turb_8h}{syn\_turb.h}}"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ UDF\_MOTION\_NAME\_SIZE\ 128}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structbasis__vector__struct}{basis\_vector\_struct}}}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structbasis__vector__struct_a14a6d82fbd39b3905203fbda52b1f510}{i}}[3];}
+\DoxyCodeLine{00016\ \}\ \mbox{\hyperlink{c__fluid_8h_a128f282e6828d3522520f2a3bb2d09b8}{Basis\_Vector}};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structvector__basis__struct}{vector\_basis\_struct}}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \ \ \mbox{\hyperlink{structbasis__vector__struct}{Basis\_Vector}}\ \mbox{\hyperlink{structvector__basis__struct_ad69a4a0806dd943c29692b68363e6b44}{e}}[3];}
+\DoxyCodeLine{00021\ \}\ \mbox{\hyperlink{c__fluid_8h_ad394cbcd8e8b81805f89945103ae3794}{Vector\_Basis}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmotion__spec__struct}{motion\_spec\_struct}}}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmotion__spec__struct_ac1e49bc93c29bd4fef4bc9f72f65709d}{is\_moving}};}
+\DoxyCodeLine{00026\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmotion__spec__struct_a8ac7e3b28277b8e841f9c815ecd99bd7}{is\_superposed}};}
+\DoxyCodeLine{00027\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmotion__spec__struct_afebfd06e3a948b577ccefe54a3010acd}{is\_set}};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmotion__spec__struct_a36d3821ae1d94c5bb0b9769dee770297}{accel\_uptodate}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ used\ to\ allow\ acceleration\ update}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ *\ once\ per\ timestep\ only\ */}}
+\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmotion__spec__struct_aefa0c7818b1d47f121fd334254c0e602}{is\_moving\_frame}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structmotion__spec__struct_a1ffe17ca89f89c3abc8d9c1abc672ca4}{omega}};}
+\DoxyCodeLine{00034\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structmotion__spec__struct_afecef329656434ecd9b4d762a18553c2}{origin}}[3];}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structmotion__spec__struct_a6a56df78a6d46e44241af9ab18684557}{axis}}[3];}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structmotion__spec__struct_a1896b61addfaa4af2223cc2eca8747f2}{velocity}}[3];}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structmotion__spec__struct_afc58ee4f1f01936833d888a6440254c7}{omega\_p}};}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structmotion__spec__struct_a1c5b41044a9391231f9368b04a1ffc72}{origin\_p}}[3];}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structmotion__spec__struct_a9ec527449914c406c417620978af0efe}{axis\_p}}[3];}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structmotion__spec__struct_ab5bf2eeb0c4d084fd0c44c94c822bb59}{velocity\_p}}[3];}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structmotion__spec__struct_a4131ab2693ae0181bb1a0b7d06761bc8}{alpha}}[3];}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structmotion__spec__struct_ac71ef2bcb5d33ae5637e0bfec9c12587}{accel}}[3];}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{structvector__basis__struct}{Vector\_Basis}}\ \mbox{\hyperlink{structmotion__spec__struct_a8da043223e279d2dca28ccad3db24d5f}{b}};}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structmotion__spec__struct_aa7a479e227f5035e99482fc83203ce06}{t\_relative}};}
+\DoxyCodeLine{00045\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmotion__spec__struct}{motion\_spec\_struct}}\ *\mbox{\hyperlink{structmotion__spec__struct_aebcf65078bc6909f66ac6604f933588a}{relative}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ motion\ specification\ relative}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ to\ thread\ */}}
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structmotion__spec__struct_a6ff27fa45e47822883a8e6c6bae0fad8}{udf\_zmotion\_name}}[\mbox{\hyperlink{c__fluid_8h_ad9722b0aa80fc2bd0146428d7dd850ea}{UDF\_MOTION\_NAME\_SIZE}}];\ \textcolor{comment}{/*\ name\ for\ DEFINE\_ZONE\_MOTION\ udf\ */}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \}\ \mbox{\hyperlink{c__fluid_8h_ab788a4642dbe6d17b4c87272ccf69a1b}{Motion\_Spec}};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfan3d__struct}{fan3d\_struct}}}
+\DoxyCodeLine{00052\ \{}
+\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfan3d__struct_ac10a654442eb8ea6939d9d45aa5123a0}{fan3dzone}};}
+\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a13379294229cd373869328becca9c852}{glo\_origin}}[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \ \ \textcolor{comment}{/*\ 3D\ fan\ rotation\ axis\ origin*/}}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a774856366a4759b47b95870b7137587a}{th}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*fan\ thickness*/}}
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a3c45801bc76ebf68fa2a8c8f2f107d10}{inrdia}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*fan\ inner\ diameter*/}}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a784d15a017d4190770160d703d8d627d}{outdia}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*fan\ outer\ diameter*/}}
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a4f9771f7cdf0dd89a406b984395faef9}{Cm}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*fan\ inflection\ point*/}}
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a666452c8c90d6227212dcf382c6960bd}{nt}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*fan\ test\ angular\ velocity*/}}
+\DoxyCodeLine{00060\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a46256ffd9fe8d5dcaf72cba3270aba41}{nr}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*fan\ operating\ angular\ velocity*/}}
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a15d7ca3958502285ddf38e57ecf03985}{test\_temp}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*fan\ test\ temperature*/}}
+\DoxyCodeLine{00062\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfan3d__struct_a226597d2adad336136fe68f41b2133c2}{tan\_source}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*flag\ for\ tangential\ source*/}}
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfan3d__struct_ad076154afe6e5e904ef9e60c57e3c685}{axial\_source}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*flag\ for\ axial\ source*/}}
+\DoxyCodeLine{00064\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfan3d__struct_af784824da44700c7af909e98cb94c858}{radial\_source}};\ \ \ \ \ \ \ \textcolor{comment}{/*flag\ for\ axial\ source*/}}
+\DoxyCodeLine{00065\ \ \ \textcolor{comment}{/*\ cxboolean\ read\_dp\_from\_file;\ \ \ \ \ \ \ *flag\ for\ axial\ source*/}}
+\DoxyCodeLine{00066\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfan3d__struct_a07099638f603f16289260141fd6253b0}{limit\_flow}};}
+\DoxyCodeLine{00067\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfan3d__struct_ac3216b327d6c60549647a8bfe31a6e80}{fan\_curve}};}
+\DoxyCodeLine{00068\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_adc0ab1ee954be2bc6f4fbabd83e110ba}{max\_flow}};}
+\DoxyCodeLine{00069\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a6156ac28f4045d6a79270255001b6fab}{min\_flow}};}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_abe165e0cfc6271ccfc10e7a17b22a86f}{delP}};}
+\DoxyCodeLine{00071\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfan3d__struct_a6a0d9d5af2ebe6c67b770c92745744bf}{axials\_method}};\ \ \ \ \ \ \ \textcolor{comment}{/*flag\ for\ axial\ source\ method*/}}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_ad98263af82a91b68a3a8b252d5663197}{poly\_order}}\ ;}
+\DoxyCodeLine{00073\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfan3d__struct_abbe2d74fc49590c9f33d558a4108a450}{curve\_fit}}\ ;}
+\DoxyCodeLine{00074\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_aa2ba6ee47e2aae2950b0d7fe24510399}{ini\_flow}}\ ;}
+\DoxyCodeLine{00075\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfan3d__struct_aa12637ab4e656c696a941c3b0d5a9b89}{rot\_dir}};}
+\DoxyCodeLine{00076\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfan3d__struct_ad99acc2ace4864f15b68e6f2698fd2fc}{inlet\_id}},\ \mbox{\hyperlink{structfan3d__struct_a797961aa727ea79622d76c330fe862af}{exit\_id}},\ \mbox{\hyperlink{structfan3d__struct_a34c107083c705766236c7e1fe8daf3ec}{shroud\_id}};}
+\DoxyCodeLine{00077\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a1fc988b681eb7061c5f4d819c7a017f3}{tr}}[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}][\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];}
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_a14267d18bcaf6301c75c3ee3710aef2c}{loc\_origin}}[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \ \ \textcolor{comment}{/*\ 3D\ fan\ rotation\ axis\ origin*/}}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfan3d__struct_ad31d84d049ed88fa8b6deb2cb8f35363}{axis}}[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];}
+\DoxyCodeLine{00080\ \ \ \textcolor{comment}{/*Polynomial\ p\_jump;\ */}}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structfan3d__struct_ae73fbaa1c5e8b1e463b347e2ac99052c}{P}};}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structfan3d__struct_a50c5217883964b430eeebf633abcdedc}{Q}};}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structfan3d__struct_af64b5d2930cc3f43eec2da78dd88cff8}{Cp}};}
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfan3d__struct_a53e53380c64d2dcc85486da7f90794d5}{nrows}};}
+\DoxyCodeLine{00085\ \}\ \mbox{\hyperlink{c__fluid_8h_a87a47956c506599cffa8f7830f437f71}{Fan3d\_Var}};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpremix__var__struct}{premix\_var\_struct}}}
+\DoxyCodeLine{00088\ \{}
+\DoxyCodeLine{00089\ \ \ \textcolor{comment}{/*\ cache\ for\ unburned\ and\ burned\ quantities\ */}}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpremix__var__struct_a93ed7fa923263e4d2efd4a28c49d9e4f}{rho\_u}};}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpremix__var__struct_ac10c64bc0bc29729623759a0bcf3efee}{rho\_b}};}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpremix__var__struct_a8de14d9a676841f1e9f5a997e1d2974b}{Cp\_u}};}
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpremix__var__struct_af9ece63871ac0862a2a2dec49dbc414e}{T\_u}};}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpremix__var__struct_a794d7ba6fd75b3a10ce9e66532f372c7}{T\_b}};}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpremix__var__struct_ae0916c3d9d1dd5b0fe5ac94e1cc908f6}{tdiff\_u}};}
+\DoxyCodeLine{00096\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpremix__var__struct_ae0275c354f0da40c1c7d9eb8219e1588}{delta\_l}};}
+\DoxyCodeLine{00097\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpremix__var__struct_a4386d561961763b693c5fd0ff1965bde}{rho\_ratio}};}
+\DoxyCodeLine{00098\ \}\ \mbox{\hyperlink{c__fluid_8h_a79d241a8d1b35c6d30ace4b6e8e981b3}{premix\_var\_t}};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{comment}{/*\ for\ Open\ Channel\ case\ in\ VOF\ \ */}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoc__beach__dir__list__struct}{oc\_beach\_dir\_list\_struct}}}
+\DoxyCodeLine{00103\ \{}
+\DoxyCodeLine{00104\ \ \ \textcolor{comment}{/*\ main\ variables\ */}}
+\DoxyCodeLine{00105\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structoc__beach__dir__list__struct_a5857161e22b803ca35f3291f391a43cc}{ni}},\ \mbox{\hyperlink{structoc__beach__dir__list__struct_a2dc6c32eadfa40de8326eb289f39ad78}{nj}},\ \mbox{\hyperlink{structoc__beach__dir__list__struct_afc85917513496b956d80167629bbb324}{nk}};}
+\DoxyCodeLine{00106\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structoc__beach__dir__list__struct_ace7943d1a79b1651ecfc03c2d6af4714}{xe}},\ \mbox{\hyperlink{structoc__beach__dir__list__struct_a5fc9651f7a0a36cf8285a61c7d6a48a8}{len}};}
+\DoxyCodeLine{00107\ \ \ \textcolor{comment}{/*\ derived\ variables\ */}}
+\DoxyCodeLine{00108\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structoc__beach__dir__list__struct_a333fc060da3b05539f2c82f515ec870d}{xs}};}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structoc__beach__dir__list__struct_a1d8448c3fe9bcdac0ff45f2b61e6dfe4}{NV\_VEC}}(fl\_dir);}
+\DoxyCodeLine{00110\ \}\ \mbox{\hyperlink{c__fluid_8h_a95f39f1567a98ca44a11e7c2158650f1}{oc\_beach\_dir\_list}};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structnumerical__beach__struct}{numerical\_beach\_struct}}}
+\DoxyCodeLine{00113\ \{}
+\DoxyCodeLine{00114\ \ \ \textcolor{comment}{/*\ Numerical\ Beach\ related\ variables\ */}}
+\DoxyCodeLine{00115\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structnumerical__beach__struct_a3eaa40a706c39792a134178ed73c1a58}{wave\_len}},\ \mbox{\hyperlink{structnumerical__beach__struct_aa54e3dd4e8d0be2fa4e5b8eda4791031}{fs\_level}},\ \mbox{\hyperlink{structnumerical__beach__struct_ade842823bcaf2bbf59d50f2f366f7d41}{bottom\_level}};}
+\DoxyCodeLine{00116\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structnumerical__beach__struct_a5857161e22b803ca35f3291f391a43cc}{ni}},\ \mbox{\hyperlink{structnumerical__beach__struct_a2dc6c32eadfa40de8326eb289f39ad78}{nj}},\ \mbox{\hyperlink{structnumerical__beach__struct_afc85917513496b956d80167629bbb324}{nk}};}
+\DoxyCodeLine{00117\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structnumerical__beach__struct_a1f1f443122026a1710682572f350328c}{damp\_type}},\ \mbox{\hyperlink{structnumerical__beach__struct_a8c37294562f69167abad42d8b5d713c7}{len\_spec}};}
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structnumerical__beach__struct_a333fc060da3b05539f2c82f515ec870d}{xs}},\ \mbox{\hyperlink{structnumerical__beach__struct_ace7943d1a79b1651ecfc03c2d6af4714}{xe}},\ \mbox{\hyperlink{structnumerical__beach__struct_a2685f747b42e997a43b745baabadb28a}{len\_factor}};}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structnumerical__beach__struct_a35697fc596e43c86db23ba348e448d9b}{damp\_resist\_lin}},\ \mbox{\hyperlink{structnumerical__beach__struct_a07b8cb3f8cab6861d7ac038a46fd9620}{damp\_resist\_quad}};}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structnumerical__beach__struct_a1d8448c3fe9bcdac0ff45f2b61e6dfe4}{NV\_VEC}}(fl\_dir),\ \mbox{\hyperlink{structnumerical__beach__struct_a1d8448c3fe9bcdac0ff45f2b61e6dfe4}{NV\_VEC}}(ht\_dir);}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structnumerical__beach__struct_a5daa3888b9f4d785bd8f693b2fdfbab4}{damp\_len}},\ \mbox{\hyperlink{structnumerical__beach__struct_a19dacf5604cbf75075fb45165e6b6e08}{ht\_liquid}};}
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structnumerical__beach__struct_a8687b88c4227a239d89ad0ca683f01c0}{relative\_damping}};}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00125\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ multi\_direct;}
+\DoxyCodeLine{00126\ \ \ \textcolor{keywordtype}{int}\ count;}
+\DoxyCodeLine{00127\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoc__beach__dir__list__struct}{oc\_beach\_dir\_list\_struct}}\ *dir\_list;}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00129\ \}\ \mbox{\hyperlink{c__fluid_8h_a8e8b476255b036f9b78e7044cf3d7b91}{Numerical\_Beach}};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__cell__struct}{tv\_cell\_struct}}}
+\DoxyCodeLine{00132\ \{}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a19eb82ca6bb53ca8105448a19ed821af}{sources}};\ \ \ \ \textcolor{comment}{/*\ sources\ specified?\ */}}
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ **\mbox{\hyperlink{structtv__cell__struct_acccfcc2216b8d7f0dc03b3f5e858a4dd}{source\_pointer}}\textcolor{comment}{/*[MAX\_EQNS]*/};\ \textcolor{comment}{/*\ equation\ source\ terms\ */}}
+\DoxyCodeLine{00135\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structtv__cell__struct_a44629cd9813e9207d071223293dcb4fa}{nsources\_pointer}}\textcolor{comment}{/*[MAX\_EQNS]*/};}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a0be176ce39fa7427b9602458b6fdba5e}{fixedFlag}};\ \ \ \ \textcolor{comment}{/*\ sources\ specified?\ */}}
+\DoxyCodeLine{00138\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a9d187206527963282128edcfd9c42388}{fixedCyl}};\ \ \ \textcolor{comment}{/*\ use\ local\ cylindrical\ coordinates\ for\ fixed\ velocity?\ */}}
+\DoxyCodeLine{00139\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \ \ *\mbox{\hyperlink{structtv__cell__struct_a73166702ed9aef4a190672d7d60ccc48}{fixed\_pointer}}\textcolor{comment}{/*[MAX\_EQNS]*/};\ \textcolor{comment}{/*\ equation\ fixed\ terms\ */}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \textcolor{comment}{/*\ For\ multiple\ reference\ pressure\ */}}
+\DoxyCodeLine{00142\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_acbc2e8a401b4ba1f37dfc471acd5b10d}{need\_refp}};}
+\DoxyCodeLine{00143\ \ \ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ \mbox{\hyperlink{structtv__cell__struct_af89118af51af1f00b6b4477512b98d58}{cell\_refp\_loc}};}
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_aaa64011b5c8979722bba62f31978c0e3}{ctid\_refp\_loc}};}
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_aceb2b771333b431df7ed97deca5352e0}{rank\_refp\_loc}};}
+\DoxyCodeLine{00146\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_aedb836354b462be1531999042058f6b3}{tree\_id}};}
+\DoxyCodeLine{00147\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_a3b50e14f0455928c2a3fae4ef791e1d9}{num\_trees}};}
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_acb1dc02a6094297197ee93093f2f2960}{pp\_ref}};}
+\DoxyCodeLine{00149\ \ \ \textcolor{comment}{/*\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a1ffe17ca89f89c3abc8d9c1abc672ca4}{omega}};\ \ \ \ \ \textcolor{comment}{/*\ angular\ speed\ */}}
+\DoxyCodeLine{00152\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_afecef329656434ecd9b4d762a18553c2}{origin}}[3];\ \ \ \textcolor{comment}{/*\ origin\ of\ axis\ of\ rotation\ */}}
+\DoxyCodeLine{00153\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a6a56df78a6d46e44241af9ab18684557}{axis}}[3];\ \ \ \ \ \textcolor{comment}{/*\ axis\ of\ rotation\ (always\ specified\ as\ 3d)\ */}}
+\DoxyCodeLine{00154\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a1896b61addfaa4af2223cc2eca8747f2}{velocity}}[3];\ \ \ \textcolor{comment}{/*\ translational\ velocity\ */}}
+\DoxyCodeLine{00155\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_ac71ef2bcb5d33ae5637e0bfec9c12587}{accel}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ translational\ acceleration\ vector\ */}}
+\DoxyCodeLine{00156\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a4131ab2693ae0181bb1a0b7d06761bc8}{alpha}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ angular\ acceleration\ vector\ */}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \mbox{\hyperlink{structmotion__spec__struct}{Motion\_Spec}}\ \mbox{\hyperlink{structtv__cell__struct_a7f8c2c09b4e402b91d63578815b823fd}{mrf}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ moving\ reference\ frame\ */}}
+\DoxyCodeLine{00159\ \ \ \mbox{\hyperlink{structmotion__spec__struct}{Motion\_Spec}}\ \mbox{\hyperlink{structtv__cell__struct_a1c11c62bb01cd06760b63c9e4b28655c}{mgrid}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ moving\ grid\ */}}
+\DoxyCodeLine{00160\ \ \ \mbox{\hyperlink{structmotion__spec__struct}{Motion\_Spec}}\ \mbox{\hyperlink{structtv__cell__struct_a246e028e0d10cb495d629837f9ec9cd7}{msuperposed}};\ \ \ \ \ \ \textcolor{comment}{/*\ superposed\ motion,\ same\ as\ cell.omega,\ cell.velocity\ etc.\ */}}
+\DoxyCodeLine{00161\ \ \ \mbox{\hyperlink{structmotion__spec__struct}{Motion\_Spec}}\ \mbox{\hyperlink{structtv__cell__struct_a31bf701a80d8618e7928663b23ae5b4c}{lcmrf}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ moving\ frame\ spec\ in\ local\ coordinates,\ for\ embedded\ moving\ mesh\ */}}
+\DoxyCodeLine{00162\ \ \ \mbox{\hyperlink{structmotion__spec__struct}{Motion\_Spec}}\ \mbox{\hyperlink{structtv__cell__struct_a7c4ca3a19862d63ad66df9942aee2bfc}{lcmgrid}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ moving\ grid\ spec\ in\ local\ coordinates,\ for\ embedded\ moving\ mesh\ */}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_ab44226a1d889fd193d78d7a8152541bf}{radiating}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ participating\ in\ disco\ radiation\ */}}
+\DoxyCodeLine{00165\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ \ \ *\ fluid-\/specific\ variables}}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00168\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a004fc5bf1c24b0bf6bc458551caec0ec}{laminar}};\ \ \ \ \textcolor{comment}{/*\ laminar\ "{}transitional"{}\ region?\ */}}
+\DoxyCodeLine{00169\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_adece17f5fbd19bdadc5b596d27d8c815}{laminar\_mut\_zero}};\ \textcolor{comment}{/*\ control\ of\ mu\_t\ calculation\ within\ laminar\ zone.\ */}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \textcolor{comment}{/*\ embedded\ LES\ */}}
+\DoxyCodeLine{00172\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a570c96bdb4a8ef245f83ee8dcb3bc2ba}{eles}};\ \ \ \ \ \textcolor{comment}{/*\ embedded\ les\ region?\ */}}
+\DoxyCodeLine{00173\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_a19adb3bed4a799e1a001656c9bddb0f3}{eles\_spec}};\ \ \ \ \textcolor{comment}{/*\ embedded\ LES\ model\ \ specification:}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 0\ =\ Smagorinsky}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 1\ =\ WALE}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ 2\ =\ Dynamic\ Smagorinsky\ */}}
+\DoxyCodeLine{00177\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_ad03f35274164da9d2a5c2d961b4b1283}{eles\_mom\_scheme}};\ \ \ \ \textcolor{comment}{/*\ embedded\ LES\ momentum\ scheme:\ *\ 0\ =\ BCD\ *\ 1\ =\ CD\ */}}
+\DoxyCodeLine{00178\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a5f21a76c00b10468b20508823c26065e}{eles\_const}};\ \ \ \ \textcolor{comment}{/*\ les\ model\ constant\ */}}
+\DoxyCodeLine{00179\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a642171edd1e1bf71aaac224fa260a445}{eles\_smag\_const}};\ \ \ \textcolor{comment}{/*\ les\ model\ Smagorinsky\ constant\ */}}
+\DoxyCodeLine{00180\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_af5361a735f5d7c1f88303977de38bb63}{eles\_wale\_const}};\ \ \ \textcolor{comment}{/*\ les\ model\ WALE\ constant\ */}}
+\DoxyCodeLine{00181\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a4aaa6fb3d42345afc2607f4eea119bdb}{eles\_Pr\_wall}};}
+\DoxyCodeLine{00182\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_ab4b9e83a8ff5e593451ec673140220bb}{eles\_dyn\_energy\_flux}};}
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a022b16bef648b93b3efd818d44c06a2c}{eles\_Pr\_energy}};}
+\DoxyCodeLine{00184\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a976e4eefc304f9f3edf5debcb137efd3}{eles\_dyn\_scalar\_flux}};}
+\DoxyCodeLine{00185\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a76b5ff24ab06ec3fbf7b1c342ea3e7ad}{eles\_Sc\_scalar}};}
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a56759502429c92eedfd4e99e09d12a43}{eles\_Sc\_pdf}};}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \textcolor{comment}{/*\ Synthetic\ turbulence\ */}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00190\ \ \ syn\_turb\_synthetic\_turbulence\_generator\_type\ syn\_turb\_synthetic\_turbulence\_generator;}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \textcolor{comment}{/*\ Zonal\ compressive\ scheme\ specific\ */}}
+\DoxyCodeLine{00194\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a40378f84d3bc602b71016c24507847bc}{mp\_compressive\_beta\_max}};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \textcolor{comment}{/*\ glass\ modeling\ */}}
+\DoxyCodeLine{00197\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_acb9fe9f8952ade215e99d8a2be0bd643}{glass}};}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ \ \ *\ porous\ definition}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00202\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structtv__cell__struct_a34acaa60a4e530a59e76d0da74ef9179}{porosity}};}
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structtv__cell__struct_a6e320310d287b19ca5788de2c8399a90}{area\_density}};\ \textcolor{comment}{/*Interfacial\ Area\ Density\ of\ porous\ material*/}}
+\DoxyCodeLine{00204\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structtv__cell__struct_a66566457554292e8abcf901c5f06a2cd}{heat\_transfer\_coeff}};\ \textcolor{comment}{/*Heat\ Transfer\ Coeff\ of\ porous\ Material*/}}
+\DoxyCodeLine{00205\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a64e82ef28a7b6b6389a11172f396b37a}{surf\_vol\_ratio}};\ \ \ \ \textcolor{comment}{/*\ surface-\/volume\ ratio\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00206\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_ae3b35e5479ed78850c63835179b4462e}{electrolyte}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ zone\ is\ electrolyte\ */}}
+\DoxyCodeLine{00207\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a7246409c8d5c44c902886817a4162395}{porous}};\ \ \ \textcolor{comment}{/*\ non-\/zero\ porous\ definition?\ */}}
+\DoxyCodeLine{00208\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a819af6a7ba6186f2f5ef7593a1a91b99}{non\_equib\_thermal}};\ \ \ \ \ \textcolor{comment}{/*Non\ Equilibrium\ Thermal\ Model\ for\ Porous\ Medium*/}}
+\DoxyCodeLine{00209\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_ad77d372553aa45c3b47b3742d1d19b67}{rel\_vel\_resist}};\ \textcolor{comment}{/*\ relative\ velocity\ resistance\ for\ moving\ porous\ media?\ */}}
+\DoxyCodeLine{00210\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_ab75e317d9980cf60235b93d5d13aaa14}{resistp}};\ \ \ \ \textcolor{comment}{/*\ non-\/zero\ resist\ definition?\ */}}
+\DoxyCodeLine{00211\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a9c461154d246f35ed67ecfdf1fa35de5}{C2p}};\ \ \ \ \textcolor{comment}{/*\ non-\/zero\ C2\ definition?\ */}}
+\DoxyCodeLine{00212\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a9beaa25ab9006205017777e28ab5333b}{alt\_inertial\_form}};\ \ \textcolor{comment}{/*\ Alternative\ inertial\ formulation\ */}}
+\DoxyCodeLine{00213\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_ad07fda4d7314c232e6903300b39f845c}{var\_res}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ non-\/constant\ resist\ specification?\ */}}
+\DoxyCodeLine{00214\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_a38e529d48bf4bc5c7fb03ee1627e0111}{dual\_zn\_id}};}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \textcolor{comment}{/*\ principle-\/axis\ definition\ */}}
+\DoxyCodeLine{00217\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_a9a07f127924fa1bae981b0df218e5a11}{porous\_principle\_n\_axis}};\ \ \textcolor{comment}{/*\ number\ of\ axis\ specified\ (0,1,2)\ */}}
+\DoxyCodeLine{00218\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structtv__cell__struct_a9447e220fafdb4e299423b9974590730}{porous\_principle\_axis}}[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}][\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];}
+\DoxyCodeLine{00219\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structtv__cell__struct_a33b56939469b44bb8f11daa59123492d}{porous\_principle\_r}}[\mbox{\hyperlink{global_8h_a62b3ec2a68923796798c087f3b72db55}{ND\_3}}];}
+\DoxyCodeLine{00220\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ \mbox{\hyperlink{structtv__cell__struct_a9713cbac85634d3ae777bb6120141a83}{porous\_principle\_c}}[\mbox{\hyperlink{global_8h_a62b3ec2a68923796798c087f3b72db55}{ND\_3}}];}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \textcolor{comment}{/*\ multiphase\ porous\ medium\ \ */}}
+\DoxyCodeLine{00224\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_aea9b7ecd4acc73153a6638db72439a66}{none}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ relative\ permeability?\ \ */}}
+\DoxyCodeLine{00225\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_ae5111de7a367436a5d6aae3d453fcae5}{corey}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 2-\/phase\ relative\ permeability?\ \ */}}
+\DoxyCodeLine{00226\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a0cfbb75edb553bc85e203700b944ffd6}{stone\_1}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 3-\/phase\ relative\ permeability?\ \ */}}
+\DoxyCodeLine{00227\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_affc04d469882c3900d1022906aa75227}{stone\_2}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 3-\/phase\ relative\ permeability?\ \ */}}
+\DoxyCodeLine{00228\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_a200b2f001400b5bda561217888dc3e34}{wetting\_phase}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ wetting-\/phase\ for\ two-\/phase\ corey\ model*/}}
+\DoxyCodeLine{00229\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_a0447822d83918b85282006c462d2ac6b}{non\_wetting\_phase}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ non-\/wetting-\/phase\ for\ two-\/phase\ corey\ model*/}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a2065bf5fc92c159ec7fe4247baacd8a1}{res\_sat\_p1}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ wetting\ phase\ residual\ saturation\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00233\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_acaabf57d7b4787783117c1e3137d49ed}{res\_sat\_p2}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ non-\/wetting\ phase\ residual\ saturation\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00234\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a2bd8c63b09a42e67a175c183371cfb9b}{res\_sat\_p3}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ stone\ phase\ residual\ saturation\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a61d8d85b5b740c94a66390776fef11a6}{exponent\_p1}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ wetting\ phase\ corey\ model\ exponent\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00237\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a27d4ca711b463f88f5ec39fc1657b32b}{exponent\_p2}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ non-\/wetting\ phase\ corey\ model\ exponent\ \ \ \ \ */}}
+\DoxyCodeLine{00238\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_ad16c04d432d4a803d8ad4773f795ca7c}{exponent\_p3}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ stone\ corey\ model\ exponent\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_aafcecfe7503883394c543bf002cf98fb}{ref\_rel\_perm\_p1}};\ \ \ \ \ \textcolor{comment}{/*\ wetting\ phase\ reference\ relative\ permeability\ */}}
+\DoxyCodeLine{00241\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a0389afb651a7e6e7cdbf1d93c7378f7f}{ref\_rel\_perm\_p2}};\ \ \ \ \ \textcolor{comment}{/*\ non-\/wetting\ phase\ reference\ relative\ permeability\ */}}
+\DoxyCodeLine{00242\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_ab1986b9428a3377d29e53690fdbdb71d}{ref\_rel\_perm\_p3}};\ \ \ \ \ \textcolor{comment}{/*\ stone\ reference\ relative\ permeability\ */}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a62ff67c8466be9a4d640756980ade860}{van\_genuchten\_pg}};}
+\DoxyCodeLine{00245\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a93862e5fc3424ee8179130ad752eeb41}{van\_genuchten\_ng}};}
+\DoxyCodeLine{00246\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a6b21add6918927a6d202ee12274342d2}{skjaeveland\_nw\_pc\_coef}};}
+\DoxyCodeLine{00247\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a5a6c11319b0970ed1e486273b2449b92}{skjaeveland\_nw\_pc\_pwr}};}
+\DoxyCodeLine{00248\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_ab69bb377cb4142c5b39423a13eb842f9}{skjaeveland\_wet\_pc\_coef}};}
+\DoxyCodeLine{00249\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a5d8d75cca6f65242b75ae64100d3d45e}{skjaeveland\_wet\_pc\_pwr}};}
+\DoxyCodeLine{00250\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a20bda7b8a44a94ebe2a69ed7575cbe89}{brooks\_corey\_pe}};}
+\DoxyCodeLine{00251\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a1f1377b2c50bc5640593d85896d95162}{brooks\_corey\_ng}};}
+\DoxyCodeLine{00252\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a35c4b3c66ae4a89753efd02b68904955}{lev\_con\_ang}};}
+\DoxyCodeLine{00253\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a8d8c95dc6dc8a2b728db2d15b29c6953}{max\_capillary\_pressure}};}
+\DoxyCodeLine{00254\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a600e00f2e2cc196f714f1c83f7732649}{rel\_perm\_limit\_p1}};}
+\DoxyCodeLine{00255\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a1e835b3cea0674ea2b160e2ddc7d2bf1}{rel\_perm\_limit\_p2}};}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_a43984a7ca5ee6406a81f1f00804951db}{cpt\_name}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00258\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_a9671cb2dd4c3b3b6e9002a495456f03c}{cpt\_satw}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00259\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_a97e9f3ffc068b074403775ee79fe7a42}{cpt\_cap\_press}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtv__cell__struct_a590d799b706d878159a5a28ed218e1bd}{cap\_method}};}
+\DoxyCodeLine{00263\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_acd71be1fab7f7c5d98df6560279ee446}{cap\_udf\_name}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a05a1bc637807633e87c2886482014b13}{rel\_perm\_tabular\_p1}};}
+\DoxyCodeLine{00266\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_ade012c43d66b3081a327e01eed1418b5}{rel\_perm\_table\_p1}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00267\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_a0a52f5596dd2f8f8f2543c626ddb635b}{rel\_perm\_satw\_p1}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00268\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_af1bdd1bc39d0a5f5a8c8dbe44b09b4b5}{rel\_perm\_rp\_p1}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#if\ 1}}
+\DoxyCodeLine{00271\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a1058b2571d68d7d3197cf02b23e161fe}{rel\_perm\_tabular\_p2}};}
+\DoxyCodeLine{00272\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_adad2391bfd8e5607865b001c247a05f0}{rel\_perm\_table\_p2}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00273\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_a268e36d211ae876dc73cf29a0bee2b17}{rel\_perm\_satw\_p2}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00274\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structtv__cell__struct_ac4fcee161dbd2d0990a57a5d4888f655}{rel\_perm\_rp\_p2}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00279\ \ \ \textcolor{comment}{/*\ conical\ porous\ media\ inputs\ */}}
+\DoxyCodeLine{00280\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ conicalp;\ \ \ \textcolor{comment}{/*\ conical\ porous\ media?\ */}}
+\DoxyCodeLine{00281\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cone\_axis[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \textcolor{comment}{/*\ conical\ axis\ vector\ */}}
+\DoxyCodeLine{00282\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cone\_axis\_pt[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \textcolor{comment}{/*\ coordinates\ of\ point\ on\ axis\ of\ cone\ */}}
+\DoxyCodeLine{00283\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cone\_angle;\ \ \ \ \textcolor{comment}{/*\ angle\ of\ cone\ relative\ to\ its\ axis\ */}}
+\DoxyCodeLine{00284\ \ \ \mbox{\hyperlink{structfan3d__struct}{Fan3d\_Var}}\ fan3d\ ;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*3d\ fan\ variables*/}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#if\ RP\_SHELL}}
+\DoxyCodeLine{00288\ \ \ \textcolor{keywordtype}{int}\ nShellLayer;}
+\DoxyCodeLine{00289\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dShell;}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \ \ \textcolor{comment}{/*\ raw\ cartesian\ matrices\ */}}
+\DoxyCodeLine{00293\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a2db1e93a14f2426ad3d7045143a59904}{resist}}[\mbox{\hyperlink{global_8h_a62b3ec2a68923796798c087f3b72db55}{ND\_3}}][\mbox{\hyperlink{global_8h_a62b3ec2a68923796798c087f3b72db55}{ND\_3}}];\ \ \textcolor{comment}{/*\ inverse-\/permeability\ coefficients\ */}}
+\DoxyCodeLine{00294\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_a0b111fa72747923339b86e439512e7ca}{C2}}[\mbox{\hyperlink{global_8h_a62b3ec2a68923796798c087f3b72db55}{ND\_3}}][\mbox{\hyperlink{global_8h_a62b3ec2a68923796798c087f3b72db55}{ND\_3}}];\ \ \textcolor{comment}{/*\ inertial\ resistance\ coefficients\ */}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \textcolor{comment}{/*\ a\ "{}power\ law"{}\ model\ */}}
+\DoxyCodeLine{00297\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_af400fe8f393fac83617687d1653a41cf}{C0}},\ \mbox{\hyperlink{structtv__cell__struct_afb1672c802075da327f5557597dfeb24}{C1}};\ \ \ \ \ \ \textcolor{comment}{/*\ power\ law\ coefficients\ */}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a9cd281a884be4eeb1896ff1ce71f7ecb}{react}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ reaction\ is\ on/off\ at\ this\ thread\ */}}
+\DoxyCodeLine{00300\ \ \ \mbox{\hyperlink{structreaction__mech__struct}{Reaction\_Mech}}\ *\mbox{\hyperlink{structtv__cell__struct_abe4f234a041d7526414f5af253cb8133}{react\_mech}};\ \ \ \textcolor{comment}{/*\ reaction\ mechanism\ pointer\ at\ this\ thread\ */}}
+\DoxyCodeLine{00301\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structtv__cell__struct_afd66d7b52a569ee77530f4056a168324}{react\_mech\_name}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ reaction\ mechanism\ name\ at\ this\ thread\ */}}
+\DoxyCodeLine{00302\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_ad13ef8be40b154b4e384abf11252809d}{gasoline\_flame\_speed\_f\_t\_u}};\textcolor{comment}{/*Gasoline\ flame\ speed*/}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpremix__var__struct}{premix\_var\_struct}}\ \mbox{\hyperlink{structtv__cell__struct_a903256dcbb4340a0a2e6138112eef785}{premix\_var}};\ \textcolor{comment}{/*\ cached\ premixed\ combustion\ variables\ */}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \textcolor{comment}{/*\ cell\ zone\ specific\ boiling\ */}}
+\DoxyCodeLine{00307\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_aed19b8068c81e7c2db7929cbd1d81413}{mp\_boiling\_zone}};}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \textcolor{comment}{/*\ Numerical\ Beach\ related\ variables\ */}}
+\DoxyCodeLine{00310\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_a68a07b547e1c8ed0b9c690f9199d6f4b}{numerical\_beach}};}
+\DoxyCodeLine{00311\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structnumerical__beach__struct}{numerical\_beach\_struct}}\ \mbox{\hyperlink{structtv__cell__struct_a70cd6b12bb0dd4f495f5a73698ea65ea}{num\_beach}};}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtv__cell__struct_afdf17a48b3fc2a65f441fdcd75800ed3}{anisotropic\_spe\_diffusion}};}
+\DoxyCodeLine{00314\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtv__cell__struct_ade3731782626aae5ac1b951ff7748a28}{spe\_diff\_matrix}}[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}][\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];}
+\DoxyCodeLine{00315\ \};}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#define\ CELL\_PROFILE\_FIXED\_BASE(\_c)\ ((\_c).fixed\_pointer)}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#define\ CELL\_PROFILE\_SOURCE\_BASE(\_c)\ ((\_c).source\_pointer)}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#define\ CELL\_PROFILE\_NSOURCES\_BASE(\_c)\ ((\_c).nsources\_pointer)}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#define\ CELL\_PROFILE\_FIXED(\_c)\ (CELL\_PROFILE\_FIXED\_BASE(\_c)?\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CELL\_PROFILE\_FIXED\_BASE(\_c):\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (CELL\_PROFILE\_FIXED\_BASE(\_c)\ =\ (Profile*)CX\_Calloc(MAX\_EQNS,\ sizeof(Profile))))}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#define\ CELL\_PROFILE\_SOURCE(\_c)\ (CELL\_PROFILE\_SOURCE\_BASE(\_c)?\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CELL\_PROFILE\_SOURCE\_BASE(\_c):\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (CELL\_PROFILE\_SOURCE\_BASE(\_c)\ =\ (Profile**)CX\_Calloc(MAX\_EQNS,\ sizeof(Profile*))))}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#define\ CELL\_PROFILE\_NSOURCES(\_c)\ (CELL\_PROFILE\_NSOURCES\_BASE(\_c)?\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CELL\_PROFILE\_NSOURCES\_BASE(\_c):\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (CELL\_PROFILE\_NSOURCES\_BASE(\_c)\ =\ (unsigned\ char*)CX\_Calloc(MAX\_EQNS,\ sizeof(unsigned\ char))))}}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_a6a45b7a5b196b70a99461a8c729b04f7}{Pseudo\_Transient\_Active}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_a2be0f416e20b2117f1526859b064ea18}{fixed\_eqn\_phase}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int}\ eqn,\ \textcolor{keywordtype}{int}\ phase);}
+\DoxyCodeLine{00334\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_a2939f912c49f4fc43a58ddaa58f17a7f}{fixed\_eqn}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00335\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_a5e2ea5d6eb8d022a0463f31fe0c04ddb}{fixed\_all\_phase}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int}\ phase);}
+\DoxyCodeLine{00336\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_a03aa8fc0bd150670bcefaac5b93f5a26}{fixed\_all}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00337\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_af99fbdbce54bfb85fc068028a66835f7}{fixed\_all\_zero\_p}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a71d36220a9ed3250502d77e5cbb7dff2}{radiation\_sources}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00340\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_ace6785796b3b5670f21bee0722e9f21e}{porous\_sources}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#if\ RP\_2D}}
+\DoxyCodeLine{00342\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ swirl\_porous\_sources(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00344\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_aeadff0e7304ed58bbfcdfc5d221f37ce}{body\_forces}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#if\ RP\_2D}}
+\DoxyCodeLine{00347\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ axi\_sources(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a2a8fcadc883d993ce9e571a12fce0752}{Update\_Cell\_Zone\_Motion}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00351\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_affe517025071b427bea404c434e9460d}{Init\_Cell\_Zone\_Motion}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00352\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a5eab6ce86a324a47ad25ca3b79fbef12}{Set\_Cell\_Zone\_Motion}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00353\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a09469e5abb9e99816f3bec0262a7530a}{Init\_Thread\_Frame\_Basis}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00354\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_a0ab03a4e2ee2e76bbbe1b569dca431e7}{Check\_MRF\_Mgrid\_Coaxial}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00355\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{c__fluid_8h_a1c5e35cc25094407c4804d0ad9a45e4a}{Check\_Any\_MRF\_Mgrid\_Coaxial}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *d);}
+\DoxyCodeLine{00356\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_ad367c7071c92a819b6e4770a732cc891}{Frame\_Acceleration\_Forces}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00357\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_aa925a673cc65383f855ef25b4c4575ae}{Thread\_Motion\_Equal}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ t1,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ t2);}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_aede3875b75e7d4cec6d1d2d9e7a41a3e}{Is\_User\_Defined\_Motion}}(\mbox{\hyperlink{structmotion__spec__struct}{Motion\_Spec}}\ *m);}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a10f48ce5631b3df0f2f5685108c71d7f}{Report\_Mspec}}(\mbox{\hyperlink{structmotion__spec__struct}{Motion\_Spec}}\ *m,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\#if\ SEEM}}
+\DoxyCodeLine{00364\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ cell\_set\_var(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{char}\ *name,\ \mbox{\hyperlink{structobj}{Pointer}}\ value);}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00366\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a222c6da04fad281b13edc3e69a65ca3b}{thread\_cell\_default}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00367\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a668da83edd2568eaec69730380943dd4}{thread\_cell\_update}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a6cd60c084a02bf1b77c0757b35d7a413}{Set\_SVar\_To\_Min}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ epsilon);}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00383\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a69b2f001732b01c9ef8cc25689ceb1fe}{Equation\_Unsteady\_Sources}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_phi,}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_s,}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_vof,}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_vof\_m1);}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00405\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a209acebfbbf843cb5ab9caa40045ba0b}{Equation\_Unsteady\_Sources\_LT}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_phi,}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_s,}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_vof,}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_vof\_m1,}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structtransient__struct}{TransientParameters}}\ *trans\_params\_local);}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a96ccba7e71805683040ab824fa5ed783}{Pseudo\_Transient\_Sources}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_v,\ \textcolor{keywordtype}{int}\ i,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_source,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ pseudo\_time\_step);}
+\DoxyCodeLine{00414\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a5719ca7d44f665d1c633296bcfd8e30d}{Energy\_Pseudo\_Transient\_Sources}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_v,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_source,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ pseudo\_time\_step);}
+\DoxyCodeLine{00415\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a57da331ef7def36014da49b72040471c}{Energy\_Pseudo\_Transient\_Sources\_Porous\_Melt}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_v,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_source,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ pseudo\_time\_step);}
+\DoxyCodeLine{00416\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a36eb655f492aa187af11af2d10284b4d}{Energy\_PT\_Sources}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_v,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_source,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ pseudo\_time\_step);}
+\DoxyCodeLine{00417\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_a0632ec44d60cfb8eb5049f2a986a5e5d}{potential\_energy\_sources}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_v,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_s);}
+\DoxyCodeLine{00418\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{c__fluid_8h_abc1af8a9c84a61f2744701d20aebc337}{relative\_permeability}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *satw,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *rel\_perm,\ \textcolor{keywordtype}{int}\ npts,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ rp\_tabular);}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{c__fluid_8h_aba58039231e119ddc456358d06bdc7b3}{is\_ph\_thread\_rel\_perm\_tabular}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread);}
+\DoxyCodeLine{00421\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_ac4be9f10250f27f9e7c61e6b0861368e}{get\_rel\_perm\_tab\_info}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,\ \textcolor{keywordtype}{int}\ *numpts,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **data\_satw,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **data\_rel\_perm);}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#if\ RP\_NETWORK}}
+\DoxyCodeLine{00424\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ thread\_network\_default(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00428\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{c__fluid_8h_ace42e682f6cabaedd7bfcf9c21aa5f6f}{Mspecs\_From\_RPvar}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *spec,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *varname);}
+\DoxyCodeLine{00430\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{c__fluid_8h_a77db68796c381cb86c598e3271eb762f}{RPvar\_From\_Mspecs}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *spec,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *cond);}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#define\ C\_R\_SOLID(c,t)THREAD\_PROP(t,PROP\_rho,0)}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#define\ C\_K\_SOLID(c,t)C\_K\_L(c,t)}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#define\ C\_CP\_SOLID(c,t)THREAD\_PROP(t,PROP\_Cp,0)}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_C\_FLUID\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

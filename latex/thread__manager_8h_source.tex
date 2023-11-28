@@ -1,0 +1,525 @@
+\doxysection{thread\+\_\+manager.\+h}
+\hypertarget{thread__manager_8h_source}{}\label{thread__manager_8h_source}\index{fluent20.1.0/tgrid/src/thread\_manager.h@{fluent20.1.0/tgrid/src/thread\_manager.h}}
+\mbox{\hyperlink{thread__manager_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ thread\_manager\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ thread\_manager\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{hash_8h}{hash.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tgrid_2src_2entity_8h}{entity.h}}"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ MAX\_ROLLMARKS\ 128}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ MAX\_BAD\_CHARS\ 128}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ MAX\_PREFIX\_LENGTH\ 32}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ MAX\_DELETED\_THREAD\_IDS\ 256}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ MAX\_FREE\_THREAD\_IDS\ 2048}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ TEMPORARY\_THREAD\ \ \ \ \ \ \ \ \ \ \ \ \ 0x1}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ USER\_THREAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ SOLVER\_THREAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0X4}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ PARTITION\_INTERFACE\_THREAD\ \ \ 0x8}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ SLIDING\_INTERFACE\_THREAD\ \ \ \ \ 0X10}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ PRINCIPAL\_FACE\_THREAD\ \ \ \ \ \ \ \ 0X20}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ PRISM\_REVERSED\_THREAD\ \ \ \ \ \ \ \ 0X40}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ PRISM\_IGNORED\_INTERFACE\ \ \ \ \ \ 0x80}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ PRISM\_REVERSED\_INTERFACE\ \ \ \ \ 0x100}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ INTERFACE\_THREAD\ \ \ \ \ \ \ \ \ \ \ \ \ 0x200}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ THREAD\_ID\_SYNC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ THREAD\_INTERFACE\_INSIDE\ \ \ \ \ \ 0x800}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ TAGGED\_THREAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x1000}}
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\#define\ THREAD\_ENTITY\_LIST\ \ \ \ \ \ \ \ \ \ \ 0x2000*/}}
+\DoxyCodeLine{00031\ \textcolor{comment}{/*\#define\ THREAD\_LOOP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000*/}}
+\DoxyCodeLine{00032\ \textcolor{comment}{/*\#define\ THREAD\_LOOP\_SAFE\ \ \ \ \ \ \ \ \ \ \ \ \ 0x8000*/}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ THREAD\_HAS\_NEIGHBORS\ \ \ \ \ \ \ \ \ 0x10000}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ THREAD\_NEIGHBORS\_FULL\ \ \ \ \ \ \ \ 0x20000}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ PRISM\_ORIGINAL\_INTERFACE\ \ \ \ \ 0x40000}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ MARKED\_THREAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x80000}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ POLY\_PRISM\_TRANSITION\_BASE\ \ \ 0x100000}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ PRISM\_BAFFLE\_THREAD\ \ \ \ \ \ \ \ \ \ 0x200000}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ PROXIMITY\_CACHE\_THREAD\ \ \ \ \ \ \ 0x800000}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ THREAD\_ORIGINAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x1000000}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ CAD\_THREAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2000000}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ ZOMBIE\_THREAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000000}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ THREAD\_ADJ\_QUAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x8000000}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ THREAD\_CURRENT\_INT\ \ \ \ \ \ \ \ \ \ \ 0x10000000}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#if\ DEBUG}}
+\DoxyCodeLine{00047\ \textcolor{comment}{/*\ so\ that\ gdb\ can\ get\ the\ stuct\ definition\ while\ debugging\ */}}
+\DoxyCodeLine{00048\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__thread__head__struct}{\_tg\_thread\_head\_struct}}\ *unused;}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ UNDO\_STACK\_LENGTH\ 10}}
+\DoxyCodeLine{00052\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__struct__interval}{\_tg\_struct\_interval}}}
+\DoxyCodeLine{00053\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__struct__interval_aa4c2a5552e9bc49b1816ff532f558c74}{a}},\ \mbox{\hyperlink{struct__tg__struct__interval_a148e3876077787926724625411d6e7a9}{b}};}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__struct__interval}{\_tg\_struct\_interval}}\ *\mbox{\hyperlink{struct__tg__struct__interval_a82d2b03ab876dceb7c1f7691cdd29d0d}{next}};}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__struct__interval}{\_tg\_struct\_interval}}\ *\mbox{\hyperlink{struct__tg__struct__interval_a9f6da962770e1394bf544f0efc8aa7b6}{prev}};}
+\DoxyCodeLine{00057\ \}\ \mbox{\hyperlink{thread__manager_8h_a73071983a13f4dba8dd38b95ed9c7aac}{Interval}};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__struct__id__interval}{\_tg\_struct\_id\_interval}}}
+\DoxyCodeLine{00060\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{struct__tg__struct__interval}{Interval}}\ *\mbox{\hyperlink{struct__tg__struct__id__interval_a299ebf5b2935a6d161e9ca077db6a257}{cache}};}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{struct__tg__struct__interval}{Interval}}\ *\mbox{\hyperlink{struct__tg__struct__id__interval_a3f2f99821fa3590e6cd18aaa3c7a5425}{head}};}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{struct__tg__struct__interval}{Interval}}\ *\mbox{\hyperlink{struct__tg__struct__id__interval_ab8d62a84443cb2cf4faa9e2a44e91c84}{tail}};}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__struct__id__interval_ac2cbe49c83ea8e4583a43266a31a8522}{start\_tid}};}
+\DoxyCodeLine{00065\ \}\ \mbox{\hyperlink{thread__manager_8h_aea6b51a4d0bebd5d139967eb8d300312}{Id\_Interval}};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00069\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00070\ \{}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{struct__tg__struct__id__interval}{Id\_Interval}}\ *\ \mbox{\hyperlink{thread__manager_8h_a2d5c3b1a36920bbb103637a9a3e32689}{\_TG\_Id\_interval\_init}}(\textcolor{keywordtype}{int}\ start\_tid);}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{thread__manager_8h_a004863342e475416496caa8e8924adfa}{\_TG\_Id\_interval\_find}}(\mbox{\hyperlink{struct__tg__struct__id__interval}{Id\_Interval}}\ *idit,\ \textcolor{keywordtype}{int}\ tid);}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a6ce8f24fc9d11d0bae1592f81d7a76dd}{\_TG\_Id\_interval\_add}}(\mbox{\hyperlink{struct__tg__struct__id__interval}{Id\_Interval}}\ *idit,\ \textcolor{keywordtype}{int}\ tid);}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a329755f77cbedee113882b4231af6f68}{\_TG\_Id\_interval\_remove}}(\mbox{\hyperlink{struct__tg__struct__id__interval}{Id\_Interval}}\ *idit,\ \textcolor{keywordtype}{int}\ tid);}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a8bfa44222aa5ec8cdc1fa55779005cfc}{\_TG\_Id\_interval\_next}}(\mbox{\hyperlink{struct__tg__struct__id__interval}{Id\_Interval}}\ *idit);}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_aae9c7ba73cc09bb98b0cd7073b90e5b9}{\_TG\_Id\_interval\_free}}(\mbox{\hyperlink{struct__tg__struct__id__interval}{Id\_Interval}}\ **idit);}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a7a0c4d35d65f4b7edecf060ed5e5a969}{\_TG\_Id\_interval\_build}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a79ca59f23894cf43e40beef9eccd9a4d}{\_TG\_Copy\_Thread\_Attribs}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_ab042701db37bf6102b5b195f91e6630e}{\_TG\_Swap\_Thread\_Attribs}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#if\ DEBUG}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \_TG\_Id\_interval\_print(\mbox{\hyperlink{struct__tg__struct__id__interval}{Id\_Interval}}\ *idit);}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_aa4fa82a0f95fede59b61c6c97e809d94}{\_TG\_Id\_interval\_reset}}(\mbox{\hyperlink{struct__tg__struct__id__interval}{Id\_Interval}}\ *idit);}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structstash}{stash}}\ *\ \mbox{\hyperlink{thread__manager_8h_a5c4c1f38a2ea1c8e67c70cb17049a646}{\_TG\_Get\_Stglob}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00089\ \}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00096\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__struct__thread__manager}{\_tg\_struct\_thread\_manager}}}
+\DoxyCodeLine{00097\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__struct__thread__manager_a90b8a3a4cb19ad1a1586ca57ca172528}{deleted\_thread\_ids}}[\mbox{\hyperlink{thread__manager_8h_a4c75e30472609e0d944115fa64d20c48}{MAX\_DELETED\_THREAD\_IDS}}];}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__struct__thread__manager_a5c1b6ecc39b3b1c5e43b7f2133b27333}{deleted\_id\_index}};}
+\DoxyCodeLine{00100\ \ \ \ \ \mbox{\hyperlink{struct__tg__struct__id__interval}{Id\_Interval}}\ *\mbox{\hyperlink{struct__tg__struct__thread__manager_a9ab6ab3763954e9f67ac9287990f4853}{interval}};}
+\DoxyCodeLine{00101\ \ \ \ \ \mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *\mbox{\hyperlink{struct__tg__struct__thread__manager_ab3a72555f5b8d655f02b33f3c3977cbe}{thread\_names}};}
+\DoxyCodeLine{00102\ \ \ \ \ \mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *\mbox{\hyperlink{struct__tg__struct__thread__manager_a1f1907f91dbbc158c05bdbf978a6192e}{thread\_ids}};}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__struct__thread__manager_acac08054e479d3ae527719e4e62a140b}{temp\_id}};}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{struct__tg__struct__thread__manager_a0b67d58879409ef8fecc05ecf23750aa}{bad\_chars}}[\mbox{\hyperlink{thread__manager_8h_a033358c9054b2156353f312cb5501727}{MAX\_BAD\_CHARS}}];}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{struct__tg__struct__thread__manager_a83bc0d1f9d9a8e9549ff44abef486776}{prefix}}[\mbox{\hyperlink{thread__manager_8h_a232e63ea59e42fb8ea54f86ef2b70c32}{MAX\_PREFIX\_LENGTH}}];}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__struct__thread__manager_a5a5dc0c3a61d78d7f66650d6a731c163}{max\_tid}};}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__struct__thread__manager_ac7fd8bbd1051125915021eea4be21950}{max\_tid\_sync}};}
+\DoxyCodeLine{00108\ \}\ \mbox{\hyperlink{thread__manager_8h_a052e82a1be4c90183e86dd4b945aa421}{Thread\_Manager}};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00111\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{/*\ integer\ attributes\ */}}
+\DoxyCodeLine{00113\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8ad615fc31ad2dadd7dae1d5c3c48f0e6b}{ATTR\_ID}},}
+\DoxyCodeLine{00114\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8a48ddad5cca8cd9223251268cfc386c3b}{ATTR\_BOUNDARY\_CONDITIONS}},}
+\DoxyCodeLine{00115\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8ae49f497ad159a0a3eba3274fa5baf80a}{ATTR\_MAJOR\_ID}},}
+\DoxyCodeLine{00116\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8ac3bc798bb3167d9bcc080acf28f794e1}{ATTR\_SHADOW\_ID}},}
+\DoxyCodeLine{00117\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8a9d87b6b9bf8a16bafd7a01f41db23704}{ATTR\_ORDER}},}
+\DoxyCodeLine{00118\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8afe7683672b122a58c08f547f5351b857}{ATTR\_SOURCE\_ID}},}
+\DoxyCodeLine{00119\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8a430c817742621bdec2814e423843b619}{ATTR\_WRAP\_LEVEL}},}
+\DoxyCodeLine{00120\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8aab65f6995f64c5d83e7ce7e1a3646a37}{ATTR\_OBJECT\_ID}},}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{comment}{/*Flag\ attribute\ for\ boolean\ attributes\ */}}
+\DoxyCodeLine{00123\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8af6bcc89b51ea97ef865b62566edb19e9}{ATTR\_FLAGS}},}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{comment}{/*\ string\ attributes\ */}}
+\DoxyCodeLine{00126\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8ad663865cf214e3e17ee06bab55380850}{ATTR\_NAME}},}
+\DoxyCodeLine{00127\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8ad75c83c761ce2cdc3fa45b43744e15a0}{ATTR\_OBJECTS}},}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{/*\ pointer\ attributes\ */}}
+\DoxyCodeLine{00130\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8a316fdc0692308b98e25b2eaf84f0b33c}{ATTR\_MESH\_REGIONS}},}
+\DoxyCodeLine{00131\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8a65de194ad6be4ebd7a10b8406e1b919e}{ATTR\_BOUNDARY\_TAGS}},}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8a4144e4fcc0c068632a3dcbc4c1bf1b13}{MAX\_ATTR\_TYPES}}}
+\DoxyCodeLine{00134\ \}\mbox{\hyperlink{thread__manager_8h_a8481bd188995e744877a51f82b3ecab8}{Attribute\_Type}};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union}}
+\DoxyCodeLine{00137\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{union_attr___data_adf89a25c6c2cefbabf86ff4e7931032e}{int\_data}};}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{char}\ char\_data[\mbox{\hyperlink{cxserv_8h_a0c397a708cec89c74029582574516b30}{MAX\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00140\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{union_attr___data_a487d8d76270b4e427cafec2c5d0950e2}{boolean\_data}};}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{union_attr___data_a4d7aa4ede2c630c80f21a0506f70b958}{pointer\_data}};}
+\DoxyCodeLine{00142\ \}\mbox{\hyperlink{union_attr___data}{Attr\_Data}};}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__thread__attributes}{\_thread\_attributes}}}
+\DoxyCodeLine{00145\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \mbox{\hyperlink{union_attr___data}{Attr\_Data}}\ *\mbox{\hyperlink{struct__thread__attributes_a90c8b441a013b41f8acc9ac06b4d38c1}{value}};}
+\DoxyCodeLine{00147\ \ \ \ \ void\ (*\mbox{\hyperlink{struct__thread__attributes_a140b25207598b9ced8c61f8b0fe1e748}{fn}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00148\ \}\mbox{\hyperlink{thread__manager_8h_a6c371de9c412d1ea7d352b6b4f18678a}{Thread\_Attributes}};}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__boundary__conditions}{\_boundary\_conditions}}}
+\DoxyCodeLine{00151\ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__boundary__conditions_aed7ea92f45bd273dde380a45ddced592}{offset}};}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__boundary__conditions_ac765329451135abec74c45e1897abf26}{type}};}
+\DoxyCodeLine{00154\ \}\mbox{\hyperlink{thread__manager_8h_af17cbd1f428b9adbc67055b8231158f6}{BCs}};}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__struct__reserved__thread__manager}{\_tg\_struct\_reserved\_thread\_manager}}}
+\DoxyCodeLine{00157\ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *\mbox{\hyperlink{struct__tg__struct__reserved__thread__manager_afd41b1561fc112a5a01ea7f92d21a297}{reserved\_threads\_by\_id}};}
+\DoxyCodeLine{00159\ \ \ \ \ \mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *\mbox{\hyperlink{struct__tg__struct__reserved__thread__manager_a6d0b0212b9aeb387062038a4a02fa48d}{reserved\_threads\_by\_name}};}
+\DoxyCodeLine{00160\ \}\ \mbox{\hyperlink{thread__manager_8h_a75507d2f9a7abbb5b952f0844d445182}{Reserved\_Thread\_Manager}};}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{comment}{/*\ Thread\ attribute\ macros\ */}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ GET\_THREAD\_ATTRIBUTES(t)\ ((Thread\_Attributes\ *)((t)-\/>attr))}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ SET\_THREAD\_ATTRIBUTES(t,attrs)\ (t)-\/>attr\ =\ (void\ *)(attrs)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ UPDATE\_ATTRIBUTE(t,\ attr,\ th\_dat,\ val\_ptr)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\ \ \ \ (GET\_THREAD\_ATTRIBUTES(t))[attr].fn(t,\ th\_dat,\ val\_ptr)}}
+\DoxyCodeLine{00167\ \textcolor{comment}{/*should\ UPDATE\_ATTRIBUTE\ be\ renamed\ to\ UPDATE\_THREAD\_ATTRIBUTE\ ??\ */}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ ATTRIBUTE\_LOCATION(t,\ attr)\ (GET\_THREAD\_ATTRIBUTES(t))[attr].value}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#define\ ATTRIBUTES\_MEMBER(t,\ attr,\ field)\ ATTRIBUTE\_LOCATION(t,\ attr)-\/>field}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ ID\_ATTRIBUTE(t)\ \ \ \ \ \ \ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_ID,\ int\_data)}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#define\ BC\_ATTRIBUTE(t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\ \ \ \ ((BCs\ *)(ATTRIBUTES\_MEMBER(t,\ ATTR\_BOUNDARY\_CONDITIONS,\ pointer\_data)))}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ TYPE\_ATTRIBUTE(t)\ (BC\_ATTRIBUTE(t)-\/>type)}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ OFFSET\_ATTRIBUTE(t)\ (BC\_ATTRIBUTE(t)-\/>offset)}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ MAJOR\_ID\_ATTRIBUTE(t)\ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_MAJOR\_ID,\ int\_data)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ SHADOW\_ID\_ATTRIBUTE(t)\ ATTRIBUTES\_MEMBER(t,\ ATTR\_SHADOW\_ID,\ int\_data)}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ ORDER\_ATTRIBUTE(t)\ \ \ \ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_ORDER,\ int\_data)}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#define\ SOURCE\_ID\_ATTRIBUTE(t)\ ATTRIBUTES\_MEMBER(t,\ ATTR\_SOURCE\_ID,\ int\_data)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#define\ WRAP\_LEVEL\_ATTRIBUTE(t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\ \ \ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_WRAP\_LEVEL,\ int\_data)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ FLAGS\_ATTRIBUTE(t)\ \ \ \ \ \ \ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_FLAGS,\ int\_data)}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ NAME\_ATTRIBUTE(t)\ \ \ \ \ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_NAME,\ char\_data)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#define\ OBJECTS\_ATTRIBUTE(t)\ \ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_OBJECTS,\ char\_data)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#define\ OBJECT\_ID\_ATTRIBUTE(t)\ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_OBJECT\_ID,\ int\_data)}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#define\ OBJECT\_REGIONS\_ATTRIBUTE(t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\ \ \ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_MESH\_REGIONS,\ pointer\_data)}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ BOUNDARY\_TAGS\_ATTRIBUTE(t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\ \ \ \ ATTRIBUTES\_MEMBER(t,\ ATTR\_BOUNDARY\_TAGS,\ pointer\_data)}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#define\ STRING\_LIST\_ATTRIBUTE(t,\ attr)\ \ ATTRIBUTES\_MEMBER(t,\ attr,\ pointer\_data)}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#define\ ATTRIBUTE\_FLAG(t,\ mask)\ \ \ \ \ (FLAGS\_ATTRIBUTE(t)\ \&\ (mask))}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ SET\_ATTRIBUTE\_FLAGS(t,f)\ \ \ FLAGS\_ATTRIBUTE(t)\ |=\ (f)}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#define\ CLEAR\_ATTRIBUTE\_FLAGS(t,f)\ FLAGS\_ATTRIBUTE(t)\ \&=\ \string~(f)}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#define\ ATTR\_SI\_FLAG\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ ATTR\_ORIGINAL\_FLAG\ \ \ \ \ \ \ \ \ \ \ \ 0x4}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#define\ ATTR\_STASHED\_FLAG\ \ \ \ \ \ \ \ \ \ \ \ \ 0x20}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#define\ ATTR\_VOLUMECAP\_FLAG\ \ \ \ \ \ \ \ \ \ \ 0x200}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#define\ ATTR\_BAFFLE\_FLAG\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00209\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00210\ \{}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{thread__manager_8h_a1ccbd6e5be120541a45e960d1aed32ca}{\_tg\_spl\_chars}};}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a2342d185b123ca6831bb54f1f1e33b9e}{\_TG\_Thmgr\_init}}(\textcolor{keywordtype}{int}\ init\_size,\ \textcolor{keywordtype}{int}\ start\_tid);}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_adaf8dee2381ca6981f36166e7e607bef}{\_TG\_Thmgr\_reset}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a9e021dcbded4c5537b17dfab725ddda9}{\_TG\_Thmgr\_free}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{thread__manager_8h_a7cfe16df269dfe95e7db8763f3a009bb}{\_TG\_Thmgr\_is\_id\_free}}(\textcolor{keywordtype}{int}\ tid);}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{thread__manager_8h_a0f05730a2efc4d6364005edeb306767e}{\_TG\_Thmgr\_is\_name\_free}}(\textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{struct__tg__struct__reserved__thread__manager}{Reserved\_Thread\_Manager}}\ *\mbox{\hyperlink{thread__manager_8h_ad715338968c4d0d4f307de35c415ff6b}{\_TG\_Get\_Rtmgr}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a537003b559dd27b6337be88bf6c23a5c}{\_TG\_Thmgr\_set\_thread\_name}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *th,\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a7fc398279932ef3f1034e17b15cdd22e}{\_TG\_Thmgr\_set\_prefix}}(\textcolor{keywordtype}{char}\ *prefix);}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a5640fc187c5c304237738bffd6362142}{\_TG\_Thmgr\_register\_bad\_chars}}(\textcolor{keywordtype}{char}\ *badchars);}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a7a6894f8d63ad990c9027d1d0d91f895}{\_TG\_Thmgr\_release\_deleted\_ids}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a6e9c899958a951923780880f15c9fe3e}{\_TG\_Deregister\_Reserved\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a0073edf1e4e73a98228d9f6cc94c8590}{\_TG\_Get\_Unique\_Thread\_Id}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a3a67f0920645651f5707ad36dccf7ad1}{\_TG\_Set\_Face\_Sub\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a2b0e0c73b7e2ff048dc0b41da5903bb1}{\_TG\_Set\_Node\_Sub\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_abdcdb1ba73c0d9f18cf8633f9d6ae27b}{\_TG\_Clear\_Face\_Sub\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a2f04bc1b463153447d9ac5ba901ba233}{\_TG\_Clear\_Node\_Sub\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a376aca691c7c634ed59e90fc2b691c94}{\_TG\_Sync\_Thread\_Global}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_ace9e294cb15db7e097073966e42a7490}{\_TG\_Sync\_Thread\_Ids}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a602b559a3749448bb77d601ba8988997}{\_TG\_Segregate\_Thread}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_af629272a48cc6bec4545af3511c8b04e}{\_TG\_Segregate\_Threads}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a1d6db7aea5923e379918b64e3107a3c3}{\_TG\_Thread\_get\_default\_name}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *th,\ \textcolor{keywordtype}{char}\ name[]);}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a1c83e1711248b1b581fb29d9486b80d5}{\_TG\_Thmgr\_get\_max\_id}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a973a60c13bd9fb1447cfb78316696e71}{\_TG\_Thmgr\_get\_max\_id\_sync}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a91840ae00fac0653e45cad09331308fe}{\_TG\_Thmgr\_set\_max\_id\_sync}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a65d93e1d8a406f1ae39922864ce9ad62}{\_TG\_Thread\_update\_id\_in\_name}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a8883655173c65a138fd63f43a706d603}{\_TG\_Thmgr\_mark\_all\_thread\_ids\_sync}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a9301b0e49c847409220b46e5329d1229}{\_TG\_Thread\_Swap\_Ids}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t1,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t2);}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a5a50173c095d50b0068ce4e4dfb83de6}{\_TG\_Thread\_Swap\_Names}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t1,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t2);}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a0073edf1e4e73a98228d9f6cc94c8590}{\_TG\_Get\_Unique\_Thread\_Id}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}*\ \mbox{\hyperlink{thread__manager_8h_a9dbc29b151b276e7489421f026497bfd}{\_TG\_Create\_Thread1}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tclass,\textcolor{keywordtype}{int}\ type,}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ etype,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file,}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *func);}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a2d8e2758c4c53a95c339e0acd1227b4d}{\_TG\_Free\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a21604fec9d1e003a3faffa342301771e}{\_TG\_Alloc\_Periodic\_Memory}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a5b31a77b5a88a6627f545678227e4d1a}{\_TG\_Free\_Periodic\_Memory}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a76a2225e297f300a50386d1377f93b64}{\_TG\_Copy\_Periodic\_Attributes}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00260\ \}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00269\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\_tg\_struct\_event}
+\DoxyCodeLine{00270\ \{}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keywordtype}{long}\ timestamp;}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keywordtype}{short}\ type;}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keywordtype}{short}\ sub\_type;}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keywordtype}{int}\ thread;}
+\DoxyCodeLine{00275\ \}\ Thread\_Event;}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00279\ \textcolor{comment}{}}
+\DoxyCodeLine{00280\ \textcolor{comment}{\ \ \ typedef\ struct\ \_tg\_struct\_event\_manager}}
+\DoxyCodeLine{00281\ \textcolor{comment}{\ \ \ \{}}
+\DoxyCodeLine{00282\ \textcolor{comment}{\ \ \ List\ *events;}}
+\DoxyCodeLine{00283\ \textcolor{comment}{\ \ \ \}\ Event\_Manager;}}
+\DoxyCodeLine{00284\ \textcolor{comment}{}}
+\DoxyCodeLine{00285\ \textcolor{comment}{\ \ \ Event\_Manager*}}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ \ \ TG\_Eventmgr\_create();}}
+\DoxyCodeLine{00287\ \textcolor{comment}{}}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ \ \ void}}
+\DoxyCodeLine{00289\ \textcolor{comment}{\ \ \ TG\_Eventmgr\_start\_tracking(Event\_Manager\ *em,\ int\ event\_type);}}
+\DoxyCodeLine{00290\ \textcolor{comment}{}}
+\DoxyCodeLine{00291\ \textcolor{comment}{\ \ \ void}}
+\DoxyCodeLine{00292\ \textcolor{comment}{\ \ \ TG\_Eventmgr\_stop\_tracking(Event\_Manager\ *em);}}
+\DoxyCodeLine{00293\ \textcolor{comment}{}}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ \ \ void}}
+\DoxyCodeLine{00295\ \textcolor{comment}{\ \ \ TG\_Eventmgr\_report\_events(Event\_Manager\ *em,\ int\ new\_threads,}}
+\DoxyCodeLine{00296\ \textcolor{comment}{\ \ \ int\ del\_threads,}}
+\DoxyCodeLine{00297\ \textcolor{comment}{\ \ \ int\ mod\_threads);}}
+\DoxyCodeLine{00298\ \textcolor{comment}{\ \ \ void}}
+\DoxyCodeLine{00299\ \textcolor{comment}{\ \ \ TG\_Eventmgr\_add\_event(Event\_Manager\ *em,\ Event\ ev);}}
+\DoxyCodeLine{00300\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \textcolor{keywordtype}{long}}
+\DoxyCodeLine{00303\ TG\_Thmgr\_create\_rollmark(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00306\ TG\_Thmgr\_collect\_events(\textcolor{keywordtype}{long}\ rollmark,\ \textcolor{keywordtype}{int}\ new\_threads,}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ del\_threads,}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ mod\_threads);}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00311\ TG\_Thmgr\_delete\_rollmark(\textcolor{keywordtype}{long}\ rollmark,\ \textcolor{keywordtype}{int}\ new\_threads,}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ del\_threads,}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ mod\_threads);}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00316\ \textcolor{comment}{}}
+\DoxyCodeLine{00317\ \textcolor{comment}{typedef\ struct\ \_tg\_struct\_event\_manager}}
+\DoxyCodeLine{00318\ \textcolor{comment}{\{}}
+\DoxyCodeLine{00319\ \textcolor{comment}{\ \ \ \ List\ *events;}}
+\DoxyCodeLine{00320\ \textcolor{comment}{\}\ Event\_Manager;}}
+\DoxyCodeLine{00321\ \textcolor{comment}{}}
+\DoxyCodeLine{00322\ \textcolor{comment}{Event\_Manager*}}
+\DoxyCodeLine{00323\ \textcolor{comment}{TG\_Eventmgr\_create();}}
+\DoxyCodeLine{00324\ \textcolor{comment}{}}
+\DoxyCodeLine{00325\ \textcolor{comment}{void}}
+\DoxyCodeLine{00326\ \textcolor{comment}{TG\_Eventmgr\_start\_tracking(Event\_Manager\ *em,\ int\ event\_type);}}
+\DoxyCodeLine{00327\ \textcolor{comment}{}}
+\DoxyCodeLine{00328\ \textcolor{comment}{void}}
+\DoxyCodeLine{00329\ \textcolor{comment}{TG\_Eventmgr\_stop\_tracking(Event\_Manager\ *em);}}
+\DoxyCodeLine{00330\ \textcolor{comment}{}}
+\DoxyCodeLine{00331\ \textcolor{comment}{void}}
+\DoxyCodeLine{00332\ \textcolor{comment}{TG\_Eventmgr\_report\_events(Event\_Manager\ *em,\ int\ new\_threads,}}
+\DoxyCodeLine{00333\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int\ del\_threads,}}
+\DoxyCodeLine{00334\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int\ mod\_threads);}}
+\DoxyCodeLine{00335\ \textcolor{comment}{void}}
+\DoxyCodeLine{00336\ \textcolor{comment}{TG\_Eventmgr\_add\_event(Event\_Manager\ *em,\ Event\ ev);}}
+\DoxyCodeLine{00337\ \textcolor{comment}{}}
+\DoxyCodeLine{00338\ \textcolor{comment}{static\ long}}
+\DoxyCodeLine{00339\ \textcolor{comment}{tm\_create\_rollmark()}}
+\DoxyCodeLine{00340\ \textcolor{comment}{\{}}
+\DoxyCodeLine{00341\ \textcolor{comment}{\}}}
+\DoxyCodeLine{00342\ \textcolor{comment}{}}
+\DoxyCodeLine{00343\ \textcolor{comment}{static\ tm\_delete\_rollmark(long\ rollmark,\ int\ new\_threads,}}
+\DoxyCodeLine{00344\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int\ del\_threads,}}
+\DoxyCodeLine{00345\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int\ mod\_threads)}}
+\DoxyCodeLine{00346\ \textcolor{comment}{\{}}
+\DoxyCodeLine{00347\ \textcolor{comment}{\}}}
+\DoxyCodeLine{00348\ \textcolor{comment}{}}
+\DoxyCodeLine{00349\ \textcolor{comment}{static\ int}}
+\DoxyCodeLine{00350\ \textcolor{comment}{add\_event(Event\ ev)}}
+\DoxyCodeLine{00351\ \textcolor{comment}{\{}}
+\DoxyCodeLine{00352\ \textcolor{comment}{\}}}
+\DoxyCodeLine{00353\ \textcolor{comment}{}}
+\DoxyCodeLine{00354\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ 0\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#define\ LTHREAD\_NEW\_FLAG\ \ \ 0x10}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\#define\ LTHREAD\_PERSISTENT\_FLAG\ 0x20\ }\textcolor{comment}{/*to\ mark\ for\ mesh\ object\ backup\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\#define\ LTHREAD\_CHECKPOINT\_FLAG\ 0x40\ }\textcolor{comment}{/*to\ mark\ for\ checkpoint\ backup\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00361\ \textcolor{comment}{/*\ if\ both\ LTHREAD\_PERSISTENT\_FLAG\ and\ LTHREAD\_CHECKPOINT\_FLAG\ are\ not\ set\ then}}
+\DoxyCodeLine{00362\ \textcolor{comment}{\ *\ the\ zone\ is\ considered\ as\ temp\ backup\ zone\ created\ for\ undo\ */}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\#define\ LTHREAD\_SOLVER\_THREAD\_FLAG}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\#define\ LTHREAD\_SI\_THREAD\_FLAG}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#define\ LTHREAD\_FLAG(t,mask)\ \ \ \ \ ((lt)-\/>flags\ \&\ (mask))}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#define\ SET\_LTHREAD\_FLAGS(lt,f)\ \ \ (lt)-\/>flags\ |=\ (f)}}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\#define\ CLEAR\_LTHREAD\_FLAGS(lt,f)\ (lt)-\/>flags\ \&=\ \string~(f)}}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_lthread}{Lthread}}}
+\DoxyCodeLine{00371\ \{}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_lthread_a7441ef0865bcb3db9b8064dd7375c1ea}{id}};}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{struct_lthread_ad50982abf9e9bbbc784f8f17fa25b1b2}{name}}[\mbox{\hyperlink{cxserv_8h_a0c397a708cec89c74029582574516b30}{MAX\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_lthread_ac85d5511fdb8d162a7278bfb440ae420}{order}};}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_lthread_a4c03ffa92da49d0ed568977405abd99c}{klass}};}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_lthread_ac765329451135abec74c45e1897abf26}{type}};}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_lthread_a4c762b9c7f1fcd8f5fe50765b20d25b7}{etype}};}
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_lthread_afbdf4e40cdcd20ffa8cf5d516e977672}{ntv}};}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_lthread_ac92588540e8c1d014a08cd8a45462b19}{flags}};}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_lthread_a1f943a1d39745c4484668a625ee9dead}{tv}};}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_lthread_a90d12eb1216c60cd601308eb47e3a1bb}{nv}};}
+\DoxyCodeLine{00382\ \ \ \ \ \mbox{\hyperlink{dbgmsg_8h_a5f5a64ef503db0fc824df8320929b126}{real}}\ (*\mbox{\hyperlink{struct_lthread_a0161d3a903dfeea35669650220b5f304}{coord}})[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];}
+\DoxyCodeLine{00383\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{struct_lthread_aacd4307c59ed8dccebd5702a4a982574}{curv}};}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{comment}{/*Replace\ with\ enumerated\ ids*/}}
+\DoxyCodeLine{00385\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ *\mbox{\hyperlink{struct_lthread_a177b801fffc225c932fb2d39ad127900}{map}};}
+\DoxyCodeLine{00386\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ *\mbox{\hyperlink{struct_lthread_ab9711ca785ce3525ff9cf54fdbe3c54a}{twin\_map}};}
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_lthread_aa6a56ff6d4c0baa7856a2006295f0664}{nel}};}
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct_lthread_abcafbdaafafde8de838e7465ba468fe0}{elist}};}
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_lthread_a3bf1137663f19e5c361c845cf4dfb7db}{ne}};}
+\DoxyCodeLine{00390\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ *\mbox{\hyperlink{struct_lthread_add3e1f338c1a6d6b2e377cf9b24b8f0d}{emap}};}
+\DoxyCodeLine{00391\ \};}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structstash}{stash}}}
+\DoxyCodeLine{00394\ \{}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_lthread}{Lthread}}\ **\mbox{\hyperlink{structstash_aebed626a24a87f4e14772953895c2ce7}{list}};}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structstash_a76f11d9a0a47b94f72c2d0e77fb32240}{n}},\ \mbox{\hyperlink{structstash_a102915126eea69748433b1d248aeced0}{n\_max}};}
+\DoxyCodeLine{00397\ \ \ \ \ \mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *\mbox{\hyperlink{structstash_a37e5b2e7f874ce90603c609717a10e25}{tref}};}
+\DoxyCodeLine{00398\ \ \ \ \ \mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *\mbox{\hyperlink{structstash_a1bb64bc8989403ea1dcec0290da67c23}{tnmref}};}
+\DoxyCodeLine{00399\ \ \ \ \ \mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *\mbox{\hyperlink{structstash_aa6071ee861126246f74db349671d862f}{vref}};}
+\DoxyCodeLine{00400\ \ \ \ \ \mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *\mbox{\hyperlink{structstash_acf1a192e082eb0aaf8116cce256e3012}{eref}};}
+\DoxyCodeLine{00401\ \ \ \ \ \mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *\mbox{\hyperlink{structstash_a9eae24f3ded69e20fcf57c46b47cd8f1}{fref}};}
+\DoxyCodeLine{00402\ \};}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structundo__node}{undo\_node}}}
+\DoxyCodeLine{00405\ \{}
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structundo__node_a8cc3dd191f714ba4ae35b2d3ac5b557a}{tid}};}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structundo__node_a53fe45b9d43c0da75fb377b484e44426}{sid}};}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structundo__node_aa801e71074c0d173fc204fd3a539b055}{obj\_name}};}
+\DoxyCodeLine{00409\ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{structundo__node_a69d5c24d677f1d110a19b93834616ad8}{regs}};}
+\DoxyCodeLine{00410\ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{structundo__node_a8c1d031b50b2e0e229d838c781cea907}{tags}};}
+\DoxyCodeLine{00411\ \}\ \mbox{\hyperlink{thread__manager_8h_aad14e0ccb0ddf3b25f85df1f711bf535}{Undo\_Node}};}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structundo__stack__entry}{undo\_stack\_entry}}}
+\DoxyCodeLine{00414\ \{}
+\DoxyCodeLine{00415\ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{structundo__stack__entry_a2ed5ef400299ce93b8013eea33c4ea74}{list\_undo\_entities}};}
+\DoxyCodeLine{00416\ \}\ \mbox{\hyperlink{thread__manager_8h_a49a23c884110bde68fc1a21235a6f3a1}{Undo\_Stack\_Entry}};}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \textcolor{comment}{/*\ thread\ interface\ */}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00422\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00423\ \{}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a1ea26c07c122d27f52f819d0ee532af9}{\_TG\_Thread\_set\_id1}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a74e4354eb14ec9cebaa0b44c2adfab54}{\_TG\_Thread\_set\_id\_no\_check}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a69de3f3e4f8188286fc690d29754ca74}{\_TG\_Thread\_set\_name\_no\_check}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{char}*);}
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_ae42a6abd658c1718268cfe0a5f87b036}{\_TG\_Thread\_set\_name1}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{char}*\ name);}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a312ce214b51a1cf4e97f2dbe04589514}{\_TG\_Thread\_assign\_default\_name1}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00431\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_aee64cad853c12577760e1973ebf4d9e9}{\_TG\_Thread\_set\_name1\_no\_check}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{char}*\ name);}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a32fade6ecaab33b712842748a65f0efc}{\_TG\_Thread\_set\_sname1}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{char}*\ format,\ ...);}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{thread__manager_8h_a9e514bb6e65aaefbf08a76fb443d681d}{\_TG\_Thread\_get\_by\_id}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{thread__manager_8h_a93c3c9d46a8ac1ac60737ecde0dcc969}{\_TG\_Thread\_get\_by\_name}}(\textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{struct__thread__attributes}{Thread\_Attributes}}\ *\mbox{\hyperlink{thread__manager_8h_a3d1f198f16e09e0753d2b3193bb7f416}{\_TG\_Reserved\_Thread\_Attributes\_by\_name}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{struct__thread__attributes}{Thread\_Attributes}}\ *\mbox{\hyperlink{thread__manager_8h_a7e699b690f29275a9a9c142c8c3a08f4}{\_TG\_Reserved\_Thread\_Attributes\_by\_id}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00439\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a751c1dd9d2426177a572b4b1100ec0fa}{\_TG\_Free\_All\_Thread\_Attributes}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a7ac32d917b1d04ff9e274ab0f1266f28}{\_TG\_Thread\_swap\_id\_name}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t1,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t2);}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_adc858d21859814631371a47d2655788c}{\_TG\_Update\_Id\_Name\_For\_Stashed\_Thread}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{struct_lthread}{Lthread}}\ *);}
+\DoxyCodeLine{00444\ }
+\DoxyCodeLine{00445\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a04ef1974c3b4217f4ab23d7d3547bc34}{\_TG\_Thread\_Promote}}(\mbox{\hyperlink{structcons__cell}{List}}\ *domlist,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00446\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a5586aad643ab6b694283ad32eef5b072}{\_TG\_Promote\_Unique\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_afa1c143be6516ac65fff7a14dbf7c000}{\_TG\_Promote\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_abfc85be6fde052f5c559bdf19715f73e}{\_TG\_Thread\_Demote}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *th);}
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a43099f20743963db1ff75ec205f0f8c2}{\_TG\_Promote\_Tmp\_Threads}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_ac7407dc6b23a8ceaf90866c27ee7f264}{\_TG\_Demote\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *th);}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a4855d2f75a2f6aadb30074da1a957be3}{\_TG\_Thread\_Demote1}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *th);}
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00453\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{thread__manager_8h_a0ef2474bc441e0b052d609ae2c90ebc5}{\_TG\_Create\_Tmp\_Thread2}}(\textcolor{keywordtype}{int}\ tclass,\ \textcolor{keywordtype}{int}\ type,\ \textcolor{keywordtype}{int}\ etype,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *func);}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{thread__manager_8h_a68361aa4e1e3647e62e8c2300aea1f5f}{\_TG\_Create\_Tmp\_Thread3}}(\textcolor{keywordtype}{int}\ tclass,\ \textcolor{keywordtype}{int}\ type,\ \textcolor{keywordtype}{int}\ etype,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *func);}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{struct__thread__attributes}{Thread\_Attributes}}\ *\ \mbox{\hyperlink{thread__manager_8h_a444c4de99508773b0909762a6991eda1}{\_TG\_Copy\_Thread\_Attributes}}(\mbox{\hyperlink{struct__thread__attributes}{Thread\_Attributes}}\ *,\ \mbox{\hyperlink{struct__thread__attributes}{Thread\_Attributes}}\ *);}
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a019571388f023a62352a49fe5ca59976}{\_TG\_Deregister\_Thread\_Attribute}}(\mbox{\hyperlink{struct__thread__attributes}{Thread\_Attributes}}\ *);}
+\DoxyCodeLine{00457\ }
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{struct__thread__attributes}{Thread\_Attributes}}\ *\ \mbox{\hyperlink{thread__manager_8h_a82843fead4f6882b7f901f18ec854201}{\_TG\_Register\_Reserved\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a99f46b64e74cb4095afe4554680ec0ae}{\_TG\_Thread\_id\_lock}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a60a2541029f1b4022757dcc12698574f}{\_TG\_Thread\_id\_lock\_all}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a410a4538f9b58542fddbd6a39c150020}{\_TG\_Thread\_id\_unlock}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_af293c67e75905e9840a42d444e3f69ea}{\_TG\_Thread\_id\_unlock\_all}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a8d8ef59d36baf8aff76173d069808e0a}{\_TG\_Thread\_name\_lock}}(\textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00464\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a9eeef719d4eff21bbca97e3a85451b0c}{\_TG\_Thread\_name\_lock\_all}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_ae18c991a9bfde89d1b66eff7420f3047}{\_TG\_Thread\_name\_unlock}}(\textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a0541c40c54025222e24824f07df45cc6}{\_TG\_Thread\_name\_unlock\_all}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00467\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{thread__manager_8h_a754aeba3ced02c6cc78058dfb5e74696}{\_TG\_Thread\_id\_locked\_p}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{thread__manager_8h_a57d860e5f57e53e504f23d95bc2bf37f}{\_TG\_Thread\_name\_locked\_p}}(\textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00469\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{thread__manager_8h_a2269bc08756dc85445c17dd11a96ecd2}{\_TG\_Get\_Threads\_With\_Offset}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00470\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}*\ \mbox{\hyperlink{thread__manager_8h_ab46ed86431ac213a010b3ccb2ee5f169}{\_TG\_Get\_Case\_Thread\_Attrs}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}*\ \mbox{\hyperlink{thread__manager_8h_aaad043c3b655cd4f7a913390f170c02e}{\_TG\_Get\_Major\_Attrs}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00472\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}*\ \mbox{\hyperlink{thread__manager_8h_ae9a2d79bc0c4fea7c4ba77817818aaaf}{\_TG\_Get\_SI\_Attrs}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00473\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_abc8d1f474fe5255472c163002aa658fe}{\_TG\_Get\_Attrs\_Id\_Min\_Max}}(\textcolor{keywordtype}{int}\ *min,\ \textcolor{keywordtype}{int}\ *max);}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a475ee26f3c369303905dc632fdfae419}{\_TG\_Initialize\_Thread\_Attributes}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_af9faa98fc48ad24c1f39a7f1f3721b48}{\_TG\_Fill\_Thread\_Attributes}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00477\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a2a7489183aa6000d2f0c5fe4b0638baf}{Attribute\_Update\_Id}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00478\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a554548c1412de8b1a7f211682144fb73}{Attribute\_Update\_Object\_Id}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a6a29b480b60ff7199d63ea7dd3438952}{Attribute\_Update\_Boundary\_Conditions}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a1c570ddfe5535cc05d852878ee62b890}{Attribute\_Update\_Major\_Id}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00481\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_adc79233ddc4ad2ed2251c66d5a5be21e}{Attribute\_Update\_Shadow\_Id}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00482\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a665082f56c953a99945e9a84e0982949}{Attribute\_Update\_Order}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a8c55930ba3befd206d08fb6c8249e91c}{Attribute\_Update\_Source\_Id}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_aee460c79024ae0fc8a5ec883e7222714}{Attribute\_Update\_Zone\_Wrap\_Level}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_ac599786d82b18dea16dbc274db8d9247}{Attribute\_Update\_Flags}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00486\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a8b4652f56f467f1f85844cbc7b660dc4}{Attribute\_Update\_Name}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a528196963b5887927e32462a994ba4bb}{Attribute\_Update\_Objects}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a47f087b6e1c63feee18ffd2e50a9c04f}{Attribute\_Update\_Mesh\_Regions}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00489\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_acbb288d36cd3bc7c35b1197cc8c03991}{Attribute\_Update\_Boundary\_Tags}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00490\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a6e9c899958a951923780880f15c9fe3e}{\_TG\_Deregister\_Reserved\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_aef391f647851d091f0fe13afb7631457}{\_TG\_Mark\_Stashed\_Data}}(\textcolor{keywordtype}{int}\ ,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00493\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a0ebb1908c8a595ce4eb7022a156c5d4d}{\_TG\_Stash\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a7d8e399ba932e6bc984e8f15ce7f2b1f}{\_TG\_Stash\_Topo\_Node\_Threads}}(\mbox{\hyperlink{structcons__cell}{List}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00495\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a345ef2bb88d0b650dfbe33cd01b0acd5}{\_TG\_Unstash\_Threads}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_af1e325e48abe2b1a6fbce5137186fb97}{\_TG\_Remove\_Stashed\_Thread}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{thread__manager_8h_aeda446663947e5d077265a707445e864}{\_TG\_Checkpoint\_Zones}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ unused\_nodes\_p);}
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a05590412b4e99ea9ef463e69edfa2832}{\_TG\_Prepare\_For\_Restore\_Checkpoint}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a7b080a292231ce8bcc3a25247a6451df}{\_TG\_Restore\_To\_Checkpoint\_Zones}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{void}\ **,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00500\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_abd166c49ff5b97665ef4fe2fce45e34c}{\_TG\_Free\_Lthread}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{struct_lthread}{Lthread}}\ *lt);}
+\DoxyCodeLine{00501\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_lthread}{Lthread}}\ *\mbox{\hyperlink{thread__manager_8h_a584868ebb9880ffaefa25e8b911fdefe}{\_TG\_Get\_Lthread}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00502\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{thread__manager_8h_a24907deea5b06567cad4541e3d8c0f9b}{\_TG\_Get\_Undo\_Stack}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_acdbec96c2f540633fa313bab147cf222}{\_TG\_Insert\_Undo\_Stack\_Entry}}(\mbox{\hyperlink{structundo__stack__entry}{Undo\_Stack\_Entry}}\ *);}
+\DoxyCodeLine{00504\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a4712f003bc243ac873523c4fb51f6ef9}{\_TG\_Undo\_Stack\_Push}}(\mbox{\hyperlink{structcons__cell}{List}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{thread__manager_8h_a5d2293ed4020ad5cbb7d444dd2212065}{\_TG\_Undo\_Stack\_Pop}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00506\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_afa7e196afe85781ad8fe63a5982f4829}{\_TG\_Update\_Obj\_Name\_In\_Undo\_Stack}}(\textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a9cb92b470fae95324995824c23cd4403}{\_TG\_Clear\_New\_Undo\_Stack}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a8a505785ab04a0d671b698de5650c2bf}{\_TG\_Clear\_Stash\_Data}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00509\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a6fa30988090f7b52d4370dee218bb19e}{\_TG\_Stmgr\_Entity\_Refc}}(\mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00510\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_ac394d7055634c3dd581e80632f1e31e2}{\_TG\_Stmgr\_Update\_Entity\_Refc}}(\mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_ae7882e114a14814d6ff2eded026e2b5e}{\_TG\_Stmgr\_Thread\_Refc}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_a4a9bcba487fcde2f59e290da8c622b47}{\_TG\_Stmgr\_Update\_Thread\_Refc}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00513\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a3839abec14f76c3dc12bcc843da3f036}{\_TG\_Stmgr\_Thread\_Name\_Refc}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00514\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{thread__manager_8h_aa024c6b2152c8c9d644a2d463687e213}{\_TG\_Stmgr\_Update\_Thread\_Name\_Refc}}(\textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00515\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{thread__manager_8h_a7484bd9a2888d0fcb85af50d47403db2}{\_TG\_Insert\_Lthread}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{struct_lthread}{Lthread}}\ *\mbox{\hyperlink{struct_lthread_a177b801fffc225c932fb2d39ad127900}{lt}},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00518\ \}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00521\ \textcolor{preprocessor}{\#define\ \_TG\_Create\_Tmp\_Thread(a,b,c)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\ \ \ \ \_TG\_Create\_Tmp\_Thread2(a,b,c,\_\_FILE\_\_,\_\_LINE\_\_,\_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00523\ \textcolor{preprocessor}{\#define\ \_TG\_Create\_Tmp\_Thread1(a,b,c)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\ \ \ \ \_TG\_Create\_Tmp\_Thread3(a,b,c,\_\_FILE\_\_,\_\_LINE\_\_,\_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#define\ \_TG\_Create\_Thread(a,b,c,d,e)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\ \ \ \ \_TG\_Create\_Thread1(a,b,c,d,e,\_\_FILE\_\_,\_\_LINE\_\_,\_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ thread\_manager\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

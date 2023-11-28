@@ -1,0 +1,369 @@
+\doxysection{ufuncobject.\+h}
+\hypertarget{ufuncobject_8h_source}{}\label{ufuncobject_8h_source}\index{fluent20.1.0/cortex/pylib/nexus/numpy/core/include/numpy/ufuncobject.h@{fluent20.1.0/cortex/pylib/nexus/numpy/core/include/numpy/ufuncobject.h}}
+\mbox{\hyperlink{ufuncobject_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ Py\_UFUNCOBJECT\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ Py\_UFUNCOBJECT\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{npy__math_8h}{numpy/npy\_math.h}}>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{npy__common_8h}{numpy/npy\_common.h}}>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ The\ legacy\ generic\ inner\ loop\ for\ a\ standard\ element-\/wise\ or}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ generalized\ ufunc.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{ufuncobject_8h_ac0f1b81a351961a89a93b577c9f071c3}{PyUFuncGenericFunction}})}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{char}\ **args,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ *dimensions,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ *strides,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *innerloopdata);}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ The\ most\ generic\ one-\/dimensional\ inner\ loop\ for}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ a\ masked\ standard\ element-\/wise\ ufunc.\ "{}Masked"{}\ here\ means\ that\ it\ skips}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ doing\ calculations\ on\ any\ items\ for\ which\ the\ maskptr\ array\ has\ a\ true}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ value.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ void\ (\mbox{\hyperlink{ufuncobject_8h_ae33b2c05c76f32454f27031187cd93de}{PyUFunc\_MaskedStridedInnerLoopFunc}})(}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ **dataptrs,\ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ *strides,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *maskptr,\ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ mask\_stride,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ count,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_npy_aux_data__tag}{NpyAuxData}}\ *innerloopdata);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{/*\ Forward\ declaration\ for\ the\ type\ resolver\ and\ loop\ selector\ typedefs\ */}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tag_py_u_func_object}{\_tagPyUFuncObject}};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ Given\ the\ operands\ for\ calling\ a\ ufunc,\ should\ determine\ the}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ calculation\ input\ and\ output\ data\ types\ and\ return\ an\ inner\ loop\ function.}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ This\ function\ should\ validate\ that\ the\ casting\ rule\ is\ being\ followed,}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ and\ fail\ if\ it\ is\ not.}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ For\ backwards\ compatibility,\ the\ regular\ type\ resolution\ function\ does\ not}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ support\ auxiliary\ data\ with\ object\ semantics.\ The\ type\ resolution\ call}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ which\ returns\ a\ masked\ generic\ function\ returns\ a\ standard\ NpyAuxData}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ object,\ for\ which\ the\ NPY\_AUXDATA\_FREE\ and\ NPY\_AUXDATA\_CLONE\ macros}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ work.}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ ufunc:\ \ \ \ \ \ \ \ \ \ \ \ \ The\ ufunc\ object.}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ casting:\ \ \ \ \ \ \ \ \ \ \ The\ 'casting'\ parameter\ provided\ to\ the\ ufunc.}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ operands:\ \ \ \ \ \ \ \ \ \ An\ array\ of\ length\ (ufunc-\/>nin\ +\ ufunc-\/>nout),}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ with\ the\ output\ parameters\ possibly\ NULL.}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ type\_tup:\ \ \ \ \ \ \ \ \ \ Either\ NULL,\ or\ the\ type\_tup\ passed\ to\ the\ ufunc.}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ out\_dtypes:\ \ \ \ \ \ \ \ An\ array\ which\ should\ be\ populated\ with\ new}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ references\ to\ (ufunc-\/>nin\ +\ ufunc-\/>nout)\ new}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dtypes,\ one\ for\ each\ input\ and\ output.\ These}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dtypes\ should\ all\ be\ in\ native-\/endian\ format.}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ Should\ return\ 0\ on\ success,\ -\/1\ on\ failure\ (with\ exception\ set),}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ or\ -\/2\ if\ Py\_NotImplemented\ should\ be\ returned.}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00061\ \textcolor{keyword}{typedef}\ int\ (\mbox{\hyperlink{ufuncobject_8h_a20dc8cfe5d10458c985f2e9130be635a}{PyUFunc\_TypeResolutionFunc}})(}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tag_py_u_func_object}{\_tagPyUFuncObject}}\ *ufunc,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ndarraytypes_8h_a2ad642e567c8c1b334cfad4929cd9697}{NPY\_CASTING}}\ casting,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structtag_py_array_object__fields}{PyArrayObject}}\ **operands,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyObject\ *type\_tup,}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct___py_array___descr}{PyArray\_Descr}}\ **out\_dtypes);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *\ Given\ an\ array\ of\ DTypes\ as\ returned\ by\ the\ PyUFunc\_TypeResolutionFunc,}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *\ and\ an\ array\ of\ fixed\ strides\ (the\ array\ will\ contain\ NPY\_MAX\_INTP\ for}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ strides\ which\ are\ not\ necessarily\ fixed),\ returns\ an\ inner\ loop}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *\ with\ associated\ auxiliary\ data.}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ For\ backwards\ compatibility,\ there\ is\ a\ variant\ of\ the\ inner\ loop}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ selection\ which\ returns\ an\ inner\ loop\ irrespective\ of\ the\ strides,}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *\ and\ with\ a\ void*\ static\ auxiliary\ data\ instead\ of\ an\ NpyAuxData\ *}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ *\ dynamically\ allocatable\ auxiliary\ data.}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *\ ufunc:\ \ \ \ \ \ \ \ \ \ \ \ \ The\ ufunc\ object.}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ dtypes:\ \ \ \ \ \ \ \ \ \ \ \ An\ array\ which\ has\ been\ populated\ with\ dtypes,}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in\ most\ cases\ by\ the\ type\ resolution\ function}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ for\ the\ same\ ufunc.}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ fixed\_strides:\ \ \ \ \ For\ each\ input/output,\ either\ the\ stride\ that}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ will\ be\ used\ every\ time\ the\ function\ is\ called}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ NPY\_MAX\_INTP\ if\ the\ stride\ might\ change\ or}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\ not\ known\ ahead\ of\ time.\ The\ loop\ selection}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ function\ may\ use\ this\ stride\ to\ pick\ inner\ loops}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ which\ are\ optimized\ for\ contiguous\ or\ 0-\/stride}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cases.}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ out\_innerloop:\ \ \ \ \ Should\ be\ populated\ with\ the\ correct\ ufunc\ inner}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ loop\ for\ the\ given\ type.}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *\ out\_innerloopdata:\ Should\ be\ populated\ with\ the\ void*\ data\ to}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ be\ passed\ into\ the\ out\_innerloop\ function.}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ out\_needs\_api:\ \ \ \ \ If\ the\ inner\ loop\ needs\ to\ use\ the\ Python\ API,}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ should\ set\ the\ to\ 1,\ otherwise\ should\ leave}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\ untouched.}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00098\ \textcolor{keyword}{typedef}\ int\ (\mbox{\hyperlink{ufuncobject_8h_a5b1a2aac472cf92326bb7b3ed50855f7}{PyUFunc\_LegacyInnerLoopSelectionFunc}})(}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tag_py_u_func_object}{\_tagPyUFuncObject}}\ *ufunc,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct___py_array___descr}{PyArray\_Descr}}\ **dtypes,}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ufuncobject_8h_ac0f1b81a351961a89a93b577c9f071c3}{PyUFuncGenericFunction}}\ *out\_innerloop,}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ **out\_innerloopdata,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *out\_needs\_api);}
+\DoxyCodeLine{00104\ \textcolor{keyword}{typedef}\ int\ (\mbox{\hyperlink{ufuncobject_8h_a812e6d93b58259712c93f167dbdfbe90}{PyUFunc\_MaskedInnerLoopSelectionFunc}})(}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tag_py_u_func_object}{\_tagPyUFuncObject}}\ *ufunc,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct___py_array___descr}{PyArray\_Descr}}\ **dtypes,}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct___py_array___descr}{PyArray\_Descr}}\ *mask\_dtype,}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ *fixed\_strides,}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ fixed\_mask\_stride,}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ufuncobject_8h_ae33b2c05c76f32454f27031187cd93de}{PyUFunc\_MaskedStridedInnerLoopFunc}}\ **out\_innerloop,}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_npy_aux_data__tag}{NpyAuxData}}\ **out\_innerloopdata,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *out\_needs\_api);}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tag_py_u_func_object}{\_tagPyUFuncObject}}\ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ PyObject\_HEAD}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ nin:\ Number\ of\ inputs}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ nout:\ Number\ of\ outputs}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ nargs:\ Always\ nin\ +\ nout\ (Why\ is\ it\ stored?)}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tag_py_u_func_object_a97790a044991d7cc05032ec03992f428}{nin}},\ \mbox{\hyperlink{struct__tag_py_u_func_object_a02f2d2b2d236058eef08752217df6609}{nout}},\ \mbox{\hyperlink{struct__tag_py_u_func_object_ad5d3e3aab7ad2284172cfd889b01611b}{nargs}};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Identity\ for\ reduction,\ either\ PyUFunc\_One\ or\ PyUFunc\_Zero\ */}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tag_py_u_func_object_ab8ad06433be46f99a9fbcd96bad90bb8}{identity}};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Array\ of\ one-\/dimensional\ core\ loops\ */}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ufuncobject_8h_ac0f1b81a351961a89a93b577c9f071c3}{PyUFuncGenericFunction}}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_a7c376eace2d0e5b813fa0286574b7412}{functions}};}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Array\ of\ funcdata\ that\ gets\ passed\ into\ the\ functions\ */}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ **\mbox{\hyperlink{struct__tag_py_u_func_object_af00cdd742d205932a8309628d39efd5e}{data}};}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ The\ number\ of\ elements\ in\ 'functions'\ and\ 'data'\ */}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tag_py_u_func_object_a63fd5f00cf27a20499f15f1796d5b7ea}{ntypes}};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Used\ to\ be\ unused\ field\ 'check\_return'\ */}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tag_py_u_func_object_a18a373c8b2126ea9409c08cede8f7326}{reserved1}};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ The\ name\ of\ the\ ufunc\ */}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_a8f8f80d37794cde9472343e4487ba3eb}{name}};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Array\ of\ type\ numbers,\ of\ size\ ('nargs'\ *\ 'ntypes')\ */}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_a8756daa0aafe82c44459d0933ec52b4d}{types}};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Documentation\ string\ */}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_a5092a1bd79826902df03502891db05ce}{doc}};}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_add9af9569af79ec26dd741fb226b38ba}{ptr}};}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ PyObject\ *\mbox{\hyperlink{struct__tag_py_u_func_object_aaa12580403a2cc24c96324b4c5715889}{obj}};}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ PyObject\ *\mbox{\hyperlink{struct__tag_py_u_func_object_ae27f02f63d40ec4912b8bb02e25ee682}{userloops}};}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ generalized\ ufunc\ parameters\ */}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 0\ for\ scalar\ ufunc;\ 1\ for\ generalized\ ufunc\ */}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tag_py_u_func_object_a2cc8b45e15ef603b69867a3f84853a38}{core\_enabled}};}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ distinct\ dimension\ names\ in\ signature\ */}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tag_py_u_func_object_ac5b8e073eb74feba001ea18e4a69ec9e}{core\_num\_dim\_ix}};}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ dimension\ indices\ of\ input/output\ argument\ k\ are\ stored\ in}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ core\_dim\_ixs[core\_offsets[k]..core\_offsets[k]+core\_num\_dims[k]-\/1]}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ numbers\ of\ core\ dimensions\ of\ each\ argument\ */}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_aa0ddbc91f70439c3ba390a7feb806513}{core\_num\_dims}};}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ dimension\ indices\ in\ a\ flatted\ form;\ indices}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ are\ in\ the\ range\ of\ [0,core\_num\_dim\_ix)}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_a86ede26e5863f5d635db157ddfe0c907}{core\_dim\_ixs}};}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ positions\ of\ 1st\ core\ dimensions\ of\ each}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ argument\ in\ core\_dim\_ixs,\ equivalent\ to\ cumsum(core\_num\_dims)}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_a5c2e247de126160740877b22ba81afb6}{core\_offsets}};}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ signature\ string\ for\ printing\ purpose\ */}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_a090a4857474a9213cb090bdf68ba3d36}{core\_signature}};}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ A\ function\ which\ resolves\ the\ types\ and\ fills\ an\ array}}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ with\ the\ dtypes\ for\ the\ inputs\ and\ outputs.}}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ufuncobject_8h_a20dc8cfe5d10458c985f2e9130be635a}{PyUFunc\_TypeResolutionFunc}}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_a875f8acfb50851624d75d93db36fd1b2}{type\_resolver}};}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ A\ function\ which\ returns\ an\ inner\ loop\ written\ for}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ NumPy\ 1.6\ and\ earlier\ ufuncs.\ This\ is\ for\ backwards}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ compatibility,\ and\ may\ be\ NULL\ if\ inner\_loop\_selector}}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ is\ specified.}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ufuncobject_8h_a5b1a2aac472cf92326bb7b3ed50855f7}{PyUFunc\_LegacyInnerLoopSelectionFunc}}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_aaf0821c1a6221d6ee79c4f6206ffb233}{legacy\_inner\_loop\_selector}};}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ This\ was\ blocked\ off\ to\ be\ the\ "{}new"{}\ inner\ loop\ selector\ in\ 1.7,}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ but\ this\ was\ never\ implemented.\ (This\ is\ also\ why\ the\ above}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ selector\ is\ called\ the\ "{}legacy"{}\ selector.)}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_a500f748997956fcb15a4740664b3688c}{reserved2}};}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00195\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ A\ function\ which\ returns\ a\ masked\ inner\ loop\ for\ the\ ufunc.}}
+\DoxyCodeLine{00196\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ufuncobject_8h_a812e6d93b58259712c93f167dbdfbe90}{PyUFunc\_MaskedInnerLoopSelectionFunc}}\ *\mbox{\hyperlink{struct__tag_py_u_func_object_aea4e1e11a378a6f6c088095c9726213f}{masked\_inner\_loop\_selector}};}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ List\ of\ flags\ for\ each\ operand\ when\ ufunc\ is\ called\ by\ nditer\ object.}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ These\ flags\ will\ be\ used\ in\ addition\ to\ the\ default\ flags\ for\ each}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ operand\ set\ by\ nditer\ object.}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ npy\_uint32\ *\mbox{\hyperlink{struct__tag_py_u_func_object_abac9ec6bf32fa389a426ea676d918601}{op\_flags}};}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00207\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ List\ of\ global\ flags\ used\ when\ ufunc\ is\ called\ by\ nditer\ object.}}
+\DoxyCodeLine{00208\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ These\ flags\ will\ be\ used\ in\ addition\ to\ the\ default\ global\ flags}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ set\ by\ nditer\ object.}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ npy\_uint32\ \mbox{\hyperlink{struct__tag_py_u_func_object_a636eea5f46f3eade564a793f005d4625}{iter\_flags}};}
+\DoxyCodeLine{00212\ \}\ \mbox{\hyperlink{ufuncobject_8h_a0762cb88ed266a8ae67294a7eeec5a62}{PyUFuncObject}};}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{arrayobject_8h}{arrayobject.h}}"{}}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ UFUNC\_ERR\_IGNORE\ 0}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ UFUNC\_ERR\_WARN\ \ \ 1}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ UFUNC\_ERR\_RAISE\ \ 2}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ UFUNC\_ERR\_CALL\ \ \ 3}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ UFUNC\_ERR\_PRINT\ \ 4}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ UFUNC\_ERR\_LOG\ \ \ \ 5}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Python\ side\ integer\ mask\ */}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ UFUNC\_MASK\_DIVIDEBYZERO\ 0x07}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ UFUNC\_MASK\_OVERFLOW\ 0x3f}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ UFUNC\_MASK\_UNDERFLOW\ 0x1ff}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ UFUNC\_MASK\_INVALID\ 0xfff}}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ UFUNC\_SHIFT\_DIVIDEBYZERO\ 0}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ UFUNC\_SHIFT\_OVERFLOW\ \ \ \ \ 3}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ UFUNC\_SHIFT\_UNDERFLOW\ \ \ \ 6}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ UFUNC\_SHIFT\_INVALID\ \ \ \ \ \ 9}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ UFUNC\_OBJ\_ISOBJECT\ \ \ \ \ \ 1}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ UFUNC\_OBJ\_NEEDS\_API\ \ \ \ \ 2}}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \textcolor{comment}{/*\ Default\ user\ error\ mode\ */}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ UFUNC\_ERR\_DEFAULT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (UFUNC\_ERR\_WARN\ <<\ UFUNC\_SHIFT\_DIVIDEBYZERO)\ +\ \ \(\backslash\)}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (UFUNC\_ERR\_WARN\ <<\ UFUNC\_SHIFT\_OVERFLOW)\ +\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (UFUNC\_ERR\_WARN\ <<\ UFUNC\_SHIFT\_INVALID)}}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#if\ NPY\_ALLOW\_THREADS}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ NPY\_LOOP\_BEGIN\_THREADS\ do\ \{if\ (!(loop-\/>obj\ \&\ UFUNC\_OBJ\_NEEDS\_API))\ \_save\ =\ PyEval\_SaveThread();\}\ while\ (0);}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ NPY\_LOOP\_END\_THREADS\ \ \ do\ \{if\ (!(loop-\/>obj\ \&\ UFUNC\_OBJ\_NEEDS\_API))\ PyEval\_RestoreThread(\_save);\}\ while\ (0);}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ NPY\_LOOP\_BEGIN\_THREADS}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ NPY\_LOOP\_END\_THREADS}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00254\ \textcolor{comment}{\ *\ UFunc\ has\ unit\ of\ 0,\ and\ the\ order\ of\ operations\ can\ be\ reordered}}
+\DoxyCodeLine{00255\ \textcolor{comment}{\ *\ This\ case\ allows\ reduction\ with\ multiple\ axes\ at\ once.}}
+\DoxyCodeLine{00256\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ PyUFunc\_Zero\ 0}}
+\DoxyCodeLine{00258\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00259\ \textcolor{comment}{\ *\ UFunc\ has\ unit\ of\ 1,\ and\ the\ order\ of\ operations\ can\ be\ reordered}}
+\DoxyCodeLine{00260\ \textcolor{comment}{\ *\ This\ case\ allows\ reduction\ with\ multiple\ axes\ at\ once.}}
+\DoxyCodeLine{00261\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ PyUFunc\_One\ 1}}
+\DoxyCodeLine{00263\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00264\ \textcolor{comment}{\ *\ UFunc\ has\ unit\ of\ -\/1,\ and\ the\ order\ of\ operations\ can\ be\ reordered}}
+\DoxyCodeLine{00265\ \textcolor{comment}{\ *\ This\ case\ allows\ reduction\ with\ multiple\ axes\ at\ once.\ Intended\ for}}
+\DoxyCodeLine{00266\ \textcolor{comment}{\ *\ bitwise\_and\ reduction.}}
+\DoxyCodeLine{00267\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#define\ PyUFunc\_MinusOne\ 2}}
+\DoxyCodeLine{00269\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00270\ \textcolor{comment}{\ *\ UFunc\ has\ no\ unit,\ and\ the\ order\ of\ operations\ cannot\ be\ reordered.}}
+\DoxyCodeLine{00271\ \textcolor{comment}{\ *\ This\ case\ does\ not\ allow\ reduction\ with\ multiple\ axes\ at\ once.}}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#define\ PyUFunc\_None\ -\/1}}
+\DoxyCodeLine{00274\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00275\ \textcolor{comment}{\ *\ UFunc\ has\ no\ unit,\ and\ the\ order\ of\ operations\ can\ be\ reordered}}
+\DoxyCodeLine{00276\ \textcolor{comment}{\ *\ This\ case\ allows\ reduction\ with\ multiple\ axes\ at\ once.}}
+\DoxyCodeLine{00277\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#define\ PyUFunc\_ReorderableNone\ -\/2}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ UFUNC\_REDUCE\ 0}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#define\ UFUNC\_ACCUMULATE\ 1}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#define\ UFUNC\_REDUCEAT\ 2}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#define\ UFUNC\_OUTER\ 3}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_py_u_func___py_func_data_ad5111956f609583a8237b153ba7738bb}{nin}};}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_py_u_func___py_func_data_a8b8063f52b4644782ffd01fadf55140b}{nout}};}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ PyObject\ *\mbox{\hyperlink{struct_py_u_func___py_func_data_a94470530e3bf7592bd9dcab0e4010b82}{callable}};}
+\DoxyCodeLine{00290\ \}\ \mbox{\hyperlink{struct_py_u_func___py_func_data}{PyUFunc\_PyFuncData}};}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \textcolor{comment}{/*\ A\ linked-\/list\ of\ function\ information\ for}}
+\DoxyCodeLine{00293\ \textcolor{comment}{\ \ \ user-\/defined\ 1-\/d\ loops.}}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00295\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__loop1d__info}{\_loop1d\_info}}\ \{}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ufuncobject_8h_ac0f1b81a351961a89a93b577c9f071c3}{PyUFuncGenericFunction}}\ \mbox{\hyperlink{struct__loop1d__info_ac876da3d484f601a4360dd4152e022f8}{func}};}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{struct__loop1d__info_a735984d41155bc1032e09bece8f8d66d}{data}};}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{struct__loop1d__info_af3492e033c3426732daac03affbb7343}{arg\_types}};}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__loop1d__info}{\_loop1d\_info}}\ *\mbox{\hyperlink{struct__loop1d__info_a6041d3b886ac62fad9ca91b2a0f86b4c}{next}};}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__loop1d__info_a070f871efc2b5964c94459464dce54bb}{nargs}};}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct___py_array___descr}{PyArray\_Descr}}\ **\mbox{\hyperlink{struct__loop1d__info_aa16a691c9cdf572879954ae914ac12c5}{arg\_dtypes}};}
+\DoxyCodeLine{00302\ \}\ \mbox{\hyperlink{ufuncobject_8h_a311d4c27b82cb0cf8087b3399083fdf8}{PyUFunc\_Loop1d}};}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{____ufunc__api_8h}{\_\_ufunc\_api.h}}"{}}}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#define\ UFUNC\_PYVALS\_NAME\ "{}UFUNC\_PYVALS"{}}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#define\ UFUNC\_CHECK\_ERROR(arg)\ \(\backslash\)}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ do\ \{if\ ((((arg)-\/>obj\ \&\ UFUNC\_OBJ\_NEEDS\_API)\ \&\&\ PyErr\_Occurred())\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ ((arg)-\/>errormask\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ PyUFunc\_checkfperr((arg)-\/>errormask,\ \(\backslash\)}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (arg)-\/>errobj,\ \(\backslash\)}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&(arg)-\/>first)))\ \(\backslash\)}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ goto\ fail;\}\ while\ (0)}}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \textcolor{comment}{/*\ keep\ in\ sync\ with\ ieee754.c.src\ */}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#if\ defined(sun)\ ||\ defined(\_\_BSD\_\_)\ ||\ defined(\_\_OpenBSD\_\_)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\ \ \ \ \ \ (defined(\_\_FreeBSD\_\_)\ \&\&\ (\_\_FreeBSD\_version\ <\ 502114))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\ \ \ \ \ \ defined(\_\_NetBSD\_\_)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ \ \ defined(\_\_GLIBC\_\_)\ ||\ defined(\_\_APPLE\_\_)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \ \ \ \ defined(\_\_CYGWIN\_\_)\ ||\ defined(\_\_MINGW32\_\_)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\ \ \ \ \ \ (defined(\_\_FreeBSD\_\_)\ \&\&\ (\_\_FreeBSD\_version\ >=\ 502114))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\ \ \ \ \ \ defined(\_AIX)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\ \ \ \ \ \ defined(\_MSC\_VER)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\ \ \ \ \ \ defined(\_\_osf\_\_)\ \&\&\ defined(\_\_alpha)}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#define\ NO\_FLOATING\_POINT\_SUPPORT}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00334\ \textcolor{comment}{\ *\ THESE\ MACROS\ ARE\ DEPRECATED.}}
+\DoxyCodeLine{00335\ \textcolor{comment}{\ *\ Use\ npy\_set\_floatstatus\_*\ in\ the\ npymath\ library.}}
+\DoxyCodeLine{00336\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\#define\ UFUNC\_FPE\_DIVIDEBYZERO\ \ NPY\_FPE\_DIVIDEBYZERO}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#define\ UFUNC\_FPE\_OVERFLOW\ \ \ \ \ \ NPY\_FPE\_OVERFLOW}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#define\ UFUNC\_FPE\_UNDERFLOW\ \ \ \ \ NPY\_FPE\_UNDERFLOW}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#define\ UFUNC\_FPE\_INVALID\ \ \ \ \ \ \ NPY\_FPE\_INVALID}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#define\ UFUNC\_CHECK\_STATUS(ret)\ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ \ \ \{\ \(\backslash\)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ret\ =\ npy\_clear\_floatstatus();\ \(\backslash\)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#define\ generate\_divbyzero\_error()\ npy\_set\_floatstatus\_divbyzero()}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ generate\_overflow\_error()\ npy\_set\_floatstatus\_overflow()}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \ \ \textcolor{comment}{/*\ Make\ sure\ it\ gets\ defined\ if\ it\ isn't\ already\ */}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\#ifndef\ UFUNC\_NOFPE}}
+\DoxyCodeLine{00351\ \textcolor{comment}{/*\ Clear\ the\ floating\ point\ exception\ default\ of\ Borland\ C++\ */}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#if\ defined(\_\_BORLANDC\_\_)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#define\ UFUNC\_NOFPE\ \_control87(MCW\_EM,\ MCW\_EM);}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#define\ UFUNC\_NOFPE}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00361\ \}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !Py\_UFUNCOBJECT\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,248 @@
+\doxysection{chemkin.\+h}
+\hypertarget{chemkin_8h_source}{}\label{chemkin_8h_source}\index{fluent20.1.0/src/species/chemkin.h@{fluent20.1.0/src/species/chemkin.h}}
+\mbox{\hyperlink{chemkin_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_CHEMKIN\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_CHEMKIN\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{global_8h}{global.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{materials_8h}{materials.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{mem_8h}{mem.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ speek(string)(*string)[0]}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ ADVANCE\_STREAM(stream,n)(*stream=*stream+n)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ REWIND\_STREAM(stream,n)(*stream=*stream-\/n)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ NULL\_STREAM(stream)(strcpy(*stream,"{}"{}))}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ CHEMKIN\_LARGE\ 1.e20}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ CHEMKIN\_SMALL\ 1.e-\/20}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ MAX\_LINE\_LENGTH\ 400}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ MAX\_ELEM\_PER\_SPEC\ 9}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ MAX\_WORD\_LENGTH\ 46}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ MIN\_THERMO\_LINE\_LENGTH\ 80}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ STRING\_END\ '\(\backslash\)0'}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ MAX\_ELEMENTS\ \ \ 30}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ MAX\_REACTANTS\ \ 50}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ MAX\_PRODUCTS\ \ \ 50}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ MAX\_THIRD\ \ \ \ \ \ 10}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ MAX\_THERMO\ \ \ \ \ 7}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{chemkin_8h_a52bc20cbaaa0afdf437f11a2bd7f341f}{STREAM}};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structkeyword__struct}{keyword\_struct}}}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structkeyword__struct_a4a353f40a93d3d7b900c3e511b038222}{keyword}};}
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structkeyword__struct_ab217561ce555727ff977aa053656a686}{section}};}
+\DoxyCodeLine{00039\ \}\ \mbox{\hyperlink{chemkin_8h_a8aadf74aa18f091b269d154225106c8d}{Keyword}};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structchem__element__struct}{chem\_element\_struct}}}
+\DoxyCodeLine{00042\ \{}
+\DoxyCodeLine{00043\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structchem__element__struct_a5ac083a645d964373f022d03df4849c8}{name}};\ \ \ \ \ \textcolor{comment}{/*\ element\ name\ */}}
+\DoxyCodeLine{00044\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structchem__element__struct_a544ac9e5e3ab6e15e6e8ce8b1a3248c2}{aweight}};\ \textcolor{comment}{/*\ atomic\ weight\ */}}
+\DoxyCodeLine{00045\ \}\ \mbox{\hyperlink{chemkin_8h_ad6f3081f3034d62ad5ce9aa92d535276}{Chem\_Element}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa4d7477b5ecabf13f7ed7cdd4bc43b8e8}{XMLGAS}},}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa4d7aebe2cbf5f48db4b6416e379bd431}{XMLSURF}},}
+\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa4ad546e1b2beea0e778c91064c279944}{XMLREAC}},}
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa696243573b6a07833aff1f5331ab61bc}{STOIC}},}
+\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa143dcc483aead2f70121238c37157a00}{ARRHE}},}
+\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa0dcecf832406fb6f07b0ef511f9fcdea}{XMLTHIRD}},}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fac758ed3bcc57ae73519a67e7c3e01360}{AUXIL}},}
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44faae696377c19e507b64e16be78ce3bbdb}{COMMENT}},}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa8bb193dd1f355203907fabedc4e98e2e}{ENDTAG}},}
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa3fd53e7cfe091fbb722be8f6bb92ff44}{ENDSTOIC}},}
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa99691635f3d934862cada360afb8327d}{ENDREAC}},}
+\DoxyCodeLine{00060\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44fa832096c41d6e8a4366757c1724dd3e42}{UNUSEDSPE}},}
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{chemkin_8h_af38129fd1797a5cfd7d746065784a44faaedf4589aab8341aa6bc0dbee611d44b}{NOTAG}}}
+\DoxyCodeLine{00062\ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00065\ \{}
+\DoxyCodeLine{00066\ \ \ \mbox{\hyperlink{chemkin_8h_a1812ab31015cef0a41c6d4f3ae07f13da8b6c8823f39ae7650736c5de561d297c}{P\_LINDEMANN}},}
+\DoxyCodeLine{00067\ \ \ \mbox{\hyperlink{chemkin_8h_a1812ab31015cef0a41c6d4f3ae07f13dac2c3bf7eb1c8e1b8525d97d3fad81f6c}{P\_SRI}},}
+\DoxyCodeLine{00068\ \ \ \mbox{\hyperlink{chemkin_8h_a1812ab31015cef0a41c6d4f3ae07f13da61837cc897ede202de0a3d3b082a4e18}{P\_TROE}},}
+\DoxyCodeLine{00069\ \ \ \mbox{\hyperlink{chemkin_8h_a1812ab31015cef0a41c6d4f3ae07f13da0eac2f21de60c3284338044b0105f322}{P\_NONE}}}
+\DoxyCodeLine{00070\ \};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfbab2cc30231b3e7e8bca714c8750523660}{ELEM}},}
+\DoxyCodeLine{00075\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfba60c720865aab0b3a876f8f9e72bb285c}{SPEC}},}
+\DoxyCodeLine{00076\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfba5b75b5cd73feaf21c9fd2f53f6488242}{REAC}},}
+\DoxyCodeLine{00077\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfba6f861b5465c464b882fab814830969d5}{THERMO}},}
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfbac46987c21490fbe8dac52e266e215217}{TRANSP}},}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfba78d2fab1bc603e0689a086ac2005cc06}{SITE}},}
+\DoxyCodeLine{00080\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfbabab8802da9a151c30367e23897b1ad46}{SITESDEN}},}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfba716cb1422756ec29b518c3d652b95511}{SDEN}},}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfba23f8f5e62324af5f4d8f899cee8fb70d}{MATERIAL}},}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfba7cf8c698367d8a7e5f568d30b4b17910}{BULK}},}
+\DoxyCodeLine{00084\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfbadc6f24fd6915a3f2786a1b7045406924}{END}},}
+\DoxyCodeLine{00085\ \ \ \mbox{\hyperlink{chemkin_8h_a0a28cf10bf72f80c90de5e5e1e698bfba30dcdc4574b85feeaf0d3e206a86c337}{ENDSTD}}}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00089\ \{}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{chemkin_8h_a85c7862086c1f92e4fb4108e176d8140a81bd89f7ff2c29f0171c22f7c47c3e9f}{CALO}}\ =\ 0,}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{chemkin_8h_a85c7862086c1f92e4fb4108e176d8140a6d0fb36e4dddd1c7feee0b1aa6e09069}{JOUL}},}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{chemkin_8h_a85c7862086c1f92e4fb4108e176d8140af60bcfecd946bd1aa1603375715c7a43}{KELV}},}
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{chemkin_8h_a85c7862086c1f92e4fb4108e176d8140a129c922c24a446875ef35199318119e6}{KCAL}},}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{chemkin_8h_a85c7862086c1f92e4fb4108e176d8140a997eb245c18a46fd80b10e58517268b4}{EVOL}},}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{chemkin_8h_a85c7862086c1f92e4fb4108e176d8140a63c7ce9eccd0fcbdd299624eb1f67fdb}{KJOUL}},}
+\DoxyCodeLine{00096\ \ \ \mbox{\hyperlink{chemkin_8h_a85c7862086c1f92e4fb4108e176d8140a38e7745bcd7bdc8738236514328edfc3}{MAX\_EUNIT}}}
+\DoxyCodeLine{00097\ \};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00100\ \{}
+\DoxyCodeLine{00101\ \ \ \mbox{\hyperlink{chemkin_8h_a52864abcf6ebd8d120995b36fe6ce06eafa345229a047daf4153126a72f935dce}{MOLE}}\ =\ 0,}
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{chemkin_8h_a52864abcf6ebd8d120995b36fe6ce06ea228af0a108b4594d45a7159a1fe8fcdf}{MOLC}},}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{chemkin_8h_a52864abcf6ebd8d120995b36fe6ce06ea11a34df46aef09ba98988e0cf07f1b72}{MAX\_AUNIT}}}
+\DoxyCodeLine{00104\ \};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00107\ \{}
+\DoxyCodeLine{00108\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aa6a226f4143ca3b18999551694cdb72a8}{LOW}},}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aa0c3a1dacf94061154b3ee354359c5893}{HIGH}},}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aaad6da7a4573a5259e41d94c5b228953b}{TROE}},}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aaa5781b80abc39c88c7970370a3e1f966}{SRI}},}
+\DoxyCodeLine{00112\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aafe3decbbae6240f41859a23e41557af6}{PLOG}},}
+\DoxyCodeLine{00113\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aa8b209f5ffbac4635f21eb0d452a99ad8}{REV}},}
+\DoxyCodeLine{00114\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aab10e8b238790562d829c782f351a87a5}{FORD}},}
+\DoxyCodeLine{00115\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aae58bf39ef1f8ff97f722060b70f438cc}{RORD}},}
+\DoxyCodeLine{00116\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aa9e152f413dfd22a0ca6d7da80c8ac72e}{COV}},}
+\DoxyCodeLine{00117\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aa94ec660291079916623355f9d9231077}{DUP}},}
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aac88bc782686ee422ba7a5cb3bb3bf320}{THIRD}},}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aa07d27c9b95ec40c34e98fe99efe15954}{UNITS}},}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aaa63bc52becc047bacc466a8ac33d6c80}{STICK}},}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aaacfef9310dc4e442e696a9a235ac7198}{MWOFF}},}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aafb1bf7b43f301611ee5bb34484e4765a}{MWON}},}
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{chemkin_8h_a4d29ca5db06e2ae647d1ec22548a9d2aab89ed0561440d207e1b86ae4e760a33b}{ENDAUX}}}
+\DoxyCodeLine{00124\ \};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00127\ \{}
+\DoxyCodeLine{00128\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a486aa221ceeeac475326e85d3d37f571}{LT}},}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1aede5886f734646e40ecf298677e8a5c3}{RLT}},}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a4654aa71fc9e48890d975ea7d1176c31}{JAN}},}
+\DoxyCodeLine{00131\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a31f6c0855ea811e75f9b45761f1cbd0d}{FIT1}},}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a08fec6f15df66ecd6d2c3d81e404efc7}{HV}},}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1aa6425f3a46cdf5feb38f2d03f354bb65}{EXCI}},}
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a7faa070c4f7ff08f0f0df72b119c486b}{MOME}},}
+\DoxyCodeLine{00135\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1aeff94212f92337f1764ba39eb2eb9ed2}{BOHM}},}
+\DoxyCodeLine{00136\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a1cad58d71254e37c64a4525983d50e22}{ENRGDEP}},}
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a80a154eb85a9d09e86df62196432fb6b}{TDEP}},}
+\DoxyCodeLine{00138\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1ab5cfa4325dab0e7b7de98968306d4e92}{COLLEFF}},}
+\DoxyCodeLine{00139\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a626569754dfc0c13d1db5cbbea9cbd45}{CHEB}},}
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1aad9c8c83d91de10f045226062143770d}{PCHEB}},}
+\DoxyCodeLine{00141\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1aec9917f24db39189e698558a8fac8a63}{TCHEB}},}
+\DoxyCodeLine{00142\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1aa3f06d86abece7fa9d584b1d12c5b454}{XSMI}},}
+\DoxyCodeLine{00143\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a17cc718abdd0607531fae912ccdfd72e}{DCOL}},}
+\DoxyCodeLine{00144\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1ac759d9043f5a7c84fa9fe2d397ba0b37}{LANG}},}
+\DoxyCodeLine{00145\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1ae7dad6278b79e4ebf73e4f181506c046}{LHDE}},}
+\DoxyCodeLine{00146\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a83f9c29b57322f1d4f251a26f2db9f7e}{LHNU}},}
+\DoxyCodeLine{00147\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a448903761ef421c9a797760bc99056e7}{LHPR}},}
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a26741459537a01adc304c787cdd3243e}{NATIVE}},}
+\DoxyCodeLine{00149\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a80c25bd2d5a50296b67f192a7e888d90}{NUCL}},}
+\DoxyCodeLine{00150\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a094487780ed8c40e1a40978135ada67e}{YIELD}},}
+\DoxyCodeLine{00151\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a89656ebeb2b3c32fd8cae0a97b35f5d9}{CK\_ATM}},}
+\DoxyCodeLine{00152\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a6b47037c261545f735f66c770e4e23ac}{CK\_BAR}},}
+\DoxyCodeLine{00153\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1aa95c63c984ead481b59ca8ea9382ff87}{CK\_DYN}},}
+\DoxyCodeLine{00154\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1add0952ed70075f1eea5bdbe630e1efdc}{CK\_PAS}},}
+\DoxyCodeLine{00155\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1ad7ce64cfec2de34c3b6ea5c8bdb6bf7e}{CK\_TOR}},}
+\DoxyCodeLine{00156\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1abb0b72beb8d21edb1bbc10468149fb53}{NONCON}},}
+\DoxyCodeLine{00157\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a6114e3c4dc77a24b46bd4adbf3f82bc6}{USRPROG}},}
+\DoxyCodeLine{00158\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a108c1006ada3cacde29b7d70e8e07d41}{XKEQ}},}
+\DoxyCodeLine{00159\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a7c4e992c4dae22beca303209d54a74fc}{END\_CKONLY}}}
+\DoxyCodeLine{00160\ \};}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00163\ \{}
+\DoxyCodeLine{00164\ \ \ \mbox{\hyperlink{chemkin_8h_aad1afd468cb4339144d0997ddcf04748af0808b130e480c2fe865022ec2bb94c1}{VOLUMETRIC}},}
+\DoxyCodeLine{00165\ \ \ \mbox{\hyperlink{chemkin_8h_aad1afd468cb4339144d0997ddcf04748aec3093f5673be2548cc7091279b429e2}{SURFACE}}}
+\DoxyCodeLine{00166\ \};}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structspecies__struct}{species\_struct}}}
+\DoxyCodeLine{00169\ \{}
+\DoxyCodeLine{00170\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structspecies__struct_a5ac083a645d964373f022d03df4849c8}{name}};}
+\DoxyCodeLine{00171\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_a58cceaaaf5ceaf7d4c510ac4a8def241}{mw}};}
+\DoxyCodeLine{00172\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_a750b5d744c39a06bfb13e6eb010e35d0}{index}};}
+\DoxyCodeLine{00173\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_ad9e57af8e757ab2041614cf17cfc5414}{is\_site\_species}};}
+\DoxyCodeLine{00174\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_ae489d73a8496dc632792b1c94d3ab894}{is\_bulk\_species}};}
+\DoxyCodeLine{00175\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_a0be6c89faabbeb90f84020f2d1469062}{is\_thermo\_data\_present}};}
+\DoxyCodeLine{00176\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_a431b3dcda866ade756083ed3129536c1}{temperature}}[4];}
+\DoxyCodeLine{00177\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_a3c104d4d4ec5c9ad9fa7fbce4d054188}{upper\_temperature\_coeff}}[\mbox{\hyperlink{chemkin_8h_a2e0548f68709241f6fa5f64cae78d4b3}{MAX\_THERMO}}];}
+\DoxyCodeLine{00178\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_ab0f56e226935b85502ca49a3c7eb2582}{lower\_temperature\_coeff}}[\mbox{\hyperlink{chemkin_8h_a2e0548f68709241f6fa5f64cae78d4b3}{MAX\_THERMO}}];}
+\DoxyCodeLine{00179\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_a0e46b0389ed759ebe9217c50b7de8639}{mid\_temperature\_coeff}}[\mbox{\hyperlink{chemkin_8h_a2e0548f68709241f6fa5f64cae78d4b3}{MAX\_THERMO}}];}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_a17b5d94367fe942e3f54b8a3cfe98121}{n\_coeffs}}[\mbox{\hyperlink{cxpoly_8h_aa57fbb8edd698eec394092ec6e43e8cb}{POLYNOMIAL\_MAX\_RANGES}}];}
+\DoxyCodeLine{00182\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_a2d3b73c61309bce5ffca906094091aa7}{max\_poly\_coeffts}};}
+\DoxyCodeLine{00183\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_a92115ab4c7ec2f5540ff476eed68676b}{thermo\_data\_from\_fluent\_materials}};}
+\DoxyCodeLine{00184\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_a3806e7e246b0b7b6073fd1b17a4d7e53}{n\_ranges}};}
+\DoxyCodeLine{00185\ \ \ \textcolor{keywordtype}{double}\ **\mbox{\hyperlink{structspecies__struct_a7bdc5bede318c899994a8ad0e0ab7d47}{cp\_coeffs}};}
+\DoxyCodeLine{00186\ \ \ \textcolor{keywordtype}{double}\ **\mbox{\hyperlink{structspecies__struct_a56c80b7674fd2c1f0ffa82eeedc0ef65}{cp\_ranges}};}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_ab890f9005783b608cda9e27c0d2d8a91}{fent}},\ \mbox{\hyperlink{structspecies__struct_a81be80db5abcb1fd90746ca567d77666}{feth}};}
+\DoxyCodeLine{00189\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_accf3aec63bc20b3c99ab4881cb07c05b}{phase}};}
+\DoxyCodeLine{00190\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_aea863364b3e1dcac4bd64d9c3c04e601}{transportindex}};}
+\DoxyCodeLine{00191\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_a900637bd997e698bccf7d73623a191b5}{carbon\_fraction}};}
+\DoxyCodeLine{00192\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_ae10cb0f236a2d7cd81ef9acbc5ca3dc4}{hydrogen\_fraction}};}
+\DoxyCodeLine{00193\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_a325ade051d358726f2c25730d6e8341a}{nitrogen\_fraction}};}
+\DoxyCodeLine{00194\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_a29f411d32b410afd60529a118b2651ec}{oxygen\_fraction}};}
+\DoxyCodeLine{00195\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structspecies__struct_a0104b56aee31e545064f99cdfb9dea46}{transport\_coeffts}}[5];}
+\DoxyCodeLine{00196\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_aee5405888f38d99078c840d8f76dbf76}{reacting\_p}};}
+\DoxyCodeLine{00197\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structspecies__struct_ab9533e3275ad66b3832a1b2264b06fe3}{found\_in\_species\_section\_p}};}
+\DoxyCodeLine{00198\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structspecies__struct_afd967168d74be4a8153f3df2af96b5c1}{site\_occupancy}};}
+\DoxyCodeLine{00199\ \}\ \mbox{\hyperlink{chemkin_8h_aae9afdf711b83d608555b16e7c164673}{Species}};}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_a92b56f79385605a70829d928e8036b0d}{CONVERT\_FROM\_CHEMKIN}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{seem_8h_a9e9c7019565ee800abaf5fef300b73db}{STRING}});}
+\DoxyCodeLine{00202\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_a468f850b50464b52e8b87593821efb33}{CONVERT\_TO\_CHEMKIN}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{seem_8h_a9e9c7019565ee800abaf5fef300b73db}{STRING}});}
+\DoxyCodeLine{00203\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{chemkin_8h_a4bc6bc73ffcd2de2ec7b3fab37ea9b5d}{Read\_Specie\_Thermo\_Data}}\ (\textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{char}\ **,\ \textcolor{keywordtype}{int},\ FILE\ **,\ \textcolor{keywordtype}{char}\ **,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00204\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{chemkin_8h_a19be6e067611065b46a8d00bd8e00641}{Read\_Chemkin\_Files}}\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ FILE\ *fd,\ FILE\ *,\ FILE\ *,\ FILE\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ FILE\ *);}
+\DoxyCodeLine{00205\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_ad6001687b25841922d8afc71eb906268}{Write\_Chemkin\_Files}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00206\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_a0b5c05fa6e0ba99ac8085c3bf61e9d28}{read\_mw}}\ (\mbox{\hyperlink{chemkin_8h_a52bc20cbaaa0afdf437f11a2bd7f341f}{STREAM}}\ *,\ \mbox{\hyperlink{structspecies__struct}{Species}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00207\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_a430f933f99465aa2268f05d95ba232f5}{Set\_Condensed\_Specie}}\ (\mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00208\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_a03eac2b1dfa82714ea802237387f2883}{Enable\_Report\_Each\_line}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00209\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_a106a54fd6421f78f9093898d0ccd97a6}{Read\_Specie\_Elemental\_Fractions}}\ (\textcolor{keywordtype}{char}\ *matname,\ \textcolor{keywordtype}{int}\ specie\_num,}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ **specie\_names,}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FILE\ *file\_ptrs,}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *file\_names,}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *carbon\_fractions,}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *hydrogen\_fractions,}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *oxygen\_fractions,}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *nitrogen\_fractions);}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{chemkin_8h_ac478a624e2914c30bb02a15d5c7610db}{CFX\_RIF\_Specie\_Name}}(\textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{char}\ **species\_names,\ \textcolor{keywordtype}{int}\ k,\ \textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00219\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_aba8fab09a693d8081e6004d23921ccf9}{Get\_Element\_Matrix}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \textcolor{keywordtype}{int}\ *evt,\ \textcolor{keywordtype}{int}\ *elem\_index,\ \textcolor{keywordtype}{int}\ *num\_elem,\ \textcolor{keywordtype}{char}\ **elem\_names);}
+\DoxyCodeLine{00220\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_a64b4986085d4d0deec31eb492d9f22a1}{Get\_DR\_Element\_Matrix}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \textcolor{keywordtype}{int}\ *evt,\ \textcolor{keywordtype}{int}\ *global\_elem\_indx,}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *num\_elem,\ \textcolor{keywordtype}{char}\ **elem\_names);}
+\DoxyCodeLine{00222\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_a50e71d520b4e455b9bd763d5488e4415}{Get\_Plain\_Mechanism\_Element\_Matrix}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \textcolor{keywordtype}{char}\ *thermo\_file,\ \textcolor{keywordtype}{int}\ *evt,}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *global\_elem\_indx,\ \textcolor{keywordtype}{int}\ *num\_elem,\ \textcolor{keywordtype}{char}\ **elem\_names);}
+\DoxyCodeLine{00224\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_aa8b34675c26de7e1b20d51ab6cab3f05}{Get\_Encrypted\_Mechanism\_Element\_Matrix}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \textcolor{keywordtype}{int}\ *evt,\ \textcolor{keywordtype}{int}\ *global\_elem\_indx,}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *num\_elem,\ \textcolor{keywordtype}{int}\ ifound);}
+\DoxyCodeLine{00226\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{chemkin_8h_a914ef014e1467b4da64dd712ca3b3458}{Create\_Red\_Dim\_Mixture}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \textcolor{keywordtype}{int}\ num\_rd\_spe,}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *fo\_sp\_indx,\ \textcolor{keywordtype}{int}\ *red\_sp\_indx);}
+\DoxyCodeLine{00228\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{chemkin_8h_a04286d7878831231eab141c16eb7134f}{is\_mechanism\_encrypted}}(FILE\ *fd);}
+\DoxyCodeLine{00229\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{chemkin_8h_a89345cae5ba1c26ba3ac53e9644d8bd3}{reactiondata\_apionly\_p}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00230\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{chemkin_8h_a014461f3b1c734b6e9c972cad799e25b}{fluentmixture\_matches\_chemkin\_p}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ EMP\_FUEL\_NAME\ "{}empirical-\/fuel"{}}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ EMP\_SECONDARY\_NAME\ "{}empirical-\/secondary"{}}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ SPECIES\_IS\_EMPIRICAL(name)(STREQ(name,EMP\_FUEL\_NAME)||STREQ(name,EMP\_SECONDARY\_NAME))}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{chemkin_8h_ac478a624e2914c30bb02a15d5c7610db}{CFX\_RIF\_Specie\_Name}}(\textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{char}\ **species\_names,\ \textcolor{keywordtype}{int}\ k,\ \textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{chemkin_8h_a5ba2879fcb2c88d5114ec4139b78da24}{element\_weight}}(\textcolor{keywordtype}{int}\ elem\_index);}
+\DoxyCodeLine{00238\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_aee8071dc3d56be1dc0f922aab508003e}{element\_name}}(\textcolor{keywordtype}{int}\ elem\_index,\ \textcolor{keywordtype}{char}\ *ename);}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_CHEMKIN\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00240\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_a034f47a4a2a3f28edb1c452faca68178}{Register\_Ckcfd\_Encrypted\_IO\_Managers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00241\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{chemkin_8h_aba329db5c208a214944fb042f9f5f0a6}{Deregister\_Ckcfd\_Encrypted\_IO\_Managers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00242\ }
+
+\end{DoxyCode}

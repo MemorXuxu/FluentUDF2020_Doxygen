@@ -1,0 +1,123 @@
+\doxysection{npy\+\_\+interrupt.\+h}
+\hypertarget{npy__interrupt_8h_source}{}\label{npy__interrupt_8h_source}\index{fluent20.1.0/cortex/pylib/nexus/numpy/core/include/numpy/npy\_interrupt.h@{fluent20.1.0/cortex/pylib/nexus/numpy/core/include/numpy/npy\_interrupt.h}}
+\mbox{\hyperlink{npy__interrupt_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{comment}{/*\ Signal\ handling:}}
+\DoxyCodeLine{00003\ \textcolor{comment}{}}
+\DoxyCodeLine{00004\ \textcolor{comment}{This\ header\ file\ defines\ macros\ that\ allow\ your\ code\ to\ handle}}
+\DoxyCodeLine{00005\ \textcolor{comment}{interrupts\ received\ during\ processing.\ \ Interrupts\ that}}
+\DoxyCodeLine{00006\ \textcolor{comment}{could\ reasonably\ be\ handled:}}
+\DoxyCodeLine{00007\ \textcolor{comment}{}}
+\DoxyCodeLine{00008\ \textcolor{comment}{SIGINT,\ SIGABRT,\ SIGALRM,\ SIGSEGV}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{****Warning***************}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Do\ not\ allow\ code\ that\ creates\ temporary\ memory\ or\ increases\ reference}}
+\DoxyCodeLine{00013\ \textcolor{comment}{counts\ of\ Python\ objects\ to\ be\ interrupted\ unless\ you\ handle\ it}}
+\DoxyCodeLine{00014\ \textcolor{comment}{differently.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{}}
+\DoxyCodeLine{00016\ \textcolor{comment}{**************************}}
+\DoxyCodeLine{00017\ \textcolor{comment}{}}
+\DoxyCodeLine{00018\ \textcolor{comment}{The\ mechanism\ for\ handling\ interrupts\ is\ conceptually\ simple:}}
+\DoxyCodeLine{00019\ \textcolor{comment}{}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ \ -\/\ replace\ the\ signal\ handler\ with\ our\ own\ home-\/grown\ version}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ \ \ \ \ and\ store\ the\ old\ one.}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ \ -\/\ run\ the\ code\ to\ be\ interrupted\ -\/-\/\ if\ an\ interrupt\ occurs}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ \ \ \ the\ handler\ should\ basically\ just\ cause\ a\ return\ to\ the}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ \ \ calling\ function\ for\ finish\ work.}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ \ -\/\ restore\ the\ old\ signal\ handler}}
+\DoxyCodeLine{00026\ \textcolor{comment}{}}
+\DoxyCodeLine{00027\ \textcolor{comment}{Of\ course,\ every\ code\ that\ allows\ interrupts\ must\ account\ for}}
+\DoxyCodeLine{00028\ \textcolor{comment}{returning\ via\ the\ interrupt\ and\ handle\ clean-\/up\ correctly.\ \ But,}}
+\DoxyCodeLine{00029\ \textcolor{comment}{even\ still,\ the\ simple\ paradigm\ is\ complicated\ by\ at\ least\ three}}
+\DoxyCodeLine{00030\ \textcolor{comment}{factors.}}
+\DoxyCodeLine{00031\ \textcolor{comment}{}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ 1)\ platform\ portability\ (i.e.\ Microsoft\ says\ not\ to\ use\ longjmp}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ \ \ to\ return\ from\ signal\ handling.\ \ They\ have\ a\ \_\_try\ \ and\ \_\_except}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ \ \ \ \ extension\ to\ C\ instead\ but\ what\ about\ mingw?).}}
+\DoxyCodeLine{00035\ \textcolor{comment}{}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ 2)\ how\ to\ handle\ threads:\ apparently\ whether\ signals\ are\ delivered\ to}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ \ \ \ every\ thread\ of\ the\ process\ or\ the\ "{}invoking"{}\ thread\ is\ platform}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ \ \ \ dependent.\ -\/-\/-\/\ we\ don't\ handle\ threads\ for\ now.}}
+\DoxyCodeLine{00039\ \textcolor{comment}{}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ 3)\ do\ we\ need\ to\ worry\ about\ re-\/entrance.\ \ For\ now,\ assume\ the}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ \ \ \ code\ will\ not\ call-\/back\ into\ itself.}}
+\DoxyCodeLine{00042\ \textcolor{comment}{}}
+\DoxyCodeLine{00043\ \textcolor{comment}{Ideas:}}
+\DoxyCodeLine{00044\ \textcolor{comment}{}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ 1)\ Start\ by\ implementing\ an\ approach\ that\ works\ on\ platforms\ that}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ \ \ \ can\ use\ setjmp\ and\ longjmp\ functionality\ and\ does\ nothing}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ \ \ \ on\ other\ platforms.}}
+\DoxyCodeLine{00048\ \textcolor{comment}{}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ 2)\ Ignore\ threads\ -\/-\/-\/\ i.e.\ do\ not\ mix\ interrupt\ handling\ and\ threads}}
+\DoxyCodeLine{00050\ \textcolor{comment}{}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ 3)\ Add\ a\ default\ signal\_handler\ function\ to\ the\ C-\/API\ but\ have\ the\ rest}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ \ \ \ use\ macros.}}
+\DoxyCodeLine{00053\ \textcolor{comment}{}}
+\DoxyCodeLine{00054\ \textcolor{comment}{}}
+\DoxyCodeLine{00055\ \textcolor{comment}{Simple\ Interface:}}
+\DoxyCodeLine{00056\ \textcolor{comment}{}}
+\DoxyCodeLine{00057\ \textcolor{comment}{}}
+\DoxyCodeLine{00058\ \textcolor{comment}{In\ your\ C-\/extension:\ around\ a\ block\ of\ code\ you\ want\ to\ be\ interruptible}}
+\DoxyCodeLine{00059\ \textcolor{comment}{with\ a\ SIGINT}}
+\DoxyCodeLine{00060\ \textcolor{comment}{}}
+\DoxyCodeLine{00061\ \textcolor{comment}{NPY\_SIGINT\_ON}}
+\DoxyCodeLine{00062\ \textcolor{comment}{[code]}}
+\DoxyCodeLine{00063\ \textcolor{comment}{NPY\_SIGINT\_OFF}}
+\DoxyCodeLine{00064\ \textcolor{comment}{}}
+\DoxyCodeLine{00065\ \textcolor{comment}{In\ order\ for\ this\ to\ work\ correctly,\ the}}
+\DoxyCodeLine{00066\ \textcolor{comment}{[code]\ block\ must\ not\ allocate\ any\ memory\ or\ alter\ the\ reference\ count\ of\ any}}
+\DoxyCodeLine{00067\ \textcolor{comment}{Python\ objects.\ \ In\ other\ words\ [code]\ must\ be\ interruptible\ so\ that\ continuation}}
+\DoxyCodeLine{00068\ \textcolor{comment}{after\ NPY\_SIGINT\_OFF\ will\ only\ be\ "{}missing\ some\ computations"{}}}
+\DoxyCodeLine{00069\ \textcolor{comment}{}}
+\DoxyCodeLine{00070\ \textcolor{comment}{Interrupt\ handling\ does\ not\ work\ well\ with\ threads.}}
+\DoxyCodeLine{00071\ \textcolor{comment}{}}
+\DoxyCodeLine{00072\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{comment}{/*\ Add\ signal\ handling\ macros}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ \ \ Make\ the\ global\ variable\ and\ signal\ handler\ part\ of\ the\ C-\/API}}
+\DoxyCodeLine{00076\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#ifndef\ NPY\_INTERRUPT\_H}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ NPY\_INTERRUPT\_H}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#ifndef\ NPY\_NO\_SIGNAL}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#include\ <setjmp.h>}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#include\ <signal.h>}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#ifndef\ sigsetjmp}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ NPY\_SIGSETJMP(arg1,\ arg2)\ setjmp(arg1)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ NPY\_SIGLONGJMP(arg1,\ arg2)\ longjmp(arg1,\ arg2)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ NPY\_SIGJMP\_BUF\ jmp\_buf}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ NPY\_SIGSETJMP(arg1,\ arg2)\ sigsetjmp(arg1,\ arg2)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ NPY\_SIGLONGJMP(arg1,\ arg2)\ siglongjmp(arg1,\ arg2)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ NPY\_SIGJMP\_BUF\ sigjmp\_buf}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#\ \ \ \ define\ NPY\_SIGINT\_ON\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PyOS\_sighandler\_t\ \_npy\_sig\_save;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_npy\_sig\_save\ =\ PyOS\_setsig(SIGINT,\ \_PyArray\_SigintHandler);\ \(\backslash\)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (NPY\_SIGSETJMP(*((NPY\_SIGJMP\_BUF\ *)\_PyArray\_GetSigintBuf()),\ \(\backslash\)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1)\ ==\ 0)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#\ \ \ \ define\ NPY\_SIGINT\_OFF\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ PyOS\_setsig(SIGINT,\ \_npy\_sig\_save);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{/*\ NPY\_NO\_SIGNAL\ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ NPY\_SIGINT\_ON}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ NPY\_SIGINT\_OFF}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HAVE\_SIGSETJMP\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ NPY\_INTERRUPT\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,310 @@
+\doxysection{seem.\+h}
+\hypertarget{seem_8h_source}{}\label{seem_8h_source}\index{fluent20.1.0/cortex/src/seem.h@{fluent20.1.0/cortex/src/seem.h}}
+\mbox{\hyperlink{seem_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/**************************************************************************************/}}
+\DoxyCodeLine{00006\ \textcolor{comment}{/*\ IMPORTANT\ [2019/05/07]:\ If\ you\ touch\ this\ file\ for\ even\ the\ most\ harmless\ of\ things,}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ it\ might\ still\ break\ some\ FLCORE\ test,\ as\ this\ file\ is\ included\ in\ one\ of}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ the\ 'interpreted\ UDF'\ files\ which\ tries\ to\ use\ an\ imitation\ 'C\ inerpreter'}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ but\ of\ course\ can't\ support\ it\ completely.\ Try\ using\ !UDF\_COMPILER\ macro\ test\ for}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ doing\ normal\ C/C++\ things.\ */}}
+\DoxyCodeLine{00011\ \textcolor{comment}{/**************************************************************************************/}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ \_Seem\_h\_}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ \_Seem\_h\_}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ Seem\_h\ }\textcolor{comment}{/*\ backward\ compatibility\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)\ ||\ defined(c\_plusplus)}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#if\ WIN64}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}basetsd.h"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#if\ WIN64}}
+\DoxyCodeLine{00031\ \textcolor{keyword}{typedef}\ LONG64\ \mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}};}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}};}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{seem_8h_a474af7bb4e5a4e61ac44bddc657e3eb6}{flonum}};}
+\DoxyCodeLine{00036\ \textcolor{comment}{/*\ 2010-\/04-\/28\ ubecker}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ The\ compiler\ flags\ \_lnx86,\ \_lnia64,\ and\ \_lnamd64\ are\ not\ defined\ when\ compiling\ UDF.}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ As\ a\ consequence,\ the\ Pointer\ datatype\ has\ a\ different\ size\ for\ UDF,\ if\ relying\ only\ on\ these\ flags.}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ Fix\ by\ adding\ also\ the\ fluent\ flavors\ of\ system\ flags:\ sys\_lnx86,\ sys\_lnia64,\ and\ sys\_lnamd64.}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ Note:\ These\ are\ not\ known\ for\ cortex,\ so\ one\ does\ need\ both\ with\ the\ current\ build\ system.}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#if\ \_\_convex\_\_\ ||\ \_lnx86\ ||\ sys\_lnx86\ ||\ \_SX\ ||\ \_lnia64\ ||\ sys\_lnia64\ ||\ \_lnamd64\ ||\ sys\_lnamd64}}
+\DoxyCodeLine{00043\ \textcolor{comment}{/*\ With\ shorts,\ Convex\ doesn't\ double-\/word-\/align\ this\ structure.}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ Ends\ up\ being\ 3\ words\ long\ instead\ of\ 4,\ which\ makes\ the\ dumps}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ incompatible.}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ Only\ advantage\ of\ shorts\ might\ be\ that\ fewer\ bits\ are\ manipulated.}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{seem_8h_a8f6be888c7588758d6333133e63e3ae0}{Sshortint}};}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00050\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{short}\ \mbox{\hyperlink{seem_8h_a8f6be888c7588758d6333133e63e3ae0}{Sshortint}};}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#if\ \_lnia64\ ||\ sys\_lnia64}}
+\DoxyCodeLine{00054\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{cl__platform_8h_abd062009d355453e86013d3c02318e6b}{\_\_attribute\_\_}}\ ((aligned))\ \mbox{\hyperlink{structobj}{obj}}}
+\DoxyCodeLine{00055\ \#elif\ WIN64}
+\DoxyCodeLine{00056\ \_\_declspec(align(16))\ struct\ \mbox{\hyperlink{structobj}{obj}}}
+\DoxyCodeLine{00057\ \#else}
+\DoxyCodeLine{00058\ struct\ \mbox{\hyperlink{structobj}{obj}}}
+\DoxyCodeLine{00059\ \#endif}
+\DoxyCodeLine{00060\ \{}
+\DoxyCodeLine{00061\ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00062\ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ \mbox{\hyperlink{structobj_a037f96771db400bc6205611f232a7c4c}{ncell}};\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ *\mbox{\hyperlink{structvcell}{vcell}};\}\ symbol;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{struct\ }\{\textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ *\mbox{\hyperlink{structobj_a978eb5859f110dfaaea622825e773546}{car}};\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ *\mbox{\hyperlink{sprim_8h_a9c0c927351ec781db0df30c741517234}{cdr}};\}\ \ \mbox{\hyperlink{sprim_8h_a249f179dfe31a8dff561428c3b6fb6cd}{cons}};}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{struct\ }\{\textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ *env;\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ *code;\}\ \mbox{\hyperlink{sprim_8h_a9e44d5db6310a82650931151eab5bc8a}{closure}};}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ ncell;\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ *(*f)();\}\ \ subr;}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{struct\ }\{\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ data;\}\ \ \ \ character;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ \mbox{\hyperlink{structobj_ae8be9c9411648b6bd082df049d15846e}{data}};\}\ \ \ \ \ fixednum;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_a474af7bb4e5a4e61ac44bddc657e3eb6}{flonum}}\ \mbox{\hyperlink{structobj_a128e72fa0e47deedc76b7894894ca29e}{data}};\}\ \ \ \ \ floatnum;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ ncell;\ \mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ \mbox{\hyperlink{structobj_a4dd55d07ca5f1230b81b1ca12f3af1dc}{length}};\}\ \mbox{\hyperlink{structstring}{string}};}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ ncell;\ \mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ \mbox{\hyperlink{sprim_8h_a230aaa58d1f2bf2dfd4d9ad667964035}{length}};\}\ vector;}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ ncell;\ \textcolor{keywordtype}{short}\ valid;\}\ \ \ continuation;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ ncell;\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ *next;\}\ \ free;}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ ncell;\}\ \ \ \ \ \ \mbox{\hyperlink{structport}{port}};}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{struct\ }\{\mbox{\hyperlink{seem_8h_adb014bc31b7ff166fb8b595868931b63}{fixnum}}\ id;\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structobj_a91a70b77df95bd8b0830b49a094c2acb}{data}};\}\ \ \ foreign;}
+\DoxyCodeLine{00076\ \ \ \}\ as;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{seem_8h_a8f6be888c7588758d6333133e63e3ae0}{Sshortint}}\ \mbox{\hyperlink{structobj_a29c490fe8df8f2d57f6f41691926fbf0}{gc\_mark}};}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{seem_8h_a8f6be888c7588758d6333133e63e3ae0}{Sshortint}}\ \mbox{\hyperlink{structobj_a59f57e9f7d9c0488655579b511b654f0}{type}};}
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ CAR(x)\ \ \ \ ((x)-\/>as.cons.car)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ CDR(x)\ \ \ \ ((x)-\/>as.cons.cdr)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ PNAME(x)\ \ ((char\ *)((x)+1))}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ VCELL(x)\ \ ((x)-\/>as.symbol.vcell)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ SUBRF(x)\ \ (*((x)-\/>as.subr.f))}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ FLONM(x)\ \ ((x)-\/>as.floatnum.data)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ FIXNM(x)\ \ ((x)-\/>as.fixednum.data)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ CHAR(x)\ \ \ ((x)-\/>as.character.data)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ VECTOR\_LENGTH(x)\ ((x)-\/>as.vector.length)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ VECTOR(x)\ ((Pointer\ *)((x)+1))}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ PORT(x)\ \ \ ((Port\ *)((x)+1))}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ SEEM\_STRING\_LENGTH(x)((x)-\/>as.string.length)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ STRING(x)\ ((char\ *)((x)+1))}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ CONTINUATION\_LENGTH(x)((x)-\/>as.continuation.length)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ CONTINUATION\_VALID(x)((x)-\/>as.continuation.valid)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ CONTINUATION(x)((char\ *)((x)+1))}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ NEXT\_FREE(x)((x)-\/>as.free.next)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ CELL\_LENGTH(x)((x)-\/>as.vector.ncell)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ FOREIGN\_ID(x)((x)-\/>as.foreign.id)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ FOREIGN\_DATA(x)((x)-\/>as.foreign.data)}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ **\mbox{\hyperlink{seem_8h_a808b546b9141ff44ac0c3ea9a3895792}{stack}};}
+\DoxyCodeLine{00105\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ \mbox{\hyperlink{structobj}{Obj}};}
+\DoxyCodeLine{00106\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobj}{obj}}\ *\mbox{\hyperlink{seem_8h_add6656cd05b5c4631a94620cb7781317}{Pointer}};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ NIL\ ((struct\ obj\ *)\ NULL)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ EQ(x,y)((x)\ ==\ (y))}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ NEQ(x,y)((x)\ !=\ (y))}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ NILP(x)EQ(x,NIL)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ NNILP(x)NEQ(x,NIL)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ RETURNP(x)return\ ((x)\ ?\ S\_truth\ :\ S\_false)}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ FALSEP(x)EQ(x,S\_false)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ NFALSEP(x)NEQ(x,S\_false)}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ TYPE(x)(NILP(x)\ ?\ 0\ :\ (x)-\/>type)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ TYPEP(x,y)(TYPE(x)\ ==\ (y))}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ NTYPEP(x,y)(TYPE(x)\ !=\ (y))}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ PAIRP(x)(TYPE(x)\ ==\ tc\_cons)}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ NPAIRP(x)(TYPE(x)\ !=\ tc\_cons)}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ SYMBOLP(x)(TYPE(x)\ ==\ tc\_symbol)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ FLOATP(x)(TYPE(x)\ ==\ tc\_flonum)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ INTEGERP(x)(TYPE(x)\ ==\ tc\_fixnum)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ NUMBERP(x)(TYPE(x)\ ==\ tc\_flonum\ ||\ TYPE(x)\ ==\ tc\_fixnum)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ CHARP(x)(TYPE(x)\ ==\ tc\_char)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ STRINGP(x)(TYPE(x)\ ==\ tc\_string)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ VECTORP(x)(TYPE(x)\ ==\ tc\_vector)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ BOOLEANP(x)(TYPE(x)\ ==\ tc\_true\ ||\ TYPE(x)\ ==\ tc\_false)}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ tc\_nil\ \ \ \ 0}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ tc\_true\ \ \ 1}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ tc\_false\ \ 31}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ tc\_cons\ \ \ 2}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ tc\_symbol\ 3}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ tc\_flonum\ 4}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ tc\_fixnum\ 5}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ tc\_char\ \ \ 6}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ tc\_string\ 7}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ tc\_vector\ 8}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ tc\_continuation\ 9}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ tc\_nm\_vector\ \ 10}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ tc\_free\ \ \ 11}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ tc\_port\ \ \ 12}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ tc\_lambda\ 13}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ tc\_closure\ \ 14}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ tc\_quote\ \ 15}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ tc\_define\ 16}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ tc\_setq\ \ \ 17}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ tc\_begin\ \ 18}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ tc\_if\ \ \ 19}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#define\ tc\_and\ \ \ \ 20}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ tc\_or\ \ \ 21}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ tc\_tenv\ \ \ 22}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ tc\_access\ 23}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ tc\_apply\ \ 24}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ tc\_subr\_0\ 25}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ tc\_subr\_1\ 26}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ tc\_subr\_2\ 27}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ tc\_subr\_3\ 28}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ tc\_subr\_4\ 29}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ tc\_fsubr\ \ 30}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ tc\_lsubr\ \ 32}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#define\ tc\_foreign\ \ 33}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{seem_8h_a46d5690b036d923be75441d62e5a04f4}{Seem\_Eval\_Status}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00173\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{seem_8h_a271204150b462cc4a6e1c5c1a2b46ee3}{S\_truth}},\ \mbox{\hyperlink{seem_8h_a754ec930395af7021f6601716467d706}{S\_false}};}
+\DoxyCodeLine{00174\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{seem_8h_ac80c8dd74e74b54e7a748663cfd911c5}{ErrorObject}};}
+\DoxyCodeLine{00175\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{seem_8h_a6f92198979b855428f1118a366c8b9bc}{str\_parse\_failed}}[];}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ \ MAX\_STR\_LEN\ 256}}
+\DoxyCodeLine{00177\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{stack}}\ *\mbox{\hyperlink{seem_8h_ac73bb5b4d7764e1443b38c0ed3ddc488}{stack\_end}},\ *\mbox{\hyperlink{seem_8h_ac10102f65cee56512c7b5192d2074b50}{stack\_now}},\ *\mbox{\hyperlink{seem_8h_a890104f9bb3f2121324cdab272e71232}{stack\_start}};}
+\DoxyCodeLine{00178\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{seem_8h_adbf35cbdec38c3462d4dad84496e98ce}{stack\_size}},\ \mbox{\hyperlink{seem_8h_a17585d2967ffa836c7cf87ce571a76b2}{default\_stack\_size}};}
+\DoxyCodeLine{00179\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{seem_8h_ad06d68971e39f59710e56ec981fbaa49}{errjmp\_ok}};}
+\DoxyCodeLine{00180\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{seem_8h_aa755a8a077fa8b194020b7d3e0aeca96}{nointerrupt}};}
+\DoxyCodeLine{00181\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{seem_8h_ace7da357899a2c12f75309cb9969d5dc}{gc\_verbose}};}
+\DoxyCodeLine{00182\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{seem_8h_ade8a72b21362773f8b86f53586addbb3}{seem\_fatalerror}};}
+\DoxyCodeLine{00183\ \textcolor{keyword}{extern}\ void\ (*\mbox{\hyperlink{seem_8h_a592cdb882b2f44da499e217107c0f766}{seem\_init\_ports}})();}
+\DoxyCodeLine{00184\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{seem_8h_ae92d2854411f46ea0aee8dfaba0f9069}{CPUtime}}\ (\textcolor{keywordtype}{double}\ *u,\ \textcolor{keywordtype}{double}\ *s);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#define\ Reallocate\_Stack()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\ \ size\_t\ origOffset\ =\ stack\_now\ -\/\ stack\_start;\ \ \(\backslash\)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\ \ stack\_size\ +=\ default\_stack\_size;\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\ \ stack\_start\ =\ (stack\ *)realloc(stack\_start,\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sizeof(stack)*stack\_size);\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\ \ stack\_now\ =\ stack\_start\ +\ origOffset;\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\ \ stack\_end\ =\ stack\_start\ +\ stack\_size;\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#define\ Push\_Stack(\_x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\ \ if(stack\_now==stack\_end)\ \{\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\ \ \ \ Reallocate\_Stack();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\ \ *stack\_now++\ =\ \&(\_x);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\ \ (\_x)=NIL;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#define\ Push\_Stack0(\_x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\ \ if(stack\_now==stack\_end)\ \{\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\ \ \ \ Reallocate\_Stack();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\ \ *stack\_now++\ =\ \&(\_x);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#define\ Save\_Stack()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (stack\_now\ -\/\ stack\_start)}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ Restore\_Stack(stackOffset)\ (stack\_now\ =\ stack\_start\ +\ stackOffset)}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ START\_SSCHEME\_STACK(\_result)\ \(\backslash\)}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\{\ \(\backslash\)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\ \ \ size\_t\ stackOffset\ =\ Save\_Stack();\ \(\backslash\)}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\ \ \ Push\_Stack(\_result)}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ END\_SSCHEME\_STACK(\_result)\ \(\backslash\)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\ \ \ Restore\_Stack(stackOffset);\ \(\backslash\)}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structport}{port}}}
+\DoxyCodeLine{00226\ \{}
+\DoxyCodeLine{00227\ \ \ int\ (*\mbox{\hyperlink{structport_a609bbcce68af1251049e46634f12465a}{put\_c}})\ (int,\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structport}{port}}\ *);\ \textcolor{comment}{/*\ put\ character\ */}}
+\DoxyCodeLine{00228\ \ \ int\ (*\mbox{\hyperlink{structport_a687612f3a54edc72ccafb9d27123d37e}{put\_s}})\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structport}{port}}\ *);\ \textcolor{comment}{/*\ put\ string\ */}}
+\DoxyCodeLine{00229\ \ \ int\ (*\mbox{\hyperlink{structport_abde0eb6f9e7224a85dd5646789fa329c}{get\_c}})\ (\textcolor{keyword}{struct\ }\mbox{\hyperlink{structport}{port}}\ *);\ \ \ \textcolor{comment}{/*\ get\ character\ */}}
+\DoxyCodeLine{00230\ \ \ int\ (*\mbox{\hyperlink{structport_a8ad8a936341160104f72c79aeeca89be}{unget\_c}})\ (int,\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structport}{port}}\ *);\ \textcolor{comment}{/*\ unget\ character\ */}}
+\DoxyCodeLine{00231\ \ \ int\ (*\mbox{\hyperlink{structport_ac5474911f1d20485f98e0dcc4f493a63}{ready\_c}})\ (\textcolor{keyword}{struct\ }\mbox{\hyperlink{structport}{port}}\ *);\ \ \ \textcolor{comment}{/*\ character\ ready?\ */}}
+\DoxyCodeLine{00232\ \ \ void\ (*\mbox{\hyperlink{structport_aa563b2254508c2b5d6cfdcf72861932c}{flush}})\ (\textcolor{keyword}{struct\ }\mbox{\hyperlink{structport}{port}}\ *);\ \ \textcolor{comment}{/*\ flush\ */}}
+\DoxyCodeLine{00233\ \ \ \mbox{\hyperlink{seem_8h_add6656cd05b5c4631a94620cb7781317}{Pointer}}\ (*\mbox{\hyperlink{structport_a49cddaf8937e776b8f6a4e45c280fd3d}{close}})\ (\textcolor{keyword}{struct\ }\mbox{\hyperlink{structport}{port}}\ *);\ \textcolor{comment}{/*\ close\ */}}
+\DoxyCodeLine{00234\ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00235\ \ \ \{}
+\DoxyCodeLine{00236\ \ \ \ \ FILE\ *\mbox{\hyperlink{structport_a702945180aa732857b380a007a7e2a21}{file}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ FILE\ pointer\ */}}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structport_add9af9569af79ec26dd741fb226b38ba}{ptr}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Any\ pointer\ */}}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structport_a6f8059414f0228f0256115e024eeed4b}{fd}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ File\ descriptor\ */}}
+\DoxyCodeLine{00239\ \ \ \}\ \mbox{\hyperlink{structport_acebef0d85246eeed20cc11666630b1af}{as}};}
+\DoxyCodeLine{00240\ \ \ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{structport_a467ddc202cd5cf21f543b7aa3c04856f}{string}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ string\ port\ */}}
+\DoxyCodeLine{00241\ \ \ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{structport_aa8ec04bba64573fbd79a2249aee446d8}{name}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ filename\ */}}
+\DoxyCodeLine{00242\ \ \ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{structport_a7050fb8a33d42be02b68af625cc166a7}{echo}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ echo\ port\ */}}
+\DoxyCodeLine{00243\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structport_ab7009866ab720436b92b9fb6386a5662}{\_c\_ready}};}
+\DoxyCodeLine{00244\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structport_a2a56211e773353d0a7dd5ecead15c528}{\_c\_unget}};}
+\DoxyCodeLine{00245\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structport_a396ddd3d54988940948a2e47c8fbc191}{\_nc}};}
+\DoxyCodeLine{00246\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structport_a4ec556bece3c3c38215538a7d24323f0}{cbuf}};}
+\DoxyCodeLine{00247\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structport_a3222188fafe63cf80695d9c192eed616}{ncbuf}};}
+\DoxyCodeLine{00248\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structport_ac88c8797c83fce445c8818613624e285}{linebuffered}};}
+\DoxyCodeLine{00249\ \};}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structport}{port}}\ \mbox{\hyperlink{structport}{Port}};}
+\DoxyCodeLine{00252\ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{seem_8h_add6656cd05b5c4631a94620cb7781317}{Pointer}}\ (*\mbox{\hyperlink{seem_8h_a7d48f8006909b8705caa3827f49d8090}{Subr}})();}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ PORT\_GETC(p)(*(p-\/>get\_c))(p)}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ PORT\_UNGETC(c,p)(*(p-\/>unget\_c))(c,p)}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ PORT\_PUTC(c,p)(*(p-\/>put\_c))(c,p)}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ PORT\_PUTS(s,p)(*(p-\/>put\_s))(s,p)}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ PORT\_FLUSH(p)(*(p-\/>flush))(p)}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ PORT\_CHAR\_READY(p)((p)-\/>\_c\_ready)}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ PORT\_FILE(p)\ \ ((p)-\/>as.file)}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ PORT\_STRING(p)\ \ ((p)-\/>string)}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ PORT\_FD(p)\ \ ((p)-\/>as.fd)}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ PORT\_PTR(p)\ ((p)-\/>as.ptr)}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#define\ EVAL\_SUCCESS\ 0}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#define\ EVAL\_ERROR\ 1}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ EVAL\_INTERRUPT\ 2}}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{sprim_8h}{sprim.h}}"{}}}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{seem_8h_a800ea0243545b167d52a33fbfd508e71}{psystem}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{00274\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{seem_8h_a1f0a12bc00d04fd99337cfc0fd6e4c16}{time\_string}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00275\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{seem_8h_a72776e8df491898005eba30fcc6c9006}{print\_back\_trace\_to\_file}}(FILE\ *fp,\ \textcolor{keywordtype}{int}\ nlevel,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00276\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{seem_8h_a5895cefecda30f10011b64187a87d194}{pprint\_thread}}(FILE\ *fp);}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#if\ ADD\_MISSING\_PROTOS}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#\ define\ NOPROTO(x)\ ()}}
+\DoxyCodeLine{00280\ \textcolor{comment}{/*\ missing\ prototypes\ */}}
+\DoxyCodeLine{00281\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ fclose\ NOPROTO((FILE\ *));}
+\DoxyCodeLine{00282\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ fflush\ NOPROTO((FILE\ *));}
+\DoxyCodeLine{00283\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ fgetc\ \ NOPROTO((FILE\ *));}
+\DoxyCodeLine{00284\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ fprintf\ \ NOPROTO((FILE\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ ...));}
+\DoxyCodeLine{00285\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ fputc\ \ NOPROTO((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char},\ FILE\ *));}
+\DoxyCodeLine{00286\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ fputs\ \ NOPROTO((\textcolor{keywordtype}{char}\ *,\ FILE\ *));}
+\DoxyCodeLine{00287\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ printf\ NOPROTO((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ ...));}
+\DoxyCodeLine{00288\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ putenv\ NOPROTO((\textcolor{keywordtype}{char}\ *));}
+\DoxyCodeLine{00289\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ read\ \ \ NOPROTO((\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int}));}
+\DoxyCodeLine{00290\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ remove\ NOPROTO((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *));}
+\DoxyCodeLine{00291\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ rename\ NOPROTO((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *));}
+\DoxyCodeLine{00292\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ sscanf\ NOPROTO((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ ...));}
+\DoxyCodeLine{00293\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ system\ NOPROTO((\textcolor{keywordtype}{char}\ *));}
+\DoxyCodeLine{00294\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ ungetc\ NOPROTO((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char},\ FILE\ *));}
+\DoxyCodeLine{00295\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \_filbuf\ \ NOPROTO((FILE\ *));}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)\ ||\ defined(c\_plusplus)}}
+\DoxyCodeLine{00299\ \}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_Seem\_h\_\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \textcolor{comment}{/*\ EOF\ */}}
+
+\end{DoxyCode}

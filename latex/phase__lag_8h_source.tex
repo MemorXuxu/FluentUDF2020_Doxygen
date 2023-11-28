@@ -1,0 +1,164 @@
+\doxysection{phase\+\_\+lag.\+h}
+\hypertarget{phase__lag_8h_source}{}\label{phase__lag_8h_source}\index{fluent20.1.0/src/bc/phase\_lag.h@{fluent20.1.0/src/bc/phase\_lag.h}}
+\mbox{\hyperlink{phase__lag_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_PHASE\_LAG\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_PHASE\_LAG\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ RP\_PLBC}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ PL\_PLS\ 1}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ NO\_PHASE\_LAG\_BOUNDARIES(si)\(\backslash\)}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\ \ (NULLP(SI\_T0\_PHLAG\_OBJP(si))\ \&\&\ NULLP(SI\_T1\_PHLAG\_OBJP(si)))}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ PHASE\_LAG\_BOUNDARIES\_EXIST(si)\(\backslash\)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\ \ !NO\_PHASE\_LAG\_BOUNDARIES(si)}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ THREAD\_ORG(t)((t)-\/>tmp1)}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ si\_sequence\_loop(o,o1,o2,count)\(\backslash\)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\ \ for(((o)=(o1),(count)=0);(NULL!=(o));\(\backslash\)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\ \ \ \ \ \ (((o)-\/>next==NULL)\&\&((count)==0))?((count=1),(o)=(o2)):((o)=(o)-\/>next))}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ si\_sb\_objp\_loop(o,si,n)\(\backslash\)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\ \ si\_sequence\_loop(o,SI\_T0\_OBJP(si),SI\_T1\_OBJP(si),n)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ si\_phlag\_objp\_loop(o,si,n)\(\backslash\)}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\ \ si\_sequence\_loop(o,SI\_T0\_PHLAG\_OBJP(si),SI\_T1\_PHLAG\_OBJP(si),n)}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{struct\ }pl\_signal\_struct}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Ts;\ \ \ \ \ \ \ \textcolor{comment}{/*\ signal\ period\ */}}
+\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sigma;\ \ \ \ \textcolor{comment}{/*\ phase\ lag\ */}}
+\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{int}\ nc;}
+\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacenumpy_1_1linalg_1_1linalg_a31490d8e48743bb0d763525a6f7af2b0}{cond}}[25];\ \textcolor{comment}{/*dimension\ pl-\/>M*/}}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{struct\ }phase\_lag\_struct}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \ \ \textcolor{keyword}{struct\ }pl\_signal\_struct\ sg[2];}
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{int}\ method;}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{int}\ n\_sig;\ \ \ \textcolor{comment}{/*\ number\ of\ signals\ */}}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Ts;\ \ \ \ \textcolor{comment}{/*\ common\ period\ */}}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dt;}
+\DoxyCodeLine{00043\ \ \ \textcolor{keywordtype}{int}\ Ns;\ \ \ \ \ \textcolor{comment}{/*\ number\ of\ sampling\ points\ (c.p.)*/}}
+\DoxyCodeLine{00044\ \ \ \textcolor{keywordtype}{int}\ M;\ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ modes\ */}}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ready;}
+\DoxyCodeLine{00046\ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }phase\_lag\_struct\ Phase\_Lag;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{/*\ define\ various\ methods\ of\ implementing\ phase\ lag\ BC.\ */}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00052\ \{}
+\DoxyCodeLine{00053\ \ \ MOVING\_AVERAGES\ =\ 1,}
+\DoxyCodeLine{00054\ \ \ ALTERNATE\_COEFFS}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{/*\ PL\ =\ Phase\ Lag\ \ */}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ PL\_METHOD(p)((p)-\/>method)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ PL\_NMODES(p)((p)-\/>M)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ PL\_NCOEFFS(p)((p)-\/>nCoeff)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ PL\_READY(p)((p)-\/>ready)}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{/*\ \#define\ SI\_PL(s)((s)-\/>pl)\ */}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ SI\_PL(s)(\&phase\_lag\_data)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ SI\_PL\_METHOD(s)(PL\_METHOD(SI\_PL(s)))}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ SI\_PL\_NMODES(s)(PL\_NMODES(SI\_PL(s)))}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ SI\_PL\_NCOEFFS(s)(PL\_NCOEFFS(SI\_PL(s)))}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ SI\_PL\_READY(s)(PL\_READY(SI\_PL(s)))}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ IF\_STORE\_FOURIER\_COEFF0(t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\ \ (CELL\_THREAD\_P(t)\ \&\&\ STRETCHED\_INTERFACE\_THREAD\_P(t)\ \&\&\ PHASE\_LAG\_INTERFACE\_P(THREAD\_SI(t)))}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ IF\_STORE\_FOURIER\_COEFF1(t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ (IF\_STORE\_FOURIER\_COEFF0(t)\ \&\&\ (SI\_PL\_METHOD(THREAD\_SI(t))\ ==\ ALTERNATE\_COEFFS))}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00077\ \{}
+\DoxyCodeLine{00078\ \ \ FACE\_SHARING\ =\ 1,}
+\DoxyCodeLine{00079\ \ \ NODE\_SHARING\ =\ 2}
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ INVALID\_GHOST\_CELL\_LAYERS\_P\ \ (ghost\_cell\_layer\_count\ <\ 1)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ ONE\_GHOST\_CELL\_LAYER\_P\ \ \ \ \ \ \ (ghost\_cell\_layer\_count\ ==\ 1)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ MULTIPLE\_GHOST\_CELL\_LAYERS\_P\ (ghost\_cell\_layer\_count\ >\ 1)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ FACE\_SHARED\_MARKING\_P\ \ \ \ \ \ \ \ (ghost\_cell\_layer\_type\ ==\ FACE\_SHARING)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ NODE\_SHARED\_MARKING\_P\ \ \ \ \ \ \ \ (ghost\_cell\_layer\_type\ ==\ NODE\_SHARING)}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Count\_Phase\_Lag\_Interfaces\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00089\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Print\_Ghost\_Cell\_Transformation\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00090\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Update\_Ghost\_Storage\_From\_Phase\_Lag\_Threads(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00091\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Create\_Phase\_Lag\_Threads\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00092\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Create\_Phase\_Lag\_Interface\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structsliding__interface}{Sliding\_interface}}\ *);}
+\DoxyCodeLine{00093\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Delete\_Neighbor\_Face\_Threads\_On\_Ghost\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structsliding__interface}{Sliding\_interface}}\ *);}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Set\_Parameters(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00096\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Collect\_Time\_Level\_Values(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00097\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ PL\_Compute\_Time\_Level\_Values(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ copy);}
+\DoxyCodeLine{00098\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Copy\_Ghost\_Cell\_Scalar(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ nv);}
+\DoxyCodeLine{00099\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Copy\_Adjacent\_Scalar\_Gradient(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ nv);}
+\DoxyCodeLine{00100\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Copy\_Adjacent\_Vector\_Gradient(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a297a1475e0f3890f80244906e41bea00}{ND\_VEC}}(\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sx,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sy,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sz));}
+\DoxyCodeLine{00102\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Copy\_RG\_Qs(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00103\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Copy\_G\_Qs(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00104\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Copy\_Cpld\_Coeffs(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00105\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Copy\_Scalar\_Coeffs(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ sys\_id);}
+\DoxyCodeLine{00106\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Display(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00107\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ PL\_Init\_FC(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{00110\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ if\_store\_fourier\_coeff(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ plbc\_ncoeffs;}
+\DoxyCodeLine{00114\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ Phase\_Lag\ phase\_lag\_data;}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ HB\_TEST\_INIT\ 1}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#if\ HB\_TEST\_INIT}}
+\DoxyCodeLine{00118\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ hb\_get\_c\_val(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ nv,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ time);}
+\DoxyCodeLine{00119\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ hb\_get\_f\_val(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ nv,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ time);}
+\DoxyCodeLine{00120\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ hb\_init\_var(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structvariable__attribute__struct}{Var\_Attribute}}\ *sv);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{keyword}{struct\ }v\_gsd\_struct}
+\DoxyCodeLine{00123\ \{}
+\DoxyCodeLine{00124\ \ \ \textcolor{keywordtype}{int}\ init;}
+\DoxyCodeLine{00125\ \ \ \textcolor{keywordtype}{double}\ R\_univ;}
+\DoxyCodeLine{00126\ \ \ \textcolor{keywordtype}{double}\ Mu;}
+\DoxyCodeLine{00127\ \ \ \textcolor{keywordtype}{double}\ Cp;}
+\DoxyCodeLine{00128\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{const_8h_a5c71a5e59a53413cd6c270266d63b031}{R}};}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \textcolor{keywordtype}{double}\ p0;}
+\DoxyCodeLine{00131\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespacenumpy_1_1polynomial_1_1tests_1_1test__chebyshev_a1880e3fb78cf8e13a2080ecf82bb1b7b}{T0}};}
+\DoxyCodeLine{00132\ \ \ \textcolor{keywordtype}{double}\ r0;}
+\DoxyCodeLine{00133\ \ \ \textcolor{keywordtype}{double}\ gm;}
+\DoxyCodeLine{00134\ \ \ \textcolor{keywordtype}{double}\ c0;}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \};}
+\DoxyCodeLine{00137\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }v\_gsd\_struct\ V\_GSD;}
+\DoxyCodeLine{00138\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ V\_GSD\ gsd\_data;}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ v\_init\_gsd\_data(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{keyword}{struct\ }v\_wave\_struct}
+\DoxyCodeLine{00143\ \{}
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordtype}{int}\ init;}
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordtype}{double}\ V;}
+\DoxyCodeLine{00146\ \ \ \textcolor{keywordtype}{double}\ P;}
+\DoxyCodeLine{00147\ \ \ \textcolor{keywordtype}{double}\ lambda;}
+\DoxyCodeLine{00148\ \};}
+\DoxyCodeLine{00149\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }v\_wave\_struct\ V\_WAVE;}
+\DoxyCodeLine{00150\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ V\_WAVE\ wave\_data;}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ v\_init\_wave\_data(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ RP\_PLBC\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ \_PHASE\_LAG\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

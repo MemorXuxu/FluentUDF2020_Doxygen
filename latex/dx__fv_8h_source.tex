@@ -1,0 +1,88 @@
+\doxysection{dx\+\_\+fv.\+h}
+\hypertarget{dx__fv_8h_source}{}\label{dx__fv_8h_source}\index{fluent20.1.0/src/dx/dx\_fv.h@{fluent20.1.0/src/dx/dx\_fv.h}}
+\mbox{\hyperlink{dx__fv_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{00006\ \textcolor{comment}{/*\ Fieldview\ Unstructured\ output\ */}}
+\DoxyCodeLine{00007\ \textcolor{comment}{/*\ The\ definitions\ are\ copied\ from\ sample\ files\ provided\ by\ Fieldview\ */}}
+\DoxyCodeLine{00008\ \textcolor{comment}{/*\ Numeric\ tags\ (codes)\ for\ FIELDVIEW\ binary\ file\ format.\ */}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_DX\_FV\_H}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ \_FLUENT\_DX\_FV\_H}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ FV\_MAGIC\ \ \ 0x00010203\ }\textcolor{comment}{/*\ decimal\ 66051\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ FV\_VERSION\_MAJOR\ 3}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ FV\_VERSION\_MINOR\ 0}}
+\DoxyCodeLine{00018\ \textcolor{comment}{/*\ Content\ of\ the\ file\ (grid\ only,\ results\ only\ or\ combined).\ */}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ FV\_GRIDS\_FILE\ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ FV\_RESULTS\_FILE\ \ \ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ FV\_COMBINED\_FILE\ \ \ \ \ \ \ \ 3}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ FV\_NODES\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1001}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ FV\_FACES\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1002}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ FV\_ELEMENTS\ \ \ \ \ \ \ \ \ \ \ \ \ 1003}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ FV\_VARIABLES\ \ \ \ \ \ \ \ \ \ \ \ 1004}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ FV\_BNDRY\_VARS\ \ \ \ \ \ \ \ \ \ \ 1006}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ FV\_ARB\_POLY\_FACES\ \ \ \ \ \ \ 1007}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ FV\_ARB\_POLY\_ELEMENTS\ \ \ \ 1008}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ FV\_ARB\_POLY\_BNDRY\_VARS\ \ 1009}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ FV\_TET\_ELEM\_ID\ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ FV\_HEX\_ELEM\_ID\ \ \ \ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ FV\_WEDGE\_ELEM\_ID\ \ \ \ \ \ \ \ 3}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ FV\_PYR\_ELEM\_ID\ \ \ \ \ \ \ \ \ \ 4}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ FV\_ARB\_POLY\_ELEM\_ID\ \ \ \ \ 5}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ MAX\_NUM\_ELEM\_FACES\ \ \ \ \ 6}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ BITS\_PER\_WALL\ \ 3}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ ELEM\_TYPE\_BIT\_SHIFT\ \ \ \ (MAX\_NUM\_ELEM\_FACES*BITS\_PER\_WALL)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ GRID\ (fileType==FV\_GRIDS\_FILE\ ?\ TRUE:FALSE)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ RESULT\ (fileType==FV\_RESULTS\_FILE\ ?\ TRUE:FALSE)}}
+\DoxyCodeLine{00043\ \textcolor{comment}{/*\#define\ BOTH\ (fileType==FV\_COMBINED\_FILE\ ?\ TRUE:FALSE)*/}}
+\DoxyCodeLine{00044\ \textcolor{comment}{/*\ Values\ for\ "{}wall\_info"{}\ array\ (see\ comments\ in\ fv\_encode\_elem\_header).\ */}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#if\ defined(\_\_STDC\_\_)\ ||\ \_NT}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ A\_WALL\ \ \ \ \ \ \ \ \ (07u)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ NOT\_A\_WALL\ \ \ \ \ (0u)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ A\_WALL\ \ \ \ \ \ \ \ \ (07)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ NOT\_A\_WALL\ \ \ \ \ (0)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ FV\_EPSILON\ \ \ \ \ 1e-\/04}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ NODE\_FIRST(n)\ (2*n-\/1)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ NODE\_SECOND(n)\ (2*n)}}
+\DoxyCodeLine{00055\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a48e99a1dac7485f493b1597194ffc941}{Write\_Fv\_Uns}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ FILE\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00056\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_ae5c4ac6e7bc51bd65d5ba78f09703d1b}{Write\_Fv\_Uns\_Region}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ FILE\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00057\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a5fa21135ea704ddb53d79b9beeaf64b2}{Write\_Fv}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ FILE\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00058\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a0625734cec82a98eb417fb3af27ce013}{WriteFvUnsHeader}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00059\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a7861aa220209dde2a7ccec6044ad97fd}{WriteFvUnsFastResultInfo}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00060\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a529e7257cd4cbfc2cede2fa3a21b4915}{WriteFvUnsMeshData}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00061\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{dx__fv_8h_ae54a162f254b597de67d5903e1b55f83}{fwrite\_str80}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ FILE\ *fp);}
+\DoxyCodeLine{00062\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_ae90c5dc3191955f01ea1e713a744f1e9}{WriteFvUnsFastResult}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00063\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a7c9f5e8f55d34fefd2ecfaf42f2191bd}{WriteFvUnsFastVelocity}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a5fbbf0b6ca5bb902c88a4b18bc8c1684}{Initialize\_Parallel\_FV\_Export}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00066\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a2816f9e5320584188eb4daf1f98c24be}{Store\_Parallel\_FV\_Result}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00067\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a1bb43ddfed7df169d5aff240e3cd0675}{Store\_Parallel\_FV\_Velocities}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00068\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a813cd4a54a29c58ffb2f18a21fe93eec}{Store\_Parallel\_FV\_BResults}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00069\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a3fc0d0e6b59e83c44d83d48a46c62db1}{Write\_Parallel\_FV\_File}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00070\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_afe9cd16ae897a9a273357c927e91ed8f}{Finalize\_Parallel\_FV\_Export}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{/*\ Multigird\ surface\ export\ */}}
+\DoxyCodeLine{00073\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a5d69a0a3f5c76c678312426f9187aafe}{Init\_Parallel\_FV\_SurfExport}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00074\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_aac669f755e59b3caffd215f4ff880bd1}{Write\_Parallel\_FV\_SurfFile}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00075\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_ad06c867aa9513a6620fb542ed42a0940}{Store\_FV\_Surf\_Result}}(\mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00076\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_afd536027034e505d4e78f4d1a0ef185e}{Store\_FV\_Surf\_Bresults}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00077\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_a5962e68de274aec518480b7f18f37f96}{Finalize\_FV\_Surf\_Export}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_aba9963fdecd281ff05687af5d48c5e6f}{WriteFvUnsSurfHeader}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00080\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dx__fv_8h_ab4084527f9eb8748b95b4fe845a082fd}{WriteFvUnsSurfMeshData}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_DX\_FV\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

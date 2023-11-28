@@ -1,0 +1,119 @@
+\doxysection{fluent20.1.0/src/dpm/dpm\+\_\+dem.h File Reference}
+\hypertarget{dpm__dem_8h}{}\label{dpm__dem_8h}\index{fluent20.1.0/src/dpm/dpm\_dem.h@{fluent20.1.0/src/dpm/dpm\_dem.h}}
+{\ttfamily \#include "{}dpm\+\_\+types.\+h"{}}\newline
+{\ttfamily \#include "{}threads.\+h"{}}\newline
+{\ttfamily \#include "{}dpm\+\_\+dem\+\_\+wall.\+h"{}}\newline
+{\ttfamily \#include "{}binary\+\_\+params.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structdem__ctrl__struct}{dem\+\_\+ctrl\+\_\+struct}}
+\item 
+struct \mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\+\_\+mesh\+\_\+struct}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group__dpm_ga0a0cb6084bbc9b4b25457d7330d791a6}{DEM\+\_\+\+CC\+\_\+\+FLAG\+\_\+\+HAS\+\_\+\+WALLS}}~(1)
+\item 
+\#define \mbox{\hyperlink{group__dpm_gadf1b23b10e81c011f1212185a630d4bd}{DEM\+\_\+\+CC\+\_\+\+FLAG\+\_\+\+IS\+\_\+\+GHOST\+\_\+\+CC}}~(1$<$$<$1)
+\item 
+\#define \mbox{\hyperlink{group__dpm_gac66b934163114d23d8fcb5757de84e96}{DEM\+\_\+\+CC\+\_\+\+FLAG\+\_\+\+IS\+\_\+\+PERIODIC\+\_\+\+CC}}~(1$<$$<$2)
+\item 
+\#define \mbox{\hyperlink{group__dpm_ga05b43ec807ba39731f20a9b5b0e3aa3b}{DEM\+\_\+\+CC\+\_\+\+FLAG\+\_\+P}}(cartesian\+\_\+mesh,  icc,  flag)~(cartesian\+\_\+mesh-\/$>$flags\mbox{[}icc\mbox{]} \&   (flag))
+\item 
+\#define \mbox{\hyperlink{group__dpm_gad1417c39c5ecff7cb9011c3ef290e162}{DEM\+\_\+\+SET\+\_\+\+CC\+\_\+\+FLAG}}(cartesian\+\_\+mesh,  icc,  flag)~(cartesian\+\_\+mesh-\/$>$flags\mbox{[}icc\mbox{]} \texorpdfstring{$\vert$}{|}=  (flag))
+\item 
+\#define \mbox{\hyperlink{group__dpm_ga025e2051ff1c123ead3f185e47168f76}{DEM\+\_\+\+CLEAR\+\_\+\+CC\+\_\+\+FLAG}}(cartesian\+\_\+mesh,  icc,  flag)~(cartesian\+\_\+mesh-\/$>$flags\mbox{[}icc\mbox{]} \&= \texorpdfstring{$\sim$}{\string~}(flag))
+\item 
+\#define \mbox{\hyperlink{group__dpm_ga2b363e85a8f93295ea699d4750f97170}{DEM\+\_\+\+INTEGRATE\+\_\+\+DURING}}~( \mbox{\hyperlink{dpm__types_8h_ae76f75dd8ee1bb8f9727ac523e666697aa44d4d7e1e27037eb9dafdec4876677c}{DURING\+\_\+\+TRACKING}} == dpm\+\_\+par.\+spray\+\_\+suite.\+collision\+\_\+mode \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} \mbox{\hyperlink{dpm__types_8h_ae76f75dd8ee1bb8f9727ac523e666697a533d403b3e90e35d0522d4c7cd0df2b5}{DURING\+\_\+\+UPDATE}} == dpm\+\_\+par.\+spray\+\_\+suite.\+collision\+\_\+mode )
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structdem__ctrl__struct}{dem\+\_\+ctrl\+\_\+struct}} \mbox{\hyperlink{group__dpm_ga023f997da50026896e4eee58a2631ca0}{dem\+\_\+ctrl\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{structcartesian__mesh__struct}{cartesian\+\_\+mesh\+\_\+struct}} \mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{group__dpm_gaa5d312154d3b5407c9d2ab6d35d36812}{collision\+\_\+time\+\_\+integration\+\_\+scheme}} \{ \newline
+\mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812a0a995c8e688592c16a43c19646e51e8f}{COLLISION\+\_\+\+PSEUDO\+\_\+\+EULER}}
+, \mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812a86d80baa8d280d813c5b67089d4690d3}{COLLISION\+\_\+\+TRAPEZOIDAL}}
+, \mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812a39ace2d155a31dbe9fbd20727acf6f81}{COLLISION\+\_\+\+STOERMER\+\_\+\+VERLET}}
+, \mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812a603438ae2ae9b6493c7389ec357a8f22}{COLLISION\+\_\+\+STOERMER\+\_\+\+VERLET\+\_\+\+VELOCITY}}
+, \newline
+\mbox{\hyperlink{group__dpm_ggaa5d312154d3b5407c9d2ab6d35d36812ab6b8c6235817fb95233f0dbab7d39954}{COLLISION\+\_\+\+STOERMER\+\_\+\+VERLET\+\_\+\+VELOCITY\+\_\+2}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga0fc6c8a88f6d325fced1689aed11edc3}{Fill\+\_\+dem\+\_\+collision\+\_\+partner\+\_\+table}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gaea071eab2346aa8f25748050e07d864e}{Reset\+\_\+\+Cartesian\+\_\+\+Mesh}} (\mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga1bf0541b196475c4057b0b86ff462ce1}{Initialize\+\_\+\+Cartesian\+\_\+\+Mesh}} (\mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga47f7fb57ee44b94c8a1638d02da73fde}{Fill\+\_\+\+Cartesian\+\_\+\+Mesh}} (\mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga3b643067ae808a438cda76b733b27d68}{Reset\+\_\+\+Cartesian\+\_\+\+Mesh\+\_\+\+Wall\+\_\+\+Intersection}} (\mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gadca095d7bec948c6de98387b9e346bc8}{Fill\+\_\+\+Cartesian\+\_\+\+Mesh\+\_\+\+Wall\+\_\+\+Intersection}} (\mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga346f27006cf8db0571e8af7cd3ae5b2b}{DEM\+\_\+\+Cleanup\+\_\+\+Ghost\+\_\+\+Particles}} (\mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga6738bb72b77ffa122c392cd68c2da151}{DEM\+\_\+\+Get\+\_\+\+Ghost\+\_\+\+Particles\+\_\+\+Periodic}} (\mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gab013a8809db267366dc59970be86a9af}{dem\+\_\+update\+\_\+cartesian\+\_\+mesh\+\_\+with\+\_\+ghost\+\_\+particles}} (\mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} adapt\+\_\+cm)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gad835d2805304961c56216d2a59c459e6}{DEM\+\_\+\+Initialize\+\_\+\+Particle\+\_\+\+Collision\+\_\+\+Storage}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga79af98d2cba350c0740ed87b7c4b9cf8}{DEM\+\_\+\+Update\+\_\+\+Collision\+\_\+\+Partner\+\_\+\+Indices}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gabd228fd36caad007919e6693ce576163}{Get\+\_\+\+Face\+\_\+\+Bounding\+\_\+\+Box\+\_\+\+Coordinates}} (\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}} f, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} xfmin\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} xfmax\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga32b8ec181525d9f0cbbbf38c1ed3827e}{Get\+\_\+\+Cell\+\_\+\+Bounding\+\_\+\+Box\+\_\+\+Coordinates}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} xfmin\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} xfmax\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{group__dpm_ga938f1c408fb282f4c06bb3c8f8443656}{Bounding\+\_\+\+Box\+\_\+\+Intersects\+\_\+\+Cartesian\+\_\+\+Mesh}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} xfmin\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} xfmax\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gae9b3b1b8118b4653ed99a5e6e23a323f}{Get\+\_\+\+Bounding\+\_\+\+Box\+\_\+\+Cartesian\+\_\+\+Mesh\+\_\+\+Coverage}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} xfmin\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} xfmax\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\+\_\+t}} idxmin\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\+\_\+t}} idxmax\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga03471c6036422db6d5ba3c4e8bc8be95}{Compute\+\_\+\+Cartesian\+\_\+\+Mesh\+\_\+\+Global}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}minpos, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}maxpos, \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\+\_\+t}} \texorpdfstring{$\ast$}{*}n\+\_\+edges, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}edge\+\_\+length, \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\+\_\+t}} \texorpdfstring{$\ast$}{*}offset, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} margin)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gacb52743e644056868d55479d6de3c546}{DEM\+\_\+\+Compute\+\_\+\+Global\+\_\+\+Collision\+\_\+\+Mesh}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} minpos\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} maxpos\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\+\_\+t}} n\+\_\+edges\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} edge\+\_\+length\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\+\_\+t}} offset\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} margin)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\+\_\+t}} \mbox{\hyperlink{group__dpm_gab8e3d00b022b2cef1d0e92806a09f010}{DEM\+\_\+\+Get\+\_\+\+Cartesian\+\_\+\+Cell\+\_\+\+Number\+\_\+\+For\+\_\+\+Point}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}xxx, \mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \texorpdfstring{$\ast$}{*}cartesian\+\_\+mesh)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga56f4bb1d6324cb093ce5626a261033ca}{DEM\+\_\+\+Cartesian\+\_\+\+Collision\+\_\+\+Mesh\+\_\+\+Loop}} (void(\texorpdfstring{$\ast$}{*}particle\+\_\+particle)(\mbox{\hyperlink{dpm__types_8h_a04c040b8ec8fc33f6fb7eee5dc8b6583}{Particle}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{dpm__types_8h_a04c040b8ec8fc33f6fb7eee5dc8b6583}{Particle}} \texorpdfstring{$\ast$}{*}), void(\texorpdfstring{$\ast$}{*}particle\+\_\+wall)(\mbox{\hyperlink{dpm__types_8h_a04c040b8ec8fc33f6fb7eee5dc8b6583}{Particle}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{group__dpm_gaaa5cb52b8be6debc4c39e56ebf35fdbd}{dpm\+\_\+collision\+\_\+face\+\_\+t}} \texorpdfstring{$\ast$}{*}))
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gac6e5f326df7a0c754a152f45d33152d3}{DEM\+\_\+\+Calculate\+\_\+\+Non\+\_\+\+Collision\+\_\+\+Acceleration}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} time\+\_\+step)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga84ec4299b3f415201ffd273f7a416115}{DEM\+\_\+\+Collide\+\_\+\+Particles\+\_\+\+Single\+\_\+\+Substep}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} time\+\_\+step)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga26e69cee341fb23d1c4ff290a9d27ffe}{DEM\+\_\+\+Limit\+\_\+\+Particle\+\_\+\+Velocity}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}vel)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gac84b8d17a9e36afd9e5c919bd9c97433}{set\+\_\+collision\+\_\+partner\+\_\+search\+\_\+method}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_gae7e034d33866258b804142fdf230e70f}{dem\+\_\+particle\+\_\+particle\+\_\+collision}} (\mbox{\hyperlink{dpm__types_8h_a04c040b8ec8fc33f6fb7eee5dc8b6583}{Particle}} \texorpdfstring{$\ast$}{*}pi, \mbox{\hyperlink{dpm__types_8h_a04c040b8ec8fc33f6fb7eee5dc8b6583}{Particle}} \texorpdfstring{$\ast$}{*}pj)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga9931fb8f712f820baed93d65348b00e6}{dem\+\_\+particle\+\_\+wall\+\_\+collision}} (\mbox{\hyperlink{dpm__types_8h_a04c040b8ec8fc33f6fb7eee5dc8b6583}{Particle}} \texorpdfstring{$\ast$}{*}pi, \mbox{\hyperlink{group__dpm_gaaa5cb52b8be6debc4c39e56ebf35fdbd}{dpm\+\_\+collision\+\_\+face\+\_\+t}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structface__data}{face\+\_\+data}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{group__dpm_ga80496b7a8a75c6a4d132712196958380}{dem\+\_\+add\+\_\+forces\+\_\+from\+\_\+sub\+\_\+step}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int \mbox{\hyperlink{group__dpm_gaaf9b081e8617f2957be67f284f6339bb}{get\+\_\+thread\+\_\+dpm\+\_\+bc\+\_\+collision\+\_\+partner\+\_\+index}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}thread)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{group__dpm_ga023f997da50026896e4eee58a2631ca0}{dem\+\_\+ctrl\+\_\+t}} \mbox{\hyperlink{group__dpm_ga003e90bc581d5587e6c46078a56d73b4}{dem\+\_\+ctrl}}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{group__dpm_ga1839b83fad4bf2b1637a565781dcc8e8}{cartesian\+\_\+mesh\+\_\+t}} \mbox{\hyperlink{group__dpm_ga4b088d691033d4455de2d5772c5d2064}{dem\+\_\+cartesian\+\_\+mesh}}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{binary__params_8h_a413a6927995cbc1e80cbd0860ae18583}{interaction\+\_\+partner\+\_\+table\+\_\+t}} \mbox{\hyperlink{group__dpm_gaf466b89a431e8aaf16d1b18b2075006b}{dem\+\_\+collision\+\_\+partner\+\_\+table}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+data types and routines for DEM particles 

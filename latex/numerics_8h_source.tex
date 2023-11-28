@@ -1,0 +1,81 @@
+\doxysection{numerics.\+h}
+\hypertarget{numerics_8h_source}{}\label{numerics_8h_source}\index{fluent20.1.0/addons/fiber/src/numerics.h@{fluent20.1.0/addons/fiber/src/numerics.h}}
+\mbox{\hyperlink{numerics_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*\ header\ file\ for\ fiber\ modul\ numerics}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ mb@fluent.de:\ 8/10/2000}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ markus.braun@ansys.com:\ 10-\/dec-\/2014\ updated\ for\ parallelization}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ this\ header\ file\ holds\ only\ the\ needed\ data\ structures\ for}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ the\ numerics.\ These\ are\ stuff\ like\ the\ arrays\ and\ matrices}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ for\ the\ coefficients.\ It\ also\ holds\ the\ stuff\ to\ control}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ the\ numerical\ solution.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include"{}\mbox{\hyperlink{global_8h}{global.h}}"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{comment}{/*\ let\ us\ start\ with\ a\ simple\ TDMA\ */}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{/*\ contains\ all\ data\ needed\ for\ a\ tri-\/diagonal\ matrix\ algortithm\ */}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtdma__1d__struct}{tdma\_1d\_struct}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \textcolor{comment}{/*\ solution\ controls\ */}}
+\DoxyCodeLine{00024\ \ \ \textcolor{comment}{/*\ coefficients\ */}}
+\DoxyCodeLine{00025\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtdma__1d__struct_a76f11d9a0a47b94f72c2d0e77fb32240}{n}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ equations\ to\ solve\ */}}
+\DoxyCodeLine{00026\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtdma__1d__struct_a4f65fb783f2247b3510b85db4eece863}{res\_max}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ maximum\ residuum\ */}}
+\DoxyCodeLine{00027\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtdma__1d__struct_a28d5949d2882e84b3e8e7609806ec484}{ap\_sum}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ scaling\ factor\ */}}
+\DoxyCodeLine{00028\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtdma__1d__struct_a1550126d396399da1849411049992c67}{ap}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ the\ central\ coefficient\ */}}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtdma__1d__struct_afd56ebdc35fed135f4d5cae0e5ecdc9f}{nm}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ neighbor\ minus\ */}}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtdma__1d__struct_ae409524fa31e36c70614665217eb9b7b}{np}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ neighbor\ plus\ \ */}}
+\DoxyCodeLine{00031\ \ \ \textcolor{comment}{/*\ \ \ \ real\ *phi;\ \ \ \ \ \ \ \ \ \ \ \ */}\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ the\ solution\ variable\ */}}
+\DoxyCodeLine{00032\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtdma__1d__struct_a013a1a754f056a2f4aa190b944659de7}{res}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ local\ residuals\ */}}
+\DoxyCodeLine{00033\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtdma__1d__struct_ad1b5e4cddc3b27ad93a852b5ae1576a4}{su}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ constant\ source\ term\ */}}
+\DoxyCodeLine{00034\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtdma__1d__struct_a47dc56ba49f5f6c8b54418b4f4d39fed}{sp}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ linear\ source\ term\ */}}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtdma__1d__struct_a1c39cf9488f87c5250b347f989acad7b}{p}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ helper\ array\ */}}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtdma__1d__struct_aafb88014ca18c7f353ca614367d517f7}{q}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ helper\ array\ */}}
+\DoxyCodeLine{00037\ \}\ \mbox{\hyperlink{numerics_8h_a632ae851e1575e39e6fb651d3b942d16}{Tdma\_1D\_Type}};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{/*\ declaration\ of\ interface\ routines\ from\ numerics.c\ */}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{/*\ get\ a\ pointer\ to\ the\ memory\ */}}
+\DoxyCodeLine{00042\ \mbox{\hyperlink{structtdma__1d__struct}{Tdma\_1D\_Type}}\ *\mbox{\hyperlink{numerics_8h_a4ecc7e9a35752daca012160679b05160}{Get\_TDMA\_Memory}}(\textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{/*\ deallocate\ the\ memory\ */}}
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{numerics_8h_a2304005a386a90dd04da3b7a195545a7}{Free\_TDMA\_Memory}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{/*\ compute\ central\ coefficient,\ residual\ and\ maximum\ residual\ for\ 1D\ TDMA.}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ input\ and\ output\ are\ stored\ in\ the\ struct\ td.}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ input:}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ \ \ \ \ \ \ the\ dependent\ phi,}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ \ \ \ \ \ \ the\ neighbor\ coefficients\ nm,\ np,}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ \ \ \ \ \ \ the\ source\ terms\ su,\ sp}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ \ \ \ \ \ \ and\ the\ relaxation\ factor\ u.}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ output:}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ \ \ \ \ \ \ the\ central\ coefficient\ ap,}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ \ \ \ \ \ \ the\ residual\ vector\ res}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ \ \ \ \ \ \ and\ max\ as\ the\ sum\ over\ all\ abs(res[i]).}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00060\ \mbox{\hyperlink{numerics_8h_aef0919a69e7cec2933966a3bf3e5b5a5}{TDMA\_1D\_compute\_ap\_res}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ phi0,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ phiN,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *phi,\ \mbox{\hyperlink{structtdma__1d__struct}{Tdma\_1D\_Type}}\ *td,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ u,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *max);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{/*\ solution\ of\ a\ tridiagonal\ system\ of\ equations\ like}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ a(i)*phi(i)\ =\ b(i)*phi(i+1)+c(i)*phi(i-\/1)+d(i)}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ input:}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ \ \ \ \ \ phi}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ \ \ \ \ \ ap,\ np,\ nm,\ su}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *\ output:}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ \ \ \ \ \ phi}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00070\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00071\ \mbox{\hyperlink{numerics_8h_a7847196e5d7856bd83d390677aba6033}{TDMA\_1D\_Solve}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *phi,\ \mbox{\hyperlink{structtdma__1d__struct}{Tdma\_1D\_Type}}\ *td);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{/*\ reset\ arrays\ to\ zero\ */}}
+\DoxyCodeLine{00074\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00075\ \mbox{\hyperlink{numerics_8h_ab2e3d79e89ac6d4e7ee7169ec506f50d}{TDMA\_1D\_reset}}(\mbox{\hyperlink{structtdma__1d__struct}{Tdma\_1D\_Type}}\ *td);}
+
+\end{DoxyCode}

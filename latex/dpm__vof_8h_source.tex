@@ -1,0 +1,143 @@
+\doxysection{dpm\+\_\+vof.\+h}
+\hypertarget{dpm__vof_8h_source}{}\label{dpm__vof_8h_source}\index{fluent20.1.0/src/dpm/dpm\_vof.h@{fluent20.1.0/src/dpm/dpm\_vof.h}}
+\mbox{\hyperlink{dpm__vof_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ FLUENT\_DPM\_VOF\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ FLUENT\_DPM\_VOF\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{global_8h}{global.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{mem_8h}{mem.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{prop_8h}{prop.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{profile_8h}{profile.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{slide_8h}{slide.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{threads_8h}{threads.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dpm_8h}{dpm.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dpm__types_8h}{dpm\_types.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{comment}{/*\#include\ "{}dpm\_laws.h"{}*/}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dpm__dist_8h}{dpm\_dist.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{flowf_8h}{flowf.h}}"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ DPM\_REAL\_DIM\ \ \ 1}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ DPM\_VECTOR\_DIM\ 3}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ DPM\_VOF\_DIM\ \ \ DPM\_REAL\_DIM}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ DPM\_WT\_DIM\ \ \ \ DPM\_REAL\_DIM}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ DPM\_VEL\_DIM\ \ \ DPM\_VECTOR\_DIM}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ DPM\_DIAM\_DIM\ \ DPM\_REAL\_DIM}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ DPM\_RHO\_DIM\ \ \ DPM\_REAL\_DIM}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ DPM\_TEMP\_DIM\ \ DPM\_REAL\_DIM}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ DPM\_K\_DIM\ \ \ \ \ DPM\_REAL\_DIM}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ DPM\_HC\_DIM\ \ \ \ DPM\_REAL\_DIM}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{/*\ big\ values,\ see\ also\ sg\_mphase.h\ */}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*single-\/double\ precision\ zero\ and\ epsilon*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#\ define\ DPM\_NEG\_BIG\ -\/1.e+30}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#\ define\ DPM\_BIG\ 1.e+30}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#\ define\ DPM\_NEG\_BIG\ -\/1.e+20}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#if\ (sys\_ultra\ ||\ sys\_ultra\_64)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#\ define\ DPM\_BIG\ 1.e+17}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#\ define\ DPM\_BIG\ 1.e+20}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6}{call\_spec\_e}}}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a4483e5e02e10044bd491daf0c077ddbe}{INSIDE\_TRACKING}},}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a871c061006ba6100aad615aecb57fed1}{AFTER\_AVERAGING}},}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a21780f42999717ed24c0442ffd5b54bb}{CALL\_SPEC\_MAX}}}
+\DoxyCodeLine{00050\ \}}
+\DoxyCodeLine{00051\ \mbox{\hyperlink{dpm__vof_8h_a2eedca762eb66a8a65bcb43a65c76cd8}{DPM\_Vof\_Call\_Spec}};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_aa46d127314f8cd119bc8b24d7043610e}{Setup\_DPM\_Vof}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00054\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a3df84ed90ca889e0c8dc154f2af86ebf}{Setup\_Exchange\_Coefficients}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00055\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a6adeb2ceac548ee986adf77f0780cadb}{Setup\_DDPM\_Velocity\_Correction}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00056\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_ae1502335910093b00b5a7860a7f985a0}{Setup\_DPM\_Vof\_Distributions\_on\_Nodes}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00057\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a1f691218f443c4058d250989cca2075d}{Setup\_Exchange\_Coefficients\_on\_Nodes}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00058\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a2f9370e7a2fe0ba3b3fe67b58bc14056}{Setup\_VOF\_Shared\_Classification}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00059\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a79f664367b1251a24a54b52d96f81810}{Distribute\_Exchange\_Coefficients\_from\_Nodes\_to\_Cells}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00060\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_aeee79abb282ccc8b7ad315eefe43825b}{Distribute\_DPM\_Vof\_Dist\_from\_Nodes\_to\_Cells}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_adbbb434fee66f274d3d0187d10f4b262}{DPM\_Fix\_SVar}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ eqn,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_v,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,\ \textcolor{keywordtype}{int}\ amg\_id);}
+\DoxyCodeLine{00063\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_ae6e1b9f1ecde0b23c38012f9b4db68e1}{DPM\_Fix\_SVar\_On\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,\ \textcolor{keywordtype}{int}\ eqn,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_v,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_ap,\ \textcolor{keywordtype}{int}\ amg\_id);}
+\DoxyCodeLine{00064\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a9e3158d70b17df56c5116c7266630c08}{DPM\_Correct\_Coupled\_AP\_Coefficient}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00065\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_af40fc011862e66adf120b1fb4b1c1309}{Fill\_Discrete\_Phase\_Diameter}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *pt);}
+\DoxyCodeLine{00066\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a386b6789f1f04a0af2673785d8e52c6f}{Fill\_Discrete\_Phase\_Slip\_Velocity}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ disPhase);}
+\DoxyCodeLine{00067\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_a2fe172e71cdade5c6a738e996f88bd57}{DPM\_Unlimited\_Vof}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{dpm__vof_8h_a2eedca762eb66a8a65bcb43a65c76cd8}{DPM\_Vof\_Call\_Spec}}\ call\_spec);}
+\DoxyCodeLine{00068\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_ae0c65d81b6569ab9ac346cd355101ad1}{DPM\_Averaged\_Density}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00069\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_a694b6a307fe1a65ea431d2a5009d897d}{DPM\_Averaged\_Drag}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *ti,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tj,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{int}\ j,\ \mbox{\hyperlink{structphase__pair__struct}{Phase\_Pair}}\ *phase\_pair);}
+\DoxyCodeLine{00070\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a3e9c09faf9abf6837c1905d9e69652f5}{DPM\_Dist\_Velocity}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ v[\mbox{\hyperlink{global_8h_a62b3ec2a68923796798c087f3b72db55}{ND\_3}}]);}
+\DoxyCodeLine{00071\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_a777ac1190eb0ee34f2f11a46a5bf99d6}{DPM\_Momentum\_AP}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00072\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_a049f8d5ee412186f2ede21ee6405fff7}{DPM\_Averaged\_Heat\_Coeff}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *ti,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tj);}
+\DoxyCodeLine{00073\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_af8a9a0b4a550513443da1348c773b27f}{DPM\_Averaged\_Granular\_Temperature}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *d);}
+\DoxyCodeLine{00074\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_ab5122c0bf9f0aee97253944dcc61e3f2}{DDPM\_Specific\_Heat}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00075\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_ae4deab04ca2ad48a3f0e5d076fc1d8ff}{DDPM\_Enthalpy}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00076\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a5e11f8de5e0db7a1e5f648daec1a4287}{DDPM\_Boundary\_Velocity}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V[\mbox{\hyperlink{dpm__vof_8h_aaaf3649dae2a8bd8f68e15a6c0ddf71d}{DPM\_VEL\_DIM}}],\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00077\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_ab20557bcac7aa0f1b5d4282c6771e829}{DDPM\_Boundary\_Vof}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00078\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_a7a5e1826d069cbba50a1e1db666b20fd}{DDPM\_Boundary\_Temp}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00079\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_ad65fc9b468c77b1fca23968f1a6aeac7}{DDPM\_Boundary\_Rho}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00080\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a05b5a1477850d61fcab6de6014c95fc3}{DDPM\_Calc\_Flow\_Dir}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *e\_n,\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00081\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_ac0646eeaab7386214447a718e86bf47a}{DDPM\_Inflow\_Flux}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00082\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a7691cfffc1ac1ddcac1a65d3b20965a9}{DDPM\_Flux\_Reset}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00083\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_aa45637a7ea3aa05887df472fd40a35d6}{DDPM\_Flux\_Report}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ integral[]);}
+\DoxyCodeLine{00084\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dpm__vof_8h_a860324b531be3874141c423bf010443a}{Is\_Inflow\_Boundary\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00085\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dpm__vof_8h_ada12072d3ebab7d0622d61bab83c2726}{Is\_Outflow\_Boundary\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00086\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a6b1fac27743051d0df26d75eb1ef3d87}{Add\_To\_DDPM\_Flux\_Report}}(\mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *tp,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{dpm__dist_8h_a0c9db32cb836cc66a9227f538ec1a2a3}{Accum\_Cmd\_Spec}}\ accum\_cmd);}
+\DoxyCodeLine{00087\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a3c4e9fe13c4f5121505a07b6fbdfb6d4}{Limit\_Dense\_DPM\_Properties}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00088\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a2ae6da50ae61f65f00c5ef169e4c017d}{Init\_Solve\_Eulerian\_Flag}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00089\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_ac38a92abfa0b8c01da1cc95afab584a4}{Free\_Solve\_Eulerian\_Flag}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00090\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__vof_8h_a817615e985afa910d93764e7119467af}{Update\_Solve\_Eulerian\_Flag}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00091\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dpm__vof_8h_ae9476a861fbb288a9dfe6c212a09d3c7}{Hybrid\_Phase\_Domains\_Present}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00094\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ DPM\_Vof\_Sync\_Exch\_Coeffs(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ eqn);}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ C\_SOLVE\_EULERIAN\_BIT\_SET(c,t)C\_STORAGE\_BIT\_SET(c,t,SV\_DPM\_SOLVE\_EULERIAN)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ C\_SOLVE\_EULERIAN\_BIT\_CLEAR(c,t)C\_STORAGE\_BIT\_CLEAR(c,t,SV\_DPM\_SOLVE\_EULERIAN)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ C\_SOLVE\_EULERIAN\_BIT(c,t)C\_STORAGE\_BIT\_GET(c,t,SV\_DPM\_SOLVE\_EULERIAN)}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dpm__vof_8h_a8a1098e35882daee1dd7364e913ca9d7}{injected\_ddpm\_granular\_mass\_for\_time\_step}}[\mbox{\hyperlink{materials_8h_a3462e5221d1b5cb21828c854fcfac556}{MAX\_PHASES}}];}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__vof__and__postproc__struct}{dpm\_vof\_and\_postproc\_struct}}}
+\DoxyCodeLine{00104\ \{}
+\DoxyCodeLine{00105\ \ \ \mbox{\hyperlink{structdpm__distribution__s}{Dpm\_Distribution}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_ac7d9c89bdf9d3a50b9a0d42d37722e2f}{vof\_dist}};}
+\DoxyCodeLine{00106\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_a17cc7f01f2d939be329c9f9ff0fc9d2c}{vof}};}
+\DoxyCodeLine{00107\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_ac321ddcddca7c3c51a00b068cbd89e59}{vel}};}
+\DoxyCodeLine{00108\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_a48fc0f30217a2a2292eb69befcbe6f92}{diam}};}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_af2762aa500238a8af0124bbdf1a7e485}{rho}};}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_ad4826653dfca6a91e11b9f4ad95cdeca}{temp}};}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_a7f94a651620e3244a9a9a29fe4bf85b0}{cp}};}
+\DoxyCodeLine{00112\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_ac585697ef6abada73ee0438e5121275b}{h}};}
+\DoxyCodeLine{00113\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_ae02fb1bd1f3cae5fb08a952ffccd500c}{gr\_temp}};}
+\DoxyCodeLine{00114\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_acef0918b05bd271347fa5d5d2174ab61}{number\_density}};}
+\DoxyCodeLine{00115\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_a9a2b652420e7bf69b547e469e0b3e00b}{nparcel}};}
+\DoxyCodeLine{00116\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_ad74ff093243e65a8744a248c19c4519a}{d20}};}
+\DoxyCodeLine{00117\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_a56e78915a73fbdef33a5b4119cb498bc}{d30}};}
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_a3eca8ddf09a655eb8695bbbc61385c5b}{d32}};}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_a49992d7cdae34abef66b2c60e7f4f3cb}{d43}};}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_aa148867e45d89f05a9f922fbb8bd9042}{species\_mean}};}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_a7344e02f2308e8996aecc9c8020f3a6d}{vel\_sqr}};}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_afce2f9858570335b8cea5fa154ce37ee}{temp\_sqr}};}
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct_ae71bb5344b3081124ed315e080db2e1b}{diam\_sqr}};}
+\DoxyCodeLine{00124\ \}\ \mbox{\hyperlink{dpm__vof_8h_aa524f6d134d4035aafde2a6c6de23123}{DPM\_Vof\_and\_Postproc\_s}};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structdpm__vof__and__postproc__struct}{DPM\_Vof\_and\_Postproc\_s}}\ *\mbox{\hyperlink{dpm__vof_8h_aa5f456080956cb4cf7eaad3a1baaa0db}{Get\_DPM\_Postproc\_Struct}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structddpm__exchange__coeffs__struct}{ddpm\_exchange\_coeffs\_struct}}}
+\DoxyCodeLine{00129\ \{}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{structdpm__distribution__s}{Dpm\_Distribution}}\ \mbox{\hyperlink{structddpm__exchange__coeffs__struct_aedb19f352ad0618d163abf16d0dd89a2}{exch\_coeff\_dist}};}
+\DoxyCodeLine{00131\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structddpm__exchange__coeffs__struct_a53a1710eadc269a4b6f770b3214d342d}{Kdpm}};}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{structdpm__dist__var__s}{DPM\_Dist\_Var}}\ \mbox{\hyperlink{structddpm__exchange__coeffs__struct_a8ea134eb95670c5fd01d1e256cbaeb3c}{HeatCoeff}};}
+\DoxyCodeLine{00133\ \}\ \mbox{\hyperlink{dpm__vof_8h_a779c861b7f26735b5bf0a0b67fcacb2d}{DDPM\_Exchange\_Coeffs\_s}};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structddpm__exchange__coeffs__struct}{DDPM\_Exchange\_Coeffs\_s}}\ *\mbox{\hyperlink{dpm__vof_8h_a3443bc2710f0e695243ef1b9c9e23d1b}{Get\_DDPM\_Exchange\_Struct}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ FLUENT\_DPM\_VOF\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

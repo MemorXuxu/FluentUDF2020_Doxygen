@@ -1,0 +1,271 @@
+\doxysection{nvector\+\_\+serial.\+h}
+\hypertarget{nvector__serial_8h_source}{}\label{nvector__serial_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/nvector/nvector\_serial.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/nvector/nvector\_serial.h}}
+\mbox{\hyperlink{nvector__serial_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.2\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2006/11/29\ 00:05:07\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer(s):\ Scott\ D.\ Cohen,\ Alan\ C.\ Hindmarsh,\ Radu\ Serban,}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ and\ Aaron\ Collier\ @\ LLNL}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2002,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ This\ is\ the\ header\ file\ for\ the\ serial\ implementation\ of\ the}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ NVECTOR\ module.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ Part\ I\ contains\ declarations\ specific\ to\ the\ serial}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ implementation\ of\ the\ supplied\ NVECTOR\ module.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ Part\ II\ defines\ accessor\ macros\ that\ allow\ the\ user\ to}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ efficiently\ use\ the\ type\ N\_Vector\ without\ making\ explicit}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ references\ to\ the\ underlying\ data\ structure.}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ Part\ III\ contains\ the\ prototype\ for\ the\ constructor\ N\_VNew\_Serial}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ as\ well\ as\ implementation-\/specific\ prototypes\ for\ various\ useful}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *\ vector\ operations.}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ Notes:}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ \ \ -\/\ The\ definition\ of\ the\ generic\ N\_Vector\ structure\ can\ be\ found}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ \ \ \ \ in\ the\ header\ file\ sundials\_nvector.h.}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *\ \ \ -\/\ The\ definition\ of\ the\ type\ 'realtype'\ can\ be\ found\ in\ the}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ \ \ \ \ header\ file\ sundials\_types.h,\ and\ it\ may\ be\ changed\ (at\ the\ }}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ \ \ \ \ configuration\ stage)\ according\ to\ the\ user's\ needs.\ }}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ \ \ \ \ The\ sundials\_types.h\ file\ also\ contains\ the\ definition}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ \ \ \ \ for\ the\ type\ 'booleantype'.}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ \ \ -\/\ N\_Vector\ arguments\ to\ arithmetic\ vector\ operations\ need\ not}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ \ \ \ \ be\ distinct.\ For\ example,\ the\ following\ call:}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ \ \ \ \ \ \ N\_VLinearSum\_Serial(a,x,b,y,y);}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ \ \ \ \ (which\ stores\ the\ result\ of\ the\ operation\ a*x+b*y\ in\ y)}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ \ \ \ \ is\ legal.}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#ifndef\ \_NVECTOR\_SERIAL\_H}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ \_NVECTOR\_SERIAL\_H}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00053\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__nvector_8h}{sundials/sundials\_nvector.h}}>}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ PART\ I:\ SERIAL\ implementation\ of\ N\_Vector}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{comment}{/*\ serial\ implementation\ of\ the\ N\_Vector\ 'content'\ structure}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ \ \ contains\ the\ length\ of\ the\ vector,\ a\ pointer\ to\ an\ array}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ \ \ of\ 'realtype'\ components,\ and\ a\ flag\ indicating\ ownership\ of}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ \ \ the\ data\ */}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct___n___vector_content___serial}{\_N\_VectorContent\_Serial}}\ \{}
+\DoxyCodeLine{00070\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___n___vector_content___serial_ace90823420287d5c0a71f8eddff958eb}{length}};}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{struct___n___vector_content___serial_a4981574aa9ff0a0ac56f2706d6751c10}{own\_data}};}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{struct___n___vector_content___serial_a667f7cee6a7350572d0604136fcb13e5}{data}};}
+\DoxyCodeLine{00073\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct___n___vector_content___serial}{\_N\_VectorContent\_Serial}}\ *\mbox{\hyperlink{nvector__serial_8h_aa5345928d8298d121d9b8e02e1ed2d75}{N\_VectorContent\_Serial}};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *\ PART\ II:\ macros\ NV\_CONTENT\_S,\ NV\_DATA\_S,\ NV\_OWN\_DATA\_S,}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ NV\_LENGTH\_S,\ and\ NV\_Ith\_S}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ In\ the\ descriptions\ below,\ the\ following\ user\ declarations}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ are\ assumed:}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ N\_Vector\ v;}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ long\ int\ i;}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ (1)\ NV\_CONTENT\_S}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ \ \ \ \ This\ routines\ gives\ access\ to\ the\ contents\ of\ the\ serial}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ \ \ \ \ vector\ N\_Vector.}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ \ \ \ \ The\ assignment\ v\_cont\ =\ NV\_CONTENT\_S(v)\ sets\ v\_cont\ to\ be}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ \ \ \ \ a\ pointer\ to\ the\ serial\ N\_Vector\ content\ structure.}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ (2)\ NV\_DATA\_S\ NV\_OWN\_DATA\_S\ and\ NV\_LENGTH\_S}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ \ \ \ \ These\ routines\ give\ access\ to\ the\ individual\ parts\ of}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *\ \ \ \ \ the\ content\ structure\ of\ a\ serial\ N\_Vector.}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *\ \ \ \ \ The\ assignment\ v\_data\ =\ NV\_DATA\_S(v)\ sets\ v\_data\ to\ be}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *\ \ \ \ \ a\ pointer\ to\ the\ first\ component\ of\ v.\ The\ assignment}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *\ \ \ \ \ NV\_DATA\_S(v)\ =\ data\_V\ sets\ the\ component\ array\ of\ v\ to}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ *\ \ \ \ \ be\ data\_v\ by\ storing\ the\ pointer\ data\_v.}}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ *\ \ \ \ \ The\ assignment\ v\_len\ =\ NV\_LENGTH\_S(v)\ sets\ v\_len\ to\ be}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ *\ \ \ \ \ the\ length\ of\ v.\ The\ call\ NV\_LENGTH\_S(v)\ =\ len\_v\ sets}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *\ \ \ \ \ the\ length\ of\ v\ to\ be\ len\_v.}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ (3)\ NV\_Ith\_S}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ \ \ \ \ In\ the\ following\ description,\ the\ components\ of\ an}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ \ \ \ \ N\_Vector\ are\ numbered\ 0..n-\/1,\ where\ n\ is\ the\ length\ of\ v.}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ \ \ \ \ The\ assignment\ r\ =\ NV\_Ith\_S(v,i)\ sets\ r\ to\ be\ the\ value\ of}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ \ \ \ \ the\ ith\ component\ of\ v.\ The\ assignment\ NV\_Ith\_S(v,i)\ =\ r}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *\ \ \ \ \ sets\ the\ value\ of\ the\ ith\ component\ of\ v\ to\ be\ r.}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ Note:\ When\ looping\ over\ the\ components\ of\ an\ N\_Vector\ v,\ it\ is}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ more\ efficient\ to\ first\ obtain\ the\ component\ array\ via}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ v\_data\ =\ NV\_DATA\_S(v)\ and\ then\ access\ v\_data[i]\ within\ the}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *\ loop\ than\ it\ is\ to\ use\ NV\_Ith\_S(v,i)\ within\ the\ loop.}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ NV\_CONTENT\_S(v)\ \ (\ (N\_VectorContent\_Serial)(v-\/>content)\ )}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ NV\_LENGTH\_S(v)\ \ \ (\ NV\_CONTENT\_S(v)-\/>length\ )}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ NV\_OWN\_DATA\_S(v)\ (\ NV\_CONTENT\_S(v)-\/>own\_data\ )}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ NV\_DATA\_S(v)\ \ \ \ \ (\ NV\_CONTENT\_S(v)-\/>data\ )}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ NV\_Ith\_S(v,i)\ \ \ \ (\ NV\_DATA\_S(v)[i]\ )}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *\ PART\ III:\ functions\ exported\ by\ nvector\_serial}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *\ CONSTRUCTORS:}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ \ \ \ N\_VNew\_Serial}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ \ \ \ N\_VNewEmpty\_Serial}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *\ \ \ \ N\_VMake\_Serial}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ \ \ \ N\_VCloneVectorArray\_Serial}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ \ \ \ N\_VCloneVectorArrayEmpty\_Serial}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *\ DESTRUCTORS:}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *\ \ \ \ N\_VDestroy\_Serial}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ \ \ \ N\_VDestroyVectorArray\_Serial}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ OTHER:}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *\ \ \ \ N\_VPrint\_Serial}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00155\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *\ Function\ :\ N\_VNew\_Serial}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *\ This\ function\ creates\ and\ allocates\ memory\ for\ a\ serial\ vector.}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{nvector__serial_8h_a5b4902b07c8f46f60fc15a3185151b18}{N\_VNew\_Serial}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ vec\_length);}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ *\ Function\ :\ N\_VNewEmpty\_Serial}}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ *\ This\ function\ creates\ a\ new\ serial\ N\_Vector\ with\ an\ empty\ (NULL)}}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ *\ data\ array.}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{nvector__serial_8h_a93d52cb08924eee4d7edd584c22179d2}{N\_VNewEmpty\_Serial}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ vec\_length);}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ *\ Function\ :\ N\_VMake\_Serial}}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ *\ This\ function\ creates\ and\ allocates\ memory\ for\ a\ serial\ vector}}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ *\ with\ a\ user-\/supplied\ data\ array.}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{nvector__serial_8h_a688a531ed29d81abeca46b4e222b79d0}{N\_VMake\_Serial}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ vec\_length,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *v\_data);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ *\ Function\ :\ N\_VCloneVectorArray\_Serial}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ *\ This\ function\ creates\ an\ array\ of\ 'count'\ SERIAL\ vectors\ by}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ *\ cloning\ a\ given\ vector\ w.}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *\mbox{\hyperlink{nvector__serial_8h_a0a0957ead61ac36b66c0a9cbc3900c5a}{N\_VCloneVectorArray\_Serial}}(\textcolor{keywordtype}{int}\ count,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ *\ Function\ :\ N\_VCloneVectorArrayEmpty\_Serial}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *\ This\ function\ creates\ an\ array\ of\ 'count'\ SERIAL\ vectors\ each}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ *\ with\ an\ empty\ (NULL)\ data\ array\ by\ cloning\ w.}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *\mbox{\hyperlink{nvector__serial_8h_abba68d59ae61c4c120d58676aa76411b}{N\_VCloneVectorArrayEmpty\_Serial}}(\textcolor{keywordtype}{int}\ count,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *\ Function\ :\ N\_VDestroyVectorArray\_Serial}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ *\ This\ function\ frees\ an\ array\ of\ SERIAL\ vectors\ created\ with\ }}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ *\ N\_VCloneVectorArray\_Serial\ or\ N\_VCloneVectorArrayEmpty\_Serial.}}
+\DoxyCodeLine{00214\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00215\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_af4a0620be43cb012537473dcfff76277}{N\_VDestroyVectorArray\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *vs,\ \textcolor{keywordtype}{int}\ count);}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00221\ \textcolor{comment}{\ *\ Function\ :\ N\_VPrint\_Serial}}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00223\ \textcolor{comment}{\ *\ This\ function\ prints\ the\ content\ of\ a\ serial\ vector\ to\ stdout.}}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_a843027df7026f090641cd111ccd5a877}{N\_VPrint\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v);}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00230\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ *\ serial\ implementations\ of\ various\ useful\ vector\ operations}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{nvector__serial_8h_acb95ad22b70d883cf506c4b32fab450e}{N\_VCloneEmpty\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00236\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{nvector__serial_8h_ae9f1ef770513ad46dbf867c14952ad39}{N\_VClone\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00237\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_a2d7c17f7a93605e4278dd9156f7f3b82}{N\_VDestroy\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v);}
+\DoxyCodeLine{00238\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_add2424f733a53c8dc1855d03c3202f7e}{N\_VSpace\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *lrw,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *liw);}
+\DoxyCodeLine{00239\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{nvector__serial_8h_a80586a494d56d3d1b466757d3148753d}{N\_VGetArrayPointer\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v);}
+\DoxyCodeLine{00240\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_a9b2530b25f9a9e1e45d6bb8433556c91}{N\_VSetArrayPointer\_Serial}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *v\_data,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v);}
+\DoxyCodeLine{00241\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_adb2e6e77c38951590ab11978fab27f66}{N\_VLinearSum\_Serial}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ a,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ b,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00242\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_ab13e5e3aa6250ef6eeca8d5cf175969b}{N\_VConst\_Serial}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00243\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_a9d0b5bbfea8c1f5a39e72d9b72c82326}{N\_VProd\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00244\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_a06002fd73df6e20166552b429eafa047}{N\_VDiv\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00245\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_a87d22a66dec5d55943c21620330bb9a3}{N\_VScale\_Serial}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00246\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_a86a28a9366efb686769dfee9efe381b5}{N\_VAbs\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00247\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_ae2fc1abbf43ada0642a1ac96a1c598c0}{N\_VInv\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00248\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_a93092767f6aa6fbf602ba74d6683d4dc}{N\_VAddConst\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ b,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00249\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{nvector__serial_8h_a0c80a58f7149945a8f7d80c822214c66}{N\_VDotProd\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y);}
+\DoxyCodeLine{00250\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{nvector__serial_8h_a78a4f4b9dea92261a193c7ff7a027aab}{N\_VMaxNorm\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x);}
+\DoxyCodeLine{00251\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{nvector__serial_8h_a95708f39e20021640736538e393fd212}{N\_VWrmsNorm\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00252\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{nvector__serial_8h_a6c73a5f089439c5099e286dbf8334b61}{N\_VWrmsNormMask\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00253\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{nvector__serial_8h_a3384bad4e85caf198141722b9010d1b6}{N\_VMin\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x);}
+\DoxyCodeLine{00254\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{nvector__serial_8h_a14a6a3c4db782a0637740d45ca65792d}{N\_VWL2Norm\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00255\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{nvector__serial_8h_adb49643751db869c3a63846aaf996865}{N\_VL1Norm\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x);}
+\DoxyCodeLine{00256\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{nvector__serial_8h_aa3119a82282a58de1b2bd32205d3aa04}{N\_VCompare\_Serial}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00257\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{nvector__serial_8h_aeba7fbc560ff8ebf396ac1357eff9ef6}{N\_VInvTest\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00258\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{nvector__serial_8h_ab8b65566ac927b917eb5f41f5213f9f2}{N\_VConstrMask\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ c,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ m);}
+\DoxyCodeLine{00259\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{nvector__serial_8h_a0de88c4ed4399a57aac604365a08fc1e}{N\_VMinQuotient\_Serial}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ num,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ denom);}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00262\ \}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

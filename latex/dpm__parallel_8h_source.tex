@@ -1,0 +1,545 @@
+\doxysection{dpm\+\_\+parallel.\+h}
+\hypertarget{dpm__parallel_8h_source}{}\label{dpm__parallel_8h_source}\index{fluent20.1.0/src/dpm/dpm\_parallel.h@{fluent20.1.0/src/dpm/dpm\_parallel.h}}
+\mbox{\hyperlink{dpm__parallel_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_DPM\_PARALLEL\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_DPM\_PARALLEL\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{mpmonitor_8h}{mpmonitor.h}}"{}}\ \ \ \textcolor{comment}{/*\ MUTEX\_T\ */}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dpm__types_8h}{dpm\_types.h}}"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ MAX\_PARALLEL\_DPM\_RECURSION\_DEPTH\ (RP\_Get\_Integer("{}dpm/parallel/max-\/recursion-\/depth"{}))}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{/*\ all\ neighbors\ thus\ made\ valid\ for\ particle\ relocation}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ via\ "{}net-\/wide\ circulation"{}\ in\ parallel\ dpm\ */}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ DPM\_NEIGHBOR\_P(neighbor)\ ((((I\_AM\_NODE\_LAST\_P\ ?\ 0\ :\ myid+1)\ ==\ pe)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((I\_AM\_NODE\_ZERO\_P\ ?\ (compute\_node\_count-\/1)\ :\ \(\backslash\)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ myid-\/1)\ ==\ pe)\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VALID\_NEIGHBOR\_EXT\_P(neighbor))\ \&\&\ !I\_AM\_NODE\_SAME\_P(pe)\ \(\backslash\)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ (NNULLP(neighbor-\/>dpm\_Ip[0])\ \&\&\ !I\_AM\_NODE\_SAME\_P(pe))\ \(\backslash\)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ (NNULLP(neighbor-\/>dpm\_Ip[1])\ \&\&\ !I\_AM\_NODE\_SAME\_P(pe))\ )}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_a257203df3c49be27e557bb585de0f6c2}{Pack\_Injection}}(\mbox{\hyperlink{structinjection__struct}{Injection}}\ *,\ \textcolor{keywordtype}{char}\ **,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00023\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_a29fa517dd6b38a45d68a922d4173f34d}{Unpack\_Injection}}(\mbox{\hyperlink{structinjection__struct}{Injection}}\ *,\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *injections\_list);}
+\DoxyCodeLine{00025\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_afd10d5f391a98a183682874d1b657f7d}{Pack\_Particle\_List}}(\mbox{\hyperlink{structparticle__struct}{Particle}}\ **,\ \textcolor{keywordtype}{char}\ **,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00026\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_ad36339915bc736a46bc5937dc4b5263b}{Unpack\_Particle\_List}}(\mbox{\hyperlink{structparticle__struct}{Particle}}\ **,\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *injections\_list);}
+\DoxyCodeLine{00028\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_a3ffd9287f2148484ed44de580c917a9f}{alloc\_particle\_buffer}}(\textcolor{keywordtype}{char}\ **buff,\ \textcolor{keywordtype}{size\_t}\ buffsize,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ homogeneous\_net);}
+\DoxyCodeLine{00029\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_aa1ba9b62c7f8aa4fb99b51f6abfaf463}{Get\_Injection\_Id\_From\_List}}(\mbox{\hyperlink{structinjection__struct}{Injection}}\ *I,\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *ilist);}
+\DoxyCodeLine{00030\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *\mbox{\hyperlink{dpm__parallel_8h_ae730a651ecc779f7ca26c0a1007d9ef4}{Lookup\_Injection\_In\_List}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *ilist);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_afbc4a9212a0ac10029922baeda226d72}{exchange\_particles}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *injections\_list);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00035\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Distribute\_Data\_To\_Neighbors(\textcolor{keywordtype}{void}\ (*\ \ pack\_send\_buffer)(Dom\_Neighbor\ *neighbor,\ \textcolor{keywordtype}{int}\ neighbor\_idx,\ \textcolor{keywordtype}{void}\ *data),}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ (*unpack\_recv\_buffer)(Dom\_Neighbor\ *neighbor,\ \textcolor{keywordtype}{int}\ neighbor\_idx,\ \textcolor{keywordtype}{void}\ *data),}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_aa2d0c30532a68b7469596127c638198c}{dem\_hybrid\_particle\_particle}}(\textcolor{keywordtype}{void}\ (*particle\_particle)(\mbox{\hyperlink{structparticle__struct}{Particle}}\ *,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ *));}
+\DoxyCodeLine{00041\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_a4804bd2775ebba6644e1d1b014fcc826}{Update\_DPM\_Neighbor\_Buffers\_In\_Injection}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ **pl);}
+\DoxyCodeLine{00042\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_ab1a651f62d15f50ae703091c2c4e7e75}{Move\_Exchanged\_Particles\_To\_Injection}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *I);}
+\DoxyCodeLine{00043\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structface__and__thread__struct}{fat\_t}}\ \mbox{\hyperlink{dpm__parallel_8h_acb492217b4d32c95a68f192c6d4b0155}{find\_face\_in\_cell}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ cell,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *cthread,\ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ face\_id);}
+\DoxyCodeLine{00044\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structface__and__thread__struct}{fat\_t}}\ \mbox{\hyperlink{dpm__parallel_8h_a34124d52d9d11b182cd09355c072f8fd}{find\_face\_in\_neighbor\_cell}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ cell,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *cthread,\ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ face\_id,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ exterior\_only);}
+\DoxyCodeLine{00045\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_a4aa230f6c4c086d966443afb3cff8c6f}{Exchange\_Particles\_In\_Injection}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *I);}
+\DoxyCodeLine{00046\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_a55387d50af0ea5bd9120bcaadf905ba2}{Exchange\_Particle\_List}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ **);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_afa4edde6b56c839651d73d3fd71898d4}{abort\_trapped\_particles}}(\mbox{\hyperlink{structinjection__struct}{Injection}}\ *);}
+\DoxyCodeLine{00049\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dpm__parallel_8h_ab122a9e1c8a7b1592a0f2f26b7a43d29}{abort\_parallel\_levels}}(\mbox{\hyperlink{structinjection__struct}{Injection}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00051\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ exchange\_migrant\_particles(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *injections\_list,\ \textcolor{keywordtype}{int}\ *lmigrant);}
+\DoxyCodeLine{00052\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Free\_DPM\_Exchange\_Buffers(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_abd78d0dafb0f2c0bb2f20e3b2a919731}{Host\_to\_Node\_Injections}}(\mbox{\hyperlink{structinjection__struct}{Injection}}\ **);}
+\DoxyCodeLine{00056\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_addf44ec336b03d324f6cd0c59d7f6e1a}{Node\_to\_Host\_Injections}}(\mbox{\hyperlink{structinjection__struct}{Injection}}\ **);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_a3001e04c7dc0fa16483a4436f70dc537}{nodes\_to\_nodezero\_particle\_list}}(\mbox{\hyperlink{structparticle__struct}{Particle}}\ **,\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *);}
+\DoxyCodeLine{00059\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_a2604c000a8d7295369758c5712c91292}{nodezero\_to\_nodes\_particle\_list}}(\mbox{\hyperlink{structparticle__struct}{Particle}}\ **,\ \mbox{\hyperlink{structinjection__struct}{Injection}}\ *);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_a7ca526918eacd5dbc76c00a22de82110}{Locate\_Particle\_List\_In\_Cell\_List}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structparticle__struct}{Particle}}\ **pl,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ **found,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ **lost,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *cell\_list);}
+\DoxyCodeLine{00063\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_aa3b0d73d8f20ccdb896aac5ba106d229}{Locate\_Particle\_List\_In\_Cell\_List\_Using\_Global\_IDs}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structparticle__struct}{Particle}}\ **pl,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ **found,\ \mbox{\hyperlink{structparticle__struct}{Particle}}\ **lost,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *cell\_list);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{comment}{/*\ if\ in\ hybrid\ */}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#if\ RP\_DPM\_CACHE\ \&\&\ \_OPENMP}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#\ define\ MPT\_IN\_HYBRID\ (dpm\_par.parallel\_hybrid\ \&\&\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpm\_par.parallel\_nthreads\ >\ 1)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#\ define\ GET\_OMP\_THREAD\_ID\ (MPT\_IN\_HYBRID?omp\_get\_thread\_num():0)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#\ define\ GET\_OMP\_NUM\_THRDS\ (MPT\_IN\_HYBRID?omp\_get\_num\_threads():1)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{/*\ RP\_DPM\_CACHE\ \&\&\ \_OPENMP\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#\ define\ MPT\_IN\_HYBRID\ FALSE}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#\ define\ GET\_OMP\_THREAD\_ID\ 0}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#\ define\ GET\_OMP\_NUM\_THRDS\ 1}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_DPM\_CACHE\ \&\&\ \_OPENMP\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfl__omp__gv__mgt__struct}{fl\_omp\_gv\_mgt\_struct}}}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\_T}}\ \mbox{\hyperlink{structfl__omp__gv__mgt__struct_af40479b0c50859d11c4b8ad926cd0f60}{mtx}};}
+\DoxyCodeLine{00082\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfl__omp__gv__mgt__struct_abcde13c6fd467b8f38109694e55dfb76}{n\_vals\_alloced}};}
+\DoxyCodeLine{00083\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfl__omp__gv__mgt__struct_a31d47a9d8934293823b10cacfe9becf2}{writerequester}};}
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfl__omp__gv__mgt__struct_a797cae0618f4913ee36be016b7213a6d}{n\_conc\_readers}};}
+\DoxyCodeLine{00085\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structfl__omp__gv__mgt__struct_a224fb9c06f21fad609311c1ff307632c}{conc\_readers}};}
+\DoxyCodeLine{00086\ \}\ \mbox{\hyperlink{dpm__parallel_8h_a8d42d0bfeefb149a1d1a5a5d61dc39f4}{fl\_omp\_gv\_mgt\_t}};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ \ DEFINE\_FL\_OMP\_GV\_TYPE\_T(type,\ typnam)\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{typedef\ struct\ fl\_omp\_gv\_\ \#\#\ typnam\ \#\#\ \_struct\ \{\ \ \(\backslash\)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\ \ type\ *vals;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\ \ fl\_omp\_gv\_mgt\_t\ mgt;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\}\ fl\_omp\_gv\_\ \#\#\ typnam\ \#\#\ \_t;}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \mbox{\hyperlink{dpm__parallel_8h_a500e4e2dfba3f1152fc3c40b17362afe}{DEFINE\_FL\_OMP\_GV\_TYPE\_T}}(\textcolor{keywordtype}{int},\ \ \ \ \ \ \ \textcolor{keywordtype}{int})}
+\DoxyCodeLine{00095\ \mbox{\hyperlink{dpm__parallel_8h_a500e4e2dfba3f1152fc3c40b17362afe}{DEFINE\_FL\_OMP\_GV\_TYPE\_T}}(\textcolor{keywordtype}{int}\ *,\ \ \ p\_int)}
+\DoxyCodeLine{00096\ \mbox{\hyperlink{dpm__parallel_8h_a500e4e2dfba3f1152fc3c40b17362afe}{DEFINE\_FL\_OMP\_GV\_TYPE\_T}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})}
+\DoxyCodeLine{00097\ \mbox{\hyperlink{dpm__parallel_8h_a500e4e2dfba3f1152fc3c40b17362afe}{DEFINE\_FL\_OMP\_GV\_TYPE\_T}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ p\_real)}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \mbox{\hyperlink{dpm__parallel_8h_a500e4e2dfba3f1152fc3c40b17362afe}{DEFINE\_FL\_OMP\_GV\_TYPE\_T}}(\textcolor{keywordtype}{void}\ *,\ p\_void)\ \ \ \textcolor{comment}{/*\ Mostly\ for\ internal\ use.\ */}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \ \mbox{\hyperlink{dpm__parallel_8h_a8c03056cd2295101e9448c05e024fa4c}{init\_fl\_omp\_gv\_p\_void}}(fl\_omp\_gv\_p\_void\_t\ *flompgv);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{dpm__parallel_8h_a2e0a92343b9a1cf83b6f8dfda4aeff42}{init\_fl\_omp\_gv\_int}}(fl\_omp\_gv\_int\_t\ *flompgv);}
+\DoxyCodeLine{00104\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \ *\mbox{\hyperlink{dpm__parallel_8h_aeba067187cfd5e21e4b71e4561e2821c}{get\_fl\_omp\_gv\_int}}(fl\_omp\_gv\_int\_t\ *flompgv);}
+\DoxyCodeLine{00105\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ *\mbox{\hyperlink{dpm__parallel_8h_a05fb24ccd95e6c28b707cc9b52408116}{take\_fl\_omp\_gv\_int}}(fl\_omp\_gv\_int\_t\ *flompgv);}
+\DoxyCodeLine{00106\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_a663815ee5899139f293f56f7ce125931}{leave\_fl\_omp\_gv\_int}}(fl\_omp\_gv\_int\_t\ *flompgv);}
+\DoxyCodeLine{00107\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{dpm__parallel_8h_a9a745a0f44db0276d58e36f1b4a3f534}{init\_fl\_omp\_gv\_p\_int}}(fl\_omp\_gv\_p\_int\_t\ *flompgv);}
+\DoxyCodeLine{00108\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ **\mbox{\hyperlink{dpm__parallel_8h_a0c02ca1d1909a5caa0652a5216c9045c}{get\_fl\_omp\_gv\_p\_int}}(fl\_omp\_gv\_p\_int\_t\ *flompgv);}
+\DoxyCodeLine{00109\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ **\mbox{\hyperlink{dpm__parallel_8h_af923863aad336ee3f7976dc6abbcb94f}{take\_fl\_omp\_gv\_p\_int}}(fl\_omp\_gv\_p\_int\_t\ *flompgv);}
+\DoxyCodeLine{00110\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_ae9cb18135b85d0beda52c4786f903377}{leave\_fl\_omp\_gv\_p\_int}}(fl\_omp\_gv\_p\_int\_t\ *flompgv);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \ \mbox{\hyperlink{dpm__parallel_8h_a6efd4379d519a731133fc55308e939a6}{init\_fl\_omp\_gv\_real}}(fl\_omp\_gv\_real\_t\ *flompgv);}
+\DoxyCodeLine{00113\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ *\mbox{\hyperlink{dpm__parallel_8h_a6c5af3b1840b86d99512e04b99897b86}{get\_fl\_omp\_gv\_real}}(fl\_omp\_gv\_real\_t\ *flompgv);}
+\DoxyCodeLine{00114\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ *\mbox{\hyperlink{dpm__parallel_8h_a47bbe3363e37fd7efdfcc4da11fb52d4}{take\_fl\_omp\_gv\_real}}(fl\_omp\_gv\_real\_t\ *flompgv);}
+\DoxyCodeLine{00115\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{dpm__parallel_8h_aa2ae9832c6579fc1514d5c7126b26370}{leave\_fl\_omp\_gv\_real}}(fl\_omp\_gv\_real\_t\ *flompgv);}
+\DoxyCodeLine{00116\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \ \mbox{\hyperlink{dpm__parallel_8h_a107f45e4cf99bb373e01729873ca8ac6}{init\_fl\_omp\_gv\_p\_real}}(fl\_omp\_gv\_p\_real\_t\ *flompgv);}
+\DoxyCodeLine{00117\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ **\mbox{\hyperlink{dpm__parallel_8h_a725e36910c0cfff5cf7adf4adf93a36f}{get\_fl\_omp\_gv\_p\_real}}(fl\_omp\_gv\_p\_real\_t\ *flompgv);}
+\DoxyCodeLine{00118\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{dpm__parallel_8h_a0cd6872be5cb5a877c898eeb927f59aa}{take\_fl\_omp\_gv\_p\_real}}(fl\_omp\_gv\_p\_real\_t\ *flompgv);}
+\DoxyCodeLine{00119\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{dpm__parallel_8h_a04266cf8eba85878012e9e4abef9a4ac}{leave\_fl\_omp\_gv\_p\_real}}(fl\_omp\_gv\_p\_real\_t\ *flompgv);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{comment}{/*\ USE\_DPM\_DEBUG\_WRITE\ activates}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *\ DPMDBGWRT\ macros\ so\ that\ they}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ write\ debug\ output\ into\ a\ file\ dpmdbg-\/<node\_id>.out.}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ DPMDBGERR\ macros\ are\ similar,\ but\ if\ DEBUG\ is\ on,\ they}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ throw\ an\ Error\ if\ USE\_DPM\_DEBUG\_WRITE\ is\ on\ or\ they}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ issue\ a\ message\ to\ the\ text\ console\ if\ the\ latter\ is\ not.}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ If\ DEBUG\ is\ off,\ DPMDBGERR\ is\ like\ DPMDBGWRT,\ which}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ under\ that\ circumstance\ does\ not\ do\ anything.}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#ifndef\ \ \ USE\_DPM\_DEBUG\_WRITE}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#\ define\ \ USE\_DPM\_DEBUG\_WRITE\ \ \ \ \ 00\ \ ||\ \ DEBUG\ \ \ \&\&\ \ 00}}
+\DoxyCodeLine{00133\ \textcolor{comment}{/*arning\ The\ FIRST\ "{}11"{}\ in\ the\ above\ line\ must\ become\ 00\ again...!!\ */}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#if\ \ !\ UDF\_COMPILER}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#if\ USE\_DPM\_DEBUG\_WRITE}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#\ define\ DPMDBGWRT(...)\ dpmdbgwrt(\_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00140\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ dpmdbgwrt(\textcolor{keywordtype}{char}\ *filename,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keywordtype}{char}\ *format,\ ...);}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#\ define\ DPMDBGWRT(...)\ donothing()}}
+\DoxyCodeLine{00143\ \textcolor{comment}{/*\ Must\ define\ a\ STATIC\ function...}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ static\ int\ donothing(void)\ \{\};\ \ \ \%*\ Hopefully,\ calls\ to\ this\ will\ be\ optimized\ out.\ *\%}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ ...in\ every\ .c\ file\ that\ uses\ this,\ because\ only\ such\ a\ static\ function}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *\ can\ be\ optimized\ out\ in\ the\ optimized\ production\ build!}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ This\ is\ needed\ only\ if\ one\ wants\ to\ be\ able\ to\ do...}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ \ \ \ DPMDBGWRT("{}something"{}),\ <more\ code>;}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *\ ...i.e.\ use\ a\ comma\ after\ DPMDBGWRT(...).}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *\ If\ that\ is\ not\ needed,\ we\ can\ probably\ do:}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ *\ \#define\ \ DPMDBGWRT(...)}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#endif\ \ \ }\textcolor{comment}{/*\ \ !\ UDF\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#if\ DEBUG}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#\ if\ USE\_DPM\_DEBUG\_WRITE}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#\ \ define\ \ DPMDBGERR\ \ Error}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#\ \ define\ \ DPMDBGERR(...)\ \ \ \ fprintf(stderr,\ \_\_VA\_ARGS\_\_),\ fflush(stderr)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#\ define\ \ \ DPMDBGERR\ \ DPMDBGWRT}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dpm__parallel_8h_adbc96eb99ca29204a93bbb7fc08d33fb}{num\_thread\_locks}};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#if\ RP\_DPM\_CACHE\ \&\&\ (MPT\_THREAD\ ||\ \_OPENMP)}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ PROTO\_LOCK(lock)\ MPT\_LOCK\_\#\#lock}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00176\ \{}
+\DoxyCodeLine{00177\ \ \ PROTO\_LOCK(field),}
+\DoxyCodeLine{00178\ \ \ PROTO\_LOCK(random),}
+\DoxyCodeLine{00179\ \ \ PROTO\_LOCK(summary),}
+\DoxyCodeLine{00180\ \ \ PROTO\_LOCK(cloud\_element),}
+\DoxyCodeLine{00181\ \ \ PROTO\_LOCK(erosion\_accretion),}
+\DoxyCodeLine{00182\ \ \ PROTO\_LOCK(\mbox{\hyperlink{group__dpm__mem__part_ga0c99013a9b5aa8984032a08bc34960d4}{new\_particle}}),}
+\DoxyCodeLine{00183\ \ \ PROTO\_LOCK(\mbox{\hyperlink{group__dpm__mem__part_ga348970c16a61697e1056f902e46e24d3}{deep\_copy\_particle}}),}
+\DoxyCodeLine{00184\ \ \ PROTO\_LOCK(particle),}
+\DoxyCodeLine{00185\ \ \ PROTO\_LOCK(report),}
+\DoxyCodeLine{00186\ \ \ PROTO\_LOCK(minmax),}
+\DoxyCodeLine{00187\ \ \ PROTO\_LOCK(display),}
+\DoxyCodeLine{00188\ \ \ PROTO\_LOCK(history),}
+\DoxyCodeLine{00189\ \ \ PROTO\_LOCK(prepend\_neighbor\_list),}
+\DoxyCodeLine{00190\ \ \ PROTO\_LOCK(rethread\_collision\_particle),}
+\DoxyCodeLine{00191\ \ \ PROTO\_LOCK(collide\_particle\_move\_bin),}
+\DoxyCodeLine{00192\ \ \ PROTO\_LOCK(c\_count),}
+\DoxyCodeLine{00193\ \ \ PROTO\_LOCK(wall\_heat\_flux),}
+\DoxyCodeLine{00194\ \ \ PROTO\_LOCK(update\_cell\_temperature),}
+\DoxyCodeLine{00195\ \ \ PROTO\_LOCK(film\_objp\_access),}
+\DoxyCodeLine{00196\ \ \ PROTO\_LOCK(film\_mass\_access),}
+\DoxyCodeLine{00197\ \ \ PROTO\_LOCK(film\_h\_wall\_access),}
+\DoxyCodeLine{00198\ \ \ PROTO\_LOCK(film\_heat\_flux\_access),}
+\DoxyCodeLine{00199\ \ \ PROTO\_LOCK(film\_height\_access),}
+\DoxyCodeLine{00200\ \ \ PROTO\_LOCK(film\_mass\_m0\_access),}
+\DoxyCodeLine{00201\ \ \ PROTO\_LOCK(film\_height\_m0\_access),}
+\DoxyCodeLine{00202\ \ \ PROTO\_LOCK(film\_heat\_flux\_m0\_access),}
+\DoxyCodeLine{00203\ \ \ PROTO\_LOCK(film\_temperature\_m0\_access),}
+\DoxyCodeLine{00204\ \ \ PROTO\_LOCK(film\_mu\_m0\_access),}
+\DoxyCodeLine{00205\ \ \ PROTO\_LOCK(film\_surf\_tension\_m0\_access),}
+\DoxyCodeLine{00206\ \ \ PROTO\_LOCK(film\_p\_face\_access),}
+\DoxyCodeLine{00207\ \ \ PROTO\_LOCK(film\_m\_imp\_access),}
+\DoxyCodeLine{00208\ \ \ PROTO\_LOCK(reflect\_heat\_flux\_access),}
+\DoxyCodeLine{00209\ \ \ PROTO\_LOCK(store\_cx\_cell),}
+\DoxyCodeLine{00210\ \ \ PROTO\_LOCK(Uniform\_Random),}
+\DoxyCodeLine{00211\ \ \ PROTO\_LOCK(\mbox{\hyperlink{group__dpm__tracking__breakup_ga63e183d99f1f2175d8789dd84bacd55d}{Spawn\_Particle}}),}
+\DoxyCodeLine{00212\ \ \ PROTO\_LOCK(DPM\_Memory),}
+\DoxyCodeLine{00213\ \ \ PROTO\_LOCK(\mbox{\hyperlink{prop_8h_a51d189d1863469c20a3f74653b51b321}{generic\_property}}),}
+\DoxyCodeLine{00214\ \ \ PROTO\_LOCK(fn\_all\_count),}
+\DoxyCodeLine{00215\ \ \ PROTO\_LOCK(\mbox{\hyperlink{pdf__table_8h_a2b8b7a25d627570c3227cbc0294b8291}{COPYTP}}),}
+\DoxyCodeLine{00216\ \ \ PROTO\_LOCK(\mbox{\hyperlink{cxndsearch_8h_a3f539bf3cee8636c8ca7fe8ed575f931}{CX\_Find\_Cell\_With\_Point}}),}
+\DoxyCodeLine{00217\ \ \ PROTO\_LOCK(Lookup\_Cell\_By\_Id),}
+\DoxyCodeLine{00218\ \ \ PROTO\_LOCK(location\_hits),}
+\DoxyCodeLine{00219\ \ \ PROTO\_LOCK(location\_tests),}
+\DoxyCodeLine{00220\ \ \ PROTO\_LOCK(\mbox{\hyperlink{cx_8h_a54d74d18c91a4b13ac3950c641acf08e}{CX\_Distance2\_Element}}),}
+\DoxyCodeLine{00221\ \ \ PROTO\_LOCK(\mbox{\hyperlink{group__dpm__mem__part_ga7568445f1be716e790e25b7e0c08272a}{free\_particle}}),}
+\DoxyCodeLine{00222\ \ \ PROTO\_LOCK(dist\_accumulate),}
+\DoxyCodeLine{00223\ \ \ PROTO\_LOCK(dist\_average),}
+\DoxyCodeLine{00224\ \ \ PROTO\_LOCK(MEMORY\_STD),}
+\DoxyCodeLine{00225\ \ \ PROTO\_LOCK(Deposit\_Cache\_Sources),}
+\DoxyCodeLine{00226\ \ \ PROTO\_LOCK(Deposit\_Cache\_Real),}
+\DoxyCodeLine{00227\ \ \ PROTO\_LOCK(\mbox{\hyperlink{random_8h_a4a7a22483a813b0fd5556bdd831bbc66}{wall\_film\_uniform\_random}}),}
+\DoxyCodeLine{00228\ \ \ PROTO\_LOCK(\mbox{\hyperlink{pdf__props_8h_a294634dd8b80361bab7e4d9d6ef75f60}{Pdf\_XY}}),}
+\DoxyCodeLine{00229\ \ \ PROTO\_LOCK(HYBWP),}
+\DoxyCodeLine{00230\ \ \ PROTO\_LOCK(\mbox{\hyperlink{src_2parallel_2para_8h_ac2109ceb886e7b54736f97916823e12b}{par\_fprintf}}),}
+\DoxyCodeLine{00231\ \ \ PROTO\_LOCK(THREADLOCK),}
+\DoxyCodeLine{00232\ \ \ PROTO\_LOCK(PICLETAKER),}
+\DoxyCodeLine{00233\ \ \ PROTO\_LOCK(DEADLOCKTRCR),}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ PROTO\_LOCK(DEBUGGING),}
+\DoxyCodeLine{00236\ \ \ MPT\_LOCK\_MAX}
+\DoxyCodeLine{00237\ \}\ mpt\_lock\_type;}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#\ if\ MPT\_THREAD}}
+\DoxyCodeLine{00240\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{multiport_2src_2mpthreads_8h_a1d10aae2f1352614948ba2f5080803df}{mpt\_thread\_mutex\_t}}\ mpt\_mutex\_lock[MPT\_LOCK\_MAX];}
+\DoxyCodeLine{00241\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{structmpt__barrier__struct}{mpt\_barrier\_t}}\ dpm\_cloud\_element\_barrier;}
+\DoxyCodeLine{00242\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{structmpt__barrier__struct}{mpt\_barrier\_t}}\ dpm\_barrier;}
+\DoxyCodeLine{00243\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{structmpt__barrier__struct}{mpt\_barrier\_t}}\ dpm\_particle\_barrier;}
+\DoxyCodeLine{00244\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ n\_mutex;}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MPT\_THREAD\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#\ if\ \_OPENMP}}
+\DoxyCodeLine{00248\ \textcolor{keyword}{extern}\ omp\_lock\_t\ mpt\_omp\_lock[MPT\_LOCK\_MAX];}
+\DoxyCodeLine{00249\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ mpt\_omp\_lock\_time[MPT\_LOCK\_MAX];}
+\DoxyCodeLine{00250\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ mpt\_omp\_lock\_wait\_time[MPT\_LOCK\_MAX];}
+\DoxyCodeLine{00251\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ mpt\_omp\_lock\_time\_start[MPT\_LOCK\_MAX];}
+\DoxyCodeLine{00252\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{size\_t}\ mpt\_omp\_lock\_count[MPT\_LOCK\_MAX];}
+\DoxyCodeLine{00253\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ mpt\_omp\_lock\_trace;}
+\DoxyCodeLine{00254\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Start\_MPT\_OMP\_Lock\_Track(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ start);}
+\DoxyCodeLine{00255\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Reset\_MPT\_OMP\_Lock\_Track(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00256\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Print\_MPT\_OMP\_Lock\_Track(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ \_OPENMP\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#\ define\ DPM\_MT\ (dpm\_par.parallel\_hybrid)}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{/*\ RP\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#\ define\ DPM\_MT\ rp\_dpm\_cache}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \textcolor{comment}{/*\ profile\ */}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#\ if\ \_OPENMP\ \&\&\ USE\_FLUENT\_PROFILE\ \&\&\ defined(PROFILE\_THREAD\_MAX)}}
+\DoxyCodeLine{00267\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ mpt\_omp\_lock\_prof\_time\_start[\mbox{\hyperlink{mptimer_8h_a475685a9552a54aa8f0d756a9f01f76d}{PROFILE\_THREAD\_MAX}}];}
+\DoxyCodeLine{00268\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ mpt\_omp\_lock\_prof\_id[\mbox{\hyperlink{mptimer_8h_a475685a9552a54aa8f0d756a9f01f76d}{PROFILE\_THREAD\_MAX}}];}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ START\_OMP\_LOCK\_PROFILE(\_before)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\ \ \ \ if\ (MPT\_get\_profile\_flag()\ \&\&\ mpt\_omp\_lock\_trace)\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\ \ \ \ \ \ int\ \_thread\_id\ =\ MPT\_IN\_HYBRID?\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ omp\_get\_thread\_num():0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\ \ \ \ \ \ if(\_thread\_id\ >=\ 0\ \&\&\ \_thread\_id\ <\ PROFILE\_THREAD\_MAX)\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ mpt\_omp\_lock\_prof\_time\_start[\_thread\_id]\ =\ (\_before);\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#define\ STOP\_OMP\_LOCK\_PROFILE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\ \ \ \ if\ (MPT\_get\_profile\_flag()\ \&\&\ mpt\_omp\_lock\_trace)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\ \ \ \ \ \ int\ \_thread\_id\ =\ MPT\_IN\_HYBRID?\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ omp\_get\_thread\_num():0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\ \ \ \ \ \ if(\_thread\_id\ >=\ 0\ \&\&\ \_thread\_id\ <\ PROFILE\_THREAD\_MAX)\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ log\_time\_used(\_thread\_id,\ \&mpt\_omp\_lock\_prof\_id[\_thread\_id],\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpt\_omp\_lock\_prof\_time\_start[\_thread\_id],\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Get\_Timer(),\ "{}MPT\_LOCK"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}dpm\_parallel.c"{},\ 0,\ 1,\ FALSE);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#\ else\ }\textcolor{comment}{/*\ \_OPENMP\ \&\&\ USE\_FLUENT\_PROFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#define\ START\_OMP\_LOCK\_PROFILE(\_before)}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ STOP\_OMP\_LOCK\_PROFILE}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ \_OPENMP\ \&\&\ USE\_FLUENT\_PROFILE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#if\ USE\_FLUENT\_PROFILE\ \&\&\ \_OPENMP\ \&\&\ defined(PROFILE\_THREAD\_MAX)}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#\ define\ START\_PROFILE\_MT(\_name)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\ \ \ \ unsigned\ char\ if\_use\_profile\ =\ MPT\_get\_profile\_flag();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\ \ \ \ double\ \_prof\_log\_time\_start\ =\ (if\_use\_profile>2)?Get\_Timer():0.0;\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\ \ \ \ const\ int\ \_start\_line\ =\ \_\_LINE\_\_}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#\ define\ STOP\_PROFILE\_MT(\_name)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\ \ \ \ static\ int\ \_prof\_log\_id\_mt[PROFILE\_THREAD\_MAX]\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\ \ \ \ \ \ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\ \ \ \ \ \ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\ \ \ \ \ \ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\ \ \ \ \ \ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\ \ \ \ \ \ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\ \ \ \ \ \ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\ \ \ \ \ \ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\ \ \ \ \ \ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1,\ -\/1\};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\ \ \ \ if(if\_use\_profile>2)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ \_thread\_id\ =\ MPT\_IN\_HYBRID?\ omp\_get\_thread\_num():0;\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if(\_thread\_id\ >=\ 0\ \&\&\ \_thread\_id\ <\ PROFILE\_THREAD\_MAX)\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ log\_time\_used(\_thread\_id,\ \&\_prof\_log\_id\_mt[\_thread\_id],\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_prof\_log\_time\_start,\ Get\_Timer(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_name,\ \_\_FILE\_\_,\ \_start\_line,\ \_\_LINE\_\_,\ FALSE);\ \(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \}\}}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#\ define\ START\_PROFILE\_MT(\_name)}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#\ define\ STOP\_PROFILE\_MT(\_name)}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ USE\_FLUENT\_PROFILE\ \&\&\ \_OPENMP\ \&\&\ defined(PROFILE\_THREAD\_MAX)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#\ define\ START\_PROFILE\_MT1\ START\_PROFILE\_MT(\_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#\ define\ STOP\_PROFILE\_MT1\ STOP\_PROFILE\_MT(\_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \textcolor{comment}{/*\ lock\ for\ omp\ */}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ MPT\_OMP\_LOCK(name,\ lockptr)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\ \ \ \ double\ \_before\ =\ mpt\_omp\_lock\_trace?MPT\_wall\_time():0.0;\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\ \ \ \ START\_OMP\_LOCK\_PROFILE(\_before);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\ \ \ \ omp\_set\_lock(lockptr);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\ \ \ \ if(mpt\_omp\_lock\_trace)\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\ \ \ \ \ \ mpt\_omp\_lock\_time\_start[MPT\_LOCK\_\#\#name]\ =\ \_before;\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\ \ \ \ \ \ mpt\_omp\_lock\_wait\_time[MPT\_LOCK\_\#\#name]\ +=\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_wall\_time()-\/mpt\_omp\_lock\_time\_start[MPT\_LOCK\_\#\#name];\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ \ \ \ \ mpt\_omp\_lock\_count[MPT\_LOCK\_\#\#name]++;\}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ MPT\_OMP\_UNLOCK(name,\ lockptr)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\ \ \ \ if(mpt\_omp\_lock\_trace)\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\ \ \ \ \ \ mpt\_omp\_lock\_time[MPT\_LOCK\_\#\#name]\ +=\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_wall\_time()-\/mpt\_omp\_lock\_time\_start[MPT\_LOCK\_\#\#name];\}\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\ \ \ \ omp\_unset\_lock(lockptr);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\ \ \ \ STOP\_OMP\_LOCK\_PROFILE;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \textcolor{comment}{/*\ lock\ for\ pthread\ */}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#define\ MPT\_PTHREAD\_LOCK(name)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\ \ \ \ mpt\_thread\_mutex\_lock(\&mpt\_mutex\_lock[MPT\_LOCK\_\#\#name]);\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\ \ \ \ ++n\_mutex;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#define\ MPT\_PTHREAD\_UNLOCK(name)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\ \ \ \ mpt\_thread\_mutex\_unlock(\&mpt\_mutex\_lock[MPT\_LOCK\_\#\#name]);\ \ \(\backslash\)}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#\ if\ MPT\_THREAD\ \&\&\ \_OPENMP}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#define\ MPT\_LOCK(name)\ if(DPM\_MT)\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\ \ \ \ if(rp\_dpm\_cache)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_PTHREAD\_LOCK(name);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\ \ \ \ else\ if\ (MPT\_IN\_HYBRID)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_OMP\_LOCK(name,\ \&mpt\_omp\_lock[MPT\_LOCK\_\#\#name]);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\#define\ MPT\_UNLOCK(name)\ if(DPM\_MT)\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\ \ \ \ if(rp\_dpm\_cache)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_PTHREAD\_UNLOCK(name);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\ \ \ \ else\ if\ (MPT\_IN\_HYBRID)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_OMP\_UNLOCK(name,\ \&mpt\_omp\_lock[MPT\_LOCK\_\#\#name]);\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\}}}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#\ elif\ MPT\_THREAD\ }\textcolor{comment}{/*\ MPT\_THREAD\ \&\&\ \_OPENMP\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#define\ MPT\_LOCK(name)\ if(DPM\_MT)\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\ \ \ \ if(rp\_dpm\_cache)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_PTHREAD\_LOCK(name);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\}}}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#define\ MPT\_UNLOCK(name)\ if(DPM\_MT)\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\ \ \ \ if(rp\_dpm\_cache)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_PTHREAD\_UNLOCK(name);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\}}}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#\ else\ }\textcolor{comment}{/*\ MPT\_THREAD\ \&\&\ \_OPENMP\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#define\ MPT\_LOCK(name)\ if(DPM\_MT)\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\ \ \ \ if\ (MPT\_IN\_HYBRID)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_OMP\_LOCK(name,\ \&mpt\_omp\_lock[MPT\_LOCK\_\#\#name]);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\}}}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\#define\ MPT\_UNLOCK(name)\ if(DPM\_MT)\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\ \ \ \ if\ (MPT\_IN\_HYBRID)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MPT\_OMP\_UNLOCK(name,\ \&mpt\_omp\_lock[MPT\_LOCK\_\#\#name]);\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\}}}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ MPT\_THREAD\ \&\&\ \_OPENMP\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\#\ ifdef\ CX\_Malloc}}
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\#\ undef\ CX\_Malloc}}
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#\ ifdef\ CX\_Realloc}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#\ undef\ CX\_Realloc}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#\ ifdef\ CX\_Calloc}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#\ undef\ CX\_Calloc}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#\ ifdef\ CX\_Free}}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#\ undef\ CX\_Free}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#define\ CX\_Malloc(s)\ CX\_Malloc\_MT((s),\_\_FILE\_\_,\_\_LINE\_\_)}}
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\#define\ CX\_Realloc(n,s)\ CX\_Realloc\_MT((n),(s),\_\_FILE\_\_,\_\_LINE\_\_)}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\#define\ CX\_Calloc(n,s)\ CX\_Calloc\_MT((n),(s),\_\_FILE\_\_,\_\_LINE\_\_)}}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#define\ CX\_Free(s)\ CX\_Free\_MT((s),\_\_FILE\_\_,\_\_LINE\_\_)}}
+\DoxyCodeLine{00439\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *mtm\_malloc(\textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{void}\ **imanager,}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line);}
+\DoxyCodeLine{00441\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ mtm\_free(\textcolor{keywordtype}{void}\ *p,\ \textcolor{keywordtype}{void}\ **imanager,}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line);}
+\DoxyCodeLine{00443\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *mtm\_realloc(\textcolor{keywordtype}{void}\ *p,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{void}\ **imanager,}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line);}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#\ if\ \_OPENMP\ \&\&\ RP\_NODE\ \ \ }\textcolor{comment}{/*\ reminder:\ still\ in:\ \#if\ RP\_DPM\_CACHE\ \&\&\ (MPT\_THREAD\ ||\ \_OPENMP)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\#if\ \ !\ UDF\_COMPILER}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#if\ USE\_DPM\_DEBUG\_WRITE}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#\ define\ \ \ \ \ FLOMP\_TAKE\_PARTICLE(pp,\ Tp,\ ...)\ \ (DPMDBGWRT(\_\_VA\_ARGS\_\_),\ \ \ \ flomp\_take\_Particle(pp,\ Tp))}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#\ define\ \ FLOMP\_RELEASE\_PARTICLE(pp,\ Tp,\ ...)\ \ (DPMDBGWRT(\_\_VA\_ARGS\_\_),\ flomp\_release\_Particle(pp,\ Tp))}}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{\#\ define\ \ \ \ \ FLOMP\_TAKE\_A\_THREAD(my,\ to,\ ...)\ \ (DPMDBGWRT(\_\_VA\_ARGS\_\_),\ \ \ \ flomp\_take\_a\_Thread(my,\ to))}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#\ define\ \ FLOMP\_RELEASE\_A\_THREAD(ThrdID,\ ...)\ \ (DPMDBGWRT(\_\_VA\_ARGS\_\_),\ flomp\_release\_a\_Thread(ThrdID))}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\#\ define\ \ \ \ \ FLOMP\_TAKE\_PARTICLE(pp,\ Tp,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flomp\_take\_Particle(pp,\ Tp)}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\#\ define\ \ FLOMP\_RELEASE\_PARTICLE(pp,\ Tp,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flomp\_release\_Particle(pp,\ Tp)}}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\#\ define\ \ \ \ \ FLOMP\_TAKE\_A\_THREAD(my,\ to,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flomp\_take\_a\_Thread(my,\ to)}}
+\DoxyCodeLine{00459\ \textcolor{preprocessor}{\#\ define\ \ FLOMP\_RELEASE\_A\_THREAD(ThrdID,\ ...)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flomp\_release\_a\_Thread(ThrdID)}}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\#endif\ \ \ }\textcolor{comment}{/*\ \ !\ UDF\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ flomp\_take\_Particle(\mbox{\hyperlink{structparticle__struct}{Particle}}\ *pp,\ \mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *Tp);}
+\DoxyCodeLine{00465\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \ flomp\_release\_Particle(\mbox{\hyperlink{structparticle__struct}{Particle}}\ *pp,\ \mbox{\hyperlink{structtracked__particle__struct}{Tracked\_Particle}}\ *Tp);}
+\DoxyCodeLine{00466\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ flomp\_take\_a\_Thread(\textcolor{keywordtype}{short}\ myownid,\ \textcolor{keywordtype}{short}\ towaitfor);}
+\DoxyCodeLine{00467\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \ flomp\_release\_a\_Thread(\textcolor{keywordtype}{short}\ Thread\_ID);}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{\#define\ MTM\_MALLOC(x)\ mtm\_malloc((x),\ Get\_OMP\_Mem(OM\_MEMORY\_MANAGER),\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#define\ MTM\_FREE(x)\ mtm\_free((x),\ Get\_OMP\_Mem(OM\_MEMORY\_MANAGER),\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_FILE\_\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#define\ MTM\_REALLOC(x,\ y)\ mtm\_realloc((x),\ (y),\ Get\_OMP\_Mem(OM\_MEMORY\_MANAGER),\(\backslash\)}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_FILE\_\_,\ \_\_LINE\_\_);}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\#if\ \ !\ UDF\_COMPILER}}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\#define\ \ \ \ FLOMP\_TAKE\_PARTICLE(pp,\ Tp,\ ...)\ \ TRUE}}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\#define\ FLOMP\_RELEASE\_PARTICLE(pp,\ Tp,\ ...)}}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\#define\ \ \ \ FLOMP\_TAKE\_A\_THREAD(my,\ to,\ ...)\ \ TRUE}}
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\#define\ FLOMP\_RELEASE\_A\_THREAD(ThrdID,\ ...)}}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#endif\ \ \ }\textcolor{comment}{/*\ \ !\ UDF\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\#define\ MTM\_MALLOC(x)\ CX\_Malloc(x)}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#define\ MTM\_FREE(x)\ CX\_Free(x)}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\#define\ MTM\_REALLOC(x,\ y)\ CX\_Realloc(x,\ y)}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{/*\ RP\_DPM\_CACHE\ \&\&\ (MPT\_THREAD\ ||\ \_OPENMP)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00492\ }
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\#define\ DPM\_MT\ FALSE}}
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\#define\ MPT\_LOCK(name)}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#define\ MPT\_UNLOCK(name)}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#define\ MPT\_IN\_HYBRID\ FALSE}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\#define\ MTM\_MALLOC(x)\ CX\_Malloc(x)}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\#define\ MTM\_FREE(x)\ CX\_Free(x)}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\#define\ MTM\_REALLOC(x,\ y)\ CX\_Realloc(x,\ y)}}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\#if\ \ !\ UDF\_COMPILER}}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\#define\ \ \ \ FLOMP\_TAKE\_PARTICLE(pp,\ Tp,\ ...)\ \ TRUE}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#define\ FLOMP\_RELEASE\_PARTICLE(pp,\ Tp,\ ...)}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\#define\ \ \ \ FLOMP\_TAKE\_A\_THREAD(my,\ to,\ ...)\ \ TRUE}}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\#define\ FLOMP\_RELEASE\_A\_THREAD(ThrdID,\ ...)}}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\#endif\ \ \ }\textcolor{comment}{/*\ \ !\ UDF\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00510\ \textcolor{preprocessor}{\#\ define\ START\_PROFILE\_MT1\ START\_PROFILE1}}
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\#\ define\ STOP\_PROFILE\_MT1\ STOP\_PROFILE1}}
+\DoxyCodeLine{00512\ }
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\#\ define\ START\_PROFILE\_MT(\_name)\ START\_PROFILE(\_name)}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\#\ define\ STOP\_PROFILE\_MT(\_name)\ STOP\_PROFILE(\_name)}}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_DPM\_CACHE\ \&\&\ (MPT\_THREAD\ ||\ \_OPENMP)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\#define\ MTM\_FREE\_TEMP(p)\ if\ (NNULLP\ (p))\ \{MTM\_FREE\ ((char\ *)p);\ p\ =\ NULL;\}}}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_ae867202eda0577a798b13b862f655aae}{Init\_All\_DPM\_Locks}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00521\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_afc7c387dbef9482d2875dc54dfc370b7}{Destroy\_All\_DPM\_Locks}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00522\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_a66431b3b3bd45c2907321694ee4bfc0b}{Allocate\_OMP\_Mem}}(\textcolor{keywordtype}{int}\ ngroups);}
+\DoxyCodeLine{00523\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_aaad41d9dfc31ee27269b2f1b811812dc}{Free\_OMP\_Mem}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00524\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ **\mbox{\hyperlink{dpm__parallel_8h_af9fedfc229477f104a8a4720f6341d3a}{Get\_OMP\_Mem}}(\textcolor{keywordtype}{int}\ om);}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{dpm__parallel_8h_a16b39e55b8dd714149b355755999d9e0}{CX\_Malloc\_MT}}\ \ (\textcolor{keywordtype}{size\_t},\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00527\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{dpm__parallel_8h_a5e476f587d9590cbd0b458f7f4fbf31a}{CX\_Realloc\_MT}}\ (\textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{size\_t},\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00528\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{dpm__parallel_8h_ae550203c11d5b0246b614a940a1ece04}{CX\_Calloc\_MT}}\ \ (\textcolor{keywordtype}{size\_t},\ \textcolor{keywordtype}{size\_t},\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00529\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{dpm__parallel_8h_ab0692fc92bb5eb1d22e58a8048002018}{CX\_Free\_MT}}\ \ \ \ (\textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00530\ }
+\DoxyCodeLine{00531\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dpm__parallel_8h_a7a2c8e8217f0a97c83d7ed77c2d99ce0}{get\_n\_threads}}(\textcolor{keywordtype}{int}\ nparticles,\ \textcolor{keywordtype}{int}\ **masterp,}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ **group\_sizep,\ \textcolor{keywordtype}{int}\ **thread\_numberp,}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *max\_thread\_number\_per\_loopp,}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ for\_dem);}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_ada9b8fea804e14a8f96f33f020202905}{alloc\_init\_one\_lock\_per\_thread}}(\textcolor{keywordtype}{int}\ numthreads);}
+\DoxyCodeLine{00537\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dpm__parallel_8h_a270e5a09e2a4390313175c65fc336328}{destroy\_one\_lock\_per\_thread}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00538\ }
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_DPM\_PARALLEL\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,109 @@
+\doxysection{Ans\+Interface\+Servant.\+h}
+\hypertarget{_ans_interface_servant_8h_source}{}\label{_ans_interface_servant_8h_source}\index{commonfiles20.1/PublicItf/AnsInterfaceServant.h@{commonfiles20.1/PublicItf/AnsInterfaceServant.h}}
+\mbox{\hyperlink{_ans_interface_servant_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ (C)\ 2009\ ANSYS,\ Inc.\ and\ its\ subsidiaries.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ \$LastChangedDate\$}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ \$LastChangedRevision\$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ \$LastChangedBy\$}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ \_AnsInterfaceServant\_h\_}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ \_AnsInterfaceServant\_h\_}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{ansrpc_8h}{ansrpc.h}}>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{_ans_request_8h}{AnsRequest.h}}>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{_ans_response_8h}{AnsResponse.h}}>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_ans}{Ans}}\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }Rpc\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ans_1_1_rpc_1_1_i_interface_servant}{IInterfaceServant}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_i_interface_servant_a719dfd1c420fa56d875f3761c7672d28}{GetInterfaceName}}()\ =\ 0;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_i_interface_servant_afbc2b4f74bb75122fd1ba0be05043a94}{HandleRequest}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_request}{Request}}\&\ request,\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_response}{Response}}\&\ response)\ =\ 0;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00028\ \ \ \ \ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_i_interface_servant_aaedb77df2d7c5d2ab001d190a7a39d55}{IInterfaceServant}}()\ \{\}}
+\DoxyCodeLine{00029\ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ DerivedClass>}
+\DoxyCodeLine{00036\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base}{InterfaceServantBase}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_i_interface_servant}{IInterfaceServant}}}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{class\ }InterfaceMethod}
+\DoxyCodeLine{00040\ \ \ \ \ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ void\ (T::*MethodType)(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_request}{Request}}\&\ request,\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_response}{Response}}\&\ response);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ InterfaceMethod(T*\ \mbox{\hyperlink{structobj}{obj}},\ \ MethodType\ method)\ :\ \_obj(\mbox{\hyperlink{structobj}{obj}}),\ \_method(method)}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Call(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_request}{Request}}\&\ request,\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_response}{Response}}\&\ response)}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\_obj-\/>*\_method)(request,\ response);}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\mbox{\hyperlink{class_ans_1_1_rpc_1_1_argument_exception}{ArgumentException}}\&\ ex)}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ response.\mbox{\hyperlink{class_ans_1_1_rpc_1_1_response_adbfd27186bf9f0e4d18104c1fb2024c9}{ErrorCode}}\ =\ \mbox{\hyperlink{ansrpc__ftn_8h_ab9f67025dc7b641ce8df2ebff12925f3}{kRpcErrorMethodArgument}};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ response.\mbox{\hyperlink{class_ans_1_1_rpc_1_1_message_a4ffa106aae901c5e3abd0229c6cbf532}{AddArg}}<\textcolor{keywordtype}{int}>((\mbox{\hyperlink{ansrpc_8h_a4d9b7ea3ef70d58483ec63c1be5a08cb}{RpcInt32}})\ ex.\mbox{\hyperlink{class_ans_1_1_rpc_1_1_argument_exception_a3e8347be06e7183c1ee9514ed0d688cf}{GetArgIndex}}());}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ T*\ \_obj;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ MethodType\ \_method;}
+\DoxyCodeLine{00064\ \ \ \ \ \};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ std::map<std::string,\ InterfaceMethod<DerivedClass>*>\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_a55341da8fcb61b7d28f4a458a7c51eb2}{InterfaceMethodMap}};}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ InterfaceMethodMap::iterator\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_a9e8b06d6aa9ec52c3117142a0c0dbb83}{InterfaceMethodMapIterator}};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_aae0c2cf90e31f8ee6a5743509a9b12e3}{\string~InterfaceServantBase}}()}
+\DoxyCodeLine{00071\ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_a9e8b06d6aa9ec52c3117142a0c0dbb83}{InterfaceMethodMapIterator}}\ it\ =\ \_methods.begin();\ it\ !=\ \_methods.end();\ it++)}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ (*it).second;}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_a22e44df5f08e5ea112d814c67cd05fbf}{GetInterfaceName}}()}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_interfaceName;}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_a0303d2a2a79943cd372bd36247598f1a}{HandleRequest}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_request}{Request}}\&\ request,\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_response}{Response}}\&\ response)}
+\DoxyCodeLine{00082\ \ \ \ \ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_a9e8b06d6aa9ec52c3117142a0c0dbb83}{InterfaceMethodMapIterator}}\ it\ =\ \_methods.find(request.\mbox{\hyperlink{class_ans_1_1_rpc_1_1_request_ae4cf914c7e977c4fcf7be099ddafbf05}{GetMethod}}());}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ \_methods.end())}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ response.\mbox{\hyperlink{class_ans_1_1_rpc_1_1_response_adbfd27186bf9f0e4d18104c1fb2024c9}{ErrorCode}}\ =\ \mbox{\hyperlink{ansrpc__ftn_8h_af77ad2cf7afd12dce84b353c30128870}{kRpcErrorMethodNotFound}};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ InterfaceMethod<DerivedClass>*\ method\ =\ (*it).second;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ method-\/>Call(request,\ response);}
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00095\ \ \ \ \ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_a80017b533eb9e4f7d1cce060b2d56bbe}{InterfaceServantBase}}(std::string\ interfaceName)\ :\ \_interfaceName(interfaceName)}
+\DoxyCodeLine{00096\ \ \ \ \ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_a0af5263279424e4f41230df87ac33eca}{RegisterMethod}}(std::string\ name,\ \textcolor{keyword}{typename}\ InterfaceMethod<DerivedClass>::MethodType\ method)}
+\DoxyCodeLine{00100\ \ \ \ \ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \_methods[name]\ =\ \textcolor{keyword}{new}\ InterfaceMethod<DerivedClass>(\textcolor{keyword}{static\_cast<}DerivedClass*\textcolor{keyword}{>}(\textcolor{keyword}{this}),\ method);}
+\DoxyCodeLine{00102\ \ \ \ \ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00105\ \ \ \ \ std::string\ \_interfaceName;}
+\DoxyCodeLine{00106\ \ \ \ \ \mbox{\hyperlink{class_ans_1_1_rpc_1_1_interface_servant_base_a55341da8fcb61b7d28f4a458a7c51eb2}{InterfaceMethodMap}}\ \_methods;}
+\DoxyCodeLine{00107\ \};}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \}\}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

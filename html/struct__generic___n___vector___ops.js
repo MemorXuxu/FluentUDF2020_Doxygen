@@ -1,0 +1,28 @@
+var struct__generic___n___vector___ops =
+[
+    [ "nvabs", "struct__generic___n___vector___ops.html#a14eafd15f722fbba2b78d0f033495b36", null ],
+    [ "nvaddconst", "struct__generic___n___vector___ops.html#ad81944a032dcc8dd99c72d896dd95a42", null ],
+    [ "nvclone", "struct__generic___n___vector___ops.html#a7a7f2d9098cdfbd726ab880fc5c0d7aa", null ],
+    [ "nvcloneempty", "struct__generic___n___vector___ops.html#abd025c162680299c3e983dbf2e00abcc", null ],
+    [ "nvcompare", "struct__generic___n___vector___ops.html#af80bda9fd9969ae20ce67c90f64f38e4", null ],
+    [ "nvconst", "struct__generic___n___vector___ops.html#a161ea215bba328c29fee1f4b627cdfca", null ],
+    [ "nvconstrmask", "struct__generic___n___vector___ops.html#a6ffc937a41afeb413b7e968bc744e68e", null ],
+    [ "nvdestroy", "struct__generic___n___vector___ops.html#a6e5d004acbf9fa83d6f669b8a1d3e61e", null ],
+    [ "nvdiv", "struct__generic___n___vector___ops.html#aab6e6799a79a5ae840a8834cd2a32833", null ],
+    [ "nvdotprod", "struct__generic___n___vector___ops.html#ae39a7a4660de0b2e2a12af8bbb4d7be9", null ],
+    [ "nvgetarraypointer", "struct__generic___n___vector___ops.html#ae04111076efd057383d0115e19fbabc0", null ],
+    [ "nvinv", "struct__generic___n___vector___ops.html#a1ae792ff3ffb594140cf39d19036f34c", null ],
+    [ "nvinvtest", "struct__generic___n___vector___ops.html#a5a051773b05d1dbf683b7dc1200aebf5", null ],
+    [ "nvl1norm", "struct__generic___n___vector___ops.html#aa8c3b6ffe43094b2e802af335d422490", null ],
+    [ "nvlinearsum", "struct__generic___n___vector___ops.html#a3aa583d3ff1bfca6b127d255128486b9", null ],
+    [ "nvmaxnorm", "struct__generic___n___vector___ops.html#a4417c010366ed8eeca12076aebaeb52e", null ],
+    [ "nvmin", "struct__generic___n___vector___ops.html#af0f03fee54958ddb201e8c0e2c3be058", null ],
+    [ "nvminquotient", "struct__generic___n___vector___ops.html#a0dd47a9e3a16a492117590e16da9759a", null ],
+    [ "nvprod", "struct__generic___n___vector___ops.html#a03630cd93726211ec982aa2aadaed962", null ],
+    [ "nvscale", "struct__generic___n___vector___ops.html#ab6fe0a7f6324b28f17f41244446963ac", null ],
+    [ "nvsetarraypointer", "struct__generic___n___vector___ops.html#a3c0512d107841b9e059005bec1bcbaad", null ],
+    [ "nvspace", "struct__generic___n___vector___ops.html#a1f15aad26f3e8b8e830ef967a452b8f0", null ],
+    [ "nvwl2norm", "struct__generic___n___vector___ops.html#a6824c7c273e80295ca41aba9d62c8ef7", null ],
+    [ "nvwrmsnorm", "struct__generic___n___vector___ops.html#accd6ee2fbc5b8d298b4091995066f364", null ],
+    [ "nvwrmsnormmask", "struct__generic___n___vector___ops.html#acd67febf8ae36378410095577febe7f9", null ]
+];

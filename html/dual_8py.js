@@ -1,0 +1,25 @@
+var dual_8py =
+[
+    [ "register_func", "dual_8py.html#a6d362867134edb9cbb92830aa0ccd771", null ],
+    [ "restore_all", "dual_8py.html#aae326e928af38e914bd3d6078a4bd93c", null ],
+    [ "restore_func", "dual_8py.html#a6d0d48cf0eaf5f87244028f5609bde86", null ],
+    [ "_restore_dict", "dual_8py.html#acbad4eac1498e773fddd4a9e3cbd1338", null ],
+    [ "cholesky", "dual_8py.html#a3b5c704cfd474f022ec2f1d6888a6160", null ],
+    [ "det", "dual_8py.html#aa1a74f70af61360435eda6e26d62ab72", null ],
+    [ "eig", "dual_8py.html#aed17fac53c2ae1ce335d1f088a645e6e", null ],
+    [ "eigh", "dual_8py.html#a012f1536d108240e57e992e07c32e0c3", null ],
+    [ "eigvals", "dual_8py.html#a25d36b5466704ca940daf556ea980ad4", null ],
+    [ "eigvalsh", "dual_8py.html#a9cbc4586d0d22d908d0ef4b6c17d72e9", null ],
+    [ "fft", "dual_8py.html#a380d8b4b6fa38403a802fd9445adf462", null ],
+    [ "fft2", "dual_8py.html#a554ae078a529431b5405e11224d1b2ee", null ],
+    [ "fftn", "dual_8py.html#ad0503714eba997314384d5b0c9fe28a6", null ],
+    [ "ifft", "dual_8py.html#ad00a194513e62e63cb5253029047c076", null ],
+    [ "ifft2", "dual_8py.html#a07410ec7f753ac5c900d432bad33c707", null ],
+    [ "ifftn", "dual_8py.html#ab6add92bd8dac91afa48bd7f2e2310e9", null ],
+    [ "inv", "dual_8py.html#a7bce0f4eb9b673e284663cd25776a19b", null ],
+    [ "lstsq", "dual_8py.html#a334df8f24965cfb273e4a655ba0fc0ce", null ],
+    [ "norm", "dual_8py.html#a00d8dd5a0d95d6f61f3a71ffc043a41b", null ],
+    [ "pinv", "dual_8py.html#a9745ae6a6ddf01072d6b58bd5f3198db", null ],
+    [ "solve", "dual_8py.html#a158fa40fbf115599ce65211ba524c75b", null ],
+    [ "svd", "dual_8py.html#a36c1d23ab28dd48e1d13341ed8c31434", null ]
+];

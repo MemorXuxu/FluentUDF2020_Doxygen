@@ -1,0 +1,28 @@
+var class_animation_frame_record =
+[
+    [ "AnimationFrameRecord", "class_animation_frame_record.html#a829a6e44a62af0afc4dd9d5348fcca68", null ],
+    [ "AnimationFrameRecord", "class_animation_frame_record.html#ae99e66ed97412b180ab0089e09b7b839", null ],
+    [ "~AnimationFrameRecord", "class_animation_frame_record.html#ad1ea6f4f68b63f3de259a3531fd1e219", null ],
+    [ "ConvertStorageTo", "class_animation_frame_record.html#aee5626ed9cfb09ebb31cdfc27484d835", null ],
+    [ "DeleteFrame", "class_animation_frame_record.html#a1ee13808dd2b7f9e1296ac5ca84344bf", null ],
+    [ "FrameNumber", "class_animation_frame_record.html#a1e64541b5a7bc3976012c2931f0265ae", null ],
+    [ "getPlotFrame", "class_animation_frame_record.html#a456c21a0915676ffe9e5dfca70fd15f4", null ],
+    [ "grabPlotFrame", "class_animation_frame_record.html#ac930e36b2ab7efd02b6ba830c963aace", null ],
+    [ "LoadFrame", "class_animation_frame_record.html#ad1ee3b8424bff833f9a0b1b5ec0896e0", null ],
+    [ "LoadTo", "class_animation_frame_record.html#a072324e557ceed28c2bdb658bab2680f", null ],
+    [ "Location", "class_animation_frame_record.html#a8a32650d175503537c843274c7fe7d3b", null ],
+    [ "OrigWindowID", "class_animation_frame_record.html#af2e3a76ea413bfb61c802384a21acd19", null ],
+    [ "SetFrame", "class_animation_frame_record.html#a375bc7749971844b02fc417ad7efdd0f", null ],
+    [ "SetLocation", "class_animation_frame_record.html#ac86e9bccd95c9b0b106654f182bb9979", null ],
+    [ "setPlotFrame", "class_animation_frame_record.html#a4e6097355c47f1208f500f5a1df5b50d", null ],
+    [ "SetStorageType", "class_animation_frame_record.html#a4445c8ec9b73e9e1902efb2b90a63ddb", null ],
+    [ "SetWindowID", "class_animation_frame_record.html#a27125a08799b44865ed97f822fd5f110", null ],
+    [ "StorageType", "class_animation_frame_record.html#a11066ba3b701fcc1babf579d7c79d3d9", null ],
+    [ "StoreSegmentFrame", "class_animation_frame_record.html#a587e4954020002a0e4dd5bb558327f8c", null ],
+    [ "StoreWindowFrame", "class_animation_frame_record.html#a2ac191ddd5a1c33e2deb6ea2c222c55f", null ],
+    [ "operator<<", "class_animation_frame_record.html#a0cd0556bb9469ac34e1744aa58aac0a0", null ],
+    [ "operator>>", "class_animation_frame_record.html#aaa2bf2a66b5ab99f981b2335c5b92b93", null ],
+    [ "frame_number", "class_animation_frame_record.html#a0b49557e01665bf5143bcd096df8159d", null ],
+    [ "orig_window_id", "class_animation_frame_record.html#ab79a860e7b87af67923ca57ac0c02f68", null ],
+    [ "storage_type", "class_animation_frame_record.html#a5b5ba8afbb182f521914022b124a18d9", null ]
+];

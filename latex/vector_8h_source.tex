@@ -1,0 +1,191 @@
+\doxysection{vector.\+h}
+\hypertarget{vector_8h_source}{}\label{vector_8h_source}\index{fluent20.1.0/tgrid/src/vector.h@{fluent20.1.0/tgrid/src/vector.h}}
+\mbox{\hyperlink{vector_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Vector\ math\ include\ file\ containing\ vector\ macros\ and\ vector\ function\ types.}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ Vector\_h}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ Vector\_h}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{environ_8h}{environ.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{/*\ changes:}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ added\ NV\_LIST,\ NV\_REF,\ NV\_MAPV,\ NV\_MAPVV,\ NDMAPCROSS,\ NV\_NORM,}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ \ \ ND\_EQ,\ NV\_EQ,\ N3D\_*,\ N3V\_*}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ modified\ NV\_VEC\ by\ putting\ parens\ around\ argument}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ modified\ NV\_CROSS\ args\ to\ take\ EQ\ operator}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ Underscore\ in\ macro\ names\ indicates\ lower\ precedence\ operator}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ renamed\ NV\_VVS\ to\ NV\_VV\_S}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ added\ NV\_V\_VS,\ NV\_V\_VS\_VS}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ renamed\ NV\_VSVS\ to\ NV\_VS\_VS}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ ND\_ND\ 3}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ ND\_VEC(x,y,z)x,y,z}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ NV\_LIST(a)(a)[0],(a)[1],(a)[2]}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ NV\_REF(a)\&((a)[0]),\&((a)[1]),\&((a)[2])}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ N3V\_LIST\ NV\_LIST}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ N3V\_VEC\ NV\_VEC}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ NV\_VEC(a)(a)[ND\_ND]}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{/*\ NV\_S\ (a,\ =,\ 2)\ */}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ NV\_S(a,EQ,s)ND\_VEC((a)[0]EQ(s),(a)[1]EQ(s),(a)[2]EQ(s))}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ ND\_S(a0,a1,a2,EQ,s)ND\_VEC((a0)EQ(s),(a1)EQ(s),(a2)EQ(s))}}
+\DoxyCodeLine{00038\ \textcolor{comment}{/*\ NV\_V\ (a,\ =,\ x)\ */}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ NV\_V(a,EQ,x)ND\_VEC((a)[0]EQ(x)[0],(a)[1]EQ(x)[1],(a)[2]EQ(x)[2])}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ ND\_V(a0,a1,a2,EQ,x0,x1,x2)ND\_VEC((a0)EQ(x0),(a1)EQ(x1),(a2)EQ(x2))}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ NVD\_V(a,EQ,x0,x1,x2)ND\_V((a)[0],(a)[1],(a)[2],EQ,x0,x1,x2)}}
+\DoxyCodeLine{00042\ \textcolor{comment}{/*\ NV\_VS\ (a,\ =,\ x,/,2)\ */}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ NV\_VS(a,EQ,x,S,s)ND\_VEC((a)[0]EQ(x)[0]S(s),(a)[1]EQ(x)[1]S(s),(a)[2]EQ(x)[2]S(s))}}
+\DoxyCodeLine{00044\ \textcolor{comment}{/*\ NV\_VV\ (a,\ =,\ x,+,y)\ */}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ NV\_VV(a,EQ,x,V,y)ND\_VEC((a)[0]EQ(x)[0]V(y)[0],(a)[1]EQ(x)[1]V(y)[1],(a)[2]EQ(x)[2]V(y)[2])}}
+\DoxyCodeLine{00046\ \textcolor{comment}{/*\ NV\_VV\_S\ (a,\ =,\ (x,+,y),\ /,\ 2)\ */}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ NV\_VV\_S(a,EQ,x,V,y,S,s)ND\_VEC((a)[0]EQ((x)[0]V(y)[0])S(s),(a)[1]EQ((x)[1]V(y)[1])S(s),(a)[2]EQ((x)[2]V(y)[2])S(s))}}
+\DoxyCodeLine{00048\ \textcolor{comment}{/*\ NV\_V\_VS\ (a,\ =,\ x,\ +,\ (y,\ *,\ 0.5))\ */}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ NV\_V\_VS(a,EQ,x,V,y,S,s)ND\_VEC((a)[0]EQ(x)[0]V((y)[0]S(s)),(a)[1]EQ(x)[1]V((y)[1]S(s)),(a)[2]EQ(x)[2]V((y)[2]S(s)))}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{comment}{/*\ NV\_V\_VS\_VS\ (a,\ =,\ x,\ +,\ (y,\ *,\ 0.5),\ +,\ (z,\ *,\ 0.5))\ */}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ NV\_V\_VS\_VS(a,EQ,x,V1,y,S1,s1,V2,z,S2,s2)ND\_VEC((a)[0]EQ((x)[0]V1((y)[0]S1(s1))V2((z)[0]S2(s2))),(a)[1]EQ((x)[1]V1((y)[1]S1(s1))V2((z)[1]S2(s2))),(a)[2]EQ((x)[2]V1((y)[2]S1(s1))V2((z)[2]S2(s2))))}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{/*\ NV\_VS\_VS\ (a,\ =,\ ((x,*,s1),\ +,\ (y,*,(1-\/s2))))\ */}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ NV\_VS\_VS(a,EQ,x,S1,s1,V,y,S2,s2)ND\_VEC((a)[0]EQ(((x)[0]S1(s1))V((y)[0]S2(s2))),(a)[1]EQ(((x)[1]S1(s1))V((y)[1]S2(s2))),(a)[2]EQ(((x)[2]S1(s1))V((y)[2]S2(s2))))}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{/*\ map\ function\ f\ to\ vector\ args.\ */}}
+\DoxyCodeLine{00058\ \textcolor{comment}{/*\ so\ that\ macros\ can\ be\ used\ for\ f,\ cannot\ use\ (f)\ in\ definition.\ */}}
+\DoxyCodeLine{00059\ \textcolor{comment}{/*\ NV\_MAPV\ (a,\ =,\ (float),\ x)\ */}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ NV\_MAPV(a,EQ,f,x)ND\_VEC((a)[0]EQ\ f((x)[0]),(a)[1]EQ\ f((x)[1]),(a)[2]EQ\ f((x)[2]))}}
+\DoxyCodeLine{00061\ \textcolor{comment}{/*\ NV\_MAPVV\ (a,\ =,\ MAX,\ x,\ y)\ */}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ NV\_MAPVV(a,EQ,f,x,y)ND\_VEC((a)[0]EQ\ f((x)[0],(y)[0]),(a)[1]EQ\ f((x)[1],(y)[1]),(a)[2]EQ\ f((x)[2],(y)[2]))}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ ND\_D(a0,a1,a2,EQ,x0,x1,x2)ND\_VEC((a0)EQ(x0),(a1)EQ(x1),(a2)EQ(x2))}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ ND\_OP(OP,x,y,z)((x)OP(y)OP(z))}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ NV\_OP(op,x)ND\_OP(op,(x)[0],(x)[1],(x)[2])}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ ND\_MAP\ ND\_D}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ ND\_SET(x0,x1,x2,y0,y1,y2)ND\_V(x0,x1,x2,=,y0,y1,y2)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ ND\_SUM(x0,x1,x2)ND\_OP(+,x0,x1,x2)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ NV\_SUM(x)NV\_OP(+,x)}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ ND\_DOT(x0,x1,x2,y0,y1,y2)ND\_OP(+,(x0)*(y0),(x1)*(y1),(x2)*(y2))}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ NV\_DOT(x,y)ND\_OP(+,(x)[0]*(y)[0],(x)[1]*(y)[1],(x)[2]*(y)[2])}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ NVD\_DOT(x,y0,y1,y2)ND\_OP(+,(x)[0]*(y0),(x)[1]*(y1),(x)[2]*(y2))}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ ND\_MAG2(x0,x1,x2)ND\_DOT(x0,x1,x2,x0,x1,x2)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ NV\_MAG2(x)NV\_DOT(x,x)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ ND\_MAG(x0,x1,x2)sqrt(ND\_MAG2(x0,x1,x2))}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ NV\_MAG(x)sqrt(NV\_MAG2(x))}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ NV\_TRIPLE(a,\ b,\ c)(((a)[0]*(b)[1]\ -\/\ (a)[1]*(b)[0])*(c)[2]\ +\ ((a)[2]*(b)[0]\ -\/\ (a)[0]*(b)[2])*(c)[1]\ +\ ((a)[1]*(b)[2]\ -\/\ (a)[2]*(b)[1])*(c)[0])}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ NV\_MAX(x)MAX3((x)[0],(x)[1],(x)[2])}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ NV\_MIN(x)MIN3((x)[0],(x)[1],(x)[2])}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{comment}{/*\ check\ vectors\ for\ equality\ within\ a\ tolerance\ */}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ ND\_EQ(x0,x1,tol)(POSDIFF(x0,x1)<=tol)}}
+\DoxyCodeLine{00092\ \textcolor{comment}{/*\ NV\_EQ:\ if\ (NV\_EQ(a,b,0.001))\ ...\ */}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ NV\_EQ(a,b,tol)ND\_OP(\&\&,ND\_EQ((a)[0],(b)[0],tol),ND\_EQ((a)[1],(b)[1],tol),ND\_EQ((a)[2],(b)[2],tol))}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ ND\_CROSS(x0,x1,y0,y1)(((x0)*(y1))-\/((y0)*(x1)))}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ ND\_CROSS\_X(x0,x1,x2,y0,y1,y2)ND\_CROSS(x1,x2,y1,y2)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ ND\_CROSS\_Y(x0,x1,x2,y0,y1,y2)ND\_CROSS(x2,x0,y2,y0)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ ND\_CROSS\_Z(x0,x1,x2,y0,y1,y2)ND\_CROSS(x0,x1,y0,y1)}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ NV\_CROSS\_X(x,y)ND\_CROSS\_X(x[0],x[1],x[2],y[0],y[1],y[2])}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ NV\_CROSS\_Y(x,y)ND\_CROSS\_Y(x[0],x[1],x[2],y[0],y[1],y[2])}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ NV\_CROSS\_Z(x,y)ND\_CROSS\_Z(x[0],x[1],x[2],y[0],y[1],y[2])}}
+\DoxyCodeLine{00103\ \textcolor{comment}{/*\ Warning:\ in\ NV\_CROSS\ a\ should\ not\ be\ aliased\ to\ x\ or\ y\ */}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ NV\_CROSS(a,EQ,x,y)NVD\_V(a,EQ,NV\_CROSS\_X(x,y),NV\_CROSS\_Y(x,y),NV\_CROSS\_Z(x,y))}}
+\DoxyCodeLine{00105\ \textcolor{comment}{/*\ Scalar\ triple\ product\ of\ vectors\ */}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ NV\_S\_T\_P(x,y,z)(x[0]*NV\_CROSS\_X(y,z)+x[1]*NV\_CROSS\_Y(y,z)+x[2]*NV\_CROSS\_Z(y,z))}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{comment}{/*\ The\ N3D,\ N3V\ macros\ are\ used\ when\ the\ rhs\ vector\ is\ always\ 3D}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ \ \ and\ the\ lhs\ is\ either\ 2D\ or\ 3D.\ \ Generally\ used\ for\ graphics.\ */}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ N3V\_S\ NV\_S}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ N3D\_S\ NV\_V}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ N3V\_V\ NV\_V}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ N3D\_V\ ND\_V}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ N3V\_VV\ NV\_VV}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ N3VD\_V\ NVD\_V}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ N3D\_VEC\ ND\_VEC}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ N3D\_DOT\ ND\_DOT}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ N3D\_CROSS\_X\ ND\_CROSS\_X}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ N3D\_CROSS\_Y\ ND\_CROSS\_Y}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ N3D\_CROSS\_Z\ ND\_CROSS\_Z}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ N3V\_CROSS\_X\ NV\_CROSS\_X}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ N3V\_CROSS\_Y\ NV\_CROSS\_Y}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ N3V\_CROSS\_Z\ NV\_CROSS\_Z}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#\ define\ N3V\_CROSS(a,x,y)NVD\_V(a,=,N3V\_CROSS\_X(x,y),N3V\_CROSS\_Y(x,y),N3V\_CROSS\_Z(x,y))}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{comment}{/*\ distance\ etc\ */}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ NV\_DST2(x1,x2)ND\_OP(+,SQR((x2)[0]-\/(x1)[0]),SQR((x2)[1]-\/(x1)[1]),SQR((x2)[2]-\/(x1)[2]))}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ NV\_DST(x1,x2)sqrt(NV\_DST2(x1,x2))}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{comment}{/*2d\ distances*/}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ NV\_DST2\_2D(x1,x2)\ (SQR((x2)[0]-\/(x1)[0])\ +\ SQR((x2)[1]-\/(x1)[1]))}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ NV\_DST\_2D(x1,x2)sqrt(NV\_DST2\_2D(x1,x2))}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{comment}{/*\ macros\ to\ computed\ "{}rotated"{}\ components\ of\ a\ vector\ */}}
+\DoxyCodeLine{00140\ \textcolor{comment}{/*\ ROTP\_\{XYZ\}\ compute\ components\ of\ the\ product\ of\ matrix\ r\ with\ vector\ [x\ y\ z]}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ \ \ while\ ROTN\_\{XYZ\}\ those\ of\ the\ transpose\ of\ r\ and\ vector\ [x\ y\ z]\ */}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ ROTP\_X(x,y,z,r)ND\_DOT(x,y,z,\ r[0][0],r[0][1],r[0][2])}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ ROTN\_X(x,y,z,r)ND\_DOT(x,y,z,\ r[0][0],r[1][0],r[2][0])}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ ROTP\_Y(x,y,z,r)ND\_DOT(x,y,z,\ r[1][0],r[1][1],r[1][2])}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ ROTN\_Y(x,y,z,r)ND\_DOT(x,y,z,\ r[0][1],r[1][1],r[2][1])}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ ROTP\_Z(x,y,z,r)ND\_DOT(x,y,z,\ r[2][0],r[2][1],r[2][2])}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ ROTN\_Z(x,y,z,r)ND\_DOT(x,y,z,\ r[0][2],r[1][2],r[2][2])}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ NV\_ROTP\_X(x,r)NV\_DOT(x,\ r[0])}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ NV\_ROTN\_X(x,r)NVD\_DOT(x,\ r[0][0],r[1][0],r[2][0])}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ NV\_ROTP\_Y(x,r)NV\_DOT(x,\ r[1])}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ NV\_ROTN\_Y(x,r)NVD\_DOT(x,\ r[0][1],r[1][1],r[2][1])}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ NV\_ROTP\_Z(x,r)NV\_DOT(x,\ r[2])}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ NV\_ROTN\_Z(x,r)NVD\_DOT(x,\ r[0][2],r[1][2],r[2][2])}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#define\ NV\_SWAP(type,\ a,\ b)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \{type\ NV\_VEC(\_tmpSWAP);\ NV\_V(\_tmpSWAP,\ =,\ a);\ NV\_V(a,\ =,\ b);\ NV\_V(b,\ =,\ \_tmpSWAP);\}}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ NV\_ROTN\_V(y,op,x,r)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ \ \ ND\_MAP((y)[0],(y)[1],(y)[2],op,NV\_ROTN\_X(x,r),NV\_ROTN\_Y(x,r),NV\_ROTN\_Z(x,r))}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ NV\_ROTP\_V(y,op,x,r)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ \ \ ND\_MAP((y)[0],(y)[1],(y)[2],op,NV\_ROTP\_X(x,r),NV\_ROTP\_Y(x,r),NV\_ROTP\_Z(x,r))}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{comment}{/*\ Function\ Prototypes\ */}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00168\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00169\ \{}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{vector_8h_a8ae34eba86abc10dddff2e91785968dc}{\_NV\_Intersection}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{vector_8h_a805f1abf95663fb6b7e742a896bb9da9}{\_NV\_Distance\_To\_Line\_SQ}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{vector_8h_a6037f3db1ca282b5487550b612efbc20}{\_NV\_Line\_Intersects\_Polygon}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *[],}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00177\ \}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ Vector\_h\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ }
+
+\end{DoxyCode}

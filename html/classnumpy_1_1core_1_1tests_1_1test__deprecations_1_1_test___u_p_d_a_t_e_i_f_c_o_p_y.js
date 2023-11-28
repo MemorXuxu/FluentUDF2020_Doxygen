@@ -1,0 +1,4 @@
+var classnumpy_1_1core_1_1tests_1_1test__deprecations_1_1_test___u_p_d_a_t_e_i_f_c_o_p_y =
+[
+    [ "test_npy_updateifcopy_deprecation", "classnumpy_1_1core_1_1tests_1_1test__deprecations_1_1_test___u_p_d_a_t_e_i_f_c_o_p_y.html#aa68cdc8ed23536ec3fd4400f9f136894", null ]
+];

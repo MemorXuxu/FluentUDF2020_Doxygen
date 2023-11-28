@@ -1,0 +1,178 @@
+\doxysection{powercrust.\+h}
+\hypertarget{powercrust_8h_source}{}\label{powercrust_8h_source}\index{fluent20.1.0/tgrid/src/powercrust.h@{fluent20.1.0/tgrid/src/powercrust.h}}
+\mbox{\hyperlink{powercrust_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*\ Power\ Crust\ related\ routines}}
+\DoxyCodeLine{00006\ \textcolor{comment}{*\ \ Start\ Date:\ Aug\ 2011}}
+\DoxyCodeLine{00007\ \textcolor{comment}{*\ \ Author:\ Luigi\ Giaccari\ (luigi.giaccari@ansys.com)}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifndef\ \_POWERCRUST\_H\_}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ \_POWERCRUST\_H\_}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tgrid_2src_2entity_8h}{entity.h}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tgbuf_8h}{tgbuf.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{heap_8h}{heap.h}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{timer_8h}{timer.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dy__search_8h}{dy\_search.h}}"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dy__watson_8h}{dy\_watson.h}}"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dy__triang_8h}{dy\_triang.h}}"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{project_8h}{project.h}}"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{parameters_8h}{parameters.h}}"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{size__fn_8h}{size\_fn.h}}"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{gprops_8h}{gprops.h}}"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{util_8h}{util.h}}"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{thread__manager_8h}{thread\_manager.h}}"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{hash_8h}{hash.h}}"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rmath_8h}{rmath.h}}"{}}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{/*POWERCRUST\ DEFINES*/}}
+\DoxyCodeLine{00033\ \textcolor{comment}{/*\#define\ PC\_PRINT\_STATS*/}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{/*for\ the\ nodes\ position\ inside\ triangle*/}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{/*STRUCTS*/}}
+\DoxyCodeLine{00039\ \textcolor{comment}{/*structure\ for\ 2\ neighbors\ tetra,\ the\ order\ counts!*/}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct___p_queue_node}{\_PQueueNode}}}
+\DoxyCodeLine{00041\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{struct__tg__cell__struct}{Cell}}*\ \mbox{\hyperlink{struct___p_queue_node_a8bbec717a5226350d2f9d31ff6af8435}{c1}};}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{struct__tg__cell__struct}{Cell}}*\ \mbox{\hyperlink{struct___p_queue_node_ae21eb4239eed126ca3bba8399763049e}{c2}};}
+\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct___p_queue_node_a5f1427decf1d60d4159efdc2c451b4b7}{mark\_factor}};}
+\DoxyCodeLine{00045\ \}\ \mbox{\hyperlink{powercrust_8h_aa314c21203854b8c092fede89fa1c1fd}{PQueueNode}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{powercrust_8h_af81c15d8c8d3797ef0ef5c024f60f39c}{\_PC\_Ball\_Type}}}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{powercrust_8h_af81c15d8c8d3797ef0ef5c024f60f39ca7d20a33cd3e3b8e329880584849e0c79}{PC\_BALL\_TYPE\_BACKWARD}},}
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{powercrust_8h_af81c15d8c8d3797ef0ef5c024f60f39ca2d0651a0e288f77f82d976a0f11b6e95}{PC\_BALL\_TYPE\_FORWARD}},}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{powercrust_8h_af81c15d8c8d3797ef0ef5c024f60f39caac1180452c7cac49c40dcf8d172ebb05}{PC\_BALL\_TYPE\_BAFFLE}},}
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{powercrust_8h_af81c15d8c8d3797ef0ef5c024f60f39ca0a7503b922c354d87cb044256343456d}{PC\_BALL\_TYPE\_UNKNOW}},}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{powercrust_8h_af81c15d8c8d3797ef0ef5c024f60f39cadb64a49e241df29a842dbfc441f4b35c}{PC\_BALL\_TYPE\_UNCHECKED}}}
+\DoxyCodeLine{00054\ \}\ \mbox{\hyperlink{powercrust_8h_aae14bfdce652c1679ff969a0c30aae0a}{PC\_Ball\_Type}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{/*info\ about\ the\ powerball*/}}
+\DoxyCodeLine{00057\ \textcolor{comment}{/*powerballs\ are\ how\ many\ as\ tetraedrons,\ it\ would\ better\ to\ compress\ this\ struct\ as\ much\ as\ possible*/}}
+\DoxyCodeLine{00058\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_power_ball___data}{PowerBall\_Data}}}
+\DoxyCodeLine{00059\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_power_ball___data_ae6e7fa902c6476f318d8b977fc76e982}{tgf2}};\textcolor{comment}{/*squared\ tangency\ factor*/}}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_power_ball___data_aa335e98aa89050b35f6c4c67c4c783d2}{span}};\textcolor{comment}{/*maximum\ angle\ among\ neighbour\ facets*/}}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{powercrust_8h_aae14bfdce652c1679ff969a0c30aae0a}{PC\_Ball\_Type}}\ \mbox{\hyperlink{struct_power_ball___data_ad139b4540a77546573cc90855f046685}{type}};\textcolor{comment}{/*is\ the\ ball\ backward\ or\ forward\ */}}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_power_ball___data_ab7fe903c6943b0ee043f539a1fa5e0bb}{self}};\textcolor{comment}{/*for\ self\ proximity*/}}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{struct__tg__face__struct}{Face}}*\ \mbox{\hyperlink{struct_power_ball___data_a9d2b4463e97bee5b0f2e9fe6a6fbec6b}{f1}};}
+\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{struct__tg__face__struct}{Face}}*\ \mbox{\hyperlink{struct_power_ball___data_aedc5dcfbab453c20c31d747bb3098995}{f2}};}
+\DoxyCodeLine{00066\ \}\mbox{\hyperlink{struct_power_ball___data}{PowerBall\_Data}};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{comment}{/*macro\ to\ access\ powerball\ data*/}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ PC\_GET\_POWERBALL\_DATA(s)\ \&(SVAR(s,SV\_POWERBALL\_DATA,PowerBall\_Data))}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{/*structure\ for\ statistics*/}}
+\DoxyCodeLine{00072\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_p_c___statistics}{PC\_Statistics}}}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_af7d3bfd09dcc5b7254c90ddf0bcf0d4e}{projections}};}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_aed8197a9aeaff593a4e753734743b3ac}{kd\_tree\_proj\_query}};}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_a84aa5a998717002b3748b111ef334732}{analyzed\_intersections}};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_a684ae67356560e86192710a1325a117b}{added\_nodes}};\textcolor{comment}{/*nodes\ added\ to\ DT*/}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_a90435086a46ac583dc114747e0cd626f}{refused\_nodes}};\textcolor{comment}{/*nodes\ refused\ by\ DT*/}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_a94d9df12ba1c0ca7aee5be778275b167}{refining\_nodes}};\textcolor{comment}{/*nodes\ used\ for\ refining*/}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_a655bacbc08a565e9ea2fd570c88a152f}{marked\_tetra}};\textcolor{comment}{/*still\ unused*/}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_ac5d40951d52d87dad69e3d0aa23b634b}{tot\_tetra}};}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_a9a368243cf5a713f6489ff3edbb938ae}{points\_on\_surface}};\textcolor{comment}{/*still\ unused*/}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_a68d60fa19087150aa9d8a7ae59ba011b}{triangles\_on\_surface}};\textcolor{comment}{/*still\ unused*/}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_c___statistics_a1201707cdaeadbe4e75a13c657cc02f5}{missed\_projections}};}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_p_c___statistics_aacbf3fe48d644fb9f637d9c84256292f}{dt\_avg\_orient\_calls}};}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_p_c___statistics_ac069c88622803982499e55b1d1c4a924}{dt\_avg\_insphere\_calls}};}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_p_c___statistics_acda0263c3a94567aa863435c4ea82839}{dt\_time}};}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_p_c___statistics_a2cded90a609a07d1a43dfc2ff73964e2}{refine\_time}};}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_p_c___statistics_a71fb55642ccdfb680b4b91cd568888b3}{surface\_time}};}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_p_c___statistics_abc276e47b85df9dd59f248e663b3b971}{total\_time}};}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_p_c___statistics_a23e9bf8fc63dbc5ffd88657550599ae0}{mean\_ifact}};\textcolor{comment}{/*medium\ ifactor\ used\ during\ the\ tetra\ marking*/}}
+\DoxyCodeLine{00092\ \}\mbox{\hyperlink{struct_p_c___statistics}{PC\_Statistics}};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{comment}{/*structure\ for\ behaviors*/}}
+\DoxyCodeLine{00096\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_p_c___behaviours}{PC\_Behaviours}}}
+\DoxyCodeLine{00097\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_aadd0563067c601e0f30075d3b262854c}{pc\_mesh\_feature\_edges}};\textcolor{comment}{/*enables\ the\ mesh\ of\ features*/}}
+\DoxyCodeLine{00099\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_aec42a1c645fcb4bd1fed96382fbdc5ea}{refine\_only\_good\_power\_balls}};\textcolor{comment}{/*only\ refine\ powerballs\ that\ are\ proximity\ indicators*/}}
+\DoxyCodeLine{00100\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_a508b476b175c8a68368acde3e9ba6156}{consider\_forward\_proximity}};}
+\DoxyCodeLine{00101\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_a0d6905991d6f652ac179519318b38f98}{consider\_backward\_proximity}};}
+\DoxyCodeLine{00102\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_a38f72edb608153ee7bc5407ace05d8ff}{use\_kd\_tree}};}
+\DoxyCodeLine{00103\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_a7fd3a6d044202fb8e721afb528e6d15c}{ignore\_normals}};}
+\DoxyCodeLine{00104\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_a3c6775de043832a60f05fb091095bf1a}{decimate\_output}};}
+\DoxyCodeLine{00105\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_a51c60418a9b01e4f5f71956c5ad836a2}{decimate\_heap}};}
+\DoxyCodeLine{00106\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_acf61e2a6cf17f8d98006225a552140ac}{ignore\_self}};}
+\DoxyCodeLine{00107\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_ad6d4aca1d8c706e2a307c8e1e968b815}{fit\_powerballs}};}
+\DoxyCodeLine{00108\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_a3c4931767312e7fde3e4a95c11b6accb}{discard\_wing\_tail}};}
+\DoxyCodeLine{00109\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___behaviours_a353febed7efebaab5f092cb9da68e361}{use\_face\_pair\_map}};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \}\mbox{\hyperlink{struct_p_c___behaviours}{PC\_Behaviours}};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{comment}{/*to\ track\ events*/}}
+\DoxyCodeLine{00115\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_p_c___switches}{PC\_Switches}}\{}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{struct_p_c___switches_a1f45f3f9ef33732913a23e3784289f3c}{execution\_ended}};\textcolor{comment}{/*set\ as\ false\ in\ the\ constructor\ and\ as\ true\ in\ the\ destructor*/}}
+\DoxyCodeLine{00118\ \}\mbox{\hyperlink{struct_p_c___switches}{PC\_Switches}};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{comment}{/*Parameters*/}}
+\DoxyCodeLine{00121\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_p_c___parameters}{PC\_Parameters}}\{}
+\DoxyCodeLine{00122\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_a55db13c0ec2f00749f59b51b3c1a812c}{tgf}};\textcolor{comment}{/*tangency\ factor*/}}
+\DoxyCodeLine{00123\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_ae6e7fa902c6476f318d8b977fc76e982}{tgf2}};\textcolor{comment}{/*tangency\ factor*/}}
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_ab2495c70802619365fbbce5303d9b296}{max\_powerball\_radius}};}
+\DoxyCodeLine{00125\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_a5cd47b4b608c952d6af32b1d0b91687a}{max\_powerball\_radius2}};}
+\DoxyCodeLine{00126\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_a79e0b8bd65bd0958922969501f1b7ba5}{min\_powerball\_radius}};}
+\DoxyCodeLine{00127\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_afad032573df12f9bed1fe49fa83fba8e}{min\_powerball\_radius2}};}
+\DoxyCodeLine{00128\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_ab645d6ffe799fe11cdd0373a8ed00a13}{max\_thick}};}
+\DoxyCodeLine{00129\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_a735413d10a0e2950a0ff8f50731a8d65}{min\_thick}};}
+\DoxyCodeLine{00130\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_a5ac8039578d33d0669a11bda06ce9e74}{proximity\_span}};}
+\DoxyCodeLine{00131\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_a110c0b806e91d94e144feb09157afbaa}{corner\_span}};}
+\DoxyCodeLine{00132\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_a6063e0dc91b138b1467006bb102749b1}{projection\_cone\_angle}};}
+\DoxyCodeLine{00133\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_aa85e8466e98a48e9cc80286f446af0aa}{heap\_decimate\_effective\_radius2}};}
+\DoxyCodeLine{00134\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_abcb3974d3da30e7844178aff2eac71b7}{heap\_decimate\_compare\_radius2}};}
+\DoxyCodeLine{00135\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_a547b3c4848f9e28e3d844bc0ce298a2c}{decimate\_effective\_radius2}};}
+\DoxyCodeLine{00136\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_p_c___parameters_aab35e6a6e3bf6845def638040ff446bf}{decimate\_compare\_radius2}};}
+\DoxyCodeLine{00137\ \}\mbox{\hyperlink{struct_p_c___parameters}{PC\_Parameters}};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_face_pair_map_data}{FacePairMapData}}}
+\DoxyCodeLine{00140\ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \mbox{\hyperlink{struct__tg__face__struct}{Face}}*\ \mbox{\hyperlink{struct_face_pair_map_data_a9d2b4463e97bee5b0f2e9fe6a6fbec6b}{f1}};}
+\DoxyCodeLine{00142\ \ \ \ \ \mbox{\hyperlink{struct__tg__face__struct}{Face}}*\ \mbox{\hyperlink{struct_face_pair_map_data_aedc5dcfbab453c20c31d747bb3098995}{f2}};}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_face_pair_map_data_a0877761f00ee2460fe16820f9d52daf1}{frequency}};}
+\DoxyCodeLine{00144\ \}\mbox{\hyperlink{struct_face_pair_map_data}{FacePairMapData}};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00147\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00148\ \{}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{/*Insert\ here\ global\ functions*/}}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{powercrust_8h_a1b12d4893929e6ffffbd70f927e4bd7f}{\_TG\_PC\_Compute\_Face\_Proximity}}(\mbox{\hyperlink{structdomain__struct}{Domain}}*domain,\mbox{\hyperlink{structtg__size__function}{TGSizeFunc}}*sf);}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{powercrust_8h_a6a9ccae2f0f98dc07d9ff2a07d965189}{\_TG\_PC\_Refine}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ minr,\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ tgf);}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_a5e3bf2ed62dec72379dfbeeca64e9177}{\_TG\_PC\_InitStats}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_afd80088f374fa7caf3dbb856c337daa3}{\_TG\_PC\_PrintStats}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_a032d67288b952e3704cdd783de9c0d5c}{\_TG\_PC\_Init}}(\mbox{\hyperlink{structdomain__struct}{Domain}}*,\mbox{\hyperlink{structcons__cell}{List}}*);}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_a66fe03f30070b770eceaa7df0d94d2de}{\_TG\_PC\_Free}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_a5a77d3dee2d8f1f5ab811bf8595f3b1c}{\_TG\_PC\_Proximity}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ min\_prox,\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ max\_prox);}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_a9448c0b82237e4100edda26add89f20f}{\_TG\_PC\_Refine\_Bgrid\_SF}}(\mbox{\hyperlink{structtg__size__function}{TGSizeFunc}}\ *sf);}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{comment}{/*extern\ TG\_EXPORT\ debug*/}}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_a6a9e8cc3604f1cc01f5578160f52494e}{pc\_debug\_powerball}}(\mbox{\hyperlink{struct__tg__cell__struct}{Cell}}*c);}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_a9e69a51a489796038050dbc3f1c09803}{pc\_debug\_point\_face\_map}}(\mbox{\hyperlink{structdomain__struct}{Domain}}*\ domain,\textcolor{keywordtype}{char}*\ filename);}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{powercrust_8h_a3d35c8e394d688354e3ea6b57e32fa78}{pc\_debug\_point\_in\_ball}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}*\mbox{\hyperlink{structpoint}{point}},\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}*center,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ radius2);}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_a95881446d338c7a02bae92a0f7ed788a}{pc\_debug\_print\_powerball\_data}}(\mbox{\hyperlink{struct__tg__cell__struct}{Cell}}*\ c);}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{powercrust_8h_aa05a2429bb863a9762534f8532970d06}{pc\_debug\_print\_powerballs}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{powercrust_8h_a19b34e215fbb6945886417b4182b4244}{\_TG\_Distance\_Point\_Triangle}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}*\ p,\mbox{\hyperlink{struct__tg__face__struct}{Face}}*\ f,\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}*\ proj\_v);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00169\ \}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

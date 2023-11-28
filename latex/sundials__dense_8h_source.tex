@@ -1,0 +1,193 @@
+\doxysection{sundials\+\_\+dense.\+h}
+\hypertarget{sundials__dense_8h_source}{}\label{sundials__dense_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_dense.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_dense.h}}
+\mbox{\hyperlink{sundials__dense_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.8\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2010/12/01\ 22:17:18\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer:\ Radu\ Serban\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2006,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ This\ is\ the\ header\ file\ for\ a\ generic\ package\ of\ DENSE\ matrix}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ operations,\ based\ on\ the\ DlsMat\ type\ defined\ in\ sundials\_direct.h.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ There\ are\ two\ sets\ of\ dense\ solver\ routines\ listed\ in}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ this\ file:\ one\ set\ uses\ type\ DlsMat\ defined\ below\ and\ the}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ other\ set\ uses\ the\ type\ realtype\ **\ for\ dense\ matrix\ arguments.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ Routines\ that\ work\ with\ the\ type\ DlsMat\ begin\ with\ "{}Dense"{}.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ Routines\ that\ work\ with\ realtype**\ begin\ with\ "{}dense"{}.\ }}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ \_SUNDIALS\_DENSE\_H}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ \_SUNDIALS\_DENSE\_H}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__direct_8h}{sundials/sundials\_direct.h}}>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ Functions:\ DenseGETRF\ and\ DenseGETRS}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ DenseGETRF\ performs\ the\ LU\ factorization\ of\ the\ M\ by\ N\ dense}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ matrix\ A.\ This\ is\ done\ using\ standard\ Gaussian\ elimination}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ with\ partial\ (row)\ pivoting.\ Note\ that\ this\ applies\ only}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ to\ matrices\ with\ M\ >=\ N\ and\ full\ column\ rank.}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ A\ successful\ LU\ factorization\ leaves\ the\ matrix\ A\ and\ the}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ pivot\ array\ p\ with\ the\ following\ information:}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ (1)\ p[k]\ contains\ the\ row\ number\ of\ the\ pivot\ element\ chosen}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ \ \ \ \ at\ the\ beginning\ of\ elimination\ step\ k,\ k=0,\ 1,\ ...,\ N-\/1.}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ (2)\ If\ the\ unique\ LU\ factorization\ of\ A\ is\ given\ by\ PA\ =\ LU,}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ \ \ \ \ where\ P\ is\ a\ permutation\ matrix,\ L\ is\ a\ lower\ trapezoidal}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ \ \ \ \ matrix\ with\ all\ 1's\ on\ the\ diagonal,\ and\ U\ is\ an\ upper}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ \ \ \ \ triangular\ matrix,\ then\ the\ upper\ triangular\ part\ of\ A}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ \ \ \ \ (including\ its\ diagonal)\ contains\ U\ and\ the\ strictly\ lower}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ \ \ \ \ trapezoidal\ part\ of\ A\ contains\ the\ multipliers,\ I-\/L.}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ For\ square\ matrices\ (M=N),\ L\ is\ unit\ lower\ triangular.}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ DenseGETRF\ returns\ 0\ if\ successful.\ Otherwise\ it\ encountered}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ a\ zero\ diagonal\ element\ during\ the\ factorization.\ In\ this\ case}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ it\ returns\ the\ column\ index\ (numbered\ from\ one)\ at\ which}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ it\ encountered\ the\ zero.}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ DenseGETRS\ solves\ the\ N-\/dimensional\ system\ A\ x\ =\ b\ using}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ the\ LU\ factorization\ in\ A\ and\ the\ pivot\ information\ in\ p}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ computed\ in\ DenseGETRF.\ The\ solution\ x\ is\ returned\ in\ b.\ This}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ routine\ cannot\ fail\ if\ the\ corresponding\ call\ to\ DenseGETRF}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ did\ not\ fail.}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *\ DenseGETRS\ does\ NOT\ check\ for\ a\ square\ matrix!}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *\ DenseGETRF\ and\ DenseGETRS\ are\ simply\ wrappers\ around\ denseGETRF}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ and\ denseGETRS,\ respectively,\ which\ perform\ all\ the\ work\ by}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *\ directly\ accessing\ the\ data\ in\ the\ DlsMat\ A\ (i.e.\ the\ field\ cols)}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__dense_8h_ad9fa3b0c3202f38c6de5fd638f938612}{DenseGETRF}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *p);}
+\DoxyCodeLine{00077\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__dense_8h_a3eec8a5a01a73dd9f6af61b2221df155}{DenseGETRS}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *p,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *b);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__dense_8h_ac251001b77a7211f8e0a35c0e46c6f82}{denseGETRF}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *p);}
+\DoxyCodeLine{00080\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__dense_8h_a9ed5766b921d30b9b85e15b8f4665ae5}{denseGETRS}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *p,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *b);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *\ Functions\ :\ DensePOTRF\ and\ DensePOTRS}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ DensePOTRF\ computes\ the\ Cholesky\ factorization\ of\ a\ real\ symmetric}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ positive\ definite\ matrix\ A.}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ DensePOTRS\ solves\ a\ system\ of\ linear\ equations\ A*X\ =\ B\ with\ a\ }}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ symmetric\ positive\ definite\ matrix\ A\ using\ the\ Cholesky\ factorization}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ A\ =\ L*L**T\ computed\ by\ DensePOTRF.}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ DensePOTRF\ and\ DensePOTRS\ are\ simply\ wrappers\ around\ densePOTRF}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ and\ densePOTRS,\ respectively,\ which\ perform\ all\ the\ work\ by}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ directly\ accessing\ the\ data\ in\ the\ DlsMat\ A\ (i.e.\ the\ field\ cols)}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__dense_8h_a5fbc85fef32b032a9ee967e894e3314a}{DensePOTRF}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A);}
+\DoxyCodeLine{00101\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__dense_8h_a89c161f7c96f04a52c88547078b63a29}{DensePOTRS}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *b);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__dense_8h_af3fa93eaf3bb258968bf9effb59657e4}{densePOTRF}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ m);}
+\DoxyCodeLine{00104\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__dense_8h_a7dca9eb0258d8c863305cf5e8d0dfc3e}{densePOTRS}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ m,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *b);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *\ Functions\ :\ DenseGEQRF\ and\ DenseORMQR}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ DenseGEQRF\ computes\ a\ QR\ factorization\ of\ a\ real\ M-\/by-\/N\ matrix\ A:}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *\ A\ =\ Q\ *\ R\ (with\ M>=\ N).}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ DenseGEQRF\ requires\ a\ temporary\ work\ vector\ wrk\ of\ length\ M.}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ DenseORMQR\ computes\ the\ product\ w\ =\ Q\ *\ v\ where\ Q\ is\ a\ real\ }}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ orthogonal\ matrix\ defined\ as\ the\ product\ of\ k\ elementary\ reflectors}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ Q\ =\ H(1)\ H(2)\ .\ .\ .\ H(k)}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ as\ returned\ by\ DenseGEQRF.\ Q\ is\ an\ M-\/by-\/N\ matrix,\ v\ is\ a\ vector}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ of\ length\ N\ and\ w\ is\ a\ vector\ of\ length\ M\ (with\ M>=N).}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ DenseORMQR\ requires\ a\ temporary\ work\ vector\ wrk\ of\ length\ M.}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ DenseGEQRF\ and\ DenseORMQR\ are\ simply\ wrappers\ around\ denseGEQRF}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ and\ denseORMQR,\ respectively,\ which\ perform\ all\ the\ work\ by}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ directly\ accessing\ the\ data\ in\ the\ DlsMat\ A\ (i.e.\ the\ field\ cols)}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__dense_8h_a885dcf8b09f401f372bd90895fac6eb2}{DenseGEQRF}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *beta,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *wrk);}
+\DoxyCodeLine{00133\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__dense_8h_ab83991ea0e1fe3ee718a7a5e3ad894d2}{DenseORMQR}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *beta,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *vn,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *vm,\ }
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *wrk);}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__dense_8h_a28b70f4bf36403b00b277ff0d65fd5cd}{denseGEQRF}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *beta,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *v);}
+\DoxyCodeLine{00137\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__dense_8h_af3b10055e7d08522a1e6af2730f664ae}{denseORMQR}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *beta,}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *v,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *w,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *wrk);}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ Function\ :\ DenseCopy}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ DenseCopy\ copies\ the\ contents\ of\ the\ M-\/by-\/N\ matrix\ A\ into\ the}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ M-\/by-\/N\ matrix\ B.}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *\ DenseCopy\ is\ a\ wrapper\ around\ denseCopy\ which\ accesses\ the\ data}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ in\ the\ DlsMat\ A\ and\ B\ (i.e.\ the\ fields\ cols)}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__dense_8h_a12b68ae5b683e6422cb470e2fee5d52a}{DenseCopy}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A,\ \mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ B);}
+\DoxyCodeLine{00153\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__dense_8h_ad1d2bba9170be5e0a0ac1a5697f25037}{denseCopy}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **b,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ Function:\ DenseScale}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *\ DenseScale\ scales\ the\ elements\ of\ the\ M-\/by-\/N\ matrix\ A\ by\ the}}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ *\ constant\ c\ and\ stores\ the\ result\ back\ in\ A.}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ *\ DenseScale\ is\ a\ wrapper\ around\ denseScale\ which\ performs\ the\ actual}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ *\ scaling\ by\ accessing\ the\ data\ in\ the\ DlsMat\ A\ (i.e.\ the\ field}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ *\ cols).}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__dense_8h_a56d7d7b501924936404aac7602836aa5}{DenseScale}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A);}
+\DoxyCodeLine{00169\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__dense_8h_a2effa87b0f6cc0860a1db50882a7cffc}{denseScale}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ *\ Function:\ denseAddIdentity}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ *\ denseAddIdentity\ adds\ the\ identity\ matrix\ to\ the\ n-\/by-\/n\ matrix}}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ *\ stored\ in\ the\ realtype**\ arrays.}}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__dense_8h_a1a13aa6584f758ae7348d27f4fb816d6}{denseAddIdentity}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00184\ \}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

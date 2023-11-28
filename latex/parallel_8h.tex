@@ -1,0 +1,944 @@
+\doxysection{fluent20.1.0/tgrid/src/parallel.h File Reference}
+\hypertarget{parallel_8h}{}\label{parallel_8h}\index{fluent20.1.0/tgrid/src/parallel.h@{fluent20.1.0/tgrid/src/parallel.h}}
+{\ttfamily \#include "{}rstring.\+h"{}}\newline
+{\ttfamily \#include "{}tg\+\_\+list.\+h"{}}\newline
+{\ttfamily \#include "{}entity.\+h"{}}\newline
+{\ttfamily \#include "{}tg\+\_\+mpt.\+h"{}}\newline
+{\ttfamily \#include "{}neighbor.\+h"{}}\newline
+{\ttfamily \#include "{}prism\+\_\+smooth.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct__tg__partition}{\+\_\+tg\+\_\+partition}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a6abd7e0766ef20e393a6ce365fef73bb}{MAX\+\_\+\+COMM\+\_\+\+MSG\+\_\+\+SIZE}}~1024
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a416c82111e7f97ac8687c89f02eec18f}{TG\+\_\+\+GLOBAL\+\_\+\+COMM}}~0
+\item 
+\#define \mbox{\hyperlink{parallel_8h_adb0162ecac70811eb9740bb2649e77c7}{TG\+\_\+\+SUBCOMM}}~\mbox{\hyperlink{tg__mpt_8h_a72f448ad737fcaf59c29b5210636eb90}{tg\+\_\+comm}}
+\item 
+\#define \mbox{\hyperlink{parallel_8h_aee868c95969616d9de0920665cff72d6}{I\+\_\+\+AM\+\_\+\+ALONE\+\_\+P}}~(\mbox{\hyperlink{parallel_8h_adb0162ecac70811eb9740bb2649e77c7}{TG\+\_\+\+SUBCOMM}} == \mbox{\hyperlink{multiport_2src_2mport_8h_a350ff1a3fddee74a34e4efeef7ad0ef4}{MPT\+\_\+\+COMM\+\_\+\+SERIAL}})
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a65e02bb0e83e9fcf03adc956ca88268c}{I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+ZERO\+\_\+P}}~(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} == \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\+\_\+node\+\_\+zero}})
+\item 
+\#define \mbox{\hyperlink{parallel_8h_ae5e4eeeed79aa9a07b3f162b7298a1e5}{I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+SERIAL\+\_\+P}}~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a6684d3039663a08c5f6bd54e61ca35f0}{I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+SAME\+\_\+P}}(n)~(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} == (n))
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a6758b84449ac95dbc6eb4cfed428409a}{I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+MORE\+\_\+P}}(n)~(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} $>$ n)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a1d57da72773fe67fac6268de9c3d5505}{I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+LESS\+\_\+P}}(n)~(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} $<$ n)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_adc12254cf71a68883faec8df7e98a463}{I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+MASTER\+\_\+P}}~(\mbox{\hyperlink{parallel_8h_aee868c95969616d9de0920665cff72d6}{I\+\_\+\+AM\+\_\+\+ALONE\+\_\+P}} \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} \mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} == \mbox{\hyperlink{handlers_8h_afd4b1e0cd3ed34937cc02786dab67885}{node\+\_\+master}})
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a414fb180166787ecc280dd178e404710}{MESHING\+\_\+\+NODE\+\_\+P}}(cn)~    (\mbox{\hyperlink{parallel_8h_adb0162ecac70811eb9740bb2649e77c7}{TG\+\_\+\+SUBCOMM}} != \mbox{\hyperlink{multiport_2src_2mport_8h_a350ff1a3fddee74a34e4efeef7ad0ef4}{MPT\+\_\+\+COMM\+\_\+\+SERIAL}} \&\& !\mbox{\hyperlink{cxmacros_8h_a7d105718f0a66f4e6697821784333c1e}{NULLP}}(\mbox{\hyperlink{handlers_8h_a15d4ee0bc84bd56ee4cc6bf1fdb725b7}{tg\+\_\+subcomm}}) \&\& \mbox{\hyperlink{handlers_8h_a15d4ee0bc84bd56ee4cc6bf1fdb725b7}{tg\+\_\+subcomm}}\mbox{[}cn\mbox{]})
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a19f271d76e20424fefd5cf62e928459d}{I\+\_\+\+AM\+\_\+\+MESHING\+\_\+\+NODE\+\_\+P}}~\mbox{\hyperlink{parallel_8h_a414fb180166787ecc280dd178e404710}{MESHING\+\_\+\+NODE\+\_\+P}}(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}})
+\item 
+\#define \mbox{\hyperlink{parallel_8h_ac79068da5d7e805f474d33d66bfde170}{MULTIPLE\+\_\+\+COMPUTE\+\_\+\+NODE\+\_\+P}}~(\mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}} $>$ 1)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_ae7c0cf1afca8f1561667b31b2b1f040c}{compute\+\_\+node\+\_\+loop}}(cn)~    for (cn = \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\+\_\+node\+\_\+zero}}; cn $<$ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}}; ++cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a91c853fffcf02b224a1a1554d8241da9}{compute\+\_\+node\+\_\+loop\+\_\+not\+\_\+zero}}(cn)~    for (cn = \mbox{\hyperlink{tg__mpt_8h_ab8bcd6fe30da70cb2ac664aaa64c17b5}{tg\+\_\+node\+\_\+one}}; cn $<$ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}}; ++cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a08da10976175d90b1ca1acd723bb6112}{compute\+\_\+node\+\_\+loop\+\_\+not\+\_\+master}}(cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a408bdc26eb90973aa3d1523ec3c424c6}{compute\+\_\+node\+\_\+loop\+\_\+all}}(cn)~    for (cn = \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\+\_\+node\+\_\+zero}}; cn $<$ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}}; ++cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_af28d317c9ee1a3f06c5489bb77e9d700}{compute\+\_\+node\+\_\+loop\+\_\+all\+\_\+not\+\_\+zero}}(cn)~    for (cn = \mbox{\hyperlink{tg__mpt_8h_ab8bcd6fe30da70cb2ac664aaa64c17b5}{tg\+\_\+node\+\_\+one}}; cn $<$ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}}; ++cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a709efa76d36744ca556d78cbeec54470}{compute\+\_\+node\+\_\+loop\+\_\+all\+\_\+not\+\_\+master}}(cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a78eccee88527faa6206971bdcf29de92}{meshing\+\_\+node\+\_\+loop}}(cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a40e5a10567cba53edf5a106800129c67}{meshing\+\_\+node\+\_\+loop\+\_\+higher}}(cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_abaf12f274e20a0e2417c250d1151e8e4}{meshing\+\_\+node\+\_\+loop\+\_\+lower}}(cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a14b79bdc770dc0ddb3d241c07fdd1a22}{reversed\+\_\+meshing\+\_\+node\+\_\+loop}}(cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a7a92a7d5cfeea6bd19d05b4575f30eb0}{meshing\+\_\+node\+\_\+loop\+\_\+not\+\_\+zero}}(cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a95e6b1f4bc86bb06317b8b77ee565b3b}{meshing\+\_\+node\+\_\+loop\+\_\+not\+\_\+master}}(cn)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a9acc849039db779b620ef97720a4202b}{PRG\+\_\+\+SET\+\_\+\+SUBCOMM}}(s)~\mbox{\hyperlink{handlers_8h_a74537f885b9dc4e41d8c2f5a0389ef52}{\+\_\+\+TG\+\_\+\+Set\+\_\+\+Acting\+\_\+\+Subcomm}}(s)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a922672640757eabde39068cc0dacd9dd}{PRG\+\_\+\+RESET\+\_\+\+SUBCOMM}}()~\mbox{\hyperlink{handlers_8h_a41d484666f0931cfee7bfdde4efe0243}{\+\_\+\+TG\+\_\+\+Reset\+\_\+\+Subcomm}}()
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a5682c35cb1720ce9e27a9d5204ed8181}{PRG\+\_\+\+GATHER\+\_\+\+THREAD\+\_\+\+LIST\+\_\+\+ON\+\_\+\+MASTER}}(domain,  mask)~    \mbox{\hyperlink{parallel_8h_a37e9fd77381535cdc94aeac5fda7508e}{\+\_\+\+TG\+\_\+\+Gather\+\_\+\+Thread\+\_\+\+List\+\_\+\+On\+\_\+\+Master}}(domain, mask)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a7216e0e4a0bab15aa52bdace2e6cf7e9}{PRG\+\_\+\+BCAST\+\_\+\+THREAD\+\_\+\+LIST}}(domain,  mask)~    \mbox{\hyperlink{parallel_8h_ad5282b2053b033dccc1ba3187fba251f}{\+\_\+\+TG\+\_\+\+Broadcast\+\_\+\+Thread\+\_\+\+List\+\_\+\+To\+\_\+\+Meshing\+\_\+\+Nodes}}(domain, mask);
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a6823a9b27d018611c9e09ac5d40f6981}{PRF\+\_\+\+ALLGATHER\+\_\+\+THREAD\+\_\+\+LIST}}(domain,  mask)~    \mbox{\hyperlink{parallel_8h_a2fdd12ecc26890aa39414c2c9e9b6b45}{\+\_\+\+TG\+\_\+\+Allgather\+\_\+\+Thread\+\_\+\+List}}(domain, mask)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a08efc26b2864d82f80730e945fbfce49}{PRG\+\_\+\+ALLGATHER\+\_\+\+THREAD\+\_\+\+LIST}}(domain,  mask)~    \mbox{\hyperlink{parallel_8h_a9db6caf5d5f0b4e942180da6b21106b2}{\+\_\+\+TG\+\_\+\+Allgather\+\_\+\+Thread\+\_\+\+List\+\_\+\+On\+\_\+\+Meshing\+\_\+\+Nodes}}(domain, mask)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a43338d1ecae3c86d6eb0dabf8d9ef938}{PRG\+\_\+\+SYNC\+\_\+\+THREAD\+\_\+\+LOOP\+\_\+\+ORDER}}(t,  nb)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a88b4cbb1c2918a6b46cb989d67ba5a24}{WITH\+\_\+\+HOST}}~\mbox{\hyperlink{sundials__types_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}}
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a2beb6e1366263853a940a55894c220ee}{L\+\_\+\+START\+\_\+\+PROFILE\+\_\+\+BASE}}(name,  vl,  id)~\mbox{\hyperlink{mptimer_8h_a7655a33b05ef636c88ee91114114080c}{START\+\_\+\+PROFILE\+\_\+\+BASE}}(name,vl,id)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a7c193dddfb233cbac770d6028c9c8966}{L\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+\+BASE}}(name,  vl,  id)~\mbox{\hyperlink{mptimer_8h_a04e1660ccc9e0a086a2f340515d1a80d}{STOP\+\_\+\+PROFILE\+\_\+\+BASE}}(name,vl,id)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a72a900abc15df960006213ae8889bd48}{TG\+\_\+\+START\+\_\+\+PROFILE\+\_\+\+BASE}}(name,  vl,  id)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a696c872c97b9669656139292c78b10d3}{TG\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+\+BASE}}(name,  vl,  id)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_ac063c3ad186c68a8069dff524d0d735e}{TG\+\_\+\+START\+\_\+\+PROFILE}}(name,  vl,  id)~\mbox{\hyperlink{parallel_8h_a72a900abc15df960006213ae8889bd48}{TG\+\_\+\+START\+\_\+\+PROFILE\+\_\+\+BASE}}(name,vl,id)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_ade3846f326816c80a36c1c8bb7e4039d}{TG\+\_\+\+STOP\+\_\+\+PROFILE}}(name,  vl,  id)~\mbox{\hyperlink{parallel_8h_a696c872c97b9669656139292c78b10d3}{TG\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+\+BASE}}(name,vl,id)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_a9634186bc2e071ce9aaa3bdc822146ba}{TG\+\_\+\+START\+\_\+\+PROFILE\+\_\+F}}(vl,  id)~\mbox{\hyperlink{parallel_8h_a72a900abc15df960006213ae8889bd48}{TG\+\_\+\+START\+\_\+\+PROFILE\+\_\+\+BASE}}(\+\_\+\+\_\+\+FUNCTION\+\_\+\+\_\+,vl,id)
+\item 
+\#define \mbox{\hyperlink{parallel_8h_aa5e4c6f4b995a66884281f37c458fde2}{TG\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+F}}(vl,  id)~\mbox{\hyperlink{parallel_8h_a696c872c97b9669656139292c78b10d3}{TG\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+\+BASE}}(\+\_\+\+\_\+\+FUNCTION\+\_\+\+\_\+,vl,id)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct__tg__partition}{\+\_\+tg\+\_\+partition}} \mbox{\hyperlink{parallel_8h_a090d88fdb0718f58b75b236eeef2b8e3}{Partition}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{parallel_8h_abed3e0cda9cd94019cadb9ec694e85c3}{EXTERN\+\_\+\+INSTANCE\+\_\+\+PROTOTYPE}} (\mbox{\hyperlink{para__common_8h_a73e6205bda4224a7582cd378ebb5bdcd}{parallel}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_af4a1d54db0058638d7fa214a7e84ac07}{\+\_\+\+TG\+\_\+\+Init\+\_\+\+Parallel}} (int \+\_\+myid, int \+\_\+compute\+\_\+node\+\_\+count)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a6fb01ef11ada970dba2eb864ed835dd8}{\+\_\+\+TG\+\_\+\+Set\+\_\+\+Cell\+\_\+\+Partition\+\_\+\+Count}} (int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \mbox{\hyperlink{parallel_8h_a30ca1bf9d03f93d61fc42d57b9eb9efd}{\+\_\+\+TG\+\_\+\+Get\+\_\+\+Cell\+\_\+\+Partition\+\_\+\+Count}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a1dc33bd33ea2195e02a47ed236ddefc1}{\+\_\+\+TG\+\_\+\+Send\+\_\+\+Entity\+\_\+\+Loop\+\_\+\+Order}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a6d627350fbf5b432f528d5e96967164c}{\+\_\+\+TG\+\_\+\+Recv\+\_\+\+Entity\+\_\+\+Loop\+\_\+\+Order}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a592cbf3d452fc400a943467d2c629b34}{\+\_\+\+TG\+\_\+\+Sync\+\_\+\+Entity\+\_\+\+Loop\+\_\+\+Order}} (\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a2a214f65e613f6bf7c73954d5625ed43}{\+\_\+\+TG\+\_\+\+Init\+\_\+\+Neighbor\+\_\+\+Hash}} (struct \mbox{\hyperlink{structpneighbor}{pneighbor}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_aad60c3bdf277392ebc69e248915a8c85}{\+\_\+\+TG\+\_\+\+Print\+\_\+\+Entity\+\_\+\+Neighbor\+\_\+\+Information}} (\mbox{\hyperlink{mem_8h_a2edcbfb6f1044e8e5e311c186b3f8a63}{Entity}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a7a8e8ff0b69fc1b12a691c4a22488f8d}{\+\_\+\+TG\+\_\+\+Print\+\_\+\+Node\+\_\+\+Information}} (\mbox{\hyperlink{src_2mesh_2entity_8h_ab332110d398e6b1923a6309604d97296}{Node}} \texorpdfstring{$\ast$}{*}s)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_af286821dd6328bea6fd502b0a126d1e8}{\+\_\+\+TG\+\_\+\+Print\+\_\+\+Edge\+\_\+\+Information}} (\mbox{\hyperlink{mem_8h_ad7b46df8f6b1810b44a820ff41bf9e53}{Edge}} \texorpdfstring{$\ast$}{*}s)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_ad4543aa5030c4201bfb057a769c5e845}{\+\_\+\+TG\+\_\+\+Print\+\_\+\+Face\+\_\+\+Information}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}f)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a34b7991d635af07256a4652b58fa500a}{\+\_\+\+TG\+\_\+\+Print\+\_\+\+Cell\+\_\+\+Information}} (\mbox{\hyperlink{src_2mesh_2entity_8h_ab5ff9e1f2b1d922e3d43abe57387f991}{Cell}} \texorpdfstring{$\ast$}{*}c)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a47f919959a6bce3432fa114ccd8b1f53}{\+\_\+\+TG\+\_\+\+Reset\+\_\+\+Parallel}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_ae7f3cfc50ec6b3dc6cfe0f6c0e3524d0}{\+\_\+\+TG\+\_\+\+Ensure\+\_\+\+Interface\+\_\+\+Orientation}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a273c2fe486a56680a2bc18bd72f2e3ee}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Exterior\+\_\+\+Mesh}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a7ea1c56581bee5aeadfd6ed4ac0c955a}{\+\_\+\+TG\+\_\+\+Delete\+\_\+\+Exterior\+\_\+\+Mesh}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a095612b3fe6d92e4eb2f5f9fef9245c2}{\+\_\+\+TG\+\_\+\+Fill\+\_\+\+Overlap\+\_\+\+Entities}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_ad9e6159fb9905b961e14b6039f9c9e8b}{\+\_\+\+TG\+\_\+\+Print\+\_\+\+Partition\+\_\+\+Info}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a2af05a9f25780d36ba74ad51a0036d57}{\+\_\+\+TG\+\_\+\+Send\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a51e48c3579be337b0557fe1793e22eb0}{\+\_\+\+TG\+\_\+\+Recv\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_ac3f2029ee516733b43a3863bd510e308}{\+\_\+\+TG\+\_\+\+Send\+\_\+\+Faces\+\_\+\+Deep}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*}, int, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a3671a0651d4766c4aed90132530510fc}{\+\_\+\+TG\+\_\+\+Recv\+\_\+\+Faces\+\_\+\+Deep}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_ad14d5b31217301f23a1ba78b560df93b}{\+\_\+\+TG\+\_\+\+Send\+\_\+\+Cells\+\_\+\+Deep}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{parallel_8h_a9908e5ba8390453c11b00f32a51ea0f8}{\+\_\+\+TG\+\_\+\+Recv\+\_\+\+Cells\+\_\+\+Deep}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a0ca4eba212c7978763e20ba740e469a6}{\+\_\+\+TG\+\_\+\+Migrate\+\_\+\+Cell\+\_\+\+Clusters}} (struct \mbox{\hyperlink{structcluster__sm}{cluster\+\_\+sm}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a57b62d2e131fb7383a6346d69a18a4cb}{\+\_\+\+TG\+\_\+\+Send\+\_\+\+Recv\+\_\+\+Cells\+\_\+\+Deep}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_ab5ff9e1f2b1d922e3d43abe57387f991}{Cell}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}, \mbox{\hyperlink{src_2mesh_2entity_8h_ab5ff9e1f2b1d922e3d43abe57387f991}{Cell}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a7260cbbe2183b2e18d34a067caaa4fc8}{\+\_\+\+TG\+\_\+\+Send\+\_\+\+Recv\+\_\+\+Faces\+\_\+\+Deep}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a260fba246bb91dc211b7cb0f954e108b}{\+\_\+\+TG\+\_\+\+Send\+\_\+\+Geo\+\_\+\+Bounding\+\_\+\+Box}} (\mbox{\hyperlink{struct_bounding___box}{Bounding\+\_\+\+Box}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a96fc2f5369381754532576c21011dae5}{\+\_\+\+TG\+\_\+\+Recv\+\_\+\+Geo\+\_\+\+Bounding\+\_\+\+Box}} (\mbox{\hyperlink{struct_bounding___box}{Bounding\+\_\+\+Box}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a66b222c3fb3099035fed027c68b57f46}{\+\_\+\+TG\+\_\+\+Sync\+\_\+\+Interface\+\_\+\+Separation}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{parallel_8h_a0cb2d4a53de389a6700bd366322a09d7}{\+\_\+\+TG\+\_\+\+Unify\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a0113d3f6c8ff0186221283e245e9f8f1}{\+\_\+\+TG\+\_\+\+Gather\+\_\+\+Threads\+\_\+\+On\+\_\+\+Master}} (\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a13de47d3f691282851287a5cda4cb631}{\+\_\+\+TG\+\_\+\+Agglomerate\+\_\+\+Mesh}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \mbox{\hyperlink{parallel_8h_a68e91d383b744a5306b718375093b288}{\+\_\+\+TG\+\_\+\+Face\+\_\+\+N\+\_\+\+Interface\+\_\+\+Nodes}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a64a0e377d2cbad1716d1a92e90c9e865}{\+\_\+\+TG\+\_\+\+Fill\+\_\+\+Ext\+\_\+\+Cell\+\_\+\+Partition\+\_\+\+Ids}} (struct \mbox{\hyperlink{structpneighbor}{pneighbor}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_aaa659e109a4ef9aa32882e7db2b154b9}{\+\_\+\+TG\+\_\+\+Send\+\_\+\+Interface\+\_\+\+Face\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a3d024c5fb560c14942653843af2980ef}{\+\_\+\+TG\+\_\+\+Recv\+\_\+\+Interface\+\_\+\+Face\+\_\+\+Thread}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a238f91ca8629b72c2052362f590adaa4}{\+\_\+\+TG\+\_\+\+Enforce\+\_\+\+Same\+\_\+\+Interface\+\_\+\+Zones}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a9e154d2019ec83899c60b3f96d32d8a0}{\+\_\+\+TG\+\_\+\+Distribute\+\_\+\+Mesh}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a3c29e28246ccfe080c3e42626dce4056}{\+\_\+\+TG\+\_\+\+Set\+\_\+\+Thread\+\_\+\+Interface}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a98ecd4a3f3ec8e2856f8bb6d5caffe01}{\+\_\+\+TG\+\_\+\+Fill\+\_\+\+Interface\+\_\+\+Faces}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a20f9e085f8cd66ee158f7515fdd7a9f2}{\+\_\+\+TG\+\_\+\+Fill\+\_\+\+Interface\+\_\+\+Nodes}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a94130e1c744c1bba90a2e3e9f592db6f}{\+\_\+\+TG\+\_\+\+Fill\+\_\+\+Corner\+\_\+\+Nodes}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_ac3a690bb3ad96c63078c80a546fa23be}{\+\_\+\+TG\+\_\+\+Fill\+\_\+\+Exterior\+\_\+\+Overlap\+\_\+\+Faces\+\_\+\+Nodes}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a1e3cb490e967ba0b3b6997a15b11efbb}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Exterior\+\_\+\+Faces}} (\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_ab18c27bc67e393e6b8a5180178e14183}{\+\_\+\+TG\+\_\+\+Update\+\_\+\+Interface\+\_\+\+Entities}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a50467a5618a9cea671dd7e3b3dbbb2fa}{\+\_\+\+TG\+\_\+\+Gather\+\_\+\+Domain}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a0cf240f34e750a43c9878505074a4034}{\+\_\+\+TG\+\_\+\+Broadcast\+\_\+\+Domain}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a45d724b56e599d02aff74058c545e298}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Exterior\+\_\+\+Cells}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a1ebb34dbdfe13b981e91d07d403ee917}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Exterior\+\_\+\+Cells\+\_\+\+Interface\+\_\+\+Nodes}} (\mbox{\hyperlink{src_2mesh_2entity_8h_ab332110d398e6b1923a6309604d97296}{Node}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a76fd37b15a63074ea71b13e1b448661c}{\+\_\+\+TG\+\_\+\+Recreate\+\_\+\+Exterior\+\_\+\+Mesh}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_aa517f83ea68a56c8d83631dc50de3f2e}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Extended\+\_\+\+Exterior\+\_\+\+Cells}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a2fdd12ecc26890aa39414c2c9e9b6b45}{\+\_\+\+TG\+\_\+\+Allgather\+\_\+\+Thread\+\_\+\+List}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a9db6caf5d5f0b4e942180da6b21106b2}{\+\_\+\+TG\+\_\+\+Allgather\+\_\+\+Thread\+\_\+\+List\+\_\+\+On\+\_\+\+Meshing\+\_\+\+Nodes}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a37e9fd77381535cdc94aeac5fda7508e}{\+\_\+\+TG\+\_\+\+Gather\+\_\+\+Thread\+\_\+\+List\+\_\+\+On\+\_\+\+Master}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_ad5282b2053b033dccc1ba3187fba251f}{\+\_\+\+TG\+\_\+\+Broadcast\+\_\+\+Thread\+\_\+\+List\+\_\+\+To\+\_\+\+Meshing\+\_\+\+Nodes}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{parallel_8h_ac4e4f152ec96173507224c45924c5579}{\+\_\+\+TG\+\_\+\+Migrate\+\_\+\+Cells\+\_\+\+By\+\_\+\+Partition\+\_\+\+Ids}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a8deeb172c3fb69fc741ad507b1b22a56}{\+\_\+\+TG\+\_\+\+Migrate\+\_\+\+Faces\+\_\+\+By\+\_\+\+Partition\+\_\+\+Ids}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a9c54a80f2815f5b432ffd3d560e6d2d1}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Extended\+\_\+\+Exterior\+\_\+\+Faces}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a495e35c70d0f2c2345f4cb5408c59c41}{\+\_\+\+TG\+\_\+\+Migrate\+\_\+\+Faces\+\_\+\+Cleanup}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{parallel_8h_a82634ade2e41200efd246f497d7dea01}{\+\_\+\+TG\+\_\+\+Repartition\+\_\+\+Cells}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_ab5ff9e1f2b1d922e3d43abe57387f991}{Cell}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{tghash_8h_a8064febe0270271ae0c401bfd1d0e598}{Mhash}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a1c1e2da9ea98115af16b98e782ddedb1}{\+\_\+\+TG\+\_\+\+Extract\+\_\+\+Domain\+\_\+\+Neighborhood\+\_\+\+From\+\_\+\+Domain}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_a2027270d045e93faa3141ffe087609a1}{\+\_\+\+TG\+\_\+\+AMG\+\_\+\+Neighborhood\+\_\+\+Data}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, int, \mbox{\hyperlink{src_2mesh_2entity_8h_ab332110d398e6b1923a6309604d97296}{Node}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{parallel_8h_ad3bdff30cf581c5ded48758dfa275daf}{\+\_\+\+TG\+\_\+\+AMG\+\_\+\+Check\+\_\+\+Exchanger}} (\mbox{\hyperlink{src_2mesh_2entity_8h_ab332110d398e6b1923a6309604d97296}{Node}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int, int \texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{parallel_8h_ae7c0cf1afca8f1561667b31b2b1f040c}\label{parallel_8h_ae7c0cf1afca8f1561667b31b2b1f040c} 
+\index{parallel.h@{parallel.h}!compute\_node\_loop@{compute\_node\_loop}}
+\index{compute\_node\_loop@{compute\_node\_loop}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{compute\_node\_loop}{compute\_node\_loop}}
+{\footnotesize\ttfamily \#define compute\+\_\+node\+\_\+loop(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})~    for (cn = \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\+\_\+node\+\_\+zero}}; cn $<$ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}}; ++cn)}
+
+\Hypertarget{parallel_8h_a408bdc26eb90973aa3d1523ec3c424c6}\label{parallel_8h_a408bdc26eb90973aa3d1523ec3c424c6} 
+\index{parallel.h@{parallel.h}!compute\_node\_loop\_all@{compute\_node\_loop\_all}}
+\index{compute\_node\_loop\_all@{compute\_node\_loop\_all}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{compute\_node\_loop\_all}{compute\_node\_loop\_all}}
+{\footnotesize\ttfamily \#define compute\+\_\+node\+\_\+loop\+\_\+all(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})~    for (cn = \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\+\_\+node\+\_\+zero}}; cn $<$ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}}; ++cn)}
+
+\Hypertarget{parallel_8h_a709efa76d36744ca556d78cbeec54470}\label{parallel_8h_a709efa76d36744ca556d78cbeec54470} 
+\index{parallel.h@{parallel.h}!compute\_node\_loop\_all\_not\_master@{compute\_node\_loop\_all\_not\_master}}
+\index{compute\_node\_loop\_all\_not\_master@{compute\_node\_loop\_all\_not\_master}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{compute\_node\_loop\_all\_not\_master}{compute\_node\_loop\_all\_not\_master}}
+{\footnotesize\ttfamily \#define compute\+\_\+node\+\_\+loop\+\_\+all\+\_\+not\+\_\+master(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (cn\ =\ \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\_node\_zero}};\ cn\ <\ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\_compute\_node\_count}};\ ++cn)\ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cn\ !=\ \mbox{\hyperlink{handlers_8h_afd4b1e0cd3ed34937cc02786dab67885}{node\_master}})}
+
+\end{DoxyCode}
+\Hypertarget{parallel_8h_af28d317c9ee1a3f06c5489bb77e9d700}\label{parallel_8h_af28d317c9ee1a3f06c5489bb77e9d700} 
+\index{parallel.h@{parallel.h}!compute\_node\_loop\_all\_not\_zero@{compute\_node\_loop\_all\_not\_zero}}
+\index{compute\_node\_loop\_all\_not\_zero@{compute\_node\_loop\_all\_not\_zero}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{compute\_node\_loop\_all\_not\_zero}{compute\_node\_loop\_all\_not\_zero}}
+{\footnotesize\ttfamily \#define compute\+\_\+node\+\_\+loop\+\_\+all\+\_\+not\+\_\+zero(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})~    for (cn = \mbox{\hyperlink{tg__mpt_8h_ab8bcd6fe30da70cb2ac664aaa64c17b5}{tg\+\_\+node\+\_\+one}}; cn $<$ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}}; ++cn)}
+
+\Hypertarget{parallel_8h_a08da10976175d90b1ca1acd723bb6112}\label{parallel_8h_a08da10976175d90b1ca1acd723bb6112} 
+\index{parallel.h@{parallel.h}!compute\_node\_loop\_not\_master@{compute\_node\_loop\_not\_master}}
+\index{compute\_node\_loop\_not\_master@{compute\_node\_loop\_not\_master}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{compute\_node\_loop\_not\_master}{compute\_node\_loop\_not\_master}}
+{\footnotesize\ttfamily \#define compute\+\_\+node\+\_\+loop\+\_\+not\+\_\+master(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (cn\ =\ \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\_node\_zero}};\ cn\ <\ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\_compute\_node\_count}};\ ++cn)\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cn\ !=\ \mbox{\hyperlink{handlers_8h_afd4b1e0cd3ed34937cc02786dab67885}{node\_master}})}
+
+\end{DoxyCode}
+\Hypertarget{parallel_8h_a91c853fffcf02b224a1a1554d8241da9}\label{parallel_8h_a91c853fffcf02b224a1a1554d8241da9} 
+\index{parallel.h@{parallel.h}!compute\_node\_loop\_not\_zero@{compute\_node\_loop\_not\_zero}}
+\index{compute\_node\_loop\_not\_zero@{compute\_node\_loop\_not\_zero}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{compute\_node\_loop\_not\_zero}{compute\_node\_loop\_not\_zero}}
+{\footnotesize\ttfamily \#define compute\+\_\+node\+\_\+loop\+\_\+not\+\_\+zero(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})~    for (cn = \mbox{\hyperlink{tg__mpt_8h_ab8bcd6fe30da70cb2ac664aaa64c17b5}{tg\+\_\+node\+\_\+one}}; cn $<$ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}}; ++cn)}
+
+\Hypertarget{parallel_8h_aee868c95969616d9de0920665cff72d6}\label{parallel_8h_aee868c95969616d9de0920665cff72d6} 
+\index{parallel.h@{parallel.h}!I\_AM\_ALONE\_P@{I\_AM\_ALONE\_P}}
+\index{I\_AM\_ALONE\_P@{I\_AM\_ALONE\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{I\_AM\_ALONE\_P}{I\_AM\_ALONE\_P}}
+{\footnotesize\ttfamily \#define I\+\_\+\+AM\+\_\+\+ALONE\+\_\+P~(\mbox{\hyperlink{parallel_8h_adb0162ecac70811eb9740bb2649e77c7}{TG\+\_\+\+SUBCOMM}} == \mbox{\hyperlink{multiport_2src_2mport_8h_a350ff1a3fddee74a34e4efeef7ad0ef4}{MPT\+\_\+\+COMM\+\_\+\+SERIAL}})}
+
+\Hypertarget{parallel_8h_a19f271d76e20424fefd5cf62e928459d}\label{parallel_8h_a19f271d76e20424fefd5cf62e928459d} 
+\index{parallel.h@{parallel.h}!I\_AM\_MESHING\_NODE\_P@{I\_AM\_MESHING\_NODE\_P}}
+\index{I\_AM\_MESHING\_NODE\_P@{I\_AM\_MESHING\_NODE\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{I\_AM\_MESHING\_NODE\_P}{I\_AM\_MESHING\_NODE\_P}}
+{\footnotesize\ttfamily \#define I\+\_\+\+AM\+\_\+\+MESHING\+\_\+\+NODE\+\_\+P~\mbox{\hyperlink{parallel_8h_a414fb180166787ecc280dd178e404710}{MESHING\+\_\+\+NODE\+\_\+P}}(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}})}
+
+\Hypertarget{parallel_8h_a1d57da72773fe67fac6268de9c3d5505}\label{parallel_8h_a1d57da72773fe67fac6268de9c3d5505} 
+\index{parallel.h@{parallel.h}!I\_AM\_NODE\_LESS\_P@{I\_AM\_NODE\_LESS\_P}}
+\index{I\_AM\_NODE\_LESS\_P@{I\_AM\_NODE\_LESS\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{I\_AM\_NODE\_LESS\_P}{I\_AM\_NODE\_LESS\_P}}
+{\footnotesize\ttfamily \#define I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+LESS\+\_\+P(\begin{DoxyParamCaption}\item[{}]{n }\end{DoxyParamCaption})~(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} $<$ n)}
+
+\Hypertarget{parallel_8h_adc12254cf71a68883faec8df7e98a463}\label{parallel_8h_adc12254cf71a68883faec8df7e98a463} 
+\index{parallel.h@{parallel.h}!I\_AM\_NODE\_MASTER\_P@{I\_AM\_NODE\_MASTER\_P}}
+\index{I\_AM\_NODE\_MASTER\_P@{I\_AM\_NODE\_MASTER\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{I\_AM\_NODE\_MASTER\_P}{I\_AM\_NODE\_MASTER\_P}}
+{\footnotesize\ttfamily \#define I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+MASTER\+\_\+P~(\mbox{\hyperlink{parallel_8h_aee868c95969616d9de0920665cff72d6}{I\+\_\+\+AM\+\_\+\+ALONE\+\_\+P}} \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} \mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} == \mbox{\hyperlink{handlers_8h_afd4b1e0cd3ed34937cc02786dab67885}{node\+\_\+master}})}
+
+\Hypertarget{parallel_8h_a6758b84449ac95dbc6eb4cfed428409a}\label{parallel_8h_a6758b84449ac95dbc6eb4cfed428409a} 
+\index{parallel.h@{parallel.h}!I\_AM\_NODE\_MORE\_P@{I\_AM\_NODE\_MORE\_P}}
+\index{I\_AM\_NODE\_MORE\_P@{I\_AM\_NODE\_MORE\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{I\_AM\_NODE\_MORE\_P}{I\_AM\_NODE\_MORE\_P}}
+{\footnotesize\ttfamily \#define I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+MORE\+\_\+P(\begin{DoxyParamCaption}\item[{}]{n }\end{DoxyParamCaption})~(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} $>$ n)}
+
+\Hypertarget{parallel_8h_a6684d3039663a08c5f6bd54e61ca35f0}\label{parallel_8h_a6684d3039663a08c5f6bd54e61ca35f0} 
+\index{parallel.h@{parallel.h}!I\_AM\_NODE\_SAME\_P@{I\_AM\_NODE\_SAME\_P}}
+\index{I\_AM\_NODE\_SAME\_P@{I\_AM\_NODE\_SAME\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{I\_AM\_NODE\_SAME\_P}{I\_AM\_NODE\_SAME\_P}}
+{\footnotesize\ttfamily \#define I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+SAME\+\_\+P(\begin{DoxyParamCaption}\item[{}]{n }\end{DoxyParamCaption})~(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} == (n))}
+
+\Hypertarget{parallel_8h_ae5e4eeeed79aa9a07b3f162b7298a1e5}\label{parallel_8h_ae5e4eeeed79aa9a07b3f162b7298a1e5} 
+\index{parallel.h@{parallel.h}!I\_AM\_NODE\_SERIAL\_P@{I\_AM\_NODE\_SERIAL\_P}}
+\index{I\_AM\_NODE\_SERIAL\_P@{I\_AM\_NODE\_SERIAL\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{I\_AM\_NODE\_SERIAL\_P}{I\_AM\_NODE\_SERIAL\_P}}
+{\footnotesize\ttfamily \#define I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+SERIAL\+\_\+P~\mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}}}
+
+\Hypertarget{parallel_8h_a65e02bb0e83e9fcf03adc956ca88268c}\label{parallel_8h_a65e02bb0e83e9fcf03adc956ca88268c} 
+\index{parallel.h@{parallel.h}!I\_AM\_NODE\_ZERO\_P@{I\_AM\_NODE\_ZERO\_P}}
+\index{I\_AM\_NODE\_ZERO\_P@{I\_AM\_NODE\_ZERO\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{I\_AM\_NODE\_ZERO\_P}{I\_AM\_NODE\_ZERO\_P}}
+{\footnotesize\ttfamily \#define I\+\_\+\+AM\+\_\+\+NODE\+\_\+\+ZERO\+\_\+P~(\mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\+\_\+myid}} == \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\+\_\+node\+\_\+zero}})}
+
+\Hypertarget{parallel_8h_a2beb6e1366263853a940a55894c220ee}\label{parallel_8h_a2beb6e1366263853a940a55894c220ee} 
+\index{parallel.h@{parallel.h}!L\_START\_PROFILE\_BASE@{L\_START\_PROFILE\_BASE}}
+\index{L\_START\_PROFILE\_BASE@{L\_START\_PROFILE\_BASE}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{L\_START\_PROFILE\_BASE}{L\_START\_PROFILE\_BASE}}
+{\footnotesize\ttfamily \#define L\+\_\+\+START\+\_\+\+PROFILE\+\_\+\+BASE(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{vl,  }\item[{}]{id }\end{DoxyParamCaption})~\mbox{\hyperlink{mptimer_8h_a7655a33b05ef636c88ee91114114080c}{START\+\_\+\+PROFILE\+\_\+\+BASE}}(name,vl,id)}
+
+\Hypertarget{parallel_8h_a7c193dddfb233cbac770d6028c9c8966}\label{parallel_8h_a7c193dddfb233cbac770d6028c9c8966} 
+\index{parallel.h@{parallel.h}!L\_STOP\_PROFILE\_BASE@{L\_STOP\_PROFILE\_BASE}}
+\index{L\_STOP\_PROFILE\_BASE@{L\_STOP\_PROFILE\_BASE}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{L\_STOP\_PROFILE\_BASE}{L\_STOP\_PROFILE\_BASE}}
+{\footnotesize\ttfamily \#define L\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+\+BASE(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{vl,  }\item[{}]{id }\end{DoxyParamCaption})~\mbox{\hyperlink{mptimer_8h_a04e1660ccc9e0a086a2f340515d1a80d}{STOP\+\_\+\+PROFILE\+\_\+\+BASE}}(name,vl,id)}
+
+\Hypertarget{parallel_8h_a6abd7e0766ef20e393a6ce365fef73bb}\label{parallel_8h_a6abd7e0766ef20e393a6ce365fef73bb} 
+\index{parallel.h@{parallel.h}!MAX\_COMM\_MSG\_SIZE@{MAX\_COMM\_MSG\_SIZE}}
+\index{MAX\_COMM\_MSG\_SIZE@{MAX\_COMM\_MSG\_SIZE}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_COMM\_MSG\_SIZE}{MAX\_COMM\_MSG\_SIZE}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+COMM\+\_\+\+MSG\+\_\+\+SIZE~1024}
+
+\Hypertarget{parallel_8h_a78eccee88527faa6206971bdcf29de92}\label{parallel_8h_a78eccee88527faa6206971bdcf29de92} 
+\index{parallel.h@{parallel.h}!meshing\_node\_loop@{meshing\_node\_loop}}
+\index{meshing\_node\_loop@{meshing\_node\_loop}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{meshing\_node\_loop}{meshing\_node\_loop}}
+{\footnotesize\ttfamily \#define meshing\+\_\+node\+\_\+loop(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (cn\ =\ \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\_node\_zero}};\ cn\ <\ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\_compute\_node\_count}};\ ++cn)\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{parallel_8h_a414fb180166787ecc280dd178e404710}{MESHING\_NODE\_P}}(cn))}
+
+\end{DoxyCode}
+\Hypertarget{parallel_8h_a40e5a10567cba53edf5a106800129c67}\label{parallel_8h_a40e5a10567cba53edf5a106800129c67} 
+\index{parallel.h@{parallel.h}!meshing\_node\_loop\_higher@{meshing\_node\_loop\_higher}}
+\index{meshing\_node\_loop\_higher@{meshing\_node\_loop\_higher}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{meshing\_node\_loop\_higher}{meshing\_node\_loop\_higher}}
+{\footnotesize\ttfamily \#define meshing\+\_\+node\+\_\+loop\+\_\+higher(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (cn\ =\ \mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\_myid}}+1;\ cn\ <\ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\_compute\_node\_count}};\ ++cn)\ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{parallel_8h_a414fb180166787ecc280dd178e404710}{MESHING\_NODE\_P}}(cn))}
+
+\end{DoxyCode}
+\Hypertarget{parallel_8h_abaf12f274e20a0e2417c250d1151e8e4}\label{parallel_8h_abaf12f274e20a0e2417c250d1151e8e4} 
+\index{parallel.h@{parallel.h}!meshing\_node\_loop\_lower@{meshing\_node\_loop\_lower}}
+\index{meshing\_node\_loop\_lower@{meshing\_node\_loop\_lower}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{meshing\_node\_loop\_lower}{meshing\_node\_loop\_lower}}
+{\footnotesize\ttfamily \#define meshing\+\_\+node\+\_\+loop\+\_\+lower(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (cn\ =\ \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\_node\_zero}};\ cn\ <\ \mbox{\hyperlink{tg__mpt_8h_a095431bc7d568739d04567d2fa4739b1}{tg\_myid}};\ ++cn)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{parallel_8h_a414fb180166787ecc280dd178e404710}{MESHING\_NODE\_P}}(cn))}
+
+\end{DoxyCode}
+\Hypertarget{parallel_8h_a95e6b1f4bc86bb06317b8b77ee565b3b}\label{parallel_8h_a95e6b1f4bc86bb06317b8b77ee565b3b} 
+\index{parallel.h@{parallel.h}!meshing\_node\_loop\_not\_master@{meshing\_node\_loop\_not\_master}}
+\index{meshing\_node\_loop\_not\_master@{meshing\_node\_loop\_not\_master}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{meshing\_node\_loop\_not\_master}{meshing\_node\_loop\_not\_master}}
+{\footnotesize\ttfamily \#define meshing\+\_\+node\+\_\+loop\+\_\+not\+\_\+master(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (cn\ =\ \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\_node\_zero}};\ cn\ <\ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\_compute\_node\_count}};\ ++cn)\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{parallel_8h_a414fb180166787ecc280dd178e404710}{MESHING\_NODE\_P}}(cn)\ \&\&\ cn\ !=\mbox{\hyperlink{handlers_8h_afd4b1e0cd3ed34937cc02786dab67885}{node\_master}})}
+
+\end{DoxyCode}
+\Hypertarget{parallel_8h_a7a92a7d5cfeea6bd19d05b4575f30eb0}\label{parallel_8h_a7a92a7d5cfeea6bd19d05b4575f30eb0} 
+\index{parallel.h@{parallel.h}!meshing\_node\_loop\_not\_zero@{meshing\_node\_loop\_not\_zero}}
+\index{meshing\_node\_loop\_not\_zero@{meshing\_node\_loop\_not\_zero}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{meshing\_node\_loop\_not\_zero}{meshing\_node\_loop\_not\_zero}}
+{\footnotesize\ttfamily \#define meshing\+\_\+node\+\_\+loop\+\_\+not\+\_\+zero(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (cn\ =\ \mbox{\hyperlink{tg__mpt_8h_ab8bcd6fe30da70cb2ac664aaa64c17b5}{tg\_node\_one}};\ cn\ <\ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\_compute\_node\_count}};\ ++cn)\ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{parallel_8h_a414fb180166787ecc280dd178e404710}{MESHING\_NODE\_P}}(cn))}
+
+\end{DoxyCode}
+\Hypertarget{parallel_8h_a414fb180166787ecc280dd178e404710}\label{parallel_8h_a414fb180166787ecc280dd178e404710} 
+\index{parallel.h@{parallel.h}!MESHING\_NODE\_P@{MESHING\_NODE\_P}}
+\index{MESHING\_NODE\_P@{MESHING\_NODE\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{MESHING\_NODE\_P}{MESHING\_NODE\_P}}
+{\footnotesize\ttfamily \#define MESHING\+\_\+\+NODE\+\_\+P(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})~    (\mbox{\hyperlink{parallel_8h_adb0162ecac70811eb9740bb2649e77c7}{TG\+\_\+\+SUBCOMM}} != \mbox{\hyperlink{multiport_2src_2mport_8h_a350ff1a3fddee74a34e4efeef7ad0ef4}{MPT\+\_\+\+COMM\+\_\+\+SERIAL}} \&\& !\mbox{\hyperlink{cxmacros_8h_a7d105718f0a66f4e6697821784333c1e}{NULLP}}(\mbox{\hyperlink{handlers_8h_a15d4ee0bc84bd56ee4cc6bf1fdb725b7}{tg\+\_\+subcomm}}) \&\& \mbox{\hyperlink{handlers_8h_a15d4ee0bc84bd56ee4cc6bf1fdb725b7}{tg\+\_\+subcomm}}\mbox{[}cn\mbox{]})}
+
+\Hypertarget{parallel_8h_ac79068da5d7e805f474d33d66bfde170}\label{parallel_8h_ac79068da5d7e805f474d33d66bfde170} 
+\index{parallel.h@{parallel.h}!MULTIPLE\_COMPUTE\_NODE\_P@{MULTIPLE\_COMPUTE\_NODE\_P}}
+\index{MULTIPLE\_COMPUTE\_NODE\_P@{MULTIPLE\_COMPUTE\_NODE\_P}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{MULTIPLE\_COMPUTE\_NODE\_P}{MULTIPLE\_COMPUTE\_NODE\_P}}
+{\footnotesize\ttfamily \#define MULTIPLE\+\_\+\+COMPUTE\+\_\+\+NODE\+\_\+P~(\mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\+\_\+compute\+\_\+node\+\_\+count}} $>$ 1)}
+
+\Hypertarget{parallel_8h_a6823a9b27d018611c9e09ac5d40f6981}\label{parallel_8h_a6823a9b27d018611c9e09ac5d40f6981} 
+\index{parallel.h@{parallel.h}!PRF\_ALLGATHER\_THREAD\_LIST@{PRF\_ALLGATHER\_THREAD\_LIST}}
+\index{PRF\_ALLGATHER\_THREAD\_LIST@{PRF\_ALLGATHER\_THREAD\_LIST}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{PRF\_ALLGATHER\_THREAD\_LIST}{PRF\_ALLGATHER\_THREAD\_LIST}}
+{\footnotesize\ttfamily \#define PRF\+\_\+\+ALLGATHER\+\_\+\+THREAD\+\_\+\+LIST(\begin{DoxyParamCaption}\item[{}]{domain,  }\item[{}]{mask }\end{DoxyParamCaption})~    \mbox{\hyperlink{parallel_8h_a2fdd12ecc26890aa39414c2c9e9b6b45}{\+\_\+\+TG\+\_\+\+Allgather\+\_\+\+Thread\+\_\+\+List}}(domain, mask)}
+
+\Hypertarget{parallel_8h_a08efc26b2864d82f80730e945fbfce49}\label{parallel_8h_a08efc26b2864d82f80730e945fbfce49} 
+\index{parallel.h@{parallel.h}!PRG\_ALLGATHER\_THREAD\_LIST@{PRG\_ALLGATHER\_THREAD\_LIST}}
+\index{PRG\_ALLGATHER\_THREAD\_LIST@{PRG\_ALLGATHER\_THREAD\_LIST}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{PRG\_ALLGATHER\_THREAD\_LIST}{PRG\_ALLGATHER\_THREAD\_LIST}}
+{\footnotesize\ttfamily \#define PRG\+\_\+\+ALLGATHER\+\_\+\+THREAD\+\_\+\+LIST(\begin{DoxyParamCaption}\item[{}]{domain,  }\item[{}]{mask }\end{DoxyParamCaption})~    \mbox{\hyperlink{parallel_8h_a9db6caf5d5f0b4e942180da6b21106b2}{\+\_\+\+TG\+\_\+\+Allgather\+\_\+\+Thread\+\_\+\+List\+\_\+\+On\+\_\+\+Meshing\+\_\+\+Nodes}}(domain, mask)}
+
+\Hypertarget{parallel_8h_a7216e0e4a0bab15aa52bdace2e6cf7e9}\label{parallel_8h_a7216e0e4a0bab15aa52bdace2e6cf7e9} 
+\index{parallel.h@{parallel.h}!PRG\_BCAST\_THREAD\_LIST@{PRG\_BCAST\_THREAD\_LIST}}
+\index{PRG\_BCAST\_THREAD\_LIST@{PRG\_BCAST\_THREAD\_LIST}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{PRG\_BCAST\_THREAD\_LIST}{PRG\_BCAST\_THREAD\_LIST}}
+{\footnotesize\ttfamily \#define PRG\+\_\+\+BCAST\+\_\+\+THREAD\+\_\+\+LIST(\begin{DoxyParamCaption}\item[{}]{domain,  }\item[{}]{mask }\end{DoxyParamCaption})~    \mbox{\hyperlink{parallel_8h_ad5282b2053b033dccc1ba3187fba251f}{\+\_\+\+TG\+\_\+\+Broadcast\+\_\+\+Thread\+\_\+\+List\+\_\+\+To\+\_\+\+Meshing\+\_\+\+Nodes}}(domain, mask);}
+
+\Hypertarget{parallel_8h_a5682c35cb1720ce9e27a9d5204ed8181}\label{parallel_8h_a5682c35cb1720ce9e27a9d5204ed8181} 
+\index{parallel.h@{parallel.h}!PRG\_GATHER\_THREAD\_LIST\_ON\_MASTER@{PRG\_GATHER\_THREAD\_LIST\_ON\_MASTER}}
+\index{PRG\_GATHER\_THREAD\_LIST\_ON\_MASTER@{PRG\_GATHER\_THREAD\_LIST\_ON\_MASTER}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{PRG\_GATHER\_THREAD\_LIST\_ON\_MASTER}{PRG\_GATHER\_THREAD\_LIST\_ON\_MASTER}}
+{\footnotesize\ttfamily \#define PRG\+\_\+\+GATHER\+\_\+\+THREAD\+\_\+\+LIST\+\_\+\+ON\+\_\+\+MASTER(\begin{DoxyParamCaption}\item[{}]{domain,  }\item[{}]{mask }\end{DoxyParamCaption})~    \mbox{\hyperlink{parallel_8h_a37e9fd77381535cdc94aeac5fda7508e}{\+\_\+\+TG\+\_\+\+Gather\+\_\+\+Thread\+\_\+\+List\+\_\+\+On\+\_\+\+Master}}(domain, mask)}
+
+\Hypertarget{parallel_8h_a922672640757eabde39068cc0dacd9dd}\label{parallel_8h_a922672640757eabde39068cc0dacd9dd} 
+\index{parallel.h@{parallel.h}!PRG\_RESET\_SUBCOMM@{PRG\_RESET\_SUBCOMM}}
+\index{PRG\_RESET\_SUBCOMM@{PRG\_RESET\_SUBCOMM}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{PRG\_RESET\_SUBCOMM}{PRG\_RESET\_SUBCOMM}}
+{\footnotesize\ttfamily \#define PRG\+\_\+\+RESET\+\_\+\+SUBCOMM(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})~\mbox{\hyperlink{handlers_8h_a41d484666f0931cfee7bfdde4efe0243}{\+\_\+\+TG\+\_\+\+Reset\+\_\+\+Subcomm}}()}
+
+\Hypertarget{parallel_8h_a9acc849039db779b620ef97720a4202b}\label{parallel_8h_a9acc849039db779b620ef97720a4202b} 
+\index{parallel.h@{parallel.h}!PRG\_SET\_SUBCOMM@{PRG\_SET\_SUBCOMM}}
+\index{PRG\_SET\_SUBCOMM@{PRG\_SET\_SUBCOMM}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{PRG\_SET\_SUBCOMM}{PRG\_SET\_SUBCOMM}}
+{\footnotesize\ttfamily \#define PRG\+\_\+\+SET\+\_\+\+SUBCOMM(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~\mbox{\hyperlink{handlers_8h_a74537f885b9dc4e41d8c2f5a0389ef52}{\+\_\+\+TG\+\_\+\+Set\+\_\+\+Acting\+\_\+\+Subcomm}}(s)}
+
+\Hypertarget{parallel_8h_a43338d1ecae3c86d6eb0dabf8d9ef938}\label{parallel_8h_a43338d1ecae3c86d6eb0dabf8d9ef938} 
+\index{parallel.h@{parallel.h}!PRG\_SYNC\_THREAD\_LOOP\_ORDER@{PRG\_SYNC\_THREAD\_LOOP\_ORDER}}
+\index{PRG\_SYNC\_THREAD\_LOOP\_ORDER@{PRG\_SYNC\_THREAD\_LOOP\_ORDER}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{PRG\_SYNC\_THREAD\_LOOP\_ORDER}{PRG\_SYNC\_THREAD\_LOOP\_ORDER}}
+{\footnotesize\ttfamily \#define PRG\+\_\+\+SYNC\+\_\+\+THREAD\+\_\+\+LOOP\+\_\+\+ORDER(\begin{DoxyParamCaption}\item[{}]{t,  }\item[{}]{nb }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{parallel_8h_a1d57da72773fe67fac6268de9c3d5505}{I\_AM\_NODE\_LESS\_P}}(nb))\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \_TG\_Send\_Entity\_Loop\_Order(t,\ nb);\ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \_TG\_Recv\_Entity\_Loop\_Order(t,\ nb);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ if\ (\mbox{\hyperlink{parallel_8h_a6758b84449ac95dbc6eb4cfed428409a}{I\_AM\_NODE\_MORE\_P}}(nb))\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \_TG\_Send\_Entity\_Loop\_Order(t,\ nb)}
+
+\end{DoxyCode}
+\Hypertarget{parallel_8h_a14b79bdc770dc0ddb3d241c07fdd1a22}\label{parallel_8h_a14b79bdc770dc0ddb3d241c07fdd1a22} 
+\index{parallel.h@{parallel.h}!reversed\_meshing\_node\_loop@{reversed\_meshing\_node\_loop}}
+\index{reversed\_meshing\_node\_loop@{reversed\_meshing\_node\_loop}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{reversed\_meshing\_node\_loop}{reversed\_meshing\_node\_loop}}
+{\footnotesize\ttfamily \#define reversed\+\_\+meshing\+\_\+node\+\_\+loop(\begin{DoxyParamCaption}\item[{}]{cn }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (cn\ =\ \mbox{\hyperlink{handlers_8h_a3dd908b5592cfbe04fd59ccab62b6344}{tg\_compute\_node\_count}}\ -\/\ 1;\ cn\ >=\ \mbox{\hyperlink{tg__mpt_8h_aaf975c8f37e4dcaa9d971df37d12c5c5}{tg\_node\_zero}};\ -\/-\/cn)\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{parallel_8h_a414fb180166787ecc280dd178e404710}{MESHING\_NODE\_P}}(cn))}
+
+\end{DoxyCode}
+\Hypertarget{parallel_8h_a416c82111e7f97ac8687c89f02eec18f}\label{parallel_8h_a416c82111e7f97ac8687c89f02eec18f} 
+\index{parallel.h@{parallel.h}!TG\_GLOBAL\_COMM@{TG\_GLOBAL\_COMM}}
+\index{TG\_GLOBAL\_COMM@{TG\_GLOBAL\_COMM}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{TG\_GLOBAL\_COMM}{TG\_GLOBAL\_COMM}}
+{\footnotesize\ttfamily \#define TG\+\_\+\+GLOBAL\+\_\+\+COMM~0}
+
+\Hypertarget{parallel_8h_ac063c3ad186c68a8069dff524d0d735e}\label{parallel_8h_ac063c3ad186c68a8069dff524d0d735e} 
+\index{parallel.h@{parallel.h}!TG\_START\_PROFILE@{TG\_START\_PROFILE}}
+\index{TG\_START\_PROFILE@{TG\_START\_PROFILE}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{TG\_START\_PROFILE}{TG\_START\_PROFILE}}
+{\footnotesize\ttfamily \#define TG\+\_\+\+START\+\_\+\+PROFILE(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{vl,  }\item[{}]{id }\end{DoxyParamCaption})~\mbox{\hyperlink{parallel_8h_a72a900abc15df960006213ae8889bd48}{TG\+\_\+\+START\+\_\+\+PROFILE\+\_\+\+BASE}}(name,vl,id)}
+
+\Hypertarget{parallel_8h_a72a900abc15df960006213ae8889bd48}\label{parallel_8h_a72a900abc15df960006213ae8889bd48} 
+\index{parallel.h@{parallel.h}!TG\_START\_PROFILE\_BASE@{TG\_START\_PROFILE\_BASE}}
+\index{TG\_START\_PROFILE\_BASE@{TG\_START\_PROFILE\_BASE}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{TG\_START\_PROFILE\_BASE}{TG\_START\_PROFILE\_BASE}}
+{\footnotesize\ttfamily \#define TG\+\_\+\+START\+\_\+\+PROFILE\+\_\+\+BASE(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{vl,  }\item[{}]{id }\end{DoxyParamCaption})}
+
+\Hypertarget{parallel_8h_a9634186bc2e071ce9aaa3bdc822146ba}\label{parallel_8h_a9634186bc2e071ce9aaa3bdc822146ba} 
+\index{parallel.h@{parallel.h}!TG\_START\_PROFILE\_F@{TG\_START\_PROFILE\_F}}
+\index{TG\_START\_PROFILE\_F@{TG\_START\_PROFILE\_F}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{TG\_START\_PROFILE\_F}{TG\_START\_PROFILE\_F}}
+{\footnotesize\ttfamily \#define TG\+\_\+\+START\+\_\+\+PROFILE\+\_\+F(\begin{DoxyParamCaption}\item[{}]{vl,  }\item[{}]{id }\end{DoxyParamCaption})~\mbox{\hyperlink{parallel_8h_a72a900abc15df960006213ae8889bd48}{TG\+\_\+\+START\+\_\+\+PROFILE\+\_\+\+BASE}}(\+\_\+\+\_\+\+FUNCTION\+\_\+\+\_\+,vl,id)}
+
+\Hypertarget{parallel_8h_ade3846f326816c80a36c1c8bb7e4039d}\label{parallel_8h_ade3846f326816c80a36c1c8bb7e4039d} 
+\index{parallel.h@{parallel.h}!TG\_STOP\_PROFILE@{TG\_STOP\_PROFILE}}
+\index{TG\_STOP\_PROFILE@{TG\_STOP\_PROFILE}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{TG\_STOP\_PROFILE}{TG\_STOP\_PROFILE}}
+{\footnotesize\ttfamily \#define TG\+\_\+\+STOP\+\_\+\+PROFILE(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{vl,  }\item[{}]{id }\end{DoxyParamCaption})~\mbox{\hyperlink{parallel_8h_a696c872c97b9669656139292c78b10d3}{TG\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+\+BASE}}(name,vl,id)}
+
+\Hypertarget{parallel_8h_a696c872c97b9669656139292c78b10d3}\label{parallel_8h_a696c872c97b9669656139292c78b10d3} 
+\index{parallel.h@{parallel.h}!TG\_STOP\_PROFILE\_BASE@{TG\_STOP\_PROFILE\_BASE}}
+\index{TG\_STOP\_PROFILE\_BASE@{TG\_STOP\_PROFILE\_BASE}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{TG\_STOP\_PROFILE\_BASE}{TG\_STOP\_PROFILE\_BASE}}
+{\footnotesize\ttfamily \#define TG\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+\+BASE(\begin{DoxyParamCaption}\item[{}]{name,  }\item[{}]{vl,  }\item[{}]{id }\end{DoxyParamCaption})}
+
+\Hypertarget{parallel_8h_aa5e4c6f4b995a66884281f37c458fde2}\label{parallel_8h_aa5e4c6f4b995a66884281f37c458fde2} 
+\index{parallel.h@{parallel.h}!TG\_STOP\_PROFILE\_F@{TG\_STOP\_PROFILE\_F}}
+\index{TG\_STOP\_PROFILE\_F@{TG\_STOP\_PROFILE\_F}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{TG\_STOP\_PROFILE\_F}{TG\_STOP\_PROFILE\_F}}
+{\footnotesize\ttfamily \#define TG\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+F(\begin{DoxyParamCaption}\item[{}]{vl,  }\item[{}]{id }\end{DoxyParamCaption})~\mbox{\hyperlink{parallel_8h_a696c872c97b9669656139292c78b10d3}{TG\+\_\+\+STOP\+\_\+\+PROFILE\+\_\+\+BASE}}(\+\_\+\+\_\+\+FUNCTION\+\_\+\+\_\+,vl,id)}
+
+\Hypertarget{parallel_8h_adb0162ecac70811eb9740bb2649e77c7}\label{parallel_8h_adb0162ecac70811eb9740bb2649e77c7} 
+\index{parallel.h@{parallel.h}!TG\_SUBCOMM@{TG\_SUBCOMM}}
+\index{TG\_SUBCOMM@{TG\_SUBCOMM}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{TG\_SUBCOMM}{TG\_SUBCOMM}}
+{\footnotesize\ttfamily \#define TG\+\_\+\+SUBCOMM~\mbox{\hyperlink{tg__mpt_8h_a72f448ad737fcaf59c29b5210636eb90}{tg\+\_\+comm}}}
+
+\Hypertarget{parallel_8h_a88b4cbb1c2918a6b46cb989d67ba5a24}\label{parallel_8h_a88b4cbb1c2918a6b46cb989d67ba5a24} 
+\index{parallel.h@{parallel.h}!WITH\_HOST@{WITH\_HOST}}
+\index{WITH\_HOST@{WITH\_HOST}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{WITH\_HOST}{WITH\_HOST}}
+{\footnotesize\ttfamily \#define WITH\+\_\+\+HOST~\mbox{\hyperlink{sundials__types_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}}}
+
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{parallel_8h_a090d88fdb0718f58b75b236eeef2b8e3}\label{parallel_8h_a090d88fdb0718f58b75b236eeef2b8e3} 
+\index{parallel.h@{parallel.h}!Partition@{Partition}}
+\index{Partition@{Partition}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{Partition}{Partition}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct__tg__partition}{\+\_\+tg\+\_\+partition}} \mbox{\hyperlink{parallel_8h_a090d88fdb0718f58b75b236eeef2b8e3}{Partition}}}
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{parallel_8h_a13de47d3f691282851287a5cda4cb631}\label{parallel_8h_a13de47d3f691282851287a5cda4cb631} 
+\index{parallel.h@{parallel.h}!\_TG\_Agglomerate\_Mesh@{\_TG\_Agglomerate\_Mesh}}
+\index{\_TG\_Agglomerate\_Mesh@{\_TG\_Agglomerate\_Mesh}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Agglomerate\_Mesh()}{\_TG\_Agglomerate\_Mesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Agglomerate\+\_\+\+Mesh (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a2fdd12ecc26890aa39414c2c9e9b6b45}\label{parallel_8h_a2fdd12ecc26890aa39414c2c9e9b6b45} 
+\index{parallel.h@{parallel.h}!\_TG\_Allgather\_Thread\_List@{\_TG\_Allgather\_Thread\_List}}
+\index{\_TG\_Allgather\_Thread\_List@{\_TG\_Allgather\_Thread\_List}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Allgather\_Thread\_List()}{\_TG\_Allgather\_Thread\_List()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Allgather\+\_\+\+Thread\+\_\+\+List (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a9db6caf5d5f0b4e942180da6b21106b2}\label{parallel_8h_a9db6caf5d5f0b4e942180da6b21106b2} 
+\index{parallel.h@{parallel.h}!\_TG\_Allgather\_Thread\_List\_On\_Meshing\_Nodes@{\_TG\_Allgather\_Thread\_List\_On\_Meshing\_Nodes}}
+\index{\_TG\_Allgather\_Thread\_List\_On\_Meshing\_Nodes@{\_TG\_Allgather\_Thread\_List\_On\_Meshing\_Nodes}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Allgather\_Thread\_List\_On\_Meshing\_Nodes()}{\_TG\_Allgather\_Thread\_List\_On\_Meshing\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Allgather\+\_\+\+Thread\+\_\+\+List\+\_\+\+On\+\_\+\+Meshing\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ad3bdff30cf581c5ded48758dfa275daf}\label{parallel_8h_ad3bdff30cf581c5ded48758dfa275daf} 
+\index{parallel.h@{parallel.h}!\_TG\_AMG\_Check\_Exchanger@{\_TG\_AMG\_Check\_Exchanger}}
+\index{\_TG\_AMG\_Check\_Exchanger@{\_TG\_AMG\_Check\_Exchanger}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_AMG\_Check\_Exchanger()}{\_TG\_AMG\_Check\_Exchanger()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+AMG\+\_\+\+Check\+\_\+\+Exchanger (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_ab332110d398e6b1923a6309604d97296}{Node}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a2027270d045e93faa3141ffe087609a1}\label{parallel_8h_a2027270d045e93faa3141ffe087609a1} 
+\index{parallel.h@{parallel.h}!\_TG\_AMG\_Neighborhood\_Data@{\_TG\_AMG\_Neighborhood\_Data}}
+\index{\_TG\_AMG\_Neighborhood\_Data@{\_TG\_AMG\_Neighborhood\_Data}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_AMG\_Neighborhood\_Data()}{\_TG\_AMG\_Neighborhood\_Data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+AMG\+\_\+\+Neighborhood\+\_\+\+Data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_ab332110d398e6b1923a6309604d97296}{Node}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a0cf240f34e750a43c9878505074a4034}\label{parallel_8h_a0cf240f34e750a43c9878505074a4034} 
+\index{parallel.h@{parallel.h}!\_TG\_Broadcast\_Domain@{\_TG\_Broadcast\_Domain}}
+\index{\_TG\_Broadcast\_Domain@{\_TG\_Broadcast\_Domain}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Broadcast\_Domain()}{\_TG\_Broadcast\_Domain()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Broadcast\+\_\+\+Domain (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ad5282b2053b033dccc1ba3187fba251f}\label{parallel_8h_ad5282b2053b033dccc1ba3187fba251f} 
+\index{parallel.h@{parallel.h}!\_TG\_Broadcast\_Thread\_List\_To\_Meshing\_Nodes@{\_TG\_Broadcast\_Thread\_List\_To\_Meshing\_Nodes}}
+\index{\_TG\_Broadcast\_Thread\_List\_To\_Meshing\_Nodes@{\_TG\_Broadcast\_Thread\_List\_To\_Meshing\_Nodes}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Broadcast\_Thread\_List\_To\_Meshing\_Nodes()}{\_TG\_Broadcast\_Thread\_List\_To\_Meshing\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Broadcast\+\_\+\+Thread\+\_\+\+List\+\_\+\+To\+\_\+\+Meshing\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_aa517f83ea68a56c8d83631dc50de3f2e}\label{parallel_8h_aa517f83ea68a56c8d83631dc50de3f2e} 
+\index{parallel.h@{parallel.h}!\_TG\_Create\_Extended\_Exterior\_Cells@{\_TG\_Create\_Extended\_Exterior\_Cells}}
+\index{\_TG\_Create\_Extended\_Exterior\_Cells@{\_TG\_Create\_Extended\_Exterior\_Cells}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Extended\_Exterior\_Cells()}{\_TG\_Create\_Extended\_Exterior\_Cells()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Create\+\_\+\+Extended\+\_\+\+Exterior\+\_\+\+Cells (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a9c54a80f2815f5b432ffd3d560e6d2d1}\label{parallel_8h_a9c54a80f2815f5b432ffd3d560e6d2d1} 
+\index{parallel.h@{parallel.h}!\_TG\_Create\_Extended\_Exterior\_Faces@{\_TG\_Create\_Extended\_Exterior\_Faces}}
+\index{\_TG\_Create\_Extended\_Exterior\_Faces@{\_TG\_Create\_Extended\_Exterior\_Faces}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Extended\_Exterior\_Faces()}{\_TG\_Create\_Extended\_Exterior\_Faces()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Create\+\_\+\+Extended\+\_\+\+Exterior\+\_\+\+Faces (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a45d724b56e599d02aff74058c545e298}\label{parallel_8h_a45d724b56e599d02aff74058c545e298} 
+\index{parallel.h@{parallel.h}!\_TG\_Create\_Exterior\_Cells@{\_TG\_Create\_Exterior\_Cells}}
+\index{\_TG\_Create\_Exterior\_Cells@{\_TG\_Create\_Exterior\_Cells}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Exterior\_Cells()}{\_TG\_Create\_Exterior\_Cells()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Create\+\_\+\+Exterior\+\_\+\+Cells (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a1ebb34dbdfe13b981e91d07d403ee917}\label{parallel_8h_a1ebb34dbdfe13b981e91d07d403ee917} 
+\index{parallel.h@{parallel.h}!\_TG\_Create\_Exterior\_Cells\_Interface\_Nodes@{\_TG\_Create\_Exterior\_Cells\_Interface\_Nodes}}
+\index{\_TG\_Create\_Exterior\_Cells\_Interface\_Nodes@{\_TG\_Create\_Exterior\_Cells\_Interface\_Nodes}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Exterior\_Cells\_Interface\_Nodes()}{\_TG\_Create\_Exterior\_Cells\_Interface\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Create\+\_\+\+Exterior\+\_\+\+Cells\+\_\+\+Interface\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_ab332110d398e6b1923a6309604d97296}{Node}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a1e3cb490e967ba0b3b6997a15b11efbb}\label{parallel_8h_a1e3cb490e967ba0b3b6997a15b11efbb} 
+\index{parallel.h@{parallel.h}!\_TG\_Create\_Exterior\_Faces@{\_TG\_Create\_Exterior\_Faces}}
+\index{\_TG\_Create\_Exterior\_Faces@{\_TG\_Create\_Exterior\_Faces}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Exterior\_Faces()}{\_TG\_Create\_Exterior\_Faces()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Create\+\_\+\+Exterior\+\_\+\+Faces (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a273c2fe486a56680a2bc18bd72f2e3ee}\label{parallel_8h_a273c2fe486a56680a2bc18bd72f2e3ee} 
+\index{parallel.h@{parallel.h}!\_TG\_Create\_Exterior\_Mesh@{\_TG\_Create\_Exterior\_Mesh}}
+\index{\_TG\_Create\_Exterior\_Mesh@{\_TG\_Create\_Exterior\_Mesh}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Exterior\_Mesh()}{\_TG\_Create\_Exterior\_Mesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Create\+\_\+\+Exterior\+\_\+\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a7ea1c56581bee5aeadfd6ed4ac0c955a}\label{parallel_8h_a7ea1c56581bee5aeadfd6ed4ac0c955a} 
+\index{parallel.h@{parallel.h}!\_TG\_Delete\_Exterior\_Mesh@{\_TG\_Delete\_Exterior\_Mesh}}
+\index{\_TG\_Delete\_Exterior\_Mesh@{\_TG\_Delete\_Exterior\_Mesh}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Delete\_Exterior\_Mesh()}{\_TG\_Delete\_Exterior\_Mesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Delete\+\_\+\+Exterior\+\_\+\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a9e154d2019ec83899c60b3f96d32d8a0}\label{parallel_8h_a9e154d2019ec83899c60b3f96d32d8a0} 
+\index{parallel.h@{parallel.h}!\_TG\_Distribute\_Mesh@{\_TG\_Distribute\_Mesh}}
+\index{\_TG\_Distribute\_Mesh@{\_TG\_Distribute\_Mesh}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Distribute\_Mesh()}{\_TG\_Distribute\_Mesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Distribute\+\_\+\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a238f91ca8629b72c2052362f590adaa4}\label{parallel_8h_a238f91ca8629b72c2052362f590adaa4} 
+\index{parallel.h@{parallel.h}!\_TG\_Enforce\_Same\_Interface\_Zones@{\_TG\_Enforce\_Same\_Interface\_Zones}}
+\index{\_TG\_Enforce\_Same\_Interface\_Zones@{\_TG\_Enforce\_Same\_Interface\_Zones}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Enforce\_Same\_Interface\_Zones()}{\_TG\_Enforce\_Same\_Interface\_Zones()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Enforce\+\_\+\+Same\+\_\+\+Interface\+\_\+\+Zones (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ae7f3cfc50ec6b3dc6cfe0f6c0e3524d0}\label{parallel_8h_ae7f3cfc50ec6b3dc6cfe0f6c0e3524d0} 
+\index{parallel.h@{parallel.h}!\_TG\_Ensure\_Interface\_Orientation@{\_TG\_Ensure\_Interface\_Orientation}}
+\index{\_TG\_Ensure\_Interface\_Orientation@{\_TG\_Ensure\_Interface\_Orientation}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Ensure\_Interface\_Orientation()}{\_TG\_Ensure\_Interface\_Orientation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Ensure\+\_\+\+Interface\+\_\+\+Orientation (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a1c1e2da9ea98115af16b98e782ddedb1}\label{parallel_8h_a1c1e2da9ea98115af16b98e782ddedb1} 
+\index{parallel.h@{parallel.h}!\_TG\_Extract\_Domain\_Neighborhood\_From\_Domain@{\_TG\_Extract\_Domain\_Neighborhood\_From\_Domain}}
+\index{\_TG\_Extract\_Domain\_Neighborhood\_From\_Domain@{\_TG\_Extract\_Domain\_Neighborhood\_From\_Domain}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Extract\_Domain\_Neighborhood\_From\_Domain()}{\_TG\_Extract\_Domain\_Neighborhood\_From\_Domain()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Extract\+\_\+\+Domain\+\_\+\+Neighborhood\+\_\+\+From\+\_\+\+Domain (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a68e91d383b744a5306b718375093b288}\label{parallel_8h_a68e91d383b744a5306b718375093b288} 
+\index{parallel.h@{parallel.h}!\_TG\_Face\_N\_Interface\_Nodes@{\_TG\_Face\_N\_Interface\_Nodes}}
+\index{\_TG\_Face\_N\_Interface\_Nodes@{\_TG\_Face\_N\_Interface\_Nodes}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Face\_N\_Interface\_Nodes()}{\_TG\_Face\_N\_Interface\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \+\_\+\+TG\+\_\+\+Face\+\_\+\+N\+\_\+\+Interface\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a94130e1c744c1bba90a2e3e9f592db6f}\label{parallel_8h_a94130e1c744c1bba90a2e3e9f592db6f} 
+\index{parallel.h@{parallel.h}!\_TG\_Fill\_Corner\_Nodes@{\_TG\_Fill\_Corner\_Nodes}}
+\index{\_TG\_Fill\_Corner\_Nodes@{\_TG\_Fill\_Corner\_Nodes}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Fill\_Corner\_Nodes()}{\_TG\_Fill\_Corner\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Fill\+\_\+\+Corner\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a64a0e377d2cbad1716d1a92e90c9e865}\label{parallel_8h_a64a0e377d2cbad1716d1a92e90c9e865} 
+\index{parallel.h@{parallel.h}!\_TG\_Fill\_Ext\_Cell\_Partition\_Ids@{\_TG\_Fill\_Ext\_Cell\_Partition\_Ids}}
+\index{\_TG\_Fill\_Ext\_Cell\_Partition\_Ids@{\_TG\_Fill\_Ext\_Cell\_Partition\_Ids}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Fill\_Ext\_Cell\_Partition\_Ids()}{\_TG\_Fill\_Ext\_Cell\_Partition\_Ids()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Fill\+\_\+\+Ext\+\_\+\+Cell\+\_\+\+Partition\+\_\+\+Ids (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structpneighbor}{pneighbor}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ac3a690bb3ad96c63078c80a546fa23be}\label{parallel_8h_ac3a690bb3ad96c63078c80a546fa23be} 
+\index{parallel.h@{parallel.h}!\_TG\_Fill\_Exterior\_Overlap\_Faces\_Nodes@{\_TG\_Fill\_Exterior\_Overlap\_Faces\_Nodes}}
+\index{\_TG\_Fill\_Exterior\_Overlap\_Faces\_Nodes@{\_TG\_Fill\_Exterior\_Overlap\_Faces\_Nodes}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Fill\_Exterior\_Overlap\_Faces\_Nodes()}{\_TG\_Fill\_Exterior\_Overlap\_Faces\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Fill\+\_\+\+Exterior\+\_\+\+Overlap\+\_\+\+Faces\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a98ecd4a3f3ec8e2856f8bb6d5caffe01}\label{parallel_8h_a98ecd4a3f3ec8e2856f8bb6d5caffe01} 
+\index{parallel.h@{parallel.h}!\_TG\_Fill\_Interface\_Faces@{\_TG\_Fill\_Interface\_Faces}}
+\index{\_TG\_Fill\_Interface\_Faces@{\_TG\_Fill\_Interface\_Faces}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Fill\_Interface\_Faces()}{\_TG\_Fill\_Interface\_Faces()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Fill\+\_\+\+Interface\+\_\+\+Faces (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a20f9e085f8cd66ee158f7515fdd7a9f2}\label{parallel_8h_a20f9e085f8cd66ee158f7515fdd7a9f2} 
+\index{parallel.h@{parallel.h}!\_TG\_Fill\_Interface\_Nodes@{\_TG\_Fill\_Interface\_Nodes}}
+\index{\_TG\_Fill\_Interface\_Nodes@{\_TG\_Fill\_Interface\_Nodes}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Fill\_Interface\_Nodes()}{\_TG\_Fill\_Interface\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Fill\+\_\+\+Interface\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a095612b3fe6d92e4eb2f5f9fef9245c2}\label{parallel_8h_a095612b3fe6d92e4eb2f5f9fef9245c2} 
+\index{parallel.h@{parallel.h}!\_TG\_Fill\_Overlap\_Entities@{\_TG\_Fill\_Overlap\_Entities}}
+\index{\_TG\_Fill\_Overlap\_Entities@{\_TG\_Fill\_Overlap\_Entities}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Fill\_Overlap\_Entities()}{\_TG\_Fill\_Overlap\_Entities()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Fill\+\_\+\+Overlap\+\_\+\+Entities (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a50467a5618a9cea671dd7e3b3dbbb2fa}\label{parallel_8h_a50467a5618a9cea671dd7e3b3dbbb2fa} 
+\index{parallel.h@{parallel.h}!\_TG\_Gather\_Domain@{\_TG\_Gather\_Domain}}
+\index{\_TG\_Gather\_Domain@{\_TG\_Gather\_Domain}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Gather\_Domain()}{\_TG\_Gather\_Domain()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Gather\+\_\+\+Domain (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a37e9fd77381535cdc94aeac5fda7508e}\label{parallel_8h_a37e9fd77381535cdc94aeac5fda7508e} 
+\index{parallel.h@{parallel.h}!\_TG\_Gather\_Thread\_List\_On\_Master@{\_TG\_Gather\_Thread\_List\_On\_Master}}
+\index{\_TG\_Gather\_Thread\_List\_On\_Master@{\_TG\_Gather\_Thread\_List\_On\_Master}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Gather\_Thread\_List\_On\_Master()}{\_TG\_Gather\_Thread\_List\_On\_Master()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Gather\+\_\+\+Thread\+\_\+\+List\+\_\+\+On\+\_\+\+Master (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a0113d3f6c8ff0186221283e245e9f8f1}\label{parallel_8h_a0113d3f6c8ff0186221283e245e9f8f1} 
+\index{parallel.h@{parallel.h}!\_TG\_Gather\_Threads\_On\_Master@{\_TG\_Gather\_Threads\_On\_Master}}
+\index{\_TG\_Gather\_Threads\_On\_Master@{\_TG\_Gather\_Threads\_On\_Master}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Gather\_Threads\_On\_Master()}{\_TG\_Gather\_Threads\_On\_Master()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Gather\+\_\+\+Threads\+\_\+\+On\+\_\+\+Master (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a30ca1bf9d03f93d61fc42d57b9eb9efd}\label{parallel_8h_a30ca1bf9d03f93d61fc42d57b9eb9efd} 
+\index{parallel.h@{parallel.h}!\_TG\_Get\_Cell\_Partition\_Count@{\_TG\_Get\_Cell\_Partition\_Count}}
+\index{\_TG\_Get\_Cell\_Partition\_Count@{\_TG\_Get\_Cell\_Partition\_Count}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Get\_Cell\_Partition\_Count()}{\_TG\_Get\_Cell\_Partition\_Count()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \+\_\+\+TG\+\_\+\+Get\+\_\+\+Cell\+\_\+\+Partition\+\_\+\+Count (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a2a214f65e613f6bf7c73954d5625ed43}\label{parallel_8h_a2a214f65e613f6bf7c73954d5625ed43} 
+\index{parallel.h@{parallel.h}!\_TG\_Init\_Neighbor\_Hash@{\_TG\_Init\_Neighbor\_Hash}}
+\index{\_TG\_Init\_Neighbor\_Hash@{\_TG\_Init\_Neighbor\_Hash}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Init\_Neighbor\_Hash()}{\_TG\_Init\_Neighbor\_Hash()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Init\+\_\+\+Neighbor\+\_\+\+Hash (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structpneighbor}{pneighbor}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_af4a1d54db0058638d7fa214a7e84ac07}\label{parallel_8h_af4a1d54db0058638d7fa214a7e84ac07} 
+\index{parallel.h@{parallel.h}!\_TG\_Init\_Parallel@{\_TG\_Init\_Parallel}}
+\index{\_TG\_Init\_Parallel@{\_TG\_Init\_Parallel}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Init\_Parallel()}{\_TG\_Init\_Parallel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Init\+\_\+\+Parallel (\begin{DoxyParamCaption}\item[{int}]{\+\_\+myid,  }\item[{int}]{\+\_\+compute\+\_\+node\+\_\+count }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a0ca4eba212c7978763e20ba740e469a6}\label{parallel_8h_a0ca4eba212c7978763e20ba740e469a6} 
+\index{parallel.h@{parallel.h}!\_TG\_Migrate\_Cell\_Clusters@{\_TG\_Migrate\_Cell\_Clusters}}
+\index{\_TG\_Migrate\_Cell\_Clusters@{\_TG\_Migrate\_Cell\_Clusters}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Migrate\_Cell\_Clusters()}{\_TG\_Migrate\_Cell\_Clusters()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Migrate\+\_\+\+Cell\+\_\+\+Clusters (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{structcluster__sm}{cluster\+\_\+sm}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ac4e4f152ec96173507224c45924c5579}\label{parallel_8h_ac4e4f152ec96173507224c45924c5579} 
+\index{parallel.h@{parallel.h}!\_TG\_Migrate\_Cells\_By\_Partition\_Ids@{\_TG\_Migrate\_Cells\_By\_Partition\_Ids}}
+\index{\_TG\_Migrate\_Cells\_By\_Partition\_Ids@{\_TG\_Migrate\_Cells\_By\_Partition\_Ids}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Migrate\_Cells\_By\_Partition\_Ids()}{\_TG\_Migrate\_Cells\_By\_Partition\_Ids()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \+\_\+\+TG\+\_\+\+Migrate\+\_\+\+Cells\+\_\+\+By\+\_\+\+Partition\+\_\+\+Ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a8deeb172c3fb69fc741ad507b1b22a56}\label{parallel_8h_a8deeb172c3fb69fc741ad507b1b22a56} 
+\index{parallel.h@{parallel.h}!\_TG\_Migrate\_Faces\_By\_Partition\_Ids@{\_TG\_Migrate\_Faces\_By\_Partition\_Ids}}
+\index{\_TG\_Migrate\_Faces\_By\_Partition\_Ids@{\_TG\_Migrate\_Faces\_By\_Partition\_Ids}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Migrate\_Faces\_By\_Partition\_Ids()}{\_TG\_Migrate\_Faces\_By\_Partition\_Ids()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Migrate\+\_\+\+Faces\+\_\+\+By\+\_\+\+Partition\+\_\+\+Ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a495e35c70d0f2c2345f4cb5408c59c41}\label{parallel_8h_a495e35c70d0f2c2345f4cb5408c59c41} 
+\index{parallel.h@{parallel.h}!\_TG\_Migrate\_Faces\_Cleanup@{\_TG\_Migrate\_Faces\_Cleanup}}
+\index{\_TG\_Migrate\_Faces\_Cleanup@{\_TG\_Migrate\_Faces\_Cleanup}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Migrate\_Faces\_Cleanup()}{\_TG\_Migrate\_Faces\_Cleanup()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Migrate\+\_\+\+Faces\+\_\+\+Cleanup (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a34b7991d635af07256a4652b58fa500a}\label{parallel_8h_a34b7991d635af07256a4652b58fa500a} 
+\index{parallel.h@{parallel.h}!\_TG\_Print\_Cell\_Information@{\_TG\_Print\_Cell\_Information}}
+\index{\_TG\_Print\_Cell\_Information@{\_TG\_Print\_Cell\_Information}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Print\_Cell\_Information()}{\_TG\_Print\_Cell\_Information()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Print\+\_\+\+Cell\+\_\+\+Information (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_ab5ff9e1f2b1d922e3d43abe57387f991}{Cell}} \texorpdfstring{$\ast$}{*}}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_af286821dd6328bea6fd502b0a126d1e8}\label{parallel_8h_af286821dd6328bea6fd502b0a126d1e8} 
+\index{parallel.h@{parallel.h}!\_TG\_Print\_Edge\_Information@{\_TG\_Print\_Edge\_Information}}
+\index{\_TG\_Print\_Edge\_Information@{\_TG\_Print\_Edge\_Information}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Print\_Edge\_Information()}{\_TG\_Print\_Edge\_Information()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Print\+\_\+\+Edge\+\_\+\+Information (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_ad7b46df8f6b1810b44a820ff41bf9e53}{Edge}} \texorpdfstring{$\ast$}{*}}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_aad60c3bdf277392ebc69e248915a8c85}\label{parallel_8h_aad60c3bdf277392ebc69e248915a8c85} 
+\index{parallel.h@{parallel.h}!\_TG\_Print\_Entity\_Neighbor\_Information@{\_TG\_Print\_Entity\_Neighbor\_Information}}
+\index{\_TG\_Print\_Entity\_Neighbor\_Information@{\_TG\_Print\_Entity\_Neighbor\_Information}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Print\_Entity\_Neighbor\_Information()}{\_TG\_Print\_Entity\_Neighbor\_Information()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Print\+\_\+\+Entity\+\_\+\+Neighbor\+\_\+\+Information (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_a2edcbfb6f1044e8e5e311c186b3f8a63}{Entity}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ad4543aa5030c4201bfb057a769c5e845}\label{parallel_8h_ad4543aa5030c4201bfb057a769c5e845} 
+\index{parallel.h@{parallel.h}!\_TG\_Print\_Face\_Information@{\_TG\_Print\_Face\_Information}}
+\index{\_TG\_Print\_Face\_Information@{\_TG\_Print\_Face\_Information}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Print\_Face\_Information()}{\_TG\_Print\_Face\_Information()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Print\+\_\+\+Face\+\_\+\+Information (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a7a8e8ff0b69fc1b12a691c4a22488f8d}\label{parallel_8h_a7a8e8ff0b69fc1b12a691c4a22488f8d} 
+\index{parallel.h@{parallel.h}!\_TG\_Print\_Node\_Information@{\_TG\_Print\_Node\_Information}}
+\index{\_TG\_Print\_Node\_Information@{\_TG\_Print\_Node\_Information}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Print\_Node\_Information()}{\_TG\_Print\_Node\_Information()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Print\+\_\+\+Node\+\_\+\+Information (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_ab332110d398e6b1923a6309604d97296}{Node}} \texorpdfstring{$\ast$}{*}}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ad9e6159fb9905b961e14b6039f9c9e8b}\label{parallel_8h_ad9e6159fb9905b961e14b6039f9c9e8b} 
+\index{parallel.h@{parallel.h}!\_TG\_Print\_Partition\_Info@{\_TG\_Print\_Partition\_Info}}
+\index{\_TG\_Print\_Partition\_Info@{\_TG\_Print\_Partition\_Info}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Print\_Partition\_Info()}{\_TG\_Print\_Partition\_Info()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Print\+\_\+\+Partition\+\_\+\+Info (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a76fd37b15a63074ea71b13e1b448661c}\label{parallel_8h_a76fd37b15a63074ea71b13e1b448661c} 
+\index{parallel.h@{parallel.h}!\_TG\_Recreate\_Exterior\_Mesh@{\_TG\_Recreate\_Exterior\_Mesh}}
+\index{\_TG\_Recreate\_Exterior\_Mesh@{\_TG\_Recreate\_Exterior\_Mesh}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Recreate\_Exterior\_Mesh()}{\_TG\_Recreate\_Exterior\_Mesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Recreate\+\_\+\+Exterior\+\_\+\+Mesh (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a9908e5ba8390453c11b00f32a51ea0f8}\label{parallel_8h_a9908e5ba8390453c11b00f32a51ea0f8} 
+\index{parallel.h@{parallel.h}!\_TG\_Recv\_Cells\_Deep@{\_TG\_Recv\_Cells\_Deep}}
+\index{\_TG\_Recv\_Cells\_Deep@{\_TG\_Recv\_Cells\_Deep}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Recv\_Cells\_Deep()}{\_TG\_Recv\_Cells\_Deep()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Recv\+\_\+\+Cells\+\_\+\+Deep (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a6d627350fbf5b432f528d5e96967164c}\label{parallel_8h_a6d627350fbf5b432f528d5e96967164c} 
+\index{parallel.h@{parallel.h}!\_TG\_Recv\_Entity\_Loop\_Order@{\_TG\_Recv\_Entity\_Loop\_Order}}
+\index{\_TG\_Recv\_Entity\_Loop\_Order@{\_TG\_Recv\_Entity\_Loop\_Order}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Recv\_Entity\_Loop\_Order()}{\_TG\_Recv\_Entity\_Loop\_Order()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Recv\+\_\+\+Entity\+\_\+\+Loop\+\_\+\+Order (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a3671a0651d4766c4aed90132530510fc}\label{parallel_8h_a3671a0651d4766c4aed90132530510fc} 
+\index{parallel.h@{parallel.h}!\_TG\_Recv\_Faces\_Deep@{\_TG\_Recv\_Faces\_Deep}}
+\index{\_TG\_Recv\_Faces\_Deep@{\_TG\_Recv\_Faces\_Deep}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Recv\_Faces\_Deep()}{\_TG\_Recv\_Faces\_Deep()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Recv\+\_\+\+Faces\+\_\+\+Deep (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a96fc2f5369381754532576c21011dae5}\label{parallel_8h_a96fc2f5369381754532576c21011dae5} 
+\index{parallel.h@{parallel.h}!\_TG\_Recv\_Geo\_Bounding\_Box@{\_TG\_Recv\_Geo\_Bounding\_Box}}
+\index{\_TG\_Recv\_Geo\_Bounding\_Box@{\_TG\_Recv\_Geo\_Bounding\_Box}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Recv\_Geo\_Bounding\_Box()}{\_TG\_Recv\_Geo\_Bounding\_Box()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Recv\+\_\+\+Geo\+\_\+\+Bounding\+\_\+\+Box (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_bounding___box}{Bounding\+\_\+\+Box}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a3d024c5fb560c14942653843af2980ef}\label{parallel_8h_a3d024c5fb560c14942653843af2980ef} 
+\index{parallel.h@{parallel.h}!\_TG\_Recv\_Interface\_Face\_Thread@{\_TG\_Recv\_Interface\_Face\_Thread}}
+\index{\_TG\_Recv\_Interface\_Face\_Thread@{\_TG\_Recv\_Interface\_Face\_Thread}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Recv\_Interface\_Face\_Thread()}{\_TG\_Recv\_Interface\_Face\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Recv\+\_\+\+Interface\+\_\+\+Face\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a51e48c3579be337b0557fe1793e22eb0}\label{parallel_8h_a51e48c3579be337b0557fe1793e22eb0} 
+\index{parallel.h@{parallel.h}!\_TG\_Recv\_Thread@{\_TG\_Recv\_Thread}}
+\index{\_TG\_Recv\_Thread@{\_TG\_Recv\_Thread}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Recv\_Thread()}{\_TG\_Recv\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Recv\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a82634ade2e41200efd246f497d7dea01}\label{parallel_8h_a82634ade2e41200efd246f497d7dea01} 
+\index{parallel.h@{parallel.h}!\_TG\_Repartition\_Cells@{\_TG\_Repartition\_Cells}}
+\index{\_TG\_Repartition\_Cells@{\_TG\_Repartition\_Cells}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Repartition\_Cells()}{\_TG\_Repartition\_Cells()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \+\_\+\+TG\+\_\+\+Repartition\+\_\+\+Cells (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_ab5ff9e1f2b1d922e3d43abe57387f991}{Cell}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{tghash_8h_a8064febe0270271ae0c401bfd1d0e598}{Mhash}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a47f919959a6bce3432fa114ccd8b1f53}\label{parallel_8h_a47f919959a6bce3432fa114ccd8b1f53} 
+\index{parallel.h@{parallel.h}!\_TG\_Reset\_Parallel@{\_TG\_Reset\_Parallel}}
+\index{\_TG\_Reset\_Parallel@{\_TG\_Reset\_Parallel}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Reset\_Parallel()}{\_TG\_Reset\_Parallel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Reset\+\_\+\+Parallel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ad14d5b31217301f23a1ba78b560df93b}\label{parallel_8h_ad14d5b31217301f23a1ba78b560df93b} 
+\index{parallel.h@{parallel.h}!\_TG\_Send\_Cells\_Deep@{\_TG\_Send\_Cells\_Deep}}
+\index{\_TG\_Send\_Cells\_Deep@{\_TG\_Send\_Cells\_Deep}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Send\_Cells\_Deep()}{\_TG\_Send\_Cells\_Deep()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Send\+\_\+\+Cells\+\_\+\+Deep (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a1dc33bd33ea2195e02a47ed236ddefc1}\label{parallel_8h_a1dc33bd33ea2195e02a47ed236ddefc1} 
+\index{parallel.h@{parallel.h}!\_TG\_Send\_Entity\_Loop\_Order@{\_TG\_Send\_Entity\_Loop\_Order}}
+\index{\_TG\_Send\_Entity\_Loop\_Order@{\_TG\_Send\_Entity\_Loop\_Order}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Send\_Entity\_Loop\_Order()}{\_TG\_Send\_Entity\_Loop\_Order()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Send\+\_\+\+Entity\+\_\+\+Loop\+\_\+\+Order (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ac3f2029ee516733b43a3863bd510e308}\label{parallel_8h_ac3f2029ee516733b43a3863bd510e308} 
+\index{parallel.h@{parallel.h}!\_TG\_Send\_Faces\_Deep@{\_TG\_Send\_Faces\_Deep}}
+\index{\_TG\_Send\_Faces\_Deep@{\_TG\_Send\_Faces\_Deep}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Send\_Faces\_Deep()}{\_TG\_Send\_Faces\_Deep()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Send\+\_\+\+Faces\+\_\+\+Deep (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a260fba246bb91dc211b7cb0f954e108b}\label{parallel_8h_a260fba246bb91dc211b7cb0f954e108b} 
+\index{parallel.h@{parallel.h}!\_TG\_Send\_Geo\_Bounding\_Box@{\_TG\_Send\_Geo\_Bounding\_Box}}
+\index{\_TG\_Send\_Geo\_Bounding\_Box@{\_TG\_Send\_Geo\_Bounding\_Box}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Send\_Geo\_Bounding\_Box()}{\_TG\_Send\_Geo\_Bounding\_Box()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Send\+\_\+\+Geo\+\_\+\+Bounding\+\_\+\+Box (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_bounding___box}{Bounding\+\_\+\+Box}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_aaa659e109a4ef9aa32882e7db2b154b9}\label{parallel_8h_aaa659e109a4ef9aa32882e7db2b154b9} 
+\index{parallel.h@{parallel.h}!\_TG\_Send\_Interface\_Face\_Thread@{\_TG\_Send\_Interface\_Face\_Thread}}
+\index{\_TG\_Send\_Interface\_Face\_Thread@{\_TG\_Send\_Interface\_Face\_Thread}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Send\_Interface\_Face\_Thread()}{\_TG\_Send\_Interface\_Face\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Send\+\_\+\+Interface\+\_\+\+Face\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a57b62d2e131fb7383a6346d69a18a4cb}\label{parallel_8h_a57b62d2e131fb7383a6346d69a18a4cb} 
+\index{parallel.h@{parallel.h}!\_TG\_Send\_Recv\_Cells\_Deep@{\_TG\_Send\_Recv\_Cells\_Deep}}
+\index{\_TG\_Send\_Recv\_Cells\_Deep@{\_TG\_Send\_Recv\_Cells\_Deep}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Send\_Recv\_Cells\_Deep()}{\_TG\_Send\_Recv\_Cells\_Deep()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Send\+\_\+\+Recv\+\_\+\+Cells\+\_\+\+Deep (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_ab5ff9e1f2b1d922e3d43abe57387f991}{Cell}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_ab5ff9e1f2b1d922e3d43abe57387f991}{Cell}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a7260cbbe2183b2e18d34a067caaa4fc8}\label{parallel_8h_a7260cbbe2183b2e18d34a067caaa4fc8} 
+\index{parallel.h@{parallel.h}!\_TG\_Send\_Recv\_Faces\_Deep@{\_TG\_Send\_Recv\_Faces\_Deep}}
+\index{\_TG\_Send\_Recv\_Faces\_Deep@{\_TG\_Send\_Recv\_Faces\_Deep}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Send\_Recv\_Faces\_Deep()}{\_TG\_Send\_Recv\_Faces\_Deep()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Send\+\_\+\+Recv\+\_\+\+Faces\+\_\+\+Deep (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a2af05a9f25780d36ba74ad51a0036d57}\label{parallel_8h_a2af05a9f25780d36ba74ad51a0036d57} 
+\index{parallel.h@{parallel.h}!\_TG\_Send\_Thread@{\_TG\_Send\_Thread}}
+\index{\_TG\_Send\_Thread@{\_TG\_Send\_Thread}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Send\_Thread()}{\_TG\_Send\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Send\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a6fb01ef11ada970dba2eb864ed835dd8}\label{parallel_8h_a6fb01ef11ada970dba2eb864ed835dd8} 
+\index{parallel.h@{parallel.h}!\_TG\_Set\_Cell\_Partition\_Count@{\_TG\_Set\_Cell\_Partition\_Count}}
+\index{\_TG\_Set\_Cell\_Partition\_Count@{\_TG\_Set\_Cell\_Partition\_Count}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Set\_Cell\_Partition\_Count()}{\_TG\_Set\_Cell\_Partition\_Count()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Set\+\_\+\+Cell\+\_\+\+Partition\+\_\+\+Count (\begin{DoxyParamCaption}\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a3c29e28246ccfe080c3e42626dce4056}\label{parallel_8h_a3c29e28246ccfe080c3e42626dce4056} 
+\index{parallel.h@{parallel.h}!\_TG\_Set\_Thread\_Interface@{\_TG\_Set\_Thread\_Interface}}
+\index{\_TG\_Set\_Thread\_Interface@{\_TG\_Set\_Thread\_Interface}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Set\_Thread\_Interface()}{\_TG\_Set\_Thread\_Interface()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Set\+\_\+\+Thread\+\_\+\+Interface (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a592cbf3d452fc400a943467d2c629b34}\label{parallel_8h_a592cbf3d452fc400a943467d2c629b34} 
+\index{parallel.h@{parallel.h}!\_TG\_Sync\_Entity\_Loop\_Order@{\_TG\_Sync\_Entity\_Loop\_Order}}
+\index{\_TG\_Sync\_Entity\_Loop\_Order@{\_TG\_Sync\_Entity\_Loop\_Order}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Sync\_Entity\_Loop\_Order()}{\_TG\_Sync\_Entity\_Loop\_Order()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Sync\+\_\+\+Entity\+\_\+\+Loop\+\_\+\+Order (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a66b222c3fb3099035fed027c68b57f46}\label{parallel_8h_a66b222c3fb3099035fed027c68b57f46} 
+\index{parallel.h@{parallel.h}!\_TG\_Sync\_Interface\_Separation@{\_TG\_Sync\_Interface\_Separation}}
+\index{\_TG\_Sync\_Interface\_Separation@{\_TG\_Sync\_Interface\_Separation}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Sync\_Interface\_Separation()}{\_TG\_Sync\_Interface\_Separation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Sync\+\_\+\+Interface\+\_\+\+Separation (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_a0cb2d4a53de389a6700bd366322a09d7}\label{parallel_8h_a0cb2d4a53de389a6700bd366322a09d7} 
+\index{parallel.h@{parallel.h}!\_TG\_Unify\_Thread@{\_TG\_Unify\_Thread}}
+\index{\_TG\_Unify\_Thread@{\_TG\_Unify\_Thread}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Unify\_Thread()}{\_TG\_Unify\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Unify\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_ab18c27bc67e393e6b8a5180178e14183}\label{parallel_8h_ab18c27bc67e393e6b8a5180178e14183} 
+\index{parallel.h@{parallel.h}!\_TG\_Update\_Interface\_Entities@{\_TG\_Update\_Interface\_Entities}}
+\index{\_TG\_Update\_Interface\_Entities@{\_TG\_Update\_Interface\_Entities}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Update\_Interface\_Entities()}{\_TG\_Update\_Interface\_Entities()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Update\+\_\+\+Interface\+\_\+\+Entities (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{parallel_8h_abed3e0cda9cd94019cadb9ec694e85c3}\label{parallel_8h_abed3e0cda9cd94019cadb9ec694e85c3} 
+\index{parallel.h@{parallel.h}!EXTERN\_INSTANCE\_PROTOTYPE@{EXTERN\_INSTANCE\_PROTOTYPE}}
+\index{EXTERN\_INSTANCE\_PROTOTYPE@{EXTERN\_INSTANCE\_PROTOTYPE}!parallel.h@{parallel.h}}
+\doxysubsubsection{\texorpdfstring{EXTERN\_INSTANCE\_PROTOTYPE()}{EXTERN\_INSTANCE\_PROTOTYPE()}}
+{\footnotesize\ttfamily EXTERN\+\_\+\+INSTANCE\+\_\+\+PROTOTYPE (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{para__common_8h_a73e6205bda4224a7582cd378ebb5bdcd}{parallel}}}]{ }\end{DoxyParamCaption})}
+

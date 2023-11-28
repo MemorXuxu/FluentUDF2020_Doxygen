@@ -1,0 +1,782 @@
+\doxysection{fiber.\+h}
+\hypertarget{fiber_8h_source}{}\label{fiber_8h_source}\index{fluent20.1.0/addons/fiber/src/fiber.h@{fluent20.1.0/addons/fiber/src/fiber.h}}
+\mbox{\hyperlink{fiber_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*\ header\ file\ for\ fiber\ modul}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ mb@fluent.de:\ 8/10/2000}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ markus.braun@ansys.com:\ 10-\/dec-\/2014\ updated\ for\ parallelization}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ needed\ data\ structures:}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ fiber\_list\ \ \ \ \ fiber\ \ \ \ \ \ \ \ Fiber}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>id\ \ \ \ \ \ \ \ \ int}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>*head\ \ \ \ \ \ fiber\_head\_struct}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>nozzle\_x\ \ \ real[3]}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>nozzle\_d\ \ \ real}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>nozzle\_mdotreal}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>take\_up\_x\ \ real[3]}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>take\_up\_v\ \ real}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>take\_up\_force\ real}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>strength\ \ \ real}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>grid\ \ \ \ \ \ \ (void\ **)}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>svar\ \ \ \ \ \ \ (void\ **)}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>var\ \ \ \ \ \ \ \ (void\ **)}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>*next\ \ \ \ \ \ Fiber}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *\ fiber\_head\_struct:}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>type\ \ \ \ \ \ \ Fiber\_Type}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>take\_up\_bc\ Take\_Up\_Type}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>models\ \ \ \ \ struct\ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/>deflection\ \ \ \ \ CXBoolean}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>surface\_tensio\ CXBoolean}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>rheo\_model\ \ \ \ \ Rheology\_Model\_Type}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>n\_cells\ \ \ \ int}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>gridding\ \ \ struct\ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/>type\ \ \ \ \ \ \ \ \ \ \ Fiber\_Grid\_Type}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>material\ \ \ Fiber\_Material\ \ \ \ \ \ \ \ -\/>ratio1\ \ \ \ \ \ \ \ \ real}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>ratio2\ \ \ \ \ \ \ \ \ real}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>loc\_comp\ \ \ \ \ \ \ real}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>n1\ \ \ \ \ \ \ \ \ \ \ \ \ int}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ fiber\_injection\_list\ *Fiber\_Injection\ \ Fiber\_Injection\_type}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>name\ \ \ \ \ \ \ \ \ \ char[80]}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>fiber\_injection\_file\ char\ *}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>active\ \ \ \ \ \ \ \ cxboolean}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>injection\_type\ Fiber\_Injection\_Type}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>head\ \ \ \ \ \ \ \ \ \ Fiber\_Head}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>n\_fibers\ \ \ \ \ \ int}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>n\_fibers\_per\_group\ real}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>pos1\ \ \ \ \ \ \ \ \ \ real[3]}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>pos2\ \ \ \ \ \ \ \ \ \ real[3]}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>posu\ \ \ \ \ \ \ \ \ \ real[3]}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>posr\ \ \ \ \ \ \ \ \ \ real[3]}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>n\_pts\ \ \ \ \ \ \ \ \ int}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>n\_pts\_j\ \ \ \ \ \ \ int}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>diam\ \ \ \ \ \ \ \ \ \ real}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>flow\_rate\_per\_nozzle\ real}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>temp\ \ \ \ \ \ \ \ \ \ real}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>liquid\_fraction\ real}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>material\ \ \ \ \ \ Material\ *}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>evap\_species\ \ Material\ *}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>evap\_species\_index\ int}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>f\_start\ \ \ \ \ \ \ Fiber\ *\ pointer\ in\ fiber\ list}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>f\_end\ \ \ \ \ \ \ \ \ Fiber\ *\ end\ pointer\ in\ fiber\ list}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/>next\ \ \ \ \ \ \ \ \ \ fiber\_injection\_struct\ *}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{udf_8h}{udf.h}}"{}}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ FM\_NULL\_SPECIES\_INDEX\ -\/1}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{/*\ loop\ through\ a\ linked,\ NULL\ terminated\ list\ */}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ loop\_to(p,init,end)for((p)=(init);((p)==(end)||;(p)=(p)-\/>next))}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{enum}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ store\ cell\_id\ in\ a\ UDM\ */}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \mbox{\hyperlink{fiber_8h_abc6126af1d45847bc59afa0aa3216b04a0882803d703df46cf3fd7bbb7647c3c2}{CELL\_ID}},}
+\DoxyCodeLine{00076\ \ \ \mbox{\hyperlink{fiber_8h_abc6126af1d45847bc59afa0aa3216b04a7e2ddf8646b4f150b900610af9d9aa20}{MASS\_SRC}},}
+\DoxyCodeLine{00077\ \ \ \mbox{\hyperlink{fiber_8h_abc6126af1d45847bc59afa0aa3216b04a62b39dedc15827d4e04731a2105c2a0c}{MOM\_X\_SRC}},}
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{fiber_8h_abc6126af1d45847bc59afa0aa3216b04aef15f4062f55943609774d51da54fb83}{MOM\_Y\_SRC}},}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{fiber_8h_abc6126af1d45847bc59afa0aa3216b04a33bf3837970fcd7466039b3d337fb8b9}{MOM\_Z\_SRC}},}
+\DoxyCodeLine{00080\ \ \ \mbox{\hyperlink{fiber_8h_abc6126af1d45847bc59afa0aa3216b04af51bcf2fe9521bdad9a08a13a996fb48}{ENERGY\_SRC}},}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{fiber_8h_abc6126af1d45847bc59afa0aa3216b04a5b5e8e2bc76ba19a1570fd6c77a44bac}{DOM\_ABS}},}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{fiber_8h_abc6126af1d45847bc59afa0aa3216b04a0f431d6168ffb28051bac824a967078c}{DOM\_EMISS}},}
+\DoxyCodeLine{00083\ \ \ \textcolor{comment}{/*\ \ \ \ MASS\_DPHI,\ */}}
+\DoxyCodeLine{00084\ \ \ \textcolor{comment}{/*\ \ \ \ MOM\_X\_DPHI,\ */}}
+\DoxyCodeLine{00085\ \ \ \textcolor{comment}{/*\ \ \ \ MOM\_Y\_DPHI,\ */}}
+\DoxyCodeLine{00086\ \ \ \textcolor{comment}{/*\ \ \ \ MOM\_Z\_DPHI,\ */}}
+\DoxyCodeLine{00087\ \ \ \textcolor{comment}{/*\ \ \ \ ENERGY\_DPHI,\ */}}
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{fiber_8h_abc6126af1d45847bc59afa0aa3216b04af4605a5dc34da10aa3461c5bd59df44c}{MAX\_UDM}}}
+\DoxyCodeLine{00089\ \};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{comment}{/*\ macros\ for\ fast\ UDMI\ access\ */}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ C\_FIB\_ID(c,t)\ (C\_UDMI(c,t,CELL\_ID))}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ C\_FIB\_M\_SRC(c,t)\ (C\_UDMI(c,t,MASS\_SRC))}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ C\_FIB\_X\_SRC(c,t)\ (C\_UDMI(c,t,MOM\_X\_SRC))}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ C\_FIB\_Y\_SRC(c,t)\ (C\_UDMI(c,t,MOM\_Y\_SRC))}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ C\_FIB\_Z\_SRC(c,t)\ (C\_UDMI(c,t,MOM\_Z\_SRC))}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ C\_FIB\_H\_SRC(c,t)\ (C\_UDMI(c,t,ENERGY\_SRC))}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ C\_FIB\_ABS(c,t)\ (C\_UDMI(c,t,DOM\_ABS))}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ C\_FIB\_EMISS(c,t)\ (C\_UDMI(c,t,DOM\_EMISS))}}
+\DoxyCodeLine{00100\ \textcolor{comment}{/*\ \ \#define\ C\_FIB\_M\_DPHI(c,t)\ (C\_UDMI(c,t,MASS\_DPHI))\ */}}
+\DoxyCodeLine{00101\ \textcolor{comment}{/*\ \ \#define\ C\_FIB\_X\_DPHI(c,t)\ (C\_UDMI(c,t,MOM\_X\_DPHI))\ */}}
+\DoxyCodeLine{00102\ \textcolor{comment}{/*\ \ \#define\ C\_FIB\_Y\_DPHI(c,t)\ (C\_UDMI(c,t,MOM\_Y\_DPHI))\ */}}
+\DoxyCodeLine{00103\ \textcolor{comment}{/*\ \ \#define\ C\_FIB\_Z\_DPHI(c,t)\ (C\_UDMI(c,t,MOM\_Z\_DPHI))\ */}}
+\DoxyCodeLine{00104\ \textcolor{comment}{/*\ \ \#define\ C\_FIB\_H\_DPHI(c,t)\ (C\_UDMI(c,t,ENERGY\_DPHI))\ */}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \ \ \textcolor{comment}{/*\ drag\ models\ */}}
+\DoxyCodeLine{00108\ \{}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{fiber_8h_aa5e97a9584328438ce89f9741e99f2bea605b6d8e4d682d921ddb10d98b2d694f}{CD\_CONST}}\ =\ 0,}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{fiber_8h_aa5e97a9584328438ce89f9741e99f2bea1d032ef56b8169c2f177731a20b0cd35}{CD\_KASE\_MATSUO}},}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{fiber_8h_aa5e97a9584328438ce89f9741e99f2bea551a877ac462568fe49b91876c02cebb}{CD\_GAMPERT}},}
+\DoxyCodeLine{00112\ \ \ \mbox{\hyperlink{fiber_8h_aa5e97a9584328438ce89f9741e99f2beabbb818c671dd81c19cb330a1338f1ed6}{CD\_USER\_DEFINED}}}
+\DoxyCodeLine{00113\ \}\ \mbox{\hyperlink{fiber_8h_aa5e97a9584328438ce89f9741e99f2be}{Fiber\_Drag\_Type}};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \ \ \textcolor{comment}{/*\ heat\ transfer\ models\ */}}
+\DoxyCodeLine{00116\ \{}
+\DoxyCodeLine{00117\ \ \ \mbox{\hyperlink{fiber_8h_a0ba16b309a34f37b433f40869663d894a0a0689c30a40b29451377d33302deb94}{HTC\_CONST}}\ =\ 0,}
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{fiber_8h_a0ba16b309a34f37b433f40869663d894a9fdb978a030726405bbb480c4690eb14}{HTC\_KASE\_MATSUO\_1}},}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{fiber_8h_a0ba16b309a34f37b433f40869663d894a2b1e249ad8309eea3832818de29af68e}{HTC\_KASE\_MATSUO\_2}},}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{fiber_8h_a0ba16b309a34f37b433f40869663d894a98d027acbb651836ba570a54f8177754}{HTC\_GAMPERT}},}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{fiber_8h_a0ba16b309a34f37b433f40869663d894ac10ee4fe06159b9e314b6e385e97603a}{HTC\_USER\_DEFINED}}}
+\DoxyCodeLine{00122\ \}\ \mbox{\hyperlink{fiber_8h_a0ba16b309a34f37b433f40869663d894}{Fiber\_Htc\_Type}};}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \ \ \textcolor{comment}{/*\ mass\ transfer\ models\ */}}
+\DoxyCodeLine{00125\ \{}
+\DoxyCodeLine{00126\ \ \ \mbox{\hyperlink{fiber_8h_abd9c7ce202bbe7b523e3826578ff35c3ac633aee5dfdcd3bee320e6ff6bb92c37}{MTC\_CONST}}\ =\ 0,}
+\DoxyCodeLine{00127\ \ \ \mbox{\hyperlink{fiber_8h_abd9c7ce202bbe7b523e3826578ff35c3ab7f4dce1b6ea0116839bd882bbb89b94}{MTC\_KASE\_MATSUO\_1}},}
+\DoxyCodeLine{00128\ \ \ \mbox{\hyperlink{fiber_8h_abd9c7ce202bbe7b523e3826578ff35c3a4f5b30403b8473846d7bd1d955838f86}{MTC\_KASE\_MATSUO\_2}},}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{fiber_8h_abd9c7ce202bbe7b523e3826578ff35c3abb15a3e66749690fc2b3257c20071583}{MTC\_GAMPERT}},}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{fiber_8h_abd9c7ce202bbe7b523e3826578ff35c3a3c4b94e7f264cf72de2c5107e871ac48}{MTC\_USER\_DEFINED}}}
+\DoxyCodeLine{00131\ \}\ \mbox{\hyperlink{fiber_8h_abd9c7ce202bbe7b523e3826578ff35c3}{Fiber\_Mtc\_Type}};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \ \ \ \textcolor{comment}{/*\ discretisation\ schemes\ of\ the\ fiber\ equations\ */}}
+\DoxyCodeLine{00134\ \{}
+\DoxyCodeLine{00135\ \ \ \mbox{\hyperlink{fiber_8h_ac53ba47ce1f6c1a4f6c737c5e3e63084a422e7272acfbd2c0afa7cbb8e6c80d6a}{UPWIND}}\ =\ 0,}
+\DoxyCodeLine{00136\ \ \ \mbox{\hyperlink{fiber_8h_ac53ba47ce1f6c1a4f6c737c5e3e63084a9aea9e501fa935b114b235e8e9754267}{CD}},}
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{fiber_8h_ac53ba47ce1f6c1a4f6c737c5e3e63084a8f7f92368702925bce9365ec82c7844c}{DISC}},}
+\DoxyCodeLine{00138\ \ \ \mbox{\hyperlink{fiber_8h_ac53ba47ce1f6c1a4f6c737c5e3e63084aef079160a47f3cf267a177cc6400cf1d}{QUICK}}}
+\DoxyCodeLine{00139\ \}\ \mbox{\hyperlink{fiber_8h_ac53ba47ce1f6c1a4f6c737c5e3e63084}{Disc\_Scheme\_Type}};}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \ \ \ \textcolor{comment}{/*\ variables\ allocated\ on\ the\ faces\ between\ the\ fiber\ cells\ */}}
+\DoxyCodeLine{00142\ \{}
+\DoxyCodeLine{00143\ \ \ \mbox{\hyperlink{fiber_8h_a1283b5ccc2a401ad9fd71b0a5ba2b6dfa1a2e65f5e0428759a405e99344e23624}{FF\_FLUX}}\ =\ 0,}
+\DoxyCodeLine{00144\ \ \ \mbox{\hyperlink{fiber_8h_a1283b5ccc2a401ad9fd71b0a5ba2b6dfa3e587f722d778546b803e3c36bf4f6c8}{FF\_CROSS}},}
+\DoxyCodeLine{00145\ \ \ \mbox{\hyperlink{fiber_8h_a1283b5ccc2a401ad9fd71b0a5ba2b6dfa52dcafb5b84a8196176b8eddc5ac445f}{FF\_FACTOR}},}
+\DoxyCodeLine{00146\ \ \ \mbox{\hyperlink{fiber_8h_a1283b5ccc2a401ad9fd71b0a5ba2b6dfa5b6daae239034cfc519f2d412dc57c48}{FF\_DIST}},}
+\DoxyCodeLine{00147\ \ \ \mbox{\hyperlink{fiber_8h_a1283b5ccc2a401ad9fd71b0a5ba2b6dfa4d8b6f09b4825dda8a145b972f30038d}{FF\_MAX}}}
+\DoxyCodeLine{00148\ \}\ \mbox{\hyperlink{fiber_8h_a1283b5ccc2a401ad9fd71b0a5ba2b6df}{FFvar}};}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \ \textcolor{comment}{/*\ face\ variables\ with\ dimension\ ND\ */}}
+\DoxyCodeLine{00151\ \{}
+\DoxyCodeLine{00152\ \ \ \mbox{\hyperlink{fiber_8h_a0f45f5dada443a3fa698f949f6ea78c5a4c8defb117e8fe82f505caaa85e8e7fa}{FF\_N}}\ =\ 0,\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ cartesian\ coordinates\ of\ face\ nodes\ */}}
+\DoxyCodeLine{00153\ \ \ \mbox{\hyperlink{fiber_8h_a0f45f5dada443a3fa698f949f6ea78c5a33adc0f267cea215efb51b13e2979a4b}{FF\_VEC}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ normalized\ direction\ vector\ of\ face\ */}}
+\DoxyCodeLine{00154\ \ \ \mbox{\hyperlink{fiber_8h_a0f45f5dada443a3fa698f949f6ea78c5aeac735a8168cea9fd4dc22161905d3f1}{FF\_ND\_MAX}}}
+\DoxyCodeLine{00155\ \}\ \mbox{\hyperlink{fiber_8h_a0f45f5dada443a3fa698f949f6ea78c5}{FFNDvar}};}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \ \ \ \textcolor{comment}{/*\ Number\ of\ variables\ needed\ for\ the\ fiber\ grid\ */}}
+\DoxyCodeLine{00158\ \{}
+\DoxyCodeLine{00159\ \ \ \mbox{\hyperlink{fiber_8h_a200cd467e9ea63115c4ca213380e1d6ca52473993bf532516c54f93f792bbe808}{FG\_FIB\_Z}}\ =\ 0,\ \ \ \ \ \ \textcolor{comment}{/*\ length\ coordinate\ in\ local\ fiber\ coordinate\ system\ */}}
+\DoxyCodeLine{00160\ \ \ \mbox{\hyperlink{fiber_8h_a200cd467e9ea63115c4ca213380e1d6caf12d40368e7cd9b4175d692f8933bf72}{FG\_LENGTH}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ length\ of\ fiber\ cell\ volume\ */}}
+\DoxyCodeLine{00161\ \ \ \mbox{\hyperlink{fiber_8h_a200cd467e9ea63115c4ca213380e1d6cadbd364c56b7d2835ed52f6830e06835a}{FG\_SURFACE}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ surface\ area\ of\ fiber\ cell\ */}}
+\DoxyCodeLine{00162\ \ \ \mbox{\hyperlink{fiber_8h_a200cd467e9ea63115c4ca213380e1d6cad8a93e74874563e9ba5b423f75eb482e}{FG\_MAX}}}
+\DoxyCodeLine{00163\ \}\ \mbox{\hyperlink{fiber_8h_a200cd467e9ea63115c4ca213380e1d6c}{FGvar}};}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \textcolor{comment}{/*\ fiber\ cell\ variables\ with\ dimension\ ND\ */}}
+\DoxyCodeLine{00166\ \{}
+\DoxyCodeLine{00167\ \ \ \mbox{\hyperlink{fiber_8h_a22112f3199f273b87a762802d7460de3a0966f9c08eff45a6a42dd8f582cc33e7}{FG\_CART}}\ =\ 0,\ \ \ \ \textcolor{comment}{/*\ fiber\ location\ in\ cartesian\ CFD\ coordinate\ system\ */}}
+\DoxyCodeLine{00168\ \ \ \mbox{\hyperlink{fiber_8h_a22112f3199f273b87a762802d7460de3a9bae4b0899888373417bd75a752d8356}{FG\_AXVEC}},\ \ \ \ \ \ \textcolor{comment}{/*\ normalized\ axial/parallel\ vector\ of\ fiber\ cell\ volume\ */}}
+\DoxyCodeLine{00169\ \ \ \mbox{\hyperlink{fiber_8h_a22112f3199f273b87a762802d7460de3a13bbc78c68db1a3d8414779d2ec81112}{FG\_ND\_MAX}}}
+\DoxyCodeLine{00170\ \}\ \mbox{\hyperlink{fiber_8h_a22112f3199f273b87a762802d7460de3}{FGNDvar}};}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \ \ \ \textcolor{comment}{/*\ Number\ of\ solved\ variables\ in\ a\ fiber\ iteration\ */}}
+\DoxyCodeLine{00173\ \{}
+\DoxyCodeLine{00174\ \ \ \mbox{\hyperlink{fiber_8h_afe68229454599bba7570335337565b29a09bc7c8b44bbd5a674b23ba08b1e5887}{FS\_U}}\ =\ 0,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ velocity\ */}}
+\DoxyCodeLine{00175\ \ \ \mbox{\hyperlink{fiber_8h_afe68229454599bba7570335337565b29a3c64d3a24256c2a7ef4d3c05b37f0f48}{FS\_H}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ enthalpy\ */}}
+\DoxyCodeLine{00176\ \ \ \mbox{\hyperlink{fiber_8h_afe68229454599bba7570335337565b29af05385502ab0ad8da8c2cd739bac5765}{FS\_SP}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ composition\ */}}
+\DoxyCodeLine{00177\ \ \ \mbox{\hyperlink{fiber_8h_afe68229454599bba7570335337565b29af92475c029b256f50454f86b9e9c8c2e}{FS\_MAX}}}
+\DoxyCodeLine{00178\ \}\ \mbox{\hyperlink{fiber_8h_afe68229454599bba7570335337565b29}{FSVar}};}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \ \ \ \ \ \ \textcolor{comment}{/*\ Number\ of\ additional\ variables\ to\ be\ stored\ */}}
+\DoxyCodeLine{00181\ \{}
+\DoxyCodeLine{00182\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcba804d9dc2702018dce32d09d58236715c}{FV\_RHO}}\ =\ 0,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ density\ */}}
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcbaf7fe08105efa0ed612889fb2669513d3}{FV\_VIS}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ viscosity\ */}}
+\DoxyCodeLine{00184\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcba1c0c9a452d73365b07d7d8dd0fbbaa6a}{FV\_CP}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ specific\ heat\ capacity\ */}}
+\DoxyCodeLine{00185\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcba394f595bd07f5823159c1048da746851}{FV\_KTC}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ thermal\ heat\ conductivity\ */}}
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcbac7674e810b58f3e17db7cbd23f5b9a59}{FV\_D}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ diameter\ */}}
+\DoxyCodeLine{00187\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcba3f41ca292114252594b4c67c6becc027}{FV\_T}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ temperature\ */}}
+\DoxyCodeLine{00188\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcbabbcb555f373df6b12d496f2ca0c3984f}{FV\_SP\_S}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ solvent\ mass\ fraction\ at\ fiber\ surface\ */}}
+\DoxyCodeLine{00189\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcbaefd48f589b4427115cc53c49f2aa52d8}{FV\_EVAP}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ evaporated\ mass\ flux\ */}}
+\DoxyCodeLine{00190\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcba36f5656ad4f327ac7a7e1da4b4a5f980}{FV\_DUDZ}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ axial\ velocity\ gradient\ */}}
+\DoxyCodeLine{00191\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcbae9b2fb2b6eff8830102ffda60bfeed92}{FV\_USER}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ user\ specifyable\ variables\ */}}
+\DoxyCodeLine{00192\ \ \ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcba9c4c41caadf432f67a465e75be2e02c7}{FV\_MAX}}}
+\DoxyCodeLine{00193\ \}\ \mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcb}{Fvar}};}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__material__struct}{fiber\_material\_struct}}}
+\DoxyCodeLine{00196\ \{}
+\DoxyCodeLine{00197\ \ \ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *\mbox{\hyperlink{structfiber__material__struct_af6d43224eed4ec5e44b646fe2ea289e2}{polymer}};}
+\DoxyCodeLine{00198\ \ \ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *\mbox{\hyperlink{structfiber__material__struct_af316ffdf39ef026108bd97f0e31f1f9d}{solvent}};}
+\DoxyCodeLine{00199\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfiber__material__struct_a3eca636b0158c1c9df4a57f3868f4bea}{evap\_species\_index}};}
+\DoxyCodeLine{00200\ \ \ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *\mbox{\hyperlink{structfiber__material__struct_a36f0bd8424d0bf0e1d42055f5d4b69f7}{solvent\_vapor}};}
+\DoxyCodeLine{00201\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_aa8e8e08962bf8c3b9b3bc23b5af5746b}{surface\_tension}};}
+\DoxyCodeLine{00202\ \ \ \textcolor{comment}{/*\ solidification\ stuff\ */}}
+\DoxyCodeLine{00203\ \ \ \textcolor{comment}{/*\ crystallisation\ stuff\ */}}
+\DoxyCodeLine{00204\ \ \ \textcolor{comment}{/*\ evaporation\ stuff:}}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ \ \ *\ antoine\ equation\ and\ Flory-\/Huggins\ extension}}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00207\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_ac2d47e2df47e59f66361cf7d4d93345c}{v\_a}},\ \mbox{\hyperlink{structfiber__material__struct_ac726c8e2b8f2ba572737bca8f28f2dc5}{v\_b}},\ \mbox{\hyperlink{structfiber__material__struct_a4f3380cce9183c1c836e38ff34865d50}{v\_c}};}
+\DoxyCodeLine{00208\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_a7abcd54989d7c2c2bc188f2aa26758ed}{vt\_min}},\ \mbox{\hyperlink{structfiber__material__struct_a0aced0f10f2f9cc21af7b93dd33ff37e}{vt\_max}};\ \ \textcolor{comment}{/*\ temperature\ range\ where\ antoine\ equation\ is\ valid\ */}}
+\DoxyCodeLine{00209\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__material__struct_a24e6c723aa32e56b5d9335da620de9c6}{Flory\_Huggins}};}
+\DoxyCodeLine{00210\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__material__struct_a5979b43ecb950bdebcdbef27b6898401}{use\_density\_udf}};}
+\DoxyCodeLine{00211\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__material__struct_ac9f6af5c4a43a9bf40dd291911876e7c}{use\_cp\_udf}};}
+\DoxyCodeLine{00212\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__material__struct_adead80dd5c404158c38fa402755ef5fd}{use\_tc\_udf}};}
+\DoxyCodeLine{00213\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__material__struct_ae41198744b174bf103669a3b9e6715d8}{use\_visc\_udf}};}
+\DoxyCodeLine{00214\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__material__struct_ac171295dced3d88d910887816d2ba5b7}{use\_vle\_udf}};}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_a57a6a52d499aca6603371ab99df745f9}{FH\_chi}};}
+\DoxyCodeLine{00217\ \ \ \textcolor{comment}{/*\ latent\ heat\ of\ vaporization\ */}}
+\DoxyCodeLine{00218\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_aafd4ffff56db0a6b9193c22d50332225}{latent\_heat}};}
+\DoxyCodeLine{00219\ \ \ \textcolor{comment}{/*\ the\ latent\ heat\ has\ been\ measured\ at\ this\ temperature\ */}}
+\DoxyCodeLine{00220\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_a6a85a6af84f84c04b53dd417cf9977af}{T\_vap}};}
+\DoxyCodeLine{00221\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_a510d2820c6d168b102f00644c9e7124b}{delta\_hv\_T\_ref}};}
+\DoxyCodeLine{00222\ \ \ \textcolor{comment}{/*\ latent\ heat\ at\ reference\ temperature\ */}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \textcolor{comment}{/*\ viscosity\ model\ stuff:}}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ \ \ *\ in\ melt\ spinning\ vis\ =\ c*exp(a/(b+T))\ above\ melting\ temp}}
+\DoxyCodeLine{00226\ \textcolor{comment}{\ \ \ *\ \ \ \ \ \ \ \ below\ it\ is\ constant\ and\ the\ polymer\ visc\ is\ used}}
+\DoxyCodeLine{00227\ \textcolor{comment}{\ \ \ *\ in\ dry\ spinning\ vis\ =\ a*b\string^c\ *\ xi\string^d\ *\ exp(e/T)}}
+\DoxyCodeLine{00228\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00229\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_ac07dc21abb590334fae0755b62c213d5}{a}},\ \mbox{\hyperlink{structfiber__material__struct_aa684f3a7807aa2a32bcada92fcd284bf}{b}},\ \mbox{\hyperlink{structfiber__material__struct_a5962484135e4c0ad1ace0fe8bd91ad14}{c}},\ \mbox{\hyperlink{structfiber__material__struct_a412ac02aa43d02e6d986bf0f07a96f8e}{d}},\ \mbox{\hyperlink{structfiber__material__struct_a85fec10483b76c0798d6180a41c50f2e}{e}};}
+\DoxyCodeLine{00230\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_a6ef63d90ed3c99cec24adfea763962b3}{rn}};\ \ \ \ \ \textcolor{comment}{/*\ exponent\ of\ shear\ rate\ dependency\ of\ viscosity\ */}}
+\DoxyCodeLine{00231\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_abf964c68aaf40d9d630230d1521fc1a9}{solid\_t}},\ \mbox{\hyperlink{structfiber__material__struct_a728312b83623bb22d19c17bf02472554}{solid\_dt}};}
+\DoxyCodeLine{00232\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__material__struct_aa52c717dc8a7b3a8538b1ae3d644a596}{emissivity}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ of\ fiber\ surface\ */}}
+\DoxyCodeLine{00233\ \}\ \mbox{\hyperlink{fiber_8h_af58d731588131d26a493b0f1016e9f14}{Fiber\_Material}};}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structneighbor__cell__struct}{neighbor\_cell\_struct}}}
+\DoxyCodeLine{00237\ \{}
+\DoxyCodeLine{00238\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structneighbor__cell__struct_a76f11d9a0a47b94f72c2d0e77fb32240}{n}};}
+\DoxyCodeLine{00239\ \ \ \mbox{\hyperlink{unioncell__id__struct}{CX\_Cell\_Id}}\ *\mbox{\hyperlink{structneighbor__cell__struct_a10b91637229fa954ed71c5e99dcb42d8}{c}};}
+\DoxyCodeLine{00240\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structneighbor__cell__struct_aacebe68cfaf1f0b71b4d9b8ce5a2546f}{weights}};}
+\DoxyCodeLine{00241\ \}\ \mbox{\hyperlink{fiber_8h_ad8d4919e0d466b11947f57544ca857c0}{Neighbor\_Cells}};}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00244\ \{}
+\DoxyCodeLine{00245\ \ \ \mbox{\hyperlink{fiber_8h_aba95bc2efce89fe98108a86fe1bace0fa86956f1c75b744975399bae6e32d8d98}{NON\_SPINNING}}\ =\ 0,}
+\DoxyCodeLine{00246\ \ \ \mbox{\hyperlink{fiber_8h_aba95bc2efce89fe98108a86fe1bace0fa3ec652af4b464b51916d5ffab2f677bc}{MELT\_SPINNING}},}
+\DoxyCodeLine{00247\ \ \ \mbox{\hyperlink{fiber_8h_aba95bc2efce89fe98108a86fe1bace0fa22a305a324527c3fae994dad061b689f}{DRY\_SPINNING}},}
+\DoxyCodeLine{00248\ \ \ \mbox{\hyperlink{fiber_8h_aba95bc2efce89fe98108a86fe1bace0fa659b2dad6955ef90f034ba4f6498e0a3}{GLAS\_SPINNING}}}
+\DoxyCodeLine{00249\ \}\ \mbox{\hyperlink{fiber_8h_aba95bc2efce89fe98108a86fe1bace0f}{Fiber\_Type}};}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00252\ \{}
+\DoxyCodeLine{00253\ \ \ \mbox{\hyperlink{fiber_8h_ac4c1e43d62c12763f1a5435230b21b44aa9553f242163b08c2e8de86e2fca6ca4}{NEWTONIAN}}\ =\ 0}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ MAXWELL\_B,}}
+\DoxyCodeLine{00255\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OLDROYD\_B,}}
+\DoxyCodeLine{00256\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WHITE\_METZNER}}
+\DoxyCodeLine{00257\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00258\ \}\ \mbox{\hyperlink{fiber_8h_ac4c1e43d62c12763f1a5435230b21b44}{Rheology\_Model\_Type}};}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00261\ \{}
+\DoxyCodeLine{00262\ \ \ \mbox{\hyperlink{fiber_8h_a64a39a4654cfbd6aa760cfd87443e54daf41d1c9f4ea779de94783912e388bd57}{FIBER\_INJECTION\_SINGLE}}\ =\ 0,}
+\DoxyCodeLine{00263\ \ \ \mbox{\hyperlink{fiber_8h_a64a39a4654cfbd6aa760cfd87443e54da3868dbf2f36636f91589b2f38a73fa29}{FIBER\_INJECTION\_LINE}},}
+\DoxyCodeLine{00264\ \ \ \mbox{\hyperlink{fiber_8h_a64a39a4654cfbd6aa760cfd87443e54dad4b05e2405e07c7d3236431ef599584e}{FIBER\_INJECTION\_MATRIX}},}
+\DoxyCodeLine{00265\ \ \ \mbox{\hyperlink{fiber_8h_a64a39a4654cfbd6aa760cfd87443e54dafad14e3d0d7d2dd2b0c4774fe24d5239}{FIBER\_INJECTION\_FILE}}}
+\DoxyCodeLine{00266\ \}\ \mbox{\hyperlink{fiber_8h_a64a39a4654cfbd6aa760cfd87443e54d}{Fiber\_Injection\_Type}};}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00269\ \{}
+\DoxyCodeLine{00270\ \ \ \mbox{\hyperlink{fiber_8h_ae2f05d7e1e07e754ba7a8a50941d9e11a06e15744a8bd69fceeeb39ab3614b3f6}{VELOCITY}}\ =\ 0,}
+\DoxyCodeLine{00271\ \ \ \mbox{\hyperlink{fiber_8h_ae2f05d7e1e07e754ba7a8a50941d9e11aef3eab54875fdf1722d80a3059f230d9}{TENSILE\_FORCE\_OLD}},}
+\DoxyCodeLine{00272\ \ \ \mbox{\hyperlink{fiber_8h_ae2f05d7e1e07e754ba7a8a50941d9e11a1db212e125831ac1cee1109cd8c18abb}{TENSILE\_FORCE\_NEW}}}
+\DoxyCodeLine{00273\ \}\ \mbox{\hyperlink{fiber_8h_ae2f05d7e1e07e754ba7a8a50941d9e11}{Take\_Up\_Type}};}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00276\ \{}
+\DoxyCodeLine{00277\ \ \ \mbox{\hyperlink{fiber_8h_ae867cb0c99f0b4c2be7f08171c3ee680a126d7be95d50c14f36fa1b8d2b6e63cf}{EQUIDISTANT}}\ =\ 0,}
+\DoxyCodeLine{00278\ \ \ \mbox{\hyperlink{fiber_8h_ae867cb0c99f0b4c2be7f08171c3ee680a1613952e0bab70cfb4bf7a2e271c6cc3}{ONE\_SIDED}},}
+\DoxyCodeLine{00279\ \ \ \mbox{\hyperlink{fiber_8h_ae867cb0c99f0b4c2be7f08171c3ee680a5538fe03981f9b01bbd94749a0df900b}{TWO\_SIDED}},}
+\DoxyCodeLine{00280\ \ \ \mbox{\hyperlink{fiber_8h_ae867cb0c99f0b4c2be7f08171c3ee680abbefac8312f4607bb11c2dd9b8151fa7}{THREE\_SIDED}}}
+\DoxyCodeLine{00281\ \}\ \mbox{\hyperlink{fiber_8h_ae867cb0c99f0b4c2be7f08171c3ee680}{Fiber\_Grid\_Type}};}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__model__struct}{fiber\_model\_struct}}}
+\DoxyCodeLine{00284\ \{}
+\DoxyCodeLine{00285\ \ \ \mbox{\hyperlink{fiber_8h_aba95bc2efce89fe98108a86fe1bace0f}{Fiber\_Type}}\ \mbox{\hyperlink{structfiber__model__struct_a7bf359d932f9a5b7185de85a1d8c841b}{type}};}
+\DoxyCodeLine{00286\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__model__struct_a40d61689de3da5d16722c0cd6722e1f8}{deflection}}\ ;\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ does\ the\ fiber\ bend?\ */}}
+\DoxyCodeLine{00287\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__model__struct_a6b30a6b8dbca53b7a0eaeea2bcac9e35}{surface\_tension}};}
+\DoxyCodeLine{00288\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__model__struct_af916fc0b7c022722b0451771e2ee7c70}{radiation}};}
+\DoxyCodeLine{00289\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__model__struct_a5d0e4841614042028ca3274f6b0e470f}{lateral\_drag}};}
+\DoxyCodeLine{00290\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__model__struct_ae604a6a2f89cb426fc6f3dd42f557f63}{viscous\_heating}};}
+\DoxyCodeLine{00291\ \ \ \mbox{\hyperlink{fiber_8h_ac4c1e43d62c12763f1a5435230b21b44}{Rheology\_Model\_Type}}\ \mbox{\hyperlink{structfiber__model__struct_a012ff95fdd239db1385d32baa1a8944b}{rheo\_model}};}
+\DoxyCodeLine{00292\ \ \ \mbox{\hyperlink{fiber_8h_aa5e97a9584328438ce89f9741e99f2be}{Fiber\_Drag\_Type}}\ \mbox{\hyperlink{structfiber__model__struct_a628b13f6f85e4dae6af198f5ed8d6891}{drag\_law}};}
+\DoxyCodeLine{00293\ \ \ \mbox{\hyperlink{fiber_8h_a0ba16b309a34f37b433f40869663d894}{Fiber\_Htc\_Type}}\ \mbox{\hyperlink{structfiber__model__struct_accf6ff10aaaf116ee2da29ef0750310b}{htc\_law}};}
+\DoxyCodeLine{00294\ \ \ \mbox{\hyperlink{fiber_8h_abd9c7ce202bbe7b523e3826578ff35c3}{Fiber\_Mtc\_Type}}\ \mbox{\hyperlink{structfiber__model__struct_a0d4a865b1ad123b918df546b589473dd}{mtc\_law}};}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \}\ \mbox{\hyperlink{fiber_8h_afd851d513cc0ee4d8d7e26b74548014f}{Fiber\_Models}};\ \ \ \ \textcolor{comment}{/*\ includes\ all\ model\ flags\ */}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{comment}{/*\ contains\ all\ information\ which\ is\ shared\ amongst\ the\ fibers\ of}}
+\DoxyCodeLine{00299\ \textcolor{comment}{\ \ \ a\ specific\ injection\ */}}
+\DoxyCodeLine{00300\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__head__struct}{fiber\_head\_struct}}}
+\DoxyCodeLine{00301\ \{}
+\DoxyCodeLine{00302\ \ \ \mbox{\hyperlink{fiber_8h_aba95bc2efce89fe98108a86fe1bace0f}{Fiber\_Type}}\ \mbox{\hyperlink{structfiber__head__struct_a7bf359d932f9a5b7185de85a1d8c841b}{type}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ which\ type\ is\ the\ fiber\ */}}
+\DoxyCodeLine{00303\ \ \ \mbox{\hyperlink{fiber_8h_ae2f05d7e1e07e754ba7a8a50941d9e11}{Take\_Up\_Type}}\ \mbox{\hyperlink{structfiber__head__struct_ab43736cfcc734c015f452719ddc5c516}{take\_up\_bc}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ is\ it\ velocity\ or\ tensile\ force\ */}}
+\DoxyCodeLine{00304\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_a07bb8b2d290ad359152c5df3f92fb4aa}{take\_up\_x}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ take\ up\ coordinates\ */}}
+\DoxyCodeLine{00305\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_a46c21946cf5ec7e8218bd17f8aac979e}{take\_up\_v}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ take\ up\ velocity\ */}}
+\DoxyCodeLine{00306\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_a7db9f4a1a3c088d2f1a1d63cd09b8fac}{take\_up\_force}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ take\ up\ tensile\ force\ */}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_a74e6ae5d59864a6d9cb1709a543a42f7}{nozzle\_d}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ nozzle\ diameter\ */}}
+\DoxyCodeLine{00309\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_a7e7a2fd8f26b3f01b7fb312c02442ad4}{nozzle\_mdot}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ nozzle\ mass\ flow\ rate\ */}}
+\DoxyCodeLine{00310\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_a3b6bbd8a6810bf3afcbc9c600f1daa45}{temp}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ temperature\ at\ nozzle\ */}}
+\DoxyCodeLine{00311\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_a9387a7fc393974d67cff6d36b5ce0b00}{liquid\_fraction}};}
+\DoxyCodeLine{00312\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_a1838895a0a86ffaaa1f71e2dd06554ca}{u0}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ velocity\ at\ nozzle\ */}}
+\DoxyCodeLine{00313\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_ad64ba28bc4e61006865aaafed999dc63}{h0}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ enthalpy\ at\ nozzle\ */}}
+\DoxyCodeLine{00314\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_ad53d59ed56b860e43881436452eaf217}{strength}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ fibers\ of\ this\ reference\ */}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \mbox{\hyperlink{structfiber__model__struct}{Fiber\_Models}}\ *\mbox{\hyperlink{structfiber__head__struct_affcc3ed3bf5576a60b987065f58f5bec}{models}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ which\ models\ are\ activate\ */}}
+\DoxyCodeLine{00317\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfiber__head__struct_a7c0ae149169f30e421fd5ff657cbecbe}{n\_cells}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ grid\ cells\ */}}
+\DoxyCodeLine{00318\ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00319\ \ \ \{}
+\DoxyCodeLine{00320\ \ \ \ \ \mbox{\hyperlink{fiber_8h_ae867cb0c99f0b4c2be7f08171c3ee680}{Fiber\_Grid\_Type}}\ \mbox{\hyperlink{structfiber__head__struct_a459b7d73bd4200c3ae9530d085c9d776}{type}};}
+\DoxyCodeLine{00321\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_af288aba5d44f607807243ad0fa14ff38}{ratio1}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ successive\ ratio\ factor\ at\ injection\ point\ */}}
+\DoxyCodeLine{00322\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_ac9195cdb347d99d7159bffeebbdd2cc9}{ratio2}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ successive\ ratio\ factor\ at\ loc\_comp*/}}
+\DoxyCodeLine{00323\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__head__struct_a042bc88a6b5dbbfd9ec960e35cc4ba34}{loc\_comp}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ location\ of\ compressed\ zone\ 0\ <\ loc\_comp\ <\ 1\ */}}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfiber__head__struct_acf4b6cea27655a9d2012c09c64d6ca9e}{n1}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ grid\ points\ in\ compressed\ zone\ */}}
+\DoxyCodeLine{00325\ \ \ \}\ \mbox{\hyperlink{structfiber__head__struct_afb37d164c1cf55ce1d3ef97a38ff39ed}{gridding}};}
+\DoxyCodeLine{00326\ \ \ \mbox{\hyperlink{structfiber__material__struct}{Fiber\_Material}}\ *\mbox{\hyperlink{structfiber__head__struct_a6669197222dcc2e27296bea2094bd642}{material}};}
+\DoxyCodeLine{00327\ \}\ \mbox{\hyperlink{fiber_8h_a9d58a071c584190afb20b7152e827c6f}{Fiber\_Head\_Type}};}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \textcolor{comment}{/*\ contains\ all\ information\ for\ a\ single\ fiber\ */}}
+\DoxyCodeLine{00330\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__struct}{fiber\_struct}}}
+\DoxyCodeLine{00331\ \{}
+\DoxyCodeLine{00332\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfiber__struct_a7441ef0865bcb3db9b8064dd7375c1ea}{id}};}
+\DoxyCodeLine{00333\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__head__struct}{fiber\_head\_struct}}\ *\mbox{\hyperlink{structfiber__struct_a680a71372df60e5de195654f06cd1496}{head}};\ \ \textcolor{comment}{/*\ information\ which\ is\ shared\ with\ other\ fibers\ of\ the\ same\ injection\ */}}
+\DoxyCodeLine{00334\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_a644a2828e80be74bcef61a3f8b6ec429}{nozzle\_x}}[3];}
+\DoxyCodeLine{00335\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_a74e6ae5d59864a6d9cb1709a543a42f7}{nozzle\_d}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ nozzle\ diameter\ */}}
+\DoxyCodeLine{00336\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_a7e7a2fd8f26b3f01b7fb312c02442ad4}{nozzle\_mdot}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ nozzle\ mass\ flow\ rate\ */}}
+\DoxyCodeLine{00337\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_a3b6bbd8a6810bf3afcbc9c600f1daa45}{temp}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ temperature\ at\ nozzle\ */}}
+\DoxyCodeLine{00338\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_a9387a7fc393974d67cff6d36b5ce0b00}{liquid\_fraction}};}
+\DoxyCodeLine{00339\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_a1838895a0a86ffaaa1f71e2dd06554ca}{u0}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ velocity\ at\ nozzle\ */}}
+\DoxyCodeLine{00340\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_ad64ba28bc4e61006865aaafed999dc63}{h0}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ enthalpy\ at\ nozzle\ */}}
+\DoxyCodeLine{00341\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_a43184a9256f1c2cf7cc0872fc8954ea7}{vis\_min}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ minimal\ shear\ rate\ dependent\ viscosity\ based\ on\ 1\%\ of}}
+\DoxyCodeLine{00342\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ *\ velocity\ change\ per\ fiber\ length\ */}}
+\DoxyCodeLine{00343\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfiber__struct_ac63b1f168765a53e565a8ba27f5469d1}{valid}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ status\ of\ the\ fiber\ during\ its\ initialization}}
+\DoxyCodeLine{00344\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ 0\ not\ valid}}
+\DoxyCodeLine{00345\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ 1\ fiber\ memory\ allocated}}
+\DoxyCodeLine{00346\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ 2\ fiber\ grid\ computed}}
+\DoxyCodeLine{00347\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ 3\ memory\ for\ neighbor\ cells\ allocated\ and\ found}}
+\DoxyCodeLine{00348\ \textcolor{comment}{\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structfiber__struct_a0040b987751a93c01f1835ca229462da}{grid}}[\mbox{\hyperlink{fiber_8h_a200cd467e9ea63115c4ca213380e1d6cad8a93e74874563e9ba5b423f75eb482e}{FG\_MAX}}];}
+\DoxyCodeLine{00351\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structfiber__struct_a6c5c9ca90395f389e062605ca4ca48a8}{gridND}}[\mbox{\hyperlink{fiber_8h_a22112f3199f273b87a762802d7460de3a13bbc78c68db1a3d8414779d2ec81112}{FG\_ND\_MAX}}];}
+\DoxyCodeLine{00352\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structfiber__struct_ac53b3563d272cd0250333e6bb9cf87de}{fvar}}[\mbox{\hyperlink{fiber_8h_a1283b5ccc2a401ad9fd71b0a5ba2b6dfa4d8b6f09b4825dda8a145b972f30038d}{FF\_MAX}}];}
+\DoxyCodeLine{00353\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structfiber__struct_ad2a2a89d19bfdef6269d6900089f7aa0}{fvarND}}[\mbox{\hyperlink{fiber_8h_a0f45f5dada443a3fa698f949f6ea78c5aeac735a8168cea9fd4dc22161905d3f1}{FF\_ND\_MAX}}];}
+\DoxyCodeLine{00354\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structfiber__struct_aaf4e91bccaa563bc0fe7a13e63133466}{svar}}[\mbox{\hyperlink{fiber_8h_afe68229454599bba7570335337565b29af92475c029b256f50454f86b9e9c8c2e}{FS\_MAX}}];}
+\DoxyCodeLine{00355\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structfiber__struct_a1e992a920a7ef53c4a64b603ca4e34ad}{var}}[\mbox{\hyperlink{fiber_8h_ad48a1cf5859b421dba5069428c6cebcba9c4c41caadf432f67a465e75be2e02c7}{FV\_MAX}}];}
+\DoxyCodeLine{00356\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structfiber__struct_a7288d7afd936b10423c672880a32e585}{neighbor\_cells}};}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_adadfaf6d89a25ce7fe4015b2b5d6ff77}{res}}[\mbox{\hyperlink{fiber_8h_afe68229454599bba7570335337565b29af92475c029b256f50454f86b9e9c8c2e}{FS\_MAX}}];\ \ \ \ \ \ \textcolor{comment}{/*\ store\ residuals\ for\ each\ fiber\ seperately\ */}}
+\DoxyCodeLine{00359\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__struct_a5cc907c4e9ef76d5f09bf623051dcc29}{res\_old}}[\mbox{\hyperlink{fiber_8h_afe68229454599bba7570335337565b29af92475c029b256f50454f86b9e9c8c2e}{FS\_MAX}}];\ \ \ \ \ \ \textcolor{comment}{/*\ store\ old\ residuals,\ too.\ But\ they\ will\ always}}
+\DoxyCodeLine{00360\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ hold\ absolute\ residuals.\ */}}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__struct}{fiber\_struct}}\ *\mbox{\hyperlink{structfiber__struct_ab29e5626cb286b0a0760ddb6260149f1}{next}};}
+\DoxyCodeLine{00363\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__injection__struct}{fiber\_injection\_struct}}\ *\mbox{\hyperlink{structfiber__struct_ae09f4af31c6e5755ffa7ecc6c21991d4}{injection}};}
+\DoxyCodeLine{00364\ \}\ \mbox{\hyperlink{fiber_8h_a81a239c1ddb298b7a117d0c4419c7bc1}{Fiber}};}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__injection__struct}{fiber\_injection\_struct}}}
+\DoxyCodeLine{00367\ \{}
+\DoxyCodeLine{00368\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structfiber__injection__struct_a3777dbae63a15da001b2baa317a25149}{name}}[80];}
+\DoxyCodeLine{00369\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structfiber__injection__struct_a37d92f2853cf67a41e74ce96def8e1bc}{fiber\_injection\_file}};}
+\DoxyCodeLine{00370\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfiber__injection__struct_a00afeaa72f6d6af613f7c30e4ec4d37b}{active}};}
+\DoxyCodeLine{00371\ \ \ \mbox{\hyperlink{fiber_8h_a64a39a4654cfbd6aa760cfd87443e54d}{Fiber\_Injection\_Type}}\ \mbox{\hyperlink{structfiber__injection__struct_ab6fdcf7986cad3932748f228b3f48902}{injection\_type}};}
+\DoxyCodeLine{00372\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__head__struct}{fiber\_head\_struct}}\ *\mbox{\hyperlink{structfiber__injection__struct_a680a71372df60e5de195654f06cd1496}{head}};}
+\DoxyCodeLine{00373\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfiber__injection__struct_a1df879cbd5a8ed0d3f227e6c33277ad2}{n\_fibers}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Number\ of\ fibers\ to\ calculate\ within\ this\ injection\ */}}
+\DoxyCodeLine{00374\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__injection__struct_afc80b2ed763f239a2cbb19f96aac9ae8}{pos1}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ If\ locations\ specified\ expilicitly\ or\ LINE/MATRIX.\ */}}
+\DoxyCodeLine{00375\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__injection__struct_a1ab36d369e0a18e4458c6cbf75ee223b}{pos2}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ LINE\ from\ pos1\ to\ pos2\ */}}
+\DoxyCodeLine{00376\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__injection__struct_acd9040c2cc8023de408d4c7ac3038a7e}{posu}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ MATRIX\ between\ vectors\ (posr-\/pos1)\ and\ (posu-\/pos1)\ */}}
+\DoxyCodeLine{00377\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfiber__injection__struct_a1c5c2ee1ef2d995a479610989507d6c8}{posr}}[3];}
+\DoxyCodeLine{00378\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfiber__injection__struct_a49eeba22d5b2a203ba8607dae7d1c5c9}{n\_pts}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ If\ line\ or\ (matrix),\ number\ of\ injections\ 2(along\ i).\ */}}
+\DoxyCodeLine{00379\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfiber__injection__struct_a03ee1eadf4a718fb17bdbbdc28e8a072}{n\_pts\_j}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ If\ matrix,\ number\ of\ injections\ along\ j.\ */}}
+\DoxyCodeLine{00380\ \ \ \textcolor{comment}{/*\ real\ diam;\ */}}
+\DoxyCodeLine{00381\ \ \ \textcolor{comment}{/*\ \ real\ flow\_rate\_per\_nozzle;\ */}}
+\DoxyCodeLine{00382\ \ \ \textcolor{comment}{/*\ real\ temp;\ \ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ temperature\ at\ nozzle\ */}}
+\DoxyCodeLine{00383\ \ \ \textcolor{comment}{/*\ \ real\ liquid\_fraction;\ */}}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00385\ \ \ \mbox{\hyperlink{structfiber__struct}{Fiber}}\ *\mbox{\hyperlink{structfiber__injection__struct_aa495faceddf98469e4fdaf4972ac59bd}{f\_start}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ first\ fiber\ of\ injection\ */}}
+\DoxyCodeLine{00386\ \ \ \mbox{\hyperlink{structfiber__struct}{Fiber}}\ *\mbox{\hyperlink{structfiber__injection__struct_a5a9316131390e7d3c3aeb4bae1683768}{f\_end}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ last\ fiber\ of\ injection\ */}}
+\DoxyCodeLine{00387\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfiber__injection__struct}{fiber\_injection\_struct}}\ *\mbox{\hyperlink{structfiber__injection__struct_a61f6dff5a326e1680718baaec7d0f14e}{next}};}
+\DoxyCodeLine{00388\ \}\ \mbox{\hyperlink{fiber_8h_adacb18f7a8eab9600f8acd7d3bdc46f9}{Fiber\_Injection}};}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \textcolor{comment}{/*\ solution\ controling\ stuff\ for\ one\ equation\ */}}
+\DoxyCodeLine{00391\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structeqn__control__struct}{eqn\_control\_struct}}}
+\DoxyCodeLine{00392\ \{}
+\DoxyCodeLine{00393\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structeqn__control__struct_a9880e64461d85aa6ef15a9530cda8fb6}{u}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ underrelaxation\ factor\ */}}
+\DoxyCodeLine{00394\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structeqn__control__struct_a94dc292cb9e0b0124bc36a7737144f7c}{scale\_factor}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ scaling\ factor\ */}}
+\DoxyCodeLine{00395\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structeqn__control__struct_aa1a1defb4ae3b0aca35213c069aa7238}{solve}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ solve\ equation\ ?\ */}}
+\DoxyCodeLine{00396\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structeqn__control__struct_a93dc86c0fe5c8b6ba9a80d89935e6b75}{scale}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ scale\ residual\ ?\ */}}
+\DoxyCodeLine{00397\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structeqn__control__struct_a86a43ff25af0613861748c72bbbf373b}{check}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ check\ convergence\ criterion?\ */}}
+\DoxyCodeLine{00398\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structeqn__control__struct_a89975d2ac06b7354cc06b188c4cffed5}{eps}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ convergence\ criterion\ */}}
+\DoxyCodeLine{00399\ \ \ \mbox{\hyperlink{fiber_8h_ac53ba47ce1f6c1a4f6c737c5e3e63084}{Disc\_Scheme\_Type}}\ \mbox{\hyperlink{structeqn__control__struct_ad58bcc3ef099574243d9c62329a0853b}{disc}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ discretisation\ scheme\ of\ equn\ */}}
+\DoxyCodeLine{00400\ \}\ \mbox{\hyperlink{fiber_8h_a94ea30ce92b1f3f42d7edcfda7b5fb73}{Eqn\_Control\_Type}};}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \textcolor{comment}{/*\ a\ structure\ to\ control\ the\ iterative\ solution\ */}}
+\DoxyCodeLine{00403\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfib__sol__control}{fib\_sol\_control}}}
+\DoxyCodeLine{00404\ \{}
+\DoxyCodeLine{00405\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfib__sol__control_a174c822c1ff93ea92990fd64a3f02099}{coupled}};}
+\DoxyCodeLine{00406\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfib__sol__control_ad9c6d0a6daea36a379f5b3960e8413ca}{fl\_it}};}
+\DoxyCodeLine{00407\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfib__sol__control_a5a5b8f7b5456691d726d1e36535b8fa9}{fl\_u}};}
+\DoxyCodeLine{00408\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfib__sol__control_a7309e1fbee9b79c957e6f8b890bc8f35}{move\_to\_center\_factor}};}
+\DoxyCodeLine{00409\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfib__sol__control_a1c8eaa1d6295ca42a151b5f00be6b6dc}{it}};}
+\DoxyCodeLine{00410\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfib__sol__control_a86284a4c59b8a53c3e6682864faa322f}{each}};}
+\DoxyCodeLine{00411\ \ \ \mbox{\hyperlink{structeqn__control__struct}{Eqn\_Control\_Type}}\ \mbox{\hyperlink{structfib__sol__control_a63708567279480860ab9d725d86e5ecc}{eqn}}[\mbox{\hyperlink{fiber_8h_afe68229454599bba7570335337565b29af92475c029b256f50454f86b9e9c8c2e}{FS\_MAX}}];}
+\DoxyCodeLine{00412\ \}\ \mbox{\hyperlink{fiber_8h_a93275f76e068e1368efe9f32467d377a}{Fib\_Sol\_Control\_Type}};}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{structfib__sol__control}{Fib\_Sol\_Control\_Type}}\ \mbox{\hyperlink{fiber_8h_a8315831ae3175dc8996cac27001be78f}{Fib\_Control}};}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \textcolor{comment}{/*\ define\ a\ reference\ thread\ and\ reference\ cell\ for\ an\ easy\ usage}}
+\DoxyCodeLine{00417\ \textcolor{comment}{\ \ \ of\ the\ property\ routines\ */}}
+\DoxyCodeLine{00418\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ \mbox{\hyperlink{fiber_8h_a5f589add9aba1109673cbeb4e421d67c}{ref\_c}};}
+\DoxyCodeLine{00419\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{fiber_8h_abe58d1d008263a3a41b01cd53a5be92f}{ref\_t}};}
+\DoxyCodeLine{00420\ \textcolor{comment}{/*\ for\ FLUENT6\ define\ own\ domain\ pointer\ */}}
+\DoxyCodeLine{00421\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *\mbox{\hyperlink{fiber_8h_a835849767f8cf2ca06f0fdc021af81b5}{domain1}};}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \textcolor{comment}{/*\ some\ macros\ for\ easy\ access\ onto\ the\ fiber\ variables\ */}}
+\DoxyCodeLine{00424\ \textcolor{comment}{/*\ access\ to\ real\ variables\ */}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#define\ FIB\_STORAGE\_R(f)((real\ *)f)}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#define\ FIB\_STORAGE\_R\_NV(f)((real\ (*)[ND\_ND])f)}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#define\ FIB\_STORAGE\_NC(f)((Neighbor\_Cells\ *)f)}}
+\DoxyCodeLine{00428\ \textcolor{comment}{/*\ first\ face\ variables\ */}}
+\DoxyCodeLine{00429\ \textcolor{comment}{/*\ fiber\ face\ coordinate\ vector\ */}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#define\ FIB\_F\_X(f,i)(FIB\_STORAGE\_R\_NV(f-\/>fvarND[FF\_N])[i])}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#define\ FIB\_F\_X0(f)(FIB\_STORAGE\_R\_NV(f-\/>fvarND[FF\_N]))}}
+\DoxyCodeLine{00432\ \textcolor{comment}{/*\ normalized\ fiber\ face\ direction\ vector\ */}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#define\ FIB\_F\_VEC(f,i)(FIB\_STORAGE\_R\_NV(f-\/>fvarND[FF\_VEC])[i])}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#define\ FIB\_F\_VEC0(f)(FIB\_STORAGE\_R\_NV(f-\/>fvarND[FF\_VEC]))}}
+\DoxyCodeLine{00435\ \textcolor{comment}{/*\ fiber\ face\ flux\ */}}
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\#define\ FIB\_F\_FLUX(f,i)(FIB\_STORAGE\_R(f-\/>fvar[FF\_FLUX])[i])}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\#define\ FIB\_F\_FLUX0(f)(FIB\_STORAGE\_R(f-\/>fvar[FF\_FLUX]))}}
+\DoxyCodeLine{00438\ \textcolor{comment}{/*\ fiber\ cross\ section\ */}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\#define\ FIB\_F\_CROSS(f,i)(FIB\_STORAGE\_R(f-\/>fvar[FF\_CROSS])[i])}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\#define\ FIB\_F\_CROSS0(f)(FIB\_STORAGE\_R(f-\/>fvar[FF\_CROSS]))}}
+\DoxyCodeLine{00441\ \textcolor{comment}{/*\ fiber\ interpolation\ factor\ */}}
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#define\ FIB\_F\_FACTOR(f,i)(FIB\_STORAGE\_R(f-\/>fvar[FF\_FACTOR])[i])}}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#define\ FIB\_F\_FACTOR0(f)(FIB\_STORAGE\_R(f-\/>fvar[FF\_FACTOR]))}}
+\DoxyCodeLine{00444\ \textcolor{comment}{/*\ fiber\ cell\ distance\ stored\ at\ face\ */}}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{\#define\ FIB\_F\_DIST(f,i)(FIB\_STORAGE\_R(f-\/>fvar[FF\_DIST])[i])}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#define\ FIB\_F\_DIST0(f)(FIB\_STORAGE\_R(f-\/>fvar[FF\_DIST]))}}
+\DoxyCodeLine{00447\ \textcolor{comment}{/****************************************************************/}}
+\DoxyCodeLine{00448\ \textcolor{comment}{/*\ \ \ fiber\ cell\ variables\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00449\ \textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00450\ \textcolor{comment}{/*\ fiber\ length\ coordinate\ */}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#define\ FIB\_C\_Z(f,i)(FIB\_STORAGE\_R(f-\/>grid[FG\_FIB\_Z])[i])}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#define\ FIB\_C\_Z0(f)(FIB\_STORAGE\_R(f-\/>grid[FG\_FIB\_Z]))}}
+\DoxyCodeLine{00453\ \textcolor{comment}{/*\ fiber\ cell\ length\ */}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#define\ FIB\_C\_LENGTH(f,i)(FIB\_STORAGE\_R(f-\/>grid[FG\_LENGTH])[i])}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\#define\ FIB\_C\_LENGTH0(f)(FIB\_STORAGE\_R(f-\/>grid[FG\_LENGTH]))}}
+\DoxyCodeLine{00456\ \textcolor{comment}{/*\ fiber\ cell\ surface\ area\ */}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\#define\ FIB\_C\_A(f,i)(FIB\_STORAGE\_R(f-\/>grid[FG\_SURFACE])[i])}}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\#define\ FIB\_C\_A0(f)(FIB\_STORAGE\_R(f-\/>grid[FG\_SURFACE]))}}
+\DoxyCodeLine{00459\ \textcolor{comment}{/*\ fiber\ cell\ coordinate\ vector\ */}}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#define\ FIB\_C\_X(f,i)(FIB\_STORAGE\_R\_NV(f-\/>gridND[FG\_CART])[i])}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\#define\ FIB\_C\_X0(f)(FIB\_STORAGE\_R\_NV(f-\/>gridND[FG\_CART]))}}
+\DoxyCodeLine{00462\ \textcolor{comment}{/*\ fiber\ cell\ axial/parallel\ vector\ */}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\#define\ FIB\_C\_VEC(f,i)(FIB\_STORAGE\_R\_NV(f-\/>gridND[FG\_AXVEC])[i])}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\#define\ FIB\_C\_VEC0(f)(FIB\_STORAGE\_R\_NV(f-\/>gridND[FG\_AXVEC]))}}
+\DoxyCodeLine{00465\ \textcolor{comment}{/* solution\ variables\ */}}
+\DoxyCodeLine{00466\ \textcolor{comment}{/*\ fiber\ velocity\ */}}
+\DoxyCodeLine{00467\ \textcolor{preprocessor}{\#define\ FIB\_C\_U(f,i)(FIB\_STORAGE\_R(f-\/>svar[FS\_U])[i])}}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\#define\ FIB\_C\_U0(f)(FIB\_STORAGE\_R(f-\/>svar[FS\_U]))}}
+\DoxyCodeLine{00469\ \textcolor{comment}{/*\ fiber\ enthalpy\ */}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#define\ FIB\_C\_H(f,i)(FIB\_STORAGE\_R(f-\/>svar[FS\_H])[i])}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#define\ FIB\_C\_H0(f)(FIB\_STORAGE\_R(f-\/>svar[FS\_H]))}}
+\DoxyCodeLine{00472\ \textcolor{comment}{/*\ fiber\ species\ */}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#define\ FIB\_C\_SP(f,i)(FIB\_STORAGE\_R(f-\/>svar[FS\_SP])[i])}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#define\ FIB\_C\_SP0(f)(FIB\_STORAGE\_R(f-\/>svar[FS\_SP]))}}
+\DoxyCodeLine{00475\ \textcolor{comment}{/*\ additional\ variables\ */}}
+\DoxyCodeLine{00476\ \textcolor{comment}{/*\ fiber\ density\ */}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\#define\ FIB\_C\_RHO(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_RHO])[i])}}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\#define\ FIB\_C\_RHO0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_RHO]))}}
+\DoxyCodeLine{00479\ \textcolor{comment}{/*\ fiber\ viscosity\ */}}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\#define\ FIB\_C\_VIS(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_VIS])[i])}}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\#define\ FIB\_C\_VIS0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_VIS]))}}
+\DoxyCodeLine{00482\ \textcolor{comment}{/*\ fiber\ specific\ heat\ capacity\ */}}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#define\ FIB\_C\_CP(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_CP])[i])}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#define\ FIB\_C\_CP0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_CP]))}}
+\DoxyCodeLine{00485\ \textcolor{comment}{/*\ fiber\ thermal\ conductivity\ */}}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\#define\ FIB\_C\_K(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_KTC])[i])}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#define\ FIB\_C\_K0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_KTC]))}}
+\DoxyCodeLine{00488\ \textcolor{comment}{/*\ fiber\ diameter\ */}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#define\ FIB\_C\_D(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_D])[i])}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\#define\ FIB\_C\_D0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_D]))}}
+\DoxyCodeLine{00491\ \textcolor{comment}{/*\ fiber\ temperature\ */}}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#define\ FIB\_C\_T(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_T])[i])}}
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\#define\ FIB\_C\_T0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_T]))}}
+\DoxyCodeLine{00494\ \textcolor{comment}{/*\ fiber\ surface\ solvent\ mass\ fraction\ */}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#define\ FIB\_C\_S(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_SP\_S])[i])}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#define\ FIB\_C\_S0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_SP\_S]))}}
+\DoxyCodeLine{00497\ \textcolor{comment}{/*\ fiber\ evaporated\ mass\ flux\ (evaporation\ means\ positive\ sign)\ */}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\#define\ FIB\_C\_MP(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_EVAP])[i])}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\#define\ FIB\_C\_MP0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_EVAP]))}}
+\DoxyCodeLine{00500\ \textcolor{comment}{/*\ fiber\ velocity\ gradient\ */}}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\#define\ FIB\_C\_DUDZ(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_DUDZ])[i])}}
+\DoxyCodeLine{00502\ \textcolor{preprocessor}{\#define\ FIB\_C\_DUDZ0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_DUDZ]))}}
+\DoxyCodeLine{00503\ \textcolor{comment}{/*\ fiber\ user\ variables\ */}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#define\ FIB\_C\_USER(f,i)(FIB\_STORAGE\_R(f-\/>var[FV\_USER])[i])}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\#define\ FIB\_C\_USER0(f)(FIB\_STORAGE\_R(f-\/>var[FV\_USER]))}}
+\DoxyCodeLine{00506\ \textcolor{comment}{/*\ access\ the\ fibers\ neighbors\ */}}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\#define\ FIB\_C\_NC(f,i)(FIB\_STORAGE\_NC(f-\/>neighbor\_cells)[i])}}
+\DoxyCodeLine{00508\ \textcolor{comment}{/*\ number\ of\ neighbors\ of\ fiber\ cell\ i\ */}}
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\#define\ FIB\_C\_NC\_N(f,i)((FIB\_STORAGE\_NC(f-\/>neighbor\_cells)[i]).n)}}
+\DoxyCodeLine{00510\ \textcolor{comment}{/*\ access\ the\ cortex\ cell\ id\ */}}
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\#define\ FIB\_C\_NC\_CX(f,i,j)((FIB\_STORAGE\_NC(f-\/>neighbor\_cells)[i]).c[j])}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#define\ FIB\_C\_NC\_CX0(f,i)((FIB\_STORAGE\_NC(f-\/>neighbor\_cells)[i]).c)}}
+\DoxyCodeLine{00513\ \textcolor{comment}{/*\ access\ weighting\ factor\ of\ cortex\ cell\ */}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\#define\ FIB\_C\_NC\_W(f,i,j)((FIB\_STORAGE\_NC(f-\/>neighbor\_cells)[i]).weights[j])}}
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\#define\ FIB\_C\_NC\_W0(f,i)((FIB\_STORAGE\_NC(f-\/>neighbor\_cells)[i]).weights)}}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \textcolor{comment}{/*\ some\ other\ macros\ for\ easy\ access\ of\ gridding\ */}}
+\DoxyCodeLine{00519\ \textcolor{comment}{/*\ grid\ type\ */}}
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\#define\ FIB\_G\_TYPE(f)(f-\/>head-\/>gridding.type)}}
+\DoxyCodeLine{00521\ \textcolor{comment}{/*\ ratio\ factor\ at\ injection\ point\ */}}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#define\ FIB\_R1(f)(f-\/>head-\/>gridding.ratio1)}}
+\DoxyCodeLine{00523\ \textcolor{comment}{/*\ ratio\ factor\ at\ loc\_comp\ */}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\#define\ FIB\_R2(f)(f-\/>head-\/>gridding.ratio2)}}
+\DoxyCodeLine{00525\ \textcolor{comment}{/*\ location\ of\ compressed\ zone\ */}}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#define\ FIB\_LOC(f)(f-\/>head-\/>gridding.loc\_comp)}}
+\DoxyCodeLine{00527\ \textcolor{comment}{/*\ number\ of\ grid\ points\ in\ compressed\ zone\ */}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\#define\ FIB\_N1(f)(f-\/>head-\/>gridding.n1)}}
+\DoxyCodeLine{00529\ \textcolor{comment}{/*\ number\ of\ grid\ points\ in\ fiber\ */}}
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\#define\ FIB\_N(f)(f-\/>head-\/>n\_cells)}}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ }
+\DoxyCodeLine{00533\ \textcolor{comment}{/*\ fiber\ id\ */}}
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\#define\ FIB\_ID(f)(f-\/>id)}}
+\DoxyCodeLine{00535\ \textcolor{comment}{/*\ easy\ access\ to\ residuals\ */}}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#define\ FIB\_RES\_U(f)(f-\/>res[FS\_U])}}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\#define\ FIB\_RES\_UO(f)(f-\/>res\_old[FS\_U])}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#define\ FIB\_RES\_H(f)(f-\/>res[FS\_H])}}
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\#define\ FIB\_RES\_HO(f)(f-\/>res\_old[FS\_H])}}
+\DoxyCodeLine{00540\ \textcolor{preprocessor}{\#define\ FIB\_RES\_SP(f)(f-\/>res[FS\_SP])}}
+\DoxyCodeLine{00541\ \textcolor{preprocessor}{\#define\ FIB\_RES\_SPO(f)(f-\/>res\_old[FS\_SP])}}
+\DoxyCodeLine{00542\ }
+\DoxyCodeLine{00543\ \textcolor{comment}{/*\ fluent's\ material\ pointer\ to\ polymer\ */}}
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\#define\ FIB\_MATERIAL\_POLYMER(f)(f-\/>head-\/>material-\/>polymer)}}
+\DoxyCodeLine{00545\ \textcolor{comment}{/*\ fluent's\ material\ pointer\ to\ solvent\ */}}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\#define\ FIB\_MATERIAL\_SOLVENT(f)(f-\/>head-\/>material-\/>solvent)}}
+\DoxyCodeLine{00547\ \textcolor{comment}{/*\ fluent's\ material\ pointer\ to\ \ vapor\ on\ gas\ side\ */}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\#define\ FIB\_MATERIAL\_VAPOR(f)(f-\/>head-\/>material-\/>solvent\_vapor)}}
+\DoxyCodeLine{00549\ \textcolor{comment}{/*\ emissivity\ of\ fiber\ */}}
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\#define\ FIB\_EMISSIVITY(f)(f-\/>head-\/>material-\/>emissivity)}}
+\DoxyCodeLine{00551\ \textcolor{comment}{/*\ fiber\ type\ */}}
+\DoxyCodeLine{00552\ \textcolor{preprocessor}{\#define\ FIB\_TYPE(f)(f-\/>head-\/>type)}}
+\DoxyCodeLine{00553\ \textcolor{comment}{/*\ fiber\ drag\ law\ */}}
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\#define\ FIB\_DRAG\_LAW(f)(f-\/>head-\/>models-\/>drag\_law)}}
+\DoxyCodeLine{00555\ \textcolor{comment}{/*\ fiber\ heat\ transfer\ coefficient\ */}}
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\#define\ FIB\_HTC\_LAW(f)(f-\/>head-\/>models-\/>htc\_law)}}
+\DoxyCodeLine{00557\ \textcolor{comment}{/*\ fiber\ mass\ transfer\ coefficient\ */}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\#define\ FIB\_MTC\_LAW(f)(f-\/>head-\/>models-\/>mtc\_law)}}
+\DoxyCodeLine{00559\ \textcolor{comment}{/*\ include\ surface\ tension\ */}}
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\#define\ FIB\_SURFACE\_TENSION(f)(f-\/>head-\/>models-\/>surface\_tension)}}
+\DoxyCodeLine{00561\ \textcolor{comment}{/*\ is\ viscous\ heating\ in\ the\ fiber\ active\ */}}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\#define\ FIB\_VISCOUS\_HEATING(f)(f-\/>head-\/>models-\/>viscous\_heating)}}
+\DoxyCodeLine{00563\ \textcolor{comment}{/*\ is\ radiation\ exchange\ of\ the\ fiber\ active\ */}}
+\DoxyCodeLine{00564\ \textcolor{preprocessor}{\#define\ FIB\_RADIATION(f)(f-\/>head-\/>models-\/>radiation)}}
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ \textcolor{comment}{/*\ is\ the\ fiber\ dry\ spun?\ */}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#define\ FIB\_DRY\_SPINNING(f)(FIB\_TYPE(f)\ ==\ DRY\_SPINNING)}}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \textcolor{comment}{/*\ is\ the\ fiber\ valid\ to\ compute?\ */}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\#define\ FIB\_VALID(f)((f-\/>valid\ ==\ 3))}}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \textcolor{comment}{/*\ check\ integer's\ oddity\ */}}
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\#define\ ODD(i)(i\%2\ ==\ 1)}}
+\DoxyCodeLine{00574\ }
+\DoxyCodeLine{00575\ \textcolor{comment}{/*******************************************************************/}}
+\DoxyCodeLine{00576\ }
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#define\ MAX\_FACE\_EQNS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 6*MAX\_CELL\_NODES}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\#define\ MAX\_FACE\_TRIANGLES\ \ \ \ \ \ \ \ \ \ \ \ 64}}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_cell___info__struct}{Cell\_Info\_struct}}}
+\DoxyCodeLine{00581\ \{}
+\DoxyCodeLine{00582\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_cell___info__struct_a279f0685d30e9931d84b78c9f7a76d7f}{n\_faces}};}
+\DoxyCodeLine{00583\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_cell___info__struct_a13fbf3c17594503f639a7ef768ea73bb}{ctype}};}
+\DoxyCodeLine{00584\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_cell___info__struct_aa3b976cf5d3523325aa25623964f8e7f}{faceEq}}[\mbox{\hyperlink{fiber_8h_a26e17197fb88daa80237d2b3ec8bd271}{MAX\_FACE\_EQNS}}][4];}
+\DoxyCodeLine{00585\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_cell___info__struct_a2a384931c691fd6a6bd04d7aea669c2d}{facePts}}[\mbox{\hyperlink{fiber_8h_a26e17197fb88daa80237d2b3ec8bd271}{MAX\_FACE\_EQNS}}][4][3];}
+\DoxyCodeLine{00586\ }
+\DoxyCodeLine{00587\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_cell___info__struct_a3f14599e8e7566e81e463a6792e86890}{validEq}}[\mbox{\hyperlink{fiber_8h_a26e17197fb88daa80237d2b3ec8bd271}{MAX\_FACE\_EQNS}}];}
+\DoxyCodeLine{00588\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_cell___info__struct_a1970f4d840fb18ba5ad733e479991e69}{faceNumPts}}[\mbox{\hyperlink{fiber_8h_a26e17197fb88daa80237d2b3ec8bd271}{MAX\_FACE\_EQNS}}];}
+\DoxyCodeLine{00589\ \}\ \mbox{\hyperlink{fiber_8h_a53114c3713004f209ba57928b32fa61d}{Cell\_Info}};}
+\DoxyCodeLine{00590\ }
+\DoxyCodeLine{00591\ \textcolor{comment}{/*******************************************************************/}}
+\DoxyCodeLine{00592\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00593\ \textcolor{comment}{\ *\ \ \ \ \ \ assisting\ macros\ for\ outputs}}
+\DoxyCodeLine{00594\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00595\ }
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\#define\ NPRINT\ CX\_Message("{}\(\backslash\)n"{})}}
+\DoxyCodeLine{00597\ \textcolor{comment}{/*\ helper\ for\ displaying\ integer/real\ valued\ macros\ and\ variables\ */}}
+\DoxyCodeLine{00598\ \textcolor{preprocessor}{\#define\ IPRINT(i)\ CX\_Message("{}\(\backslash\)t\%s\ \(\backslash\)t\ \%d\ \(\backslash\)n"{},\ \#i,\ i)}}
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\#define\ RPRINT(r)\ CX\_Message("{}\(\backslash\)t\%s\ \(\backslash\)t\ \%e\ \(\backslash\)n"{},\ \#r,\ r)}}
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\#define\ RVPRINT(rv)\ ((ND\_ND==3)?\ CX\_Message("{}\(\backslash\)t\%s\ \(\backslash\)t\ \%e\ \(\backslash\)t\ \%e\ \(\backslash\)t\ \%e\ \(\backslash\)n"{},\ \#rv,\ rv[0],\ rv[1],\ rv[2]):\ \(\backslash\)}}
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\ \ CX\_Message("{}\(\backslash\)t\%s\ \(\backslash\)t\ \%e\ \(\backslash\)t\ \%e\ \ \(\backslash\)n"{},\ \#rv,\ rv[0],\ rv[1]))}}
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\#define\ SPRINT(s)\ CX\_Message("{}\(\backslash\)t\%s\ \(\backslash\)t\ \%s\ \(\backslash\)n"{},\ \#s,\ s)}}
+\DoxyCodeLine{00603\ \textcolor{preprocessor}{\#define\ BPRINT(b)\ CX\_Message("{}\(\backslash\)t\%s\ \(\backslash\)t\ \%s\ \(\backslash\)n"{},\ \#b,\ (\ b\ ?\ "{}TRUE"{}:\ "{}FALSE"{}))}}
+\DoxyCodeLine{00604\ }
+\DoxyCodeLine{00605\ \textcolor{comment}{/*\ Two\ column\ output\ for\ integer\ variable\ printing.\ Optionally\ fill\ a}}
+\DoxyCodeLine{00606\ \textcolor{comment}{\ *\ column\ with\ blanks\ by\ using\ explicitly\ an\ integer\ value(!)\ as}}
+\DoxyCodeLine{00607\ \textcolor{comment}{\ *\ argument\ (issuing\ explicitly\ an\ integer\ like\ -\/1\ would\ otherwise}}
+\DoxyCodeLine{00608\ \textcolor{comment}{\ *\ result\ in\ displaying\ something\ like\ "{}-\/1\ =\ -\/1"{}).\ So\ one\ has\ to\ check}}
+\DoxyCodeLine{00609\ \textcolor{comment}{\ *\ whether\ each\ argument\ is\ an\ integer\ value\ or\ an\ integer\ variable.}}
+\DoxyCodeLine{00610\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00611\ \textcolor{preprocessor}{\#define\ IPRINT2(i1,i2)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\ \ char\ str[64];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\ \ CX\_Message("{}\ \ \ \ "{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\ \ sprintf(str,"{}\%d"{},i1);\ \ \ }\textcolor{comment}{/*\ print\ value\ to\ a\ string\ */}\textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\ \ (strcmp(\#i1,str)\ ==\ 0)\ }\textcolor{comment}{/*\ name\ equal\ value?\ Then\ blanks\ */}\textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\ \ \ \ ?\ CX\_Message("{}\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\ \ \ \ :\ CX\_Message("{}\%-\/11s\ \%2d"{},\#i1,\ i1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\ \ \ \ ;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\ \ CX\_Message("{}\ \ \ \ \ \ \ \ "{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\ \ sprintf(str,"{}\%d"{},i2);\ \ \ }\textcolor{comment}{/*\ print\ value\ to\ a\ string\ */}\textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\ \ (strcmp(\#i2,str)\ ==\ 0)\ }\textcolor{comment}{/*\ name\ equal\ value?\ Then\ blanks\ */}\textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\ \ \ \ ?\ CX\_Message("{}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)n"{})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\ \ \ \ :\ CX\_Message("{}\%-\/11s\ \%2d\(\backslash\)n"{},\ \#i2,\ i2)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\ \ \ \ ;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00626\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00627\ }
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#define\ INJ\_PRINT\_I(ivar,val,msg,level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00629\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\ \ ivar\ =\ fixnum\_arg(val,msg);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00631\ \textcolor{preprocessor}{\ \ IFNOISELEVEL(level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\ \ \ \ \ \ CX\_Message("{}\ \(\backslash\)t\%d\ "{},fixnum\_arg(val,msg));\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\ \ \ \ \ \ IPRINT(ivar);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00637\ }
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\#define\ INJ\_PRINT\_IE(ivar,val,msg,level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\ \ ivar\ =\ fixnum\_arg(val,msg);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00641\ \textcolor{preprocessor}{\ \ IFNOISELEVEL(level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00642\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\ \ \ \ \ \ CX\_Message("{}\ \(\backslash\)t\%d\ "{},fixnum\_arg(val,msg));\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\ \ \ \ \ \ RPRINT(ivar);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00645\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00647\ }
+\DoxyCodeLine{00648\ \textcolor{preprocessor}{\#define\ INJ\_PRINT\_E(ivar,val,msg,level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\ \ ivar\ =\ flonum\_arg(val,msg);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00651\ \textcolor{preprocessor}{\ \ IFNOISELEVEL(level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{\ \ \ \ \ \ CX\_Message("{}\ \(\backslash\)t\%e\ "{},flonum\_arg(val,msg));\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00654\ \textcolor{preprocessor}{\ \ \ \ \ \ RPRINT(ivar);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00655\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\#define\ INJ\_PRINT\_S(ivar,val,msg,type,level)\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{\ \ ivar\ =\ type(string\_arg(val,msg));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00661\ \textcolor{preprocessor}{\ \ IFNOISELEVEL(level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00663\ \textcolor{preprocessor}{\ \ \ \ \ \ CX\_Message("{}\ \(\backslash\)t\%s\ "{},string\_arg(val,msg));\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\ \ \ \ \ \ IPRINT(ivar);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00665\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00667\ }
+\DoxyCodeLine{00668\ \textcolor{preprocessor}{\#define\ INJ\_PRINT\_SS(ivar,val,msg,level)\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00669\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\ \ ivar\ =\ string\_arg(val,msg);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\ \ IFNOISELEVEL(level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\ \ \ \ \ \ CX\_Message("{}\ \(\backslash\)t\%s\ "{},string\_arg(val,msg));\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00674\ \textcolor{preprocessor}{\ \ \ \ \ \ IPRINT(ivar);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00677\ }
+\DoxyCodeLine{00678\ \textcolor{preprocessor}{\#define\ INJ\_PRINT\_B(ivar,val,msg,level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00680\ \textcolor{preprocessor}{\ \ ivar\ =\ cxboolean\_arg(val,msg);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00681\ \textcolor{preprocessor}{\ \ IFNOISELEVEL(level)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00683\ \textcolor{preprocessor}{\ \ \ \ \ \ CX\_Message("{}\ \(\backslash\)t\%d\ "{},cxboolean\_arg(val,msg));\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\ \ \ \ \ \ BPRINT(ivar);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00685\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00686\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{\#define\ FPRINT\_VAR(file,var,i,imax)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\ \ fprintf(file,"{}\ variable\ \%s\ \(\backslash\)n"{},\ \#var);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\ \ for\ (i=0;\ i<=(imax);\ i++)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\ \ \ \ \ \ fprintf(file,"{}\ \(\backslash\)t\%d\ \(\backslash\)t\%e\(\backslash\)n"{},i,(var));\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00693\ \textcolor{preprocessor}{\ \ fprintf(file,"{}\ \(\backslash\)n"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00694\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00695\ }
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\#define\ FPRINT\_VAR\_NV(file,var,i,imax)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\ \ fprintf(file,"{}\ variable\ \%s\ \(\backslash\)n"{},\ \#var);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\ \ for\ (i=0;\ i<=(imax);\ i++)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\ \ \ \ \ if\ (ND\_ND\ ==\ 3)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\ \ \ \ \ \ \ fprintf(file,"{}\ \(\backslash\)t\%d\ \(\backslash\)t\%e\ \(\backslash\)t\%e\ \(\backslash\)t\%e\(\backslash\)n"{},i,(var)[0],\ (var)[1],\ (var)[2]);\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\ \ \ \ \ else\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00704\ \textcolor{preprocessor}{\ \ \ \ \ \ \ fprintf(file,"{}\ \(\backslash\)t\%d\ \(\backslash\)t\%e\ \(\backslash\)t\%e\(\backslash\)n"{},i,(var)[0],\ (var)[1]);\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\ \ fprintf(file,"{}\ \(\backslash\)n"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00708\ }
+\DoxyCodeLine{00709\ }
+\DoxyCodeLine{00710\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{fiber_8h_a17e18f73c9f5290ee54e10115d45e09d}{FM\_Verbose\_Level}};}
+\DoxyCodeLine{00711\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{fiber_8h_a660e63dfc3a49a33aa988b4eb6384151}{FM\_Report\_Level}};}
+\DoxyCodeLine{00712\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{fiber_8h_acc00865561c05ad4491699e1e4f3c8ee}{FM\_Routine\_Selector}};}
+\DoxyCodeLine{00713\ }
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\#define\ IFNOISELEVEL(level)\ if\ (FM\_Verbose\_Level\ >=\ level)}}
+\DoxyCodeLine{00715\ \textcolor{comment}{/*\ \#define\ IFNOISELEVEL2(level)\ if\ ((FM\_Verbose\_Level\ >=\ (level\ \%\ 10))\ \(\backslash\)}}
+\DoxyCodeLine{00716\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ (FM\_Routine\_Selector\ ==\ (level\ /\ 10)))}}
+\DoxyCodeLine{00717\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ }
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#define\ FM\_REPORT\ 1}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\#define\ IFREPORT\ if\ (FM\_Report\_Level\ >=\ FM\_REPORT)}}
+\DoxyCodeLine{00722\ }
+\DoxyCodeLine{00723\ \textcolor{comment}{/*\ define\ section\ id's\ to\ read/write\ fiber\ data\ */}}
+\DoxyCodeLine{00724\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00725\ \{}
+\DoxyCodeLine{00726\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca05fa57d88d3d433d3f42bd44665b300c}{XF\_RF\_FIBER\_DATA}}\ =\ 0,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ start\ with\ fiber\ data\ */}}
+\DoxyCodeLine{00727\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06cad5fdc266db6095a6d8e6a1572193f5a0}{XF\_RF\_FIBER\_ID}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fiber\ id\ */}}
+\DoxyCodeLine{00728\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca51e54998f48c1cb8e2137c98bc18f006}{XF\_RF\_FIBER\_NOZZLE\_X}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ nozzle\ coordinates\ */}}
+\DoxyCodeLine{00729\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06cae8989e458c22ce57a55bd9ce725cf76f}{XF\_RF\_FIBER\_Z}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ *grid[FG\_MAX]\ */}}
+\DoxyCodeLine{00730\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca5ffea6d8f1f557d533f82241d444c546}{XF\_RF\_FIBER\_LENGTH}},}
+\DoxyCodeLine{00731\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca117916c8d6e6727869bd5bcfc583165a}{XF\_RF\_FIBER\_SURFACE}},}
+\DoxyCodeLine{00732\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca4bdfba09083d1a5887322c74b07e211c}{XF\_RF\_FIBER\_CART}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ *gridND[FG\_ND\_MAX]\ \ \ */}}
+\DoxyCodeLine{00733\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06cabdb096bee43b01a7c689e7629e39b13e}{XF\_RF\_FIBER\_AXVEC}},}
+\DoxyCodeLine{00734\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06cacc42837c5a8abb0b0e0fe38c9de3562d}{XF\_RF\_FIBER\_F\_FLUX}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ *fvar[FF\_MAX]\ */}}
+\DoxyCodeLine{00735\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca3079f53a3bacc578e8003853ab65dfad}{XF\_RF\_FIBER\_F\_CROSS}},}
+\DoxyCodeLine{00736\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca407587f2395a26b6cf600eab18cd2508}{XF\_RF\_FIBER\_F\_FACTOR}},}
+\DoxyCodeLine{00737\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06caa2f0e66ce0a95a2e45f51a1abc0447d8}{XF\_RF\_FIBER\_F\_DIST}},}
+\DoxyCodeLine{00738\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06caab5841473c3a6998e303fd11317a2418}{XF\_RF\_FIBER\_F\_N}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ *fvarND[FF\_ND\_MAX]\ \ */}}
+\DoxyCodeLine{00739\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca586c9a43ead1353ecac960b1380ac8e4}{XF\_RF\_FIBER\_F\_VEC}},}
+\DoxyCodeLine{00740\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06cab753c00bf0cf85bbaf5d7b50c429f231}{XF\_RF\_FIBER\_U}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ *svar[FS\_MAX]\ */}}
+\DoxyCodeLine{00741\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca014eb4bdef27b31f767aab375564cff0}{XF\_RF\_FIBER\_H}},}
+\DoxyCodeLine{00742\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca2789a856cebea1095dde826548c66039}{XF\_RF\_FIBER\_SP}},}
+\DoxyCodeLine{00743\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06cac9c4038951fbf51afe990f547993a0f8}{XF\_RF\_FIBER\_RHO}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ *var[FV\_MAX]\ */}}
+\DoxyCodeLine{00744\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca16625923bd86b1f3ae0af0d595aa683b}{XF\_RF\_FIBER\_VIS}},}
+\DoxyCodeLine{00745\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06cae2473d6ff74bfc3672836a170c5c0409}{XF\_RF\_FIBER\_CP}},}
+\DoxyCodeLine{00746\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca7d735e7344e156c7d611f012deb8f35f}{XF\_RF\_FIBER\_KTC}},}
+\DoxyCodeLine{00747\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06caa523810a040efb7260282e65bc92def8}{XF\_RF\_FIBER\_D}},}
+\DoxyCodeLine{00748\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca75e1035bf2ee9d487adc452e1e3c325d}{XF\_RF\_FIBER\_T}},}
+\DoxyCodeLine{00749\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca7c411ae44448550b2da4b179e337f6d1}{XF\_RF\_FIBER\_SP\_S}},}
+\DoxyCodeLine{00750\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca190ecacf15ea278aee8260f0ded6bbf2}{XF\_RF\_FIBER\_EVAP}},}
+\DoxyCodeLine{00751\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca200ebf0def6dac9a24181adb883c2a42}{XF\_RF\_FIBER\_DUDZ}},}
+\DoxyCodeLine{00752\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca05caa46017df2b023196c015e0cde4c3}{XF\_RF\_FIBER\_USER}},}
+\DoxyCodeLine{00753\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06caaec87e2c5565e7b45ba55baa6cca5ec5}{XF\_RF\_FIBER\_RES}},}
+\DoxyCodeLine{00754\ \ \ \mbox{\hyperlink{fiber_8h_adc29c2ff13d900c2f185ee95427fb06ca3aff83d22d61f3af422e53f36e4a74fa}{XF\_RF\_FIBER\_RES\_OLD}}}
+\DoxyCodeLine{00755\ \};}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00758\ \textcolor{comment}{/*\ parallel\ stuff\ */}}
+\DoxyCodeLine{00759\ \textcolor{preprocessor}{\#if\ RP\_2D}}
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\#\ \ define\ ADD\_SV\_VOLUME\_2D\ SV\_VOLUME\_2D,\ SV\_AREA\_2D,}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00762\ \textcolor{preprocessor}{\#\ \ define\ ADD\_SV\_VOLUME\_2D}}
+\DoxyCodeLine{00763\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00764\ }
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\#define\ SV\_FIB\_LIST\ \(\backslash\)}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\ \ SV\_P,\ SV\_DENSITY,\ SV\_VOLUME,SV\_AREA,\(\backslash\)}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\ \ SV\_U,\ SV\_V,\ SV\_W,\(\backslash\)}}
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\ \ SV\_OMEGA\_G,\(\backslash\)}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\ \ SV\_MU\_LAM,\ \(\backslash\)}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{\ \ SV\_DIFF\_COEFF,\(\backslash\)}}
+\DoxyCodeLine{00771\ \textcolor{preprocessor}{\ \ SV\_T,\(\backslash\)}}
+\DoxyCodeLine{00772\ \textcolor{preprocessor}{\ \ SV\_P1,\ SV\_DO\_IRRAD,\ SV\_DO\_IRRAD\_OLD,\ SV\_KTC,\ SV\_CP,\(\backslash\)}}
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\ \ SV\_Y,\(\backslash\)}}
+\DoxyCodeLine{00774\ \textcolor{preprocessor}{\ \ SV\_UDM\_I,\(\backslash\)}}
+\DoxyCodeLine{00775\ \textcolor{preprocessor}{\ \ ADD\_SV\_VOLUME\_2D\ SV\_CENTROID}}
+\DoxyCodeLine{00776\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

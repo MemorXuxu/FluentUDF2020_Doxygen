@@ -1,0 +1,1158 @@
+\doxysection{materials.\+h}
+\hypertarget{materials_8h_source}{}\label{materials_8h_source}\index{fluent20.1.0/src/material/materials.h@{fluent20.1.0/src/material/materials.h}}
+\mbox{\hyperlink{materials_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_MATERIALS\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_MATERIALS\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cudf_8h}{cudf.h}}"{}}\ \ \ \textcolor{comment}{/*\ UDF\_Cache\_Data\ */}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tabulation_8h}{tabulation.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}entity.h"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ MATERIAL\_NAME\_LENGTH\ 60}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ MAX\_SPE\_EQNS\ 50}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ MAX\_PDF\_SPECIES\ \ \ 700}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ MAX\_PROB\_EQNS\ 10}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ MAX\_SOOT\_MOM\_EQNS\ 10}}
+\DoxyCodeLine{00018\ \textcolor{comment}{/*\ This\ parameter\ should\ be\ the\ maximum\ of\ MAX\_SPE\_EQNS\ and}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ MAX\_PDF\_SPECIES.\ The\ original\ definition\ below\ is\ commented}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ \ \ \ out\ because\ the\ interpreted\ UDF\ compiler\ complains}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\#define\ MAX\_SPE\_EQNS\_PDF\ MAX(MAX\_SPE\_EQNS,\ MAX\_PDF\_SPECIES)}}
+\DoxyCodeLine{00022\ \textcolor{comment}{currently\ MAX\_SPE\_EQNS\ =\ 50\ and\ MAX\_PDF\_SPECIES\ =\ 300\ */}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ MAX\_SPE\_EQNS\_PDF\ MAX\_PDF\_SPECIES}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ MAX\_PDF\_SPECIES\_POST\ 200}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ MAX\_PLOG\ 12}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ MAX\_SUB\_DOMAINS\ 20\ \ }\textcolor{comment}{/*\ US168773\ -\/\ This\ has\ been\ moved\ here\ from\ mem\_grid.h\ without\ affecting\ any\ known\ dependency\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ MAX\_PHASES\ MAX\_SUB\_DOMAINS\ \ }\textcolor{comment}{/*\ US168773\ -\/\ This\ has\ been\ moved\ here\ from\ mem\_grid.h\ without\ affecting\ any\ known\ dependency\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ MP\_PROP\_MAX\ (MAX\_PHASES*(MAX\_PHASES+1)/2)\ \ }\textcolor{comment}{/*\ US168773\ -\/\ This\ is\ a\ calculation\ of\ the\ maximum\ number\ of\ phase\ pairs\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ PROP\_UDF\_NAME\_LENGTH\ 128\ \ }\textcolor{comment}{/*Increasing\ from\ 64\ Byte\ CR:\ 38605*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcueos__parameter__struct}{cueos\_parameter\_struct}}}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_aa5f3ba7ee188a9b478bc8392692040f7}{tcrit}}\ ;}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_a3d0ea1a8e1003c57fd8a51b63d3af636}{pcrit}}\ ;}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_a2613bc70e168c613b1659c732e94c914}{vcrit}}\ ;}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_a1ffe17ca89f89c3abc8d9c1abc672ca4}{omega}}\ ;}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_a2ccde19006634b5a8fe3acf252229a98}{a0}}\ ;}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_a8609037d2db04520b960ad2424813d43}{b0}}\ ;}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_af11b01c53c3ea59bed2c04c952b1a9ff}{c0}}\ ;}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_abe55589dd570dbb47c2916703d75f797}{bb}}\ ;}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_a0777a7d6c64e91de03933375c1e760b2}{dd}}\ ;}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_ac7c7dcaea168f39b2aa5cf768f53fcf6}{ff}}\ ;}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structcueos__parameter__struct_ae24131877e0bb03f2461c2c5b39ba5dd}{nrk}}\ ;}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structcueos__parameter__struct_ad9c7d903da9513cf5bc930484b5a1a14}{initialized}};}
+\DoxyCodeLine{00046\ \}\ \mbox{\hyperlink{materials_8h_a5d48a9647ff14f7638e7ff579bf27d98}{CUEOS\_Parameter}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structproperty__struct}{property\_struct}}}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structproperty__struct_adcc9a19ad3119f823a658f6a49a24e64}{method}};}
+\DoxyCodeLine{00051\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structproperty__struct_a3d261056ca3667cbc21f0cd453d2d13e}{constant}};\ \ \ \ \textcolor{comment}{/*\ constant\ value\ of\ property\ */}}
+\DoxyCodeLine{00052\ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00053\ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \mbox{\hyperlink{structpolynomial__struct}{Polynomial}}\ *\mbox{\hyperlink{structproperty__struct_a1ae30344dc2b6147048f9cd980068534}{poly}};}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{double}\ *\mbox{\hyperlink{structproperty__struct_a2173b8bf89b6ef1ed3f8e59a627f8b67}{vector}};}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{double}\ **\mbox{\hyperlink{structproperty__struct_aed60820750f2ab1bf9dd99bc0a9eaab8}{matrix}};}
+\DoxyCodeLine{00057\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structproperty__struct_a1d6f7e9b69cafa423e1423f681209d39}{yes\_or\_no}};}
+\DoxyCodeLine{00058\ \ \ \}\ \mbox{\hyperlink{structproperty__struct_a05b69c10e31b337f7da0dde867a04627}{u}};}
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{structtable__2d__with__range__check__struct}{Table\_2D\_With\_Range\_Check}}\ *\mbox{\hyperlink{structproperty__struct_a6efc2fabb1d3879c73bcbdedc656e61c}{table\_tp}};}
+\DoxyCodeLine{00060\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structproperty__struct_adc5a91805ce2b9954c95d73224af2875}{udf\_name}}[\mbox{\hyperlink{materials_8h_a50a81413c0c411382d08affdd35ef450}{PROP\_UDF\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{struct_u_d_f___cache___data}{UDF\_Cache\_Data}}\ \mbox{\hyperlink{structproperty__struct_a3aa32937d9870f26a310b8bdb59a5188}{udf\_prop}};}
+\DoxyCodeLine{00062\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structproperty__struct_af4b20c71b4e32566a2e8d5dfd79f20d4}{expr}};}
+\DoxyCodeLine{00063\ \}\ \mbox{\hyperlink{materials_8h_a8d4e6aafb8a97835bd54c45baf18fdef}{Property}};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00066\ \{}
+\DoxyCodeLine{00067\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1adb309a4bb01dbaeac2f04e8feb7e0db8}{MATERIAL\_UNKNOWN}}\ =\ -\/1,}
+\DoxyCodeLine{00068\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1a57c6700f08f06f82c028ae479016a50a}{MATERIAL\_FLUID}}\ =\ 0,}
+\DoxyCodeLine{00069\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1a05e4ffeb1cf62b069db016cafc821159}{MATERIAL\_SOLID}},}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1aef00a566e996c969db64d6acaa9e57b2}{MATERIAL\_MIXTURE}},}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1a76b91dbab9167d4b0103a0b73c775755}{MATERIAL\_INERT\_PARTICLE}},}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1aa59ccb5f140e2f1db94a9664288503db}{MATERIAL\_DROPLET\_PARTICLE}},}
+\DoxyCodeLine{00073\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1a7d9dba1a5341c0ed3e2f8b191f16c072}{MATERIAL\_PARTICLE\_MIXTURE}},}
+\DoxyCodeLine{00074\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1a64156e7568caa8715c8abdb6f8e7b2c9}{MATERIAL\_COMBUSTING\_PARTICLE}},}
+\DoxyCodeLine{00075\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1a05181f58cd858874001d6864889d8f85}{MATERIAL\_TYPE\_MAX}}}
+\DoxyCodeLine{00076\ \}\ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1}{Matl\_Type\_ID}};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtype__names__struct}{type\_names\_struct}}}
+\DoxyCodeLine{00079\ \{}
+\DoxyCodeLine{00080\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structtype__names__struct_acf60de4c64d60c1b9449c056bc6bfcf7}{label}};}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1}{Matl\_Type\_ID}}\ \mbox{\hyperlink{structtype__names__struct_a4b3e18afa45f57e419fb3d2fa63995f6}{type\_id}};}
+\DoxyCodeLine{00082\ \}\ \mbox{\hyperlink{materials_8h_a5c1a8a6ef1f604c5c8787ab3cc5cad1a}{Type\_Names}};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00085\ \{}
+\DoxyCodeLine{00086\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a39cbdf3f216b4c6fbac85c30a40fecc0}{PROP\_unknown}}\ =\ -\/1,}
+\DoxyCodeLine{00087\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a16994734a8bfc42c35d6453b5d2a3c47}{PROP\_rho}}\ =\ 0,\ \ \ \ \ \textcolor{comment}{/*\ density\ (incompressible\ fluid,\ or\ solid)\ */}}
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aa6806b9c572a8ad1b9f8ca335f271b44}{PROP\_Cp}},\ \ \ \ \ \ \textcolor{comment}{/*\ specific\ heat\ at\ constant\ pressure\ */}}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a6cf957fc0a57b4ebf06dc33933617e48}{PROP\_mu}},\ \ \ \ \ \ \textcolor{comment}{/*\ laminar\ viscosity\ */}}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ab02b18f8554228a07af9b5d1f7f0d817}{PROP\_ktc}},\ \ \ \ \ \textcolor{comment}{/*\ thermal\ conductivity\ (isotropic)\ */}}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212adba3d353105078463a698673eadbeedc}{PROP\_ktc0}},\ \ \ \ \ \ \textcolor{comment}{/*\ thermal\ conductivity\ (anisotropic/ortho\ direction\ 0)*/}}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a3f4550c710a0e848a5b9774d35d25d0a}{PROP\_ktc1}},\ \ \ \ \ \ \textcolor{comment}{/*\ thermal\ conductivity\ (orthotropic\ direction\ 1)\ */}}
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212abb23fb3300f05c6f5dfc7575f958e328}{PROP\_ktc2}},\ \ \ \ \ \ \textcolor{comment}{/*\ thermal\ conductivity\ (orthotropic\ direction\ 2)\ */}}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a91ee4c5f0cb68851f2a56a828d6a0daa}{PROP\_diff}},\ \ \ \ \ \ \textcolor{comment}{/*\ binary\ mass\ diffusivity\ coeff\ */}}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a75f974f7485e0fcf7a8b9d0ee3e2046f}{PROP\_mwi}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ molecular\ weight\ */}}
+\DoxyCodeLine{00096\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a98591e8b292a163b93d570cfa47ab837}{PROP\_hform}},\ \ \ \ \ \textcolor{comment}{/*\ enthalpy\ of\ formation\ */}}
+\DoxyCodeLine{00097\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae080c3f283cc716da3529c7c776dfb25}{PROP\_href}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ enthalpy\ of\ formation\ +\ integral\ 298.15\ to\ Tref\ */}}
+\DoxyCodeLine{00098\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a70ce9fe2dd8b02dac4e89d7bba3700e8}{PROP\_sform}},\ \ \ \ \ \textcolor{comment}{/*\ entropy\ of\ formation\ */}}
+\DoxyCodeLine{00099\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aa79433f7f7dd3c9783000a2cf4b32816}{PROP\_reference\_temp}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ reference\ temperature\ for\ PROP\_hform/sform\ */}}
+\DoxyCodeLine{00100\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a935a90a0ed58116785b7c63ca57f8022}{PROP\_Rgas}},\ \ \ \ \ \ \textcolor{comment}{/*\ universal\ gas\ constant/molecular\ weight\ */}}
+\DoxyCodeLine{00101\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aa827421ea49a6d4fe3426e9994f17e56}{PROP\_dof}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ degrees\ of\ freedom\ */}}
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a23e206f6639108cd8b0d0f1e739e2c5f}{PROP\_charSigma}},\ \ \ \textcolor{comment}{/*\ Lennard-\/Jones\ characteristic\ length\ */}}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a99399144e7e492a326a34ef15a780c77}{PROP\_charEpsK}},\ \ \ \ \textcolor{comment}{/*\ Lennard-\/Jones\ characteristic\ energy\ */}}
+\DoxyCodeLine{00104\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aa9ce45b68e397d8d9790248d3c430ad5}{PROP\_thermAC}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Thermal\ Accomodation\ Coefficient\ */}}
+\DoxyCodeLine{00105\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a036b3963b9621f94c565f07d04241b25}{PROP\_velAC}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Velocity\ Accomodation\ Coefficient\ */}}
+\DoxyCodeLine{00106\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a812392b3374547df3ded166922f4a3c7}{PROP\_abs\_coeff}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ absorption\ coefficient\ */}}
+\DoxyCodeLine{00107\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a7aaa43622bcd375169dd94cc665018fd}{PROP\_scat\_coeff}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ scattering\ coefficient\ */}}
+\DoxyCodeLine{00108\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a634beffc80e7bc3a923796dd4b7f12c6}{PROP\_scat\_phase\_func}},\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ scattering\ phase\ function\ */}}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a09eea1ff593bbf6e13d7c3d29c53f3e2}{PROP\_Species}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ list\ of\ species\ for\ mixture\ materials\ */}}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a62bffe4b00415c4bf94ee1fe38ee2482}{PROP\_Reactions}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ list\ of\ reactions\ */}}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212abc9627867c31e565beb2b336b1d667f6}{PROP\_Reaction\_Mechs}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ list\ of\ reaction\ Mechanisms\ */}}
+\DoxyCodeLine{00112\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a5c0a3270e24369b29fbed2dd3c9e7c97}{PROP\_latent\_heat}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ latent\ heat\ */}}
+\DoxyCodeLine{00113\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a7f4e60b8966d028ae6effabe8947dc4d}{PROP\_vap\_temp}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ vaporization\ temperature\ */}}
+\DoxyCodeLine{00114\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae6ae777dbc59ec4a2410d37b16e8f569}{PROP\_boil\_temp}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ boiling\ point\ */}}
+\DoxyCodeLine{00115\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a78a7fafea7052713c23e93eb31914acf}{PROP\_volatile\_frac}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ volatile\ fraction\ */}}
+\DoxyCodeLine{00116\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ab475f77069bd59780cdd4f04214245de}{PROP\_combustible\_frac}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ combustible\ fraction\ */}}
+\DoxyCodeLine{00117\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212adaaf95aab924c3ffc7678b51b04657e6}{PROP\_binary\_diffusivity}},\ \ \ \ \ \ \textcolor{comment}{/*\ binary\ \ diffusivity\ */}}
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a28fab5a7c84856e8d429b493ac83d78f}{PROP\_diffusivity\_reference\_pressure}},\ \textcolor{comment}{/*\ reference\ pressure\ for\ binary\ diffusivity\ */}}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a2bd473b065949c5e580984599ff3c95c}{PROP\_averaging\_coefficient\_T}},\ \textcolor{comment}{/*\ temperature\ averaging\ coefficient\ for\ particle\ film\ properties\ */}}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a1e7f386e905e0ec61108a790c60862d1}{PROP\_averaging\_coefficient\_Y}},\ \textcolor{comment}{/*\ composition\ averaging\ coefficient\ for\ particle\ film\ properties\ */}}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212afe730bf59c76f67e7f9c99f71fb740ff}{PROP\_film\_binary\_diffusivity}},\ \textcolor{comment}{/*\ film\ binary\ diffusivity\ */}}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a9bf0431db119de6c58bb1f4ef69f0db9}{PROP\_averaging\_coefficient}},\ \ \ \textcolor{comment}{/*\ film\ averaging\ coefficient\ */}}
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a0b90e68c8e896554ecf1000ad1e9ca4a}{PROP\_vapor\_pressure}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ vapor\ pressure\ */}}
+\DoxyCodeLine{00124\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a1dc8acfa56925d1b54c0f9df935a7f85}{PROP\_liquid\_surface\_tension}},\ \ \textcolor{comment}{/*\ liquid\ surface\ tension\ */}}
+\DoxyCodeLine{00125\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a881c3d178fa8ec293c68911281f1319a}{PROP\_non\_condensable\_gas}},\ \ \ \ \ \textcolor{comment}{/*\ non\ condensable\ gas\ */}}
+\DoxyCodeLine{00126\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a52fc158de537bf2b03352dc5e44ba3bc}{PROP\_therm\_exp\_coeff}},\ \ \ \textcolor{comment}{/*\ thermal\ expansion\ coefficient\ */}}
+\DoxyCodeLine{00127\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a49ea7bfd86a5c009e90ebddb5b4fb625}{PROP\_premix\_heat\_trans\_coeff}},\ \textcolor{comment}{/*\ laminar\ heat\ transfer\ coefficient\ */}}
+\DoxyCodeLine{00128\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a150c11e7ea783b687d74887b0d1a9e68}{PROP\_premix\_unburnt\_density}},\ \ \textcolor{comment}{/*\ density\ of\ unburnt\ mixture\ */}}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a2d42b6816477fbd018f95d3fb4aa298b}{PROP\_premix\_unburnt\_temp}},\ \ \ \textcolor{comment}{/*\ temperature\ of\ unburnt\ mixture\ */}}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae4a02217bd0d44cf104ff44002f3160d}{PROP\_premix\_unburnt\_cp}},\ \ \ \textcolor{comment}{/*\ specific\ heat\ of\ unburnt\ mixture\ */}}
+\DoxyCodeLine{00131\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a484b872ecfaaa01ab3eb414fb1cc4b72}{PROP\_premix\_laminar\_speed}},\ \ \ \ \textcolor{comment}{/*\ laminar\ flame\ speed\ \ \ \ */}}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a796b6f2692fedd83b3c6b6ea5fc2f74e}{PROP\_premix\_laminar\_thick}},\ \ \ \ \textcolor{comment}{/*\ laminar\ flame\ thickness\ */}}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a0b0cca17be8c3d45fb21ad542c032275}{PROP\_premix\_critical\_strain}},\ \ \textcolor{comment}{/*\ critical\ rate\ of\ strain\ \ */}}
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a2f210c09da20b43f742a5f9148f93cb7}{PROP\_premix\_adiabatic\_temp}},\ \ \ \textcolor{comment}{/*\ adiabatic\ temperature\ \ */}}
+\DoxyCodeLine{00135\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aacbbbdbb63a984e4ae64a561d92ce692}{PROP\_premix\_heat\_of\_comb}},\ \ \ \ \ \textcolor{comment}{/*\ heat\ of\ combustion\ \ \ \ \ */}}
+\DoxyCodeLine{00136\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a25ac15ad639684e393e31c5ba088f6ad}{PROP\_premix\_unburnt\_fuel\_mf}},\ \ \textcolor{comment}{/*\ unburnt\ fuel\ mass\ fraction\ */}}
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aefb40073453217196737ade603300b25}{PROP\_thermophoretic\_co}},\ \textcolor{comment}{/*\ thermophoretic\ diffusion\ coefficient\ */}}
+\DoxyCodeLine{00138\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a0e4e28c4c8e5d1beec6e57d6f07d8290}{PROP\_emissivity}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ particle\ emissivity\ */}}
+\DoxyCodeLine{00139\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a6c82b92167a8616ff86600e613bbc36b}{PROP\_scat\_factor}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ particle\ scattering\ factor\ */}}
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212afe41668fd949eb59f46a29eaec197db4}{PROP\_refractive\_index}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ refractive\ index\ */}}
+\DoxyCodeLine{00141\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a4646afd1c007ce62e8c907b28144679d}{PROP\_hpyrolysis}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ heat\ of\ pyrolysis\ */}}
+\DoxyCodeLine{00142\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ab199b516f0650f59986e94eaf18d5633}{PROP\_swell\_coeff}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ particle\ swelling\ coefficient\ */}}
+\DoxyCodeLine{00143\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a79c979df4076a99e87bb95efbfecdc80}{PROP\_burn\_stoich}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ burnout\ stoichiometry\ for\ combusting\ particle*/}}
+\DoxyCodeLine{00144\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212adf25960fe8a028dcc75351f6f1ee6034}{PROP\_hreact}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ heat\ of\ reaction\ for\ burnout\ */}}
+\DoxyCodeLine{00145\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a97e752d69a9c063f5dda9394260cb10b}{PROP\_hreact\_frac}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fraction\ of\ hreact\ given\ to\ solid\ */}}
+\DoxyCodeLine{00146\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a8db26b70f2363a16c2e9b95105b5928a}{PROP\_vaporization}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ evaporation\ model\ */}}
+\DoxyCodeLine{00147\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a3ffd1ea7b9a17bea07d63a990d7f8551}{PROP\_devol}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ devolatalization\ model\ */}}
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ada4f04b1625932c93925fdd3c6b03742}{PROP\_combustion}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ combustion\ model\ */}}
+\DoxyCodeLine{00149\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a151c4d26563267e16fc3fd640b165bb7}{PROP\_thermolysis}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ thermolysis\ model\ */}}
+\DoxyCodeLine{00150\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a5d8bb65bcb8b04f9c3173fc4e8eaa9aa}{PROP\_melting\_heat}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ melting\ heat\ */}}
+\DoxyCodeLine{00151\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ad498f66c65259b62a4228f17fe2d32ee}{PROP\_tsolidus}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ solidus\ temperature\ */}}
+\DoxyCodeLine{00152\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a492592a7c3325bc647b82824a55a9f3e}{PROP\_tliqidus}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ liquidus\ temperature\ */}}
+\DoxyCodeLine{00153\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ab5a32c3a0e02239c70c258597030d5ca}{PROP\_tmelt}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ melt\ temperature\ */}}
+\DoxyCodeLine{00154\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212acf8181a3d3b0cd219318dbd5937b7269}{PROP\_liquidus\_slope}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ slope\ of\ liquidus\ line\ */}}
+\DoxyCodeLine{00155\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aead7ba4f7cf4832558faaa14bc7a78d7}{PROP\_k\_partition}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ partition\ coefficient\ */}}
+\DoxyCodeLine{00156\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a1f7505e4a9dacc75b2c61629e4ef241c}{PROP\_yeut}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ eutecti\ mass\ fraction\ */}}
+\DoxyCodeLine{00157\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a63b10b1218036bdabd81a08c67952336}{PROP\_teut}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ eutectic\ temperature\ */}}
+\DoxyCodeLine{00158\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aafdba251a74781bf458ad21baf07580f}{PROP\_solut\_exp\_coeff}},\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ solutal\ expansion\ coefficient*/}}
+\DoxyCodeLine{00159\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a47ecbdddc82c9f80858a8e35a83e7691}{PROP\_diff\_solid}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ diffusivity\ in\ solid\ */}}
+\DoxyCodeLine{00160\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ad27e26461da6eca5d7109f15b93667f1}{PROP\_porosity}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ porosity\ (Vol\_void/Vol\_bulk)\ of\ porous\ (solid)\ mat'ls\ */}}
+\DoxyCodeLine{00161\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aa5c2d353384b6f8570fa274ca20b75c7}{PROP\_uds\_diff}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ user\ defined\ scalar\ diffusivity\ */}}
+\DoxyCodeLine{00162\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a36998f778d958b59a0b4b05845a99dfa}{PROP\_thermal\_diff}},\ \ \ \ \textcolor{comment}{/*\ thermal\ diffusion\ coefficient\ */}}
+\DoxyCodeLine{00163\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ac3fb08c57a0bdae65f74e6dfe90e65c5}{PROP\_dpm\_surften}},\ \ \ \textcolor{comment}{/*\ droplet\ surface\ tension\ for\ spray\ suite\ model\ */}}
+\DoxyCodeLine{00164\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212afb7b96604620b7a9b5671b181d998607}{PROP\_diameter}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ phase\ diameter\ */}}
+\DoxyCodeLine{00165\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a2985b3a462b058205af294fda74ed1f3}{PROP\_granular\_c}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ granular\ conductivity\ */}}
+\DoxyCodeLine{00166\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212af1f0cd7a5db129dfa87b7f486f0c05e1}{PROP\_packing}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ packing\ limit\ */}}
+\DoxyCodeLine{00167\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212adb02b4414d97e370a4648ab80f8a9566}{PROP\_solve\_eulerian\_max\_vof\_factor}},\ \textcolor{comment}{/*\ factor\ *\ packing\ limit\ */}}
+\DoxyCodeLine{00168\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a5323e1486495ea6dbe4beb52a1b7bf14}{PROP\_virtual\_mass\_coeff}},\ \ \ \ \ \ \textcolor{comment}{/*virtual\ mass\ coeff*/}}
+\DoxyCodeLine{00169\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212adebaf405a8809a52f60020c2db9ed365}{PROP\_drag\_func}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ drag\ function\ */}}
+\DoxyCodeLine{00170\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ab971778254a40ed4890eafef865307d6}{PROP\_drag\_fac}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*drag\ factor\ e.g.\ Brucato\ re:\ US\ 39205*/}}
+\DoxyCodeLine{00171\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ad20af026fa0655accff63c5602671f2d}{PROP\_lift\_coeff}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ lift\ force\ coefficient\ */}}
+\DoxyCodeLine{00172\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ad61e7a86aa907a82333b9f2dcd45dc95}{PROP\_wall\_lubrication\_coeff}},\ \ \textcolor{comment}{/*\ wall\ lubrication\ force\ coefficient\ */}}
+\DoxyCodeLine{00173\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a597cfd4ba6af27346e053f5c467cdd08}{PROP\_turbulent\_dispersion\_force}},\ \ \textcolor{comment}{/*\ turbulent\ dispersion\ force\ \ */}}
+\DoxyCodeLine{00174\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ac3a5354b62dda9405ea602ee5c595a14}{PROP\_turbulence\_interaction}},\ \ \textcolor{comment}{/*\ turbulence\ interaction\ \ */}}
+\DoxyCodeLine{00175\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aee6c57f5b7e94644fa86cac17b1b1777}{PROP\_restitution\_coeff}},\ \ \ \ \ \ \ \textcolor{comment}{/*\ restitution\ coefficient\ */}}
+\DoxyCodeLine{00176\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a576d4bc660af70579c645d5720456b96}{PROP\_sfc\_tension\_coeff}},\ \ \ \ \ \ \ \textcolor{comment}{/*\ surface\ tension\ coefficient\ */}}
+\DoxyCodeLine{00177\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a3250df6bca6df6b4a019ed4a0bcdf0a6}{PROP\_slip\_v}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ slip\ velocity\ */}}
+\DoxyCodeLine{00178\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a4a5ae1cb68c6a97d9789b56503b19b49}{PROP\_bulk\_vis}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ granular\ bulk\ viscosity\ */}}
+\DoxyCodeLine{00179\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212af16b0c9e0a19264ba172d153475d0ea4}{PROP\_friction\_vis}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ frictional\ viscosity\ (plastic\ flow)\ */}}
+\DoxyCodeLine{00180\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ac4e9dec2ede73edafbb46281eb39e9a0}{PROP\_friction\_angle}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ angle\ of\ internal\ friction\ \ */}}
+\DoxyCodeLine{00181\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ad9ef8db9edd45675eef73ef46cc2d089}{PROP\_granular\_t}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ granular\ temperature\ as\ a\ property\ */}}
+\DoxyCodeLine{00182\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a80eb23c0546b35d0950ba8e0f777549c}{PROP\_heat\_coeff}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ heat\ transfer\ coeff\ */}}
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212af73794a985af3a44895da1970ccdf4e6}{PROP\_slope\_limiter}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ slope\ limiter\ for\ phasaic\ discretization\ */}}
+\DoxyCodeLine{00184\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a0d8ec8ec5ae2aa47d56cfd56ea689cab}{PROP\_visc\_disp\_factor}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ interfacial\ viscous\ dissipation\ factor\ */}}
+\DoxyCodeLine{00185\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ab523a6712bd5b2e216ba8444a4b06fda}{PROP\_mass\_transfer}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ heat\ transfer\ coeff\ */}}
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae08fc008e7147008de46f153b8677f6a}{PROP\_elec\_conductivity}},\ \ \ \ \ \ \ \textcolor{comment}{/*\ electric\ conductivity\ (isotropic)\ (1/(ohm\ m))\ */}}
+\DoxyCodeLine{00187\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a81e2e9e632736bbbc460fcceaddee732}{PROP\_lithium\_diff}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ lithium\ diffusivity\ */}}
+\DoxyCodeLine{00188\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aec0e9e8acd9eaea565a0eb7e25b6a39a}{PROP\_mag\_permeability}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ magnetic\ permeability\ (H/m)\ */}}
+\DoxyCodeLine{00189\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a932f83adc972a45680b96cfa096ac2bb}{PROP\_charge}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ electric\ charge\ */}}
+\DoxyCodeLine{00190\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae133286bff3b611500ddaff0246dbe18}{PROP\_charge\_density}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ electric\ charge\ density\ (C/m\string^3)\ */}}
+\DoxyCodeLine{00191\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a1d45d38067f6ec6d9a47563ea8c82865}{PROP\_speed\_of\_sound}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ speed\ of\ sound\ m/s\ */}}
+\DoxyCodeLine{00192\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aeef6b4c9c7725abc53a52ea5fc0e947a}{PROP\_mpg\_press}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ solids\ pressure\ */}}
+\DoxyCodeLine{00193\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a8e5b4c3c48288e89abd9ffd189968549}{PROP\_mpg\_radial\_f}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ radial\ distribution\ function\ */}}
+\DoxyCodeLine{00194\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a11bae8bcd4dabbf6f4ba504e97bf2784}{PROP\_mpg\_elastic\_mod}},\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ elasticity\ modulus\ */}}
+\DoxyCodeLine{00195\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212af6933b0a0159f1b8763a42a7dd5e5bed}{PROP\_mpg\_friction\_p}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ frictional\ pressure\ */}}
+\DoxyCodeLine{00196\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ad7dd88ca81d46a481a097f8cf1442acb}{PROP\_mpg\_modulus\_fr}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ frictional\ modulus\ */}}
+\DoxyCodeLine{00197\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212afda757be1aceca5055541dfc46105595}{PROP\_species\_phase}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ condensed\ species\ in\ equilibrium\ calculation\ */}}
+\DoxyCodeLine{00198\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a6c8cf735b3b15bf7f3d02019a7d028dd}{PROP\_friction\_pack}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ limit\ to\ start\ frictional\ viscosity\ */}}
+\DoxyCodeLine{00199\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a69b3a2e01c87daac2fcc2cf8180576cc}{PROP\_vp\_equilib}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ vapor\ liquid\ equilibrium\ */}}
+\DoxyCodeLine{00200\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212adf8db44fe37a4bbcc86ad4ebf14c874c}{PROP\_metghalchi\_keck\_fuel}},}
+\DoxyCodeLine{00201\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a8e1f635706524ab8f99eaccd7ed1ecb8}{PROP\_iac\_g\_rate}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ iac\ gowth,\ coalescence\ and\ breakage\ kernel\ */}}
+\DoxyCodeLine{00202\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a4cfa8e1ab76ba8bfddc5dd89be2aa7a3}{PROP\_iac\_coal\_kernel}},}
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a428c2ac912e6ade915f6bc67af8bd567}{PROP\_iac\_breakage\_kernel}},}
+\DoxyCodeLine{00204\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aa737f500139918369f608ffadb23ad52}{PROP\_iac\_nucleation\_kernel}},}
+\DoxyCodeLine{00205\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ab8456457ac239f9801b210df2ff8f71e}{PROP\_iac\_surface\_tension}},}
+\DoxyCodeLine{00206\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a9d7d460ed318ce6bb8a2648be74cbe64}{PROP\_iac\_min\_diameter}},}
+\DoxyCodeLine{00207\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a69804916def0f0413706cef765b2d72f}{PROP\_iac\_max\_diameter}},}
+\DoxyCodeLine{00208\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aba853c69938ceb5f6a5ec4f1c0e94da4}{PROP\_iac\_dissipation\_rate}},}
+\DoxyCodeLine{00209\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a663b6f9cf7f837bd03e1b7487bb024da}{PROP\_iac\_hydraulic\_diam}},}
+\DoxyCodeLine{00210\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a0eaf16bd91eb10f1e1c1db5dd197cfbc}{PROP\_iac\_critical\_weber}},}
+\DoxyCodeLine{00211\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a01232afdd60a82331a8daee55b241028}{PROP\_critical\_temperature}},}
+\DoxyCodeLine{00212\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a86e9c1fc017886546a92db6f7ec7fda5}{PROP\_critical\_pressure}},}
+\DoxyCodeLine{00213\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212acba880bf4afb207673be4e30d0310d84}{PROP\_critical\_volume}},}
+\DoxyCodeLine{00214\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a431c79170e5b310fcf8df71b7dd02eb3}{PROP\_acentric\_factor}},}
+\DoxyCodeLine{00215\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a8ee6c3c9862c4930f288e0b8410fcbbb}{PROP\_vapor\_press}},}
+\DoxyCodeLine{00216\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae8ec277bd1b90b2afd31549b18d78185}{PROP\_saturation\_temperature}},}
+\DoxyCodeLine{00217\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212af91389d192390aac65f55e1433593123}{PROP\_forced\_convection\_ht\_coeff}},}
+\DoxyCodeLine{00218\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a2b6a2ea85988946d127639634eeb0a4d}{PROP\_forced\_convection\_ht\_factor1}},}
+\DoxyCodeLine{00219\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a0562fbf839908e0c234d397cf0c918c8}{PROP\_forced\_convection\_ht\_factor2}},}
+\DoxyCodeLine{00220\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a5621580fcc099b17ce3ee7f04dc649cf}{PROP\_nucleate\_boiling\_ht\_coeff}},}
+\DoxyCodeLine{00221\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a9e6468f215fe932986e038334a87c46a}{PROP\_nucleate\_boiling\_ht\_factor1}},}
+\DoxyCodeLine{00222\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212acbb54504301d7cd69d7abdbc11e07b74}{PROP\_nucleate\_boiling\_ht\_factor2}},}
+\DoxyCodeLine{00223\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a43c14778711978090376ada1531a268e}{PROP\_boiling\_ref\_length}},}
+\DoxyCodeLine{00224\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae12828909948dafe349916b962da59a9}{PROP\_boiling\_ref\_velocity}},}
+\DoxyCodeLine{00225\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a45ba4b5179003ccb9a45fe9628fc524f}{PROP\_boiling\_ref\_temperature}},}
+\DoxyCodeLine{00226\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a5fadbe5e40203733c7d8f25773e947ba}{PROP\_boiling\_superheat\_min}},}
+\DoxyCodeLine{00227\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aef1f5c92d767ba35b9133dbc9cc0dc21}{PROP\_boiling\_wall\_liquid\_frac}},}
+\DoxyCodeLine{00228\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a9cd6533de84e29959510b14c76f6e531}{PROP\_interfacial\_area}},}
+\DoxyCodeLine{00229\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ad2346956c1be2c92ea57d2d11aece8b0}{PROP\_bubble\_departure\_diameter}},}
+\DoxyCodeLine{00230\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a74cef50916b8a4f2444f6bec13c6f5ae}{PROP\_bubble\_departure\_frequency}},}
+\DoxyCodeLine{00231\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a43b729c819173727f69cf7482be08443}{PROP\_nucleate\_site\_density}},}
+\DoxyCodeLine{00232\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a19e816e57d27d130084b86cf78450bb5}{PROP\_area\_influence\_coeff}},}
+\DoxyCodeLine{00233\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212af88da5830fb42e999ba40524f910f626}{PROP\_quench\_reference\_temperature}},}
+\DoxyCodeLine{00234\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a9d3f0e007277723904fc6628f1f8ab5e}{PROP\_molar\_concentration\_henry\_coeff}},}
+\DoxyCodeLine{00235\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a99adf2f0c77e17968e720bf8190bb676}{PROP\_molar\_fraction\_henry\_coeff}},}
+\DoxyCodeLine{00236\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a35d7c052d96d8a1f2a0d8a2041e7debd}{PROP\_molar\_concentration\_equilibrium\_ratio}},}
+\DoxyCodeLine{00237\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212aba7f473904aa371db32d061bc2de7e42}{PROP\_molar\_fraction\_equilibrium\_ratio}},}
+\DoxyCodeLine{00238\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212adad39874bb255bcbe34cccef3dcd7dac}{PROP\_mass\_fraction\_equilibrium\_ratio}},}
+\DoxyCodeLine{00239\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a2e8f9a8ac3871d61ea56551cc0e55b2a}{PROP\_continuous\_interface\_mass\_coeff}},}
+\DoxyCodeLine{00240\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a521a1eb1a10a5774b68c14cddac1067a}{PROP\_dispersed\_interface\_mass\_coeff}},}
+\DoxyCodeLine{00241\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212afdb8b40de04da926d137db3cd9f872a9}{PROP\_mass\_transfer\_coeff}},}
+\DoxyCodeLine{00242\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a3465a6cb9afc21ebe0d741d7a4bba48e}{PROP\_vant\_hoff\_reference\_henry\_const}},}
+\DoxyCodeLine{00243\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a2820b29e4117fa63daa9789f3cf27b86}{PROP\_vant\_hoff\_temperature\_dependence}},}
+\DoxyCodeLine{00244\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a0611913ed1769e02a9e96fd10d9df8ee}{PROP\_antal\_coeff\_cw1}},}
+\DoxyCodeLine{00245\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ac6b8157c72406835a8bf572d4752a040}{PROP\_antal\_coeff\_cw2}},}
+\DoxyCodeLine{00246\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a5835848730f1e1ce1f6184fc20f9e6ed}{PROP\_frank\_coeff\_cwc}},}
+\DoxyCodeLine{00247\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a8c68c01ec0a34e8621c906274992b529}{PROP\_frank\_coeff\_cwd}},}
+\DoxyCodeLine{00248\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212adf68ff05acac397ae6fa5c06e01df2a5}{PROP\_frank\_coeff\_p}},}
+\DoxyCodeLine{00249\ \ \ \textcolor{comment}{/*\ GM\ */}\ \textcolor{comment}{/*\ US\ 114041\ */}\ \textcolor{comment}{/*\ Defining\ user\ vars\ for\ the\ AIAD\ interfacial\ area\ model\ */}}
+\DoxyCodeLine{00250\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ab5924add86e5b7424211a659a655c818}{PROP\_aiad\_ddrop}},}
+\DoxyCodeLine{00251\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a6d55814085e8a7667fcb8c289b36c83e}{PROP\_aiad\_cdrop}},}
+\DoxyCodeLine{00252\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae26e35304d60f7e7f0c8c3b29e974113}{PROP\_aiad\_lvdrop}},}
+\DoxyCodeLine{00253\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a411f24d1f74eefbb6a998115f90c1edc}{PROP\_aiad\_dbubb}},}
+\DoxyCodeLine{00254\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ad69cfe0d6058849e10debc03fe1dda69}{PROP\_aiad\_cbubb}},}
+\DoxyCodeLine{00255\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a696c6ec16fc8005317eefae7d80dbc98}{PROP\_aiad\_lvbubb}},}
+\DoxyCodeLine{00256\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a0aa009fc873de0c54463b2c406a33baf}{PROP\_aiad\_cddrop}},}
+\DoxyCodeLine{00257\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a2036da24677a6d2d616bf0bb33073da6}{PROP\_aiad\_cdbubb}},}
+\DoxyCodeLine{00258\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a56f699904dc517a050dafe61a145d462}{PROP\_hydro\_diam}},}
+\DoxyCodeLine{00259\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ab8bee0cdebb3ef0b03da5a0a70eb07da}{PROP\_hosokawa\_coeff}},}
+\DoxyCodeLine{00260\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a49fc9ef0af71f15fb87d11794115e4d4}{PROP\_grace\_swarm\_coeff}},\ \ \ \textcolor{comment}{/*\ US160011\ */}}
+\DoxyCodeLine{00261\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a231f943a8fa974ac40cc85fd1baa654b}{PROP\_td\_coeff}},}
+\DoxyCodeLine{00262\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a3cbea9a9f2faaefaf866527bbf53d1a1}{PROP\_td\_limiting\_func}},}
+\DoxyCodeLine{00263\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a475ba06f9f8923d5dc58550449097fb3}{PROP\_diff\_vof\_coeff}},}
+\DoxyCodeLine{00264\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a126e7c334ad964deeecb6070ea528234}{PROP\_diff\_limiting\_func}},}
+\DoxyCodeLine{00265\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a09a1e5569b903e73f63e6c51ed87e44d}{PROP\_troshko\_hassan\_coeff\_1}},}
+\DoxyCodeLine{00266\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ac4463883e1dfefe0f50030a8bba292cb}{PROP\_troshko\_hassan\_coeff\_2}},}
+\DoxyCodeLine{00267\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a58e175feb63d9e0ef01a91825e762f99}{PROP\_sato\_bit\_coeff}},}
+\DoxyCodeLine{00268\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a3310d042d09644b1f6c23747c96a000d}{PROP\_simonin\_et\_al\_coeff}},}
+\DoxyCodeLine{00269\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a073ed736817d794d781a7c02afd71f54}{PROP\_syamlal\_mf\_vof}},}
+\DoxyCodeLine{00270\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a7e5794d59dd0b7e3b59f84450acb835e}{PROP\_syamlal\_mf\_velocity}},}
+\DoxyCodeLine{00271\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae9e774cf2aabd9f55f3b0a20e38d05c1}{PROP\_continuous\_heat\_coeff}},}
+\DoxyCodeLine{00272\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a616c8ab4d89041a69bd1a86d8932e6bd}{PROP\_dispersed\_heat\_coeff}},}
+\DoxyCodeLine{00273\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a3d40f29b1f6300f62370da3fb398a31b}{PROP\_saturation\_pressure}},\ \ \ \ \ \textcolor{comment}{/*\ vapor\ material\ saturation\ pressure\ used\ in\ EWF\ */}}
+\DoxyCodeLine{00274\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a34a7ab9f55b490e86e17744f2707ed34}{PROP\_relative\_viscosity}},}
+\DoxyCodeLine{00275\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a95122a86fc9ceb808ad42ea05fd7230e}{PROP\_model\_transition}},}
+\DoxyCodeLine{00276\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a1c06c9336e387340e56d89e8f0c0999d}{PROP\_struct\_youngs\_modulus}},\ \ \ \textcolor{comment}{/*\ structure\ youngs\ modulus\ */}}
+\DoxyCodeLine{00277\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a12eaebc2638a3a063944b87645b4cf00}{PROP\_struct\_poisson\_ratio}},\ \ \ \ \textcolor{comment}{/*\ structure\ poisson\ ratio\ \ */}}
+\DoxyCodeLine{00278\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212a5f59015f6c3bcc047f861ecd88c789a4}{PROP\_atomic\_number}},}
+\DoxyCodeLine{00279\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae23ac2c8367f39290b226c161ef225d3}{PROP\_MAX}}}
+\DoxyCodeLine{00280\ \}\ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212}{Property\_ID}};}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structproperty__names__struct}{property\_names\_struct}}}
+\DoxyCodeLine{00283\ \{}
+\DoxyCodeLine{00284\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structproperty__names__struct_acf60de4c64d60c1b9449c056bc6bfcf7}{label}};}
+\DoxyCodeLine{00285\ \ \ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212}{Property\_ID}}\ \mbox{\hyperlink{structproperty__names__struct_a6a6041aaba6f428d4dcedd920ddf0be2}{prop\_id}};}
+\DoxyCodeLine{00286\ \}\ \mbox{\hyperlink{materials_8h_aed2e3bd259b331bc9fb5ce46bab42cef}{Property\_Names}};}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00289\ \{}
+\DoxyCodeLine{00290\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ \mbox{\hyperlink{struct_u_d_s___diffusivity___property_af716f090fe42b8640462c246abe3347d}{diff}};}
+\DoxyCodeLine{00291\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ \mbox{\hyperlink{struct_u_d_s___diffusivity___property_a8e095394cbd8326d86ef18314637a9c9}{diff0}};}
+\DoxyCodeLine{00292\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ \mbox{\hyperlink{struct_u_d_s___diffusivity___property_af75fc08955b5c4537623aac0ba36903f}{diff1}};}
+\DoxyCodeLine{00293\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ \mbox{\hyperlink{struct_u_d_s___diffusivity___property_ad85144b054acdc03a2b96bbb05ac6c72}{diff2}};}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ k\_matrix[3][3];}
+\DoxyCodeLine{00296\ \}\ \mbox{\hyperlink{struct_u_d_s___diffusivity___property}{UDS\_Diffusivity\_Property}};}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00299\ \{}
+\DoxyCodeLine{00300\ \ \ \textcolor{comment}{/*\ US168773\ -\/\ All\ the\ addition\ of\ the\ MP\_PROP\_MAX\ indexes\ for\ these\ coefficients\ of\ various\ interfacial\ forces\ */}}
+\DoxyCodeLine{00301\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ antal\_coeff\_cw1[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00302\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ antal\_coeff\_cw2[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ frank\_coeff\_cwc[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00305\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ frank\_coeff\_cwd[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00306\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ frank\_coeff\_p[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00307\ \ \ \textcolor{comment}{/*\ GM\ */}\ \textcolor{comment}{/*\ US\ 114041\ */}\ \textcolor{comment}{/*\ Defining\ user\ vars\ for\ the\ AIAD\ interfacial\ area\ model\ */}}
+\DoxyCodeLine{00308\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ aiad\_ddrop[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00309\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ aiad\_cdrop[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00310\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ aiad\_lvdrop[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00311\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ aiad\_dbubb[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00312\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ aiad\_cbubb[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00313\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ aiad\_lvbubb[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00314\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ aiad\_cddrop[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00315\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ aiad\_cdbubb[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00316\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ hydro\_diam[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ hosokawa\_coeff[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ grace\_swarm\_coeff[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];\ \ \ \textcolor{comment}{/*\ US160011\ \&\ 168773\ */}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ td\_coeff[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00323\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ td\_limiting\_func[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00324\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ diff\_vof\_coeff[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00325\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ diff\_limiting\_func[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ troshko\_hassan\_coeff\_1[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00328\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ troshko\_hassan\_coeff\_2[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00329\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ sato\_bit\_coeff[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00330\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ simonin\_et\_al\_coeff[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ syamlal\_mf\_vof[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00333\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ syamlal\_mf\_velocity[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ continuous\_heat\_coeff[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00336\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ dispersed\_heat\_coeff[\mbox{\hyperlink{materials_8h_a4a72b418d0ea3f992230edbf83234abf}{MP\_PROP\_MAX}}];}
+\DoxyCodeLine{00337\ \}\ \mbox{\hyperlink{struct_m_p___model___coeff}{MP\_Model\_Coeff}};}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{struct_m_p___model___coeff}{MP\_Model\_Coeff}}\ \mbox{\hyperlink{materials_8h_abe0b2bf756aa78cb3e31178340757948}{mp\_model\_coeff}};}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmaterial__struct}{material\_struct}}}
+\DoxyCodeLine{00342\ \{}
+\DoxyCodeLine{00343\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structmaterial__struct_a4d7ffa5ffa053d42198bb456d58e34bf}{name}}[\mbox{\hyperlink{materials_8h_ae9f95c4490b6fbca71154fcef8da1b53}{MATERIAL\_NAME\_LENGTH}}];\ \ \textcolor{comment}{/*\ name\ of\ material\ */}}
+\DoxyCodeLine{00344\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structmaterial__struct_a75a6d8ba0f871a22eacd2d6c78515e0a}{formula}}[\mbox{\hyperlink{materials_8h_ae9f95c4490b6fbca71154fcef8da1b53}{MATERIAL\_NAME\_LENGTH}}];\ \textcolor{comment}{/*\ formula\ of\ material\ */}}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1}{Matl\_Type\_ID}}\ \mbox{\hyperlink{structmaterial__struct_ad792e63b06d3ae6712ac7876ca3f826f}{type}};\ \ \ \ \ \ \textcolor{comment}{/*\ MATERIAL\_FLUID,}}
+\DoxyCodeLine{00347\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ *\ MATERIAL\_SOLID\ etc.\ */}}
+\DoxyCodeLine{00348\ \ \ \textcolor{comment}{/*\ user-\/specified\ properties\ */}}
+\DoxyCodeLine{00349\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ \mbox{\hyperlink{structmaterial__struct_a3dac7b6120f7e1a47eed531b46586f63}{p}}[\mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212ae23ac2c8367f39290b226c161ef225d3}{PROP\_MAX}}];}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \ \ \textcolor{comment}{/*\ for\ mixture\ materials\ */}}
+\DoxyCodeLine{00352\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmaterial__struct}{material\_struct}}\ **\mbox{\hyperlink{structmaterial__struct_aa7fcbd6aa50858d04870a531aca0b3b5}{component}};}
+\DoxyCodeLine{00353\ \ \ \textcolor{keywordtype}{char}\ **\mbox{\hyperlink{structmaterial__struct_a9410f7e5266a3180b0583cb25b60da0f}{component\_name}};\ \textcolor{comment}{/*\ name\ of\ material\ */}}
+\DoxyCodeLine{00354\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmaterial__struct_abcb199a9ceffc16faf088954f5d45116}{n\_components}};}
+\DoxyCodeLine{00355\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structmaterial__struct_af3e50916a81780e07bdaea7f76fc6b05}{mixture\_name}}[\mbox{\hyperlink{materials_8h_ae9f95c4490b6fbca71154fcef8da1b53}{MATERIAL\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmaterial__struct}{material\_struct}}\ **\mbox{\hyperlink{structmaterial__struct_a781bad295cee5ca11e56e2428a7d653a}{surface\_species}};}
+\DoxyCodeLine{00358\ \ \ \textcolor{keywordtype}{char}\ **\mbox{\hyperlink{structmaterial__struct_a4a21f0d27e9a08fc02b5ca70827bca89}{surface\_species\_names}};\ \textcolor{comment}{/*\ name\ of\ material\ */}}
+\DoxyCodeLine{00359\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmaterial__struct_a17d932fd26d2afdbc35fdd5a5fde3c74}{surface\_n\_species}};}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmaterial__struct}{material\_struct}}\ **\mbox{\hyperlink{structmaterial__struct_a14049b74650f983d84b1f61741fbea7c}{site\_species}};}
+\DoxyCodeLine{00362\ \ \ \textcolor{keywordtype}{char}\ **\mbox{\hyperlink{structmaterial__struct_af95b35edbb88f410396a480354c9f3bb}{site\_species\_names}};\ \textcolor{comment}{/*\ name\ of\ material\ */}}
+\DoxyCodeLine{00363\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmaterial__struct_a435602de889ce793c720799305fd3cac}{site\_n\_species}};}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ *\mbox{\hyperlink{structmaterial__struct_a7849509cba967678f13f0a7c5601fc87}{mass\_diffusivity}};}
+\DoxyCodeLine{00366\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ *\mbox{\hyperlink{structmaterial__struct_a35cd875d7aca2c92bbbda52b4c0984df}{thermal\_diffusivity}};}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \ \ \mbox{\hyperlink{struct_u_d_s___diffusivity___property}{UDS\_Diffusivity\_Property}}\ *\mbox{\hyperlink{structmaterial__struct_a76a54c32555b622121d7415461c56d86}{uds\_diffusivity}};}
+\DoxyCodeLine{00369\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmaterial__struct_a2bf6136837668d8b576d532bea6a78c5}{n\_uds\_diffusivity}};}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structmaterial__struct_aea7a79abcbb06583eda7e31cc5ac4596}{k\_matrix}}[3][3];}
+\DoxyCodeLine{00372\ \ \ \mbox{\hyperlink{structcueos__parameter__struct}{CUEOS\_Parameter}}\ *\mbox{\hyperlink{structmaterial__struct_ab7b2faff1f538a8a3c3d83aa6d4ac059}{CUEOS}};}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00374\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structreaction__struct}{reaction\_struct}}\ *\mbox{\hyperlink{structmaterial__struct_aa80f2358bba570fd60379d6ef78df840}{reaction\_list}};}
+\DoxyCodeLine{00375\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structreaction__mech__struct}{reaction\_mech\_struct}}\ *\mbox{\hyperlink{structmaterial__struct_aa013954043108311a1ed3a96d413a90b}{reaction\_mech\_list}};}
+\DoxyCodeLine{00376\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structmaterial__struct_a0de0881fbc18dcd1425d7543b40e8378}{p\_values}}[3][3];}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmaterial__struct_ac2e47919dc0c78ccbd9a445eddabb3c2}{chemkin\_inp\_file\_loaded}};}
+\DoxyCodeLine{00379\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmaterial__struct_ae9b30881e09730a8a32c514b1f490d11}{transport\_file\_loaded}};}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmaterial__struct}{material\_struct}}\ *\mbox{\hyperlink{structmaterial__struct_aa465deb65ddb05888835cf20bfa340f9}{next}};\ \textcolor{comment}{/*\ pointer\ to\ next\ in\ list\ */}}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \}\ \mbox{\hyperlink{materials_8h_a7e36344b8b8e5f090eb850edfe286ed1}{Material}};}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#\ define\ MATERIAL\_PROPERTY(m)((m)-\/>p)}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#\ define\ MATERIAL\_PROP(m,prop)(m)-\/>p[prop].constant}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#define\ MATERIAL\_PROP\_METHOD(m,prop)(m)-\/>p[prop].method}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#define\ MATERIAL\_PROP\_UDF\_NAME(m,prop)(m)-\/>p[prop].udf\_name}}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#define\ MATERIAL\_PROP\_EXPR(m,prop)(m)-\/>p[prop].expr}}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#define\ MATERIAL\_POLYNOMIAL(m,prop)(m)-\/>p[prop].u.poly}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#define\ MATERIAL\_MATRIX(m,prop)(m)-\/>p[prop].u.matrix}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#define\ MATERIAL\_MATRIX\_ENTRY(m,prop,i,j)(m)-\/>p[prop].u.matrix[i][j]}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#define\ MATERIAL\_TABLE\_TP(m,prop)(m)-\/>p[prop].table\_tp}}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \textcolor{comment}{/*\ these\ two\ macros\ are\ for\ backward\ compatibility;\ should\ be\ phased\ out\ */}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#define\ MATERIAL\_PROP\_COEF(m,prop,coef\_indx)\(\backslash\)}}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\ \ \ POLYNOMIAL\_COEFF((m)-\/>p[prop].u.poly,coef\_indx)}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#define\ MATERIAL\_PROP\_NUM\_COEF(m,prop)\(\backslash\)}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\ \ \ \ \ (((m)-\/>p[prop].u.poly==NULL)\ ?\ 0\ :\ (m)-\/>p[prop].u.poly-\/>n\_coeffs[0])}}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#define\ MATERIAL\_PROP\_POLYNOMIAL(m,prop,x)\(\backslash\)}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\ \ \ \ \ \ ((MATERIAL\_PROP\_METHOD(m,prop)==PROP\_METHOD\_CONSTANT)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MATERIAL\_PROP(m,prop)\ :\ evaluate\_polynomial(MATERIAL\_POLYNOMIAL(m,prop),x))}}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\#define\ MATERIAL\_PROP\_INTEGRAL(m,prop,x0,x1)\(\backslash\)}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((MATERIAL\_PROP\_METHOD(m,prop)==PROP\_METHOD\_CONSTANT)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ MATERIAL\_PROP(m,prop)*((x1)-\/(x0))\ :\(\backslash\)}}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\ \ \ evaluate\_polynomial\_integral(MATERIAL\_POLYNOMIAL(m,prop),x0,x1))}}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#define\ MATERIAL\_PROP\_OVER\_X\_INTEGRAL(m,prop,x0,x1)\(\backslash\)}}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((MATERIAL\_PROP\_METHOD(m,prop)==PROP\_METHOD\_CONSTANT)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ MATERIAL\_PROP(m,prop)*log((x1)/(x0))\ :\(\backslash\)}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\ \ \ evaluate\_polynomial\_over\_x\_integral(MATERIAL\_POLYNOMIAL(m,prop),x0,x1))}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#define\ MIXTURE\_NCOMPONENTS(m)(m)-\/>n\_components}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#define\ MIXTURE\_COMPONENT(m,i)m-\/>component[i]}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#define\ MIXTURE\_COMPONENT\_NAME(m,i)m-\/>component\_name[i]}}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#define\ MIXTURE\_NSPECIES\ \ MIXTURE\_NCOMPONENTS}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#define\ MIXTURE\_SPECIE\ \ \ \ MIXTURE\_COMPONENT}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#define\ MIXTURE\_SPECIE\_NAME\ MIXTURE\_COMPONENT\_NAME}}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#define\ MIXTURE\_SURFACE\_NSPECIES(m)(m)-\/>surface\_n\_species}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#define\ MIXTURE\_SURFACE\_SPECIE(m,i)(m)-\/>surface\_species[i]}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#define\ MIXTURE\_SURFACE\_SPECIE\_NAME(m,i)(m)-\/>surface\_species\_names[i]}}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#define\ MIXTURE\_SITE\_NSPECIES(m)(m)-\/>site\_n\_species}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#define\ MIXTURE\_SITE\_SPECIE(m,i)(m)-\/>site\_species[i]}}
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#define\ MIXTURE\_SITE\_SPECIE\_NAME(m,i)(m)-\/>site\_species\_names[i]}}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\#define\ N\_SITE\_TYPES(rm)(rm)-\/>n\_site\_types}}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#define\ GLOBAL\_SITE\_SPE\_ID(rm,i)(rm)-\/>global\_id\_site\_spe[i]}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\#define\ GLOBAL\_SITE\_SPE\_ID\_BY\_TYPE(rm,i,j)(rm)-\/>global\_id\_site\_spe\_t[i][j]}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\#define\ SITE\_ID(rm,i)(rm)-\/>site\_id\_of\_spe[i]}}
+\DoxyCodeLine{00441\ \textcolor{preprocessor}{\#define\ SITE\_DENSITY(rm,i)(rm)-\/>site\_den[i]}}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#define\ MATERIAL\_NAME(m)(m)-\/>name}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\#define\ MATERIAL\_FORMULA(m)(m)-\/>formula}}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{\#define\ MATERIAL\_TYPE(m)(m)-\/>type}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#define\ MATERIAL\_MIXTURE\_NAME(m)(m)-\/>mixture\_name}}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\#define\ MATERIAL\_DIFFUSIVITY(m,i)(m)-\/>mass\_diffusivity[i]}}
+\DoxyCodeLine{00449\ \textcolor{preprocessor}{\#define\ MATERIAL\_DIFFUSIVITY\_METHOD(m,i)(m)-\/>mass\_diffusivity[i].method}}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#define\ MATERIAL\_DIFFUSIVITY\_CONSTANT(m,i)(m)-\/>mass\_diffusivity[i].constant}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#define\ MATERIAL\_DIFFUSIVITY\_POLYNOMIAL(m,i)(m)-\/>mass\_diffusivity[i].u.poly}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#define\ MATERIAL\_DIFFUSIVITY\_UDF\_NAME(m,i)(m)-\/>mass\_diffusivity[i].udf\_name}}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY\_PROP(m)(m)-\/>uds\_diffusivity}}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY(m,i)\ MATERIAL\_UDS\_DIFFUSIVITY\_PROP(m)[i].diff}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY\_METHOD(m,i)\ MATERIAL\_UDS\_DIFFUSIVITY(m,i).method}}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY\_CONSTANT(m,i)\ MATERIAL\_UDS\_DIFFUSIVITY(m,i).constant}}
+\DoxyCodeLine{00459\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY\_POLYNOMIAL(m,i)\ MATERIAL\_UDS\_DIFFUSIVITY(m,i).u.poly}}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY\_UDF\_NAME(m,i)\ MATERIAL\_UDS\_DIFFUSIVITY(m,i).udf\_name}}
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY\_MATRIX(m,i)\ MATERIAL\_UDS\_DIFFUSIVITY\_PROP(m)[i].k\_matrix}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY\_D0(m,i)\ MATERIAL\_UDS\_DIFFUSIVITY\_PROP(m)[i].diff0}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY\_D1(m,i)\ MATERIAL\_UDS\_DIFFUSIVITY\_PROP(m)[i].diff1}}
+\DoxyCodeLine{00465\ \textcolor{preprocessor}{\#define\ MATERIAL\_UDS\_DIFFUSIVITY\_D2(m,i)\ MATERIAL\_UDS\_DIFFUSIVITY\_PROP(m)[i].diff2}}
+\DoxyCodeLine{00466\ }
+\DoxyCodeLine{00467\ \textcolor{preprocessor}{\#define\ MATERIAL\_THERMAL\_DIFFUSIVITY(m,i)(m)-\/>thermal\_diffusivity[i]}}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\#define\ MATERIAL\_THERMAL\_DIFFUSIVITY\_METHOD(m,i)(m)-\/>thermal\_diffusivity[i].method}}
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{\#define\ MATERIAL\_THERMAL\_DIFFUSIVITY\_CONSTANT(m,i)(m)-\/>thermal\_diffusivity[i].constant}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#define\ MATERIAL\_THERMAL\_DIFFUSIVITY\_POLYNOMIAL(m,i)(m)-\/>thermal\_diffusivity[i].u.poly}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#define\ MATERIAL\_THERMAL\_DIFFUSIVITY\_UDF\_NAME(m,i)(m)-\/>thermal\_diffusivity[i].udf\_name}}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#define\ mixture\_component\_loop(m,sp,i)\(\backslash\)}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\ \ \ \ \ for(sp=(m)-\/>component[i=0];\ i<m-\/>n\_components;\ sp=(m)-\/>component[++i])}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#define\ mixture\_component\_loop\_i(m,i)\(\backslash\)}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\ \ \ \ \ for(i=0;\ i<m-\/>n\_components;\ ++i)}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\#define\ bounded\_mixture\_component\_loop(m,sp,i,min\_i,max\_i)\(\backslash\)}}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\ \ \ \ \ for(sp=(m)-\/>component[i=min\_i];\ i<\ max\_i;\ sp=(m)-\/>component[++i])}}
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\#define\ bounded\_mixture\_component\_loop\_i(m,i,min\_i,max\_i)\(\backslash\)}}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\ \ \ \ \ for(i=min\_i;\ i<\ max\_i;\ ++i)}}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\#define\ mixture\_species\_loop\ \ \ \ mixture\_component\_loop}}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#define\ mixture\_species\_loop\_i\ \ \ \ mixture\_component\_loop\_i}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#define\ bounded\_mixture\_species\_loop\ \ bounded\_mixture\_component\_loop}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\#define\ bounded\_mixture\_species\_loop\_i\ \ bounded\_mixture\_component\_loop\_i}}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#define\ mixture\_surface\_species\_loop(m,sp,i)\(\backslash\)}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\ \ \ \ \ for(sp=(m)-\/>surface\_species[i=0];\ i<m-\/>surface\_n\_species;\ sp=(m)-\/>surface\_species[++i])}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#define\ mixture\_surface\_species\_loop\_i(m,i)\(\backslash\)}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\ \ \ \ \ for(i=0;\ i<m-\/>surface\_n\_species;\ ++i)}}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#define\ mixture\_site\_species\_loop(m,sp,i)\(\backslash\)}}
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\ \ \ \ \ for(sp=(m)-\/>site\_species[i=0];\ i<m-\/>site\_n\_species;\ sp=(m)-\/>site\_species[++i])}}
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\#define\ mixture\_site\_species\_loop\_i(m,i)\(\backslash\)}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\ \ \ \ \ for(i=0;\ i<m-\/>site\_n\_species;\ ++i)}}
+\DoxyCodeLine{00496\ \textcolor{comment}{/*\ methods\ */}}
+\DoxyCodeLine{00497\ \textcolor{comment}{/*\ Indices\ 0\ through\ 9\ are\ reserved\ for\ generic\ methods\ (such\ as\ constant,}}
+\DoxyCodeLine{00498\ \textcolor{comment}{\ \ \ polynomial,\ piecewise\ polynomial,\ etc.)\ Specific\ methods\ applicable\ for\ only}}
+\DoxyCodeLine{00499\ \textcolor{comment}{\ \ \ one\ property\ (eg.\ Sutherland's\ law\ for\ viscosity)\ should\ use\ indices\ 10\ and\ higher\ */}}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00502\ \{}
+\DoxyCodeLine{00503\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1ca5fc523c10558929347b7b5545cacc476}{PROP\_METHOD\_EXPR}}\ =\ -\/3,}
+\DoxyCodeLine{00504\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1ca1ff4343542f90792797b94ffb58861cf}{PROP\_METHOD\_BOOLEAN}}\ =\ -\/2,\ \ \textcolor{comment}{/*\ Adding\ as\ >\ 0\ causes\ PROP\_METHOD\_NONE\ (below)\ to\ conflict\ with\ many\ others\ defined\ as\ =\ 10..:-\/|\ */}}
+\DoxyCodeLine{00505\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1ca7fb2737198113cd15c049530f797801c}{PROP\_METHOD\_CONSTANT}}\ =\ 0,}
+\DoxyCodeLine{00506\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1ca8d41e70561489e0cf85cb83e01df0970}{PROP\_METHOD\_POLYNOMIAL}},}
+\DoxyCodeLine{00507\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1ca61bd0ef7216976c7da9e99f53f3d5d20}{PROP\_METHOD\_UDF}},\ \ \ \ \textcolor{comment}{/*\ user\ defined\ function\ */}}
+\DoxyCodeLine{00508\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1cadfe4a01aebbc9b4ddae7301d0874dba0}{PROP\_METHOD\_REAL\_GAS}},}
+\DoxyCodeLine{00509\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1ca5323b8835cfae05e0c79b4851efd3dd7}{PROP\_METHOD\_UDF\_DPM}},\ \ \ \ \textcolor{comment}{/*\ user\ defined\ properties\ for\ particles\ */}}
+\DoxyCodeLine{00510\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1ca41836c8c2f9ee6c7f7dbe9affa1b39e4}{PROP\_METHOD\_UDF\_PDF\_TRAN}},\ \ \ \ \ \textcolor{comment}{/*\ UDF\ for\ PDF\ Transport,\ which\ couples\ thru\ density\ */}}
+\DoxyCodeLine{00511\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1cab874a77c81458d1ce6c34d385c668051}{PROP\_METHOD\_UDF\_MIXING\_LAW}},\ \textcolor{comment}{/*\ user\ defined\ mixing\ law\ */}}
+\DoxyCodeLine{00512\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1ca851d48aba225c850dc768c0ba6ec6c0d}{PROP\_METHOD\_UDF\_GRAY\_BAND\_ABS\_COEFF}},\ \ \textcolor{comment}{/*\ user\ defined\ gray\ band\ */}}
+\DoxyCodeLine{00513\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1cab8768b70bf187d29218a35e93a82d90e}{PROP\_METHOD\_WET\_STEAM}},}
+\DoxyCodeLine{00514\ \ \ \mbox{\hyperlink{materials_8h_a1f3b6c692395e5007ff47ce5d9304c1caf39929da4ecda2a76cb3f83aeafdebe1}{PROP\_METHOD\_NONE}}\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ =\ 9,\ must\ not\ change\ or\ will\ incur\ lots\ of\ conflicts\ with\ other\ things\ defined\ as\ 10...\ */}}
+\DoxyCodeLine{00515\ \};}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\#define\ \ PROP\_METHOD\_REAL\_GAS\_MIXTURE\ 100}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\#define\ PROP\_METHOD\_LIQ\_SLOPE\ 10}}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\#define\ PROP\_METHOD\_UDF\_WSGGM\_ABS\_COEFF\ 40}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\#define\ PROP\_METHOD\_TABLE\_TP\ 80}}
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\#define\ PROP\_METHOD\_TABLE\_SAT\ 81}}
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ \textcolor{comment}{/*\ some\ properties\ define\ their\ own\ method\ symbols\ if\ they\ allow\ methods}}
+\DoxyCodeLine{00523\ \textcolor{comment}{\ \ \ other\ than\ the\ generic\ ones.\ \ */}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#define\ UNIVERSAL\_GAS\_CONSTANT\ \ \ \ 8314.34\ }\textcolor{comment}{/*\ SI\ units:\ J/Kmol/K\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#define\ AVOGADRO\_NUMBER\ \ \ \ \ \ \ \ \ \ 6.022E26\ }\textcolor{comment}{/*\ SI\ units:\ molecules/Kmol\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#define\ BOLTZMANN\_NUMBER\ \ \ \ \ \ \ \ \ \ 1.3806504e-\/23}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00529\ \textcolor{comment}{/*Note:\ The\ values\ below\ are\ from\ NIST\ 2006\ and\ in\ Sync\ with\ Chemkin\ used\ value*/}}
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\#define\ AVOGADRO\_NUMBER\ \ \ \ \ \ \ \ \ \ \ 6.02214179e+26\ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ SI\ units:\ molecules/Kmol\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00531\ \textcolor{preprocessor}{\#define\ BOLTZMANN\_NUMBER\ \ \ \ \ \ \ \ \ \ 1.3806504e-\/23\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ SI\ units:\ \ \ [J/K]\ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#define\ UNIVERSAL\_GAS\_CONSTANT\ \ \ \ 8314.47247122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*(AVOGADRO\_NUMBER*BOLTZMANN\_NUMBER)\ SI\ units:\ J/Kmol/K\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00534\ }
+\DoxyCodeLine{00535\ \textcolor{comment}{/*\ method\ for\ calculating\ specific\ heat\ */}}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#define\ CP\_MIXTURE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\#define\ CP\_KINETIC\_THEORY\ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#define\ CP\_REACTION\_DESIGN\ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ \textcolor{comment}{/*\ method\ for\ calculating\ viscosity\ */}}
+\DoxyCodeLine{00541\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00542\ \{}
+\DoxyCodeLine{00543\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058a880a5b54e6d6eeb148e24e37a6a2b436}{MU\_MIXTURE}}\ =\ 10,}
+\DoxyCodeLine{00544\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058a809f322204f3f257ba39624623b81b28}{MU\_SUTHERLAND}},}
+\DoxyCodeLine{00545\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058a047ce2fcdc95f6099a59e6c5c46344b7}{MU\_POWER\_LAW}},}
+\DoxyCodeLine{00546\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058aecf89f026b8dde60a0f9b29a8d304fcd}{MU\_KINETIC\_THEORY}},}
+\DoxyCodeLine{00547\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058a011a2efd7f98768f9f9f4a43adaf6acf}{MU\_IDEAL\_GAS\_MIXTURE}},}
+\DoxyCodeLine{00548\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058abecc86f8640f0dcfff113471d9b4869c}{MU\_NON\_NEWTONIAN\_POWER\_LAW}},}
+\DoxyCodeLine{00549\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058ab11bd4a9592bad2166b7a55dfef99326}{MU\_CARREAU\_MODEL}},}
+\DoxyCodeLine{00550\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058a25224d99e469c002d40d6c8618f579a6}{MU\_HERSCHEL\_BULKLEY}},}
+\DoxyCodeLine{00551\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058a8e61e346fa61eeb215a4a8368ccafb95}{MU\_CROSS\_MODEL}},}
+\DoxyCodeLine{00552\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058ab57f6a0d62656ebbd7576e3da2e1721f}{MU\_SYAMLAL\_OBRIEN}},}
+\DoxyCodeLine{00553\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058a0febcdd512472fb912fd88ad8df3d5e9}{MU\_GIDASPOW}},}
+\DoxyCodeLine{00554\ \ \ \mbox{\hyperlink{materials_8h_a0ae1e3bf78c960c83e2d437efd802058ac0847408e852a0947184265278417cd2}{MU\_REACTION\_DESIGN}}}
+\DoxyCodeLine{00555\ \};}
+\DoxyCodeLine{00556\ }
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \textcolor{comment}{/*\ method\ for\ calculating\ thermal\ conductivity\ */}}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\#define\ KTC\_MIXTURE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00561\ \textcolor{preprocessor}{\#define\ KTC\_KINETIC\_THEORY\ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\#define\ KTC\_IDEAL\_GAS\_MIXTURE\ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00563\ \textcolor{preprocessor}{\#define\ KTC\_ANISOTROPIC\ \ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00564\ \textcolor{preprocessor}{\#define\ KTC\_ORTHOTROPIC\ \ \ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\#define\ KTC\_ORTHOCYLIND\ \ \ \ \ \ \ \ \ \ \ \ \ 15}}
+\DoxyCodeLine{00566\ \textcolor{preprocessor}{\#define\ KTC\_BIAXIAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 16}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#define\ KTC\_REACTION\_DESIGN\ \ \ \ \ \ \ \ \ 17}}
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\#define\ KTC\_ANISO\_UDF\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 18}}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\#define\ KTC\_PA\_PV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 19}}
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ \textcolor{comment}{/*\ method\ for\ calculating\ mass\ diffusivity\ */}}
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\#define\ MASS\_DIFF\_CONSTANT\_DILUTE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\#define\ MASS\_DIFF\_DILUTE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\#define\ MASS\_DIFF\_MULTICOMP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#define\ MASS\_DIFF\_KINETIC\_THEORY\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\#define\ MASS\_DIFF\_REACTION\_DESIGN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#define\ MASS\_DIFF\_UNITY\_LE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 15}}
+\DoxyCodeLine{00578\ }
+\DoxyCodeLine{00579\ \textcolor{comment}{/*\ method\ for\ calculating\ thermal\ diffusion\ coefficient\ */}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\#define\ THERMAL\_DIFF\_MIXTURE\ \ \ \ 10}}
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\#define\ THERMAL\_DIFF\_KINETIC\_THEORY\ 11}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#define\ THERMAL\_DIFF\_REACTION\_DESIGN\ \ 12}}
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ \textcolor{comment}{/*\ method\ for\ calculating\ user\ defined\ scalar\ diffusion\ coefficient\ */}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\#define\ UDS\_METHOD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#define\ UDS\_DIFF\_ANISOTROPIC\ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#define\ UDS\_DIFF\_ORTHOTROPIC\ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#define\ UDS\_DIFF\_ORTHOCYLIND\ \ \ \ \ \ \ \ 15}}
+\DoxyCodeLine{00589\ \textcolor{preprocessor}{\#define\ UDS\_DIFF\_ANISO\_UDF\ \ \ \ \ \ \ \ \ \ 16}}
+\DoxyCodeLine{00590\ }
+\DoxyCodeLine{00591\ \textcolor{comment}{/*\ method\ for\ calculating\ electric\ conductivity\ using\ mixing\ law\ */}}
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\#define\ ELEC\_VOL\_WEIGHTED\_MIXTURE\ \ \ 10}}
+\DoxyCodeLine{00593\ }
+\DoxyCodeLine{00594\ \textcolor{comment}{/*\ method\ for\ calculating\ density\ */}}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\#define\ RHO\_CONSTANT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PROP\_METHOD\_CONSTANT}}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\#define\ RHO\_POLYNOMIAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ PROP\_METHOD\_POLYNOMIAL}}
+\DoxyCodeLine{00597\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00598\ \{}
+\DoxyCodeLine{00599\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dadaec5232b7f4d99a7e98647ce95fb66898}{RHO\_BOUSSINESQ}}\ =\ 10,}
+\DoxyCodeLine{00600\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dadae1a5381e8a02c9b0e2683235a2d8d579}{RHO\_INCOMPRESSIBLE\_IDEAL\_GAS}},}
+\DoxyCodeLine{00601\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dadad03d7a3a4d9554e93b713594bda00f79}{RHO\_IDEAL\_GAS}},}
+\DoxyCodeLine{00602\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dadafdc5b2cb10f4b595fd3df59db65d8571}{RHO\_VOL\_WEIGHTED\_MIXTURE}},}
+\DoxyCodeLine{00603\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dada72d8d78f29cd312eb9bcbb4a328ab9e5}{RHO\_PDF}},}
+\DoxyCodeLine{00604\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dada0aafb9c68ae599e3eb75d076c270a4a2}{RHO\_PREMIXED\_COMBUSTION}},}
+\DoxyCodeLine{00605\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dada8213c16c7c60b89ac19c57237f04ab8c}{RHO\_AUNGIER\_REDLICH\_KWONG}},}
+\DoxyCodeLine{00606\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dadaec9c3296b6cc49492f2418e444192c8b}{RHO\_REDLICH\_KWONG}},}
+\DoxyCodeLine{00607\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dadae84b989807834d3fcd73be31d7a02352}{RHO\_SOAVE\_REDLICH\_KWONG}},}
+\DoxyCodeLine{00608\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dadad7471293fa2503a9b269fb9e6118fc41}{RHO\_PENG\_ROBINSON}},}
+\DoxyCodeLine{00609\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dadad4ab9ec3faf5819e1c4d827f259001ff}{RHO\_CUEOS\_END}},\ \textcolor{comment}{/*\ this\ follows\ the\ last\ cubic\ equation\ of\ state\ model\ definition\ */}}
+\DoxyCodeLine{00610\ \ \ \mbox{\hyperlink{materials_8h_a01aea4eb01aa6415eee118b5a5ee3dada57567824e3d234c7d940b9017fba21f5}{RHO\_TAIT}}}
+\DoxyCodeLine{00611\ \};}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#define\ RHO\_CUEOS\_START\ RHO\_AUNGIER\_REDLICH\_KWONG}}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00614\ \textcolor{comment}{/*\ method\ for\ calculating\ absorption\ coefficient\ */}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\#define\ ABS\_COEFF\_WSGGM\_CELL\ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\#define\ ABS\_COEFF\_WSGGM\_DOMAIN\ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#define\ ABS\_COEFF\_WSGGM\_USER\ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\#define\ ABS\_COEFF\_GRAY\_BAND\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\#define\ PROP\_las\_coeff\ PROP\_scat\_phase\_func}}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \textcolor{comment}{/*\ method\ for\ scattering\ phase\ function\ */}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\#define\ SCAT\_PHASE\_FUNC\_ISOTROPIC\ 10}}
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\#define\ SCAT\_PHASE\_FUNC\_LINEAR\ 11}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\#define\ SCAT\_PHASE\_FUNC\_DELTA\_EDDINGTON\ 12}}
+\DoxyCodeLine{00626\ }
+\DoxyCodeLine{00627\ \textcolor{comment}{/*\ devolatalization\ models\ */}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#define\ DEVOL\_SINGLE\_RATE\ 10}}
+\DoxyCodeLine{00629\ \textcolor{preprocessor}{\#define\ DEVOL\_TWO\_RATES\ 11}}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\#define\ DEVOL\_CPD\ 12\ }\textcolor{comment}{/*\ coal\_cpd*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \textcolor{comment}{/*\ thermophoretic\ coefficients\ */}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\#define\ THERMO\_DIFF\_TALBOT\ 10}}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ \textcolor{comment}{/*\ combustion\ model\ */}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\#define\ CMB\_DIFF\_LIMITED\ 10}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#define\ CMB\_DIFF\_KINETICS\_LIMITED\ 11}}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\#define\ CMB\_INTRINSIC\ 12}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\#define\ CMB\_MULTIPLE\ 13}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\#define\ CMB\_CBK\ 14}}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \textcolor{comment}{/*\ vaporization\ and\ thermolysis\ model\ */}}
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\#define\ EVAP\_DIFFUSION\ 10}}
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\#define\ EVAP\_CONVECTION\_DIFFUSION\ 11}}
+\DoxyCodeLine{00645\ \textcolor{preprocessor}{\#define\ EVAP\_THERMOLYSIS\ 12}}
+\DoxyCodeLine{00646\ }
+\DoxyCodeLine{00647\ \textcolor{comment}{/*\ reaction\ mechanisms\ */}}
+\DoxyCodeLine{00648\ \textcolor{preprocessor}{\#define\ REACT\_NONE\ 10}}
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\#define\ REACT\_FINITE\ 11}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\#define\ REACT\_FINITE\_EDDY\_DISS\ 12}}
+\DoxyCodeLine{00651\ \textcolor{preprocessor}{\#define\ REACT\_EDDY\_DISS\ 13}}
+\DoxyCodeLine{00652\ }
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{\#define\ REACT\_MECHANISM\ 10}}
+\DoxyCodeLine{00654\ }
+\DoxyCodeLine{00655\ \textcolor{comment}{/*\ partially\ premixed\ polynomial\ for\ laminar\ flame\ speed\ */}}
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\#define\ PREPDF\_POLY\ 10}}
+\DoxyCodeLine{00657\ \textcolor{comment}{/*\ laminar\ flame\ speed\ for\ Gasoline*/}}
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\#define\ GASOLINE\_LAW\ 11}}
+\DoxyCodeLine{00659\ \textcolor{comment}{/*\ laminar\ flame\ speed\ from\ chemkin\ MFL\ libaray*/}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{\#define\ CHEMKIN\_MFL\_LAW\ 12}}
+\DoxyCodeLine{00661\ }
+\DoxyCodeLine{00662\ \textcolor{comment}{/*\ mixture\ fraction\ based\ laminar\ flame\ thickness\ */}}
+\DoxyCodeLine{00663\ \textcolor{preprocessor}{\#define\ DIFFUSIVITY\_OVER\_FLAME\_SPEED\ 10}}
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00665\ \textcolor{comment}{/*\ method\ for\ binary\ diffusivity\ for\ DPM\ \ */}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#define\ DPM\_DIFFUSIVITY\_FILM\ 10}}
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\#define\ DPM\_DIFFUSIVITY\_UNITY\_LE\ 11}}
+\DoxyCodeLine{00668\ }
+\DoxyCodeLine{00669\ \textcolor{comment}{/*\ speciesphase\ types\ */}}
+\DoxyCodeLine{00670\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00671\ \{}
+\DoxyCodeLine{00672\ \ \ \mbox{\hyperlink{materials_8h_a7646ae03981912f97626c39dfe9318daa4331cf7c21bc403bf2598a1ce8f42eac}{SPECIES\_PHASE\_TYPE\_GAS}}\ =\ 10,}
+\DoxyCodeLine{00673\ \ \ \mbox{\hyperlink{materials_8h_a7646ae03981912f97626c39dfe9318daa060afba0ba33004619409497c10b3c9d}{SPECIES\_PHASE\_TYPE\_LIQUID}},}
+\DoxyCodeLine{00674\ \ \ \mbox{\hyperlink{materials_8h_a7646ae03981912f97626c39dfe9318daae72419ef0ba21e3103cf15400b272133}{SPECIES\_PHASE\_TYPE\_SOLID}}}
+\DoxyCodeLine{00675\ \};}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00677\ \textcolor{comment}{/*\ multiphase\ methods\ and\ types\ */}}
+\DoxyCodeLine{00678\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00679\ \{}
+\DoxyCodeLine{00680\ \ \ \mbox{\hyperlink{materials_8h_a29d44341ce767c5dfc737d622fc97ba1a4d2aa3cdfda98ad111c94e7b65dab338}{PHASE\_TYPE\_GAS}}\ =\ 10,}
+\DoxyCodeLine{00681\ \ \ \mbox{\hyperlink{materials_8h_a29d44341ce767c5dfc737d622fc97ba1a46ba5d7f8a6851d7574ac0c633008a14}{PHASE\_TYPE\_LIQUID}},}
+\DoxyCodeLine{00682\ \ \ \mbox{\hyperlink{materials_8h_a29d44341ce767c5dfc737d622fc97ba1a8b9368976f59a417969ea244fb439cd8}{PHASE\_TYPE\_SOLID}}}
+\DoxyCodeLine{00683\ \};}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00685\ \textcolor{comment}{/*\ for\ mass\ transfer\ \&\ model\ transition\ */}}
+\DoxyCodeLine{00686\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00687\ \{}
+\DoxyCodeLine{00688\ \ \ \mbox{\hyperlink{materials_8h_a1b7b7893d940926615b39239ac05829da3c1be82e82a4753f6c42809546571d8a}{PROP\_METHOD\_CONSTANT\_RATE}}\ =\ 10,}
+\DoxyCodeLine{00689\ \ \ \mbox{\hyperlink{materials_8h_a1b7b7893d940926615b39239ac05829da33791505aaa5e6c8ceeca117cd431eb4}{PROP\_METHOD\_AIAD\_ENTRAINMENT\_ABSORPTION}},\ \textcolor{comment}{/*\ GM\ */}\ \textcolor{comment}{/*\ US114041\ */}\ \textcolor{comment}{/*\ AIAD\ Entrainment\ Absortion\ PROP\_METHOD\ */}}
+\DoxyCodeLine{00690\ \ \ \mbox{\hyperlink{materials_8h_a1b7b7893d940926615b39239ac05829da33ac25ae910d0ce402b0aa4ca6a180bc}{PROP\_METHOD\_GENTOP\_COMPLETE\_COALESCENCE}},\ \textcolor{comment}{/*\ GM\ */}\ \textcolor{comment}{/*\ US150386\ */}\ \textcolor{comment}{/*\ GENTOP\ Complete\ Coalescence\ PROP\_METHOD\ */}}
+\DoxyCodeLine{00691\ \ \ \mbox{\hyperlink{materials_8h_a1b7b7893d940926615b39239ac05829daa4220e414cda2c353654c6fb916604bf}{PROP\_METHOD\_PB}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*population\ balance\ method*/}}
+\DoxyCodeLine{00692\ \ \ \mbox{\hyperlink{materials_8h_a1b7b7893d940926615b39239ac05829dae8a69d1046e5906139d9f619878f5be7}{PROP\_METHOD\_CAVITATION}},}
+\DoxyCodeLine{00693\ \ \ \mbox{\hyperlink{materials_8h_a1b7b7893d940926615b39239ac05829da3c0c096828e0bf3d097be8b830872230}{PROP\_METHOD\_EVAPORATION\_CONDENSATION}},}
+\DoxyCodeLine{00694\ \ \ \mbox{\hyperlink{materials_8h_a1b7b7893d940926615b39239ac05829da90b70590562590ba06ab3b1ff4ff5b5b}{PROP\_METHOD\_BOILING}},}
+\DoxyCodeLine{00695\ \ \ \mbox{\hyperlink{materials_8h_a1b7b7893d940926615b39239ac05829da82d6951a6a2bb0af1c5963b4d379c3db}{PROP\_METHOD\_SPECIES\_TRANSFER}},}
+\DoxyCodeLine{00696\ \ \ \mbox{\hyperlink{materials_8h_a1b7b7893d940926615b39239ac05829da7b1edec7c122de9bdcd31bc72f3e80e9}{PROP\_METHOD\_VOF\_TO\_DPM}}\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ The\ only\ model\ transition\ so\ far,\ rest\ is\ mass\ transfer.\ */}}
+\DoxyCodeLine{00697\ \};}
+\DoxyCodeLine{00698\ }
+\DoxyCodeLine{00699\ \textcolor{comment}{/*\ methods\ for\ calculating\ drag\ functions\ */}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\#define\ DRAG\_SCHILLER\_NAUMANN\ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\#define\ DRAG\_MORSI\_ALEXANDER\ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\#define\ DRAG\_SYAMLAL\_OBRIEN\ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#define\ DRAG\_WEN\_YU\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00704\ \textcolor{preprocessor}{\#define\ DRAG\_GIDASPOW\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 15}}
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\#define\ DRAG\_SYAMLAL\_OBRIEN\_SYMMETRIC\ 16}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\#define\ DRAG\_SYMMETRIC\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 17}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\#define\ DRAG\_UNIVERSAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 18}}
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\#define\ DRAG\_ANISOTROPIC\ \ \ \ \ \ \ \ \ \ \ \ \ \ 19}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#define\ DRAG\_SCHILLER\_NAUMANN\_PB\ \ \ \ \ \ 20}}
+\DoxyCodeLine{00710\ \textcolor{preprocessor}{\#define\ DRAG\_WEN\_YU\_PB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 21}}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#define\ DRAG\_ISHII\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 22}}
+\DoxyCodeLine{00712\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00713\ \textcolor{comment}{\#define\ DRAG\_BOILING\_ISHII\ \ \ \ \ \ \ \ \ \ \ \ 22}}
+\DoxyCodeLine{00714\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\#define\ DRAG\_HUILIN\_GIDASPOW\ \ \ \ \ \ \ \ \ \ 23}}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{\#define\ DRAG\_GIBILARO\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 24}}
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\#define\ DRAG\_GRACE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 25\ }\textcolor{comment}{/*US\ 39204*/}\textcolor{preprocessor}{\ }\textcolor{comment}{/*US\ 160011*/}\textcolor{preprocessor}{\ }\textcolor{comment}{/*\ US168773\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\#define\ DRAG\_TOMIYAMA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 26\ }\textcolor{comment}{/*US\ 39204*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#define\ DRAG\_SYAMLAL\_OBRIEN\_PARA\ \ \ \ \ \ 27}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#define\ DRAG\_ISHIIZUBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 28\ }\textcolor{comment}{/*US\ 160011*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\#define\ DRAG\_AIAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 29\ }\textcolor{comment}{/*\ GM\ */}\textcolor{preprocessor}{\ }\textcolor{comment}{/*\ US\ 95649\ */}\textcolor{preprocessor}{\ }\textcolor{comment}{/*\ Defining\ Drag\ variable\ for\ AIAD\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00722\ }
+\DoxyCodeLine{00723\ \textcolor{comment}{/*\ US\ 39205\ method\ for\ calculating\ drag\ factor*/}}
+\DoxyCodeLine{00724\ }
+\DoxyCodeLine{00725\ \textcolor{preprocessor}{\#define\ DRAG\_FACTOR\_BRUCATO\ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00726\ }
+\DoxyCodeLine{00727\ \textcolor{comment}{/*\ methods\ for\ calculating\ lift\ coefficient\ */}}
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\#define\ LIFT\_MORAGA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\#define\ LIFT\_SAFFMAN\_MEI\ \ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\#define\ LIFT\_LEGENDRE\_MAGNAUDET\ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{\#define\ LIFT\_TOMIYAMA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00732\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00733\ \textcolor{comment}{\#define\ LIFT\_BOILING\_MORAGA\ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00734\ \textcolor{comment}{\#define\ LIFT\_BOILING\_TOMIYAMA\_ET\_AL\ \ \ 12}}
+\DoxyCodeLine{00735\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00736\ }
+\DoxyCodeLine{00737\ \textcolor{comment}{/*\ methods\ for\ calculating\ wall\ lubrication\ coefficient\ */}}
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{\#define\ WALL\_LUBRICATION\_ANTAL\ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#define\ WALL\_LUBRICATION\_TOMIYAMA\ \ \ \ \ 12}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\#define\ WALL\_LUBRICATION\_FRANK\ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\#define\ WALL\_LUBRICATION\_HOSOKAWA\ \ \ \ \ 14}}
+\DoxyCodeLine{00742\ }
+\DoxyCodeLine{00743\ \textcolor{comment}{/*\ methods\ for\ calculating\ turbulent\ dispersion\ force\ */}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#define\ TD\_LOPEZ\_DE\_BERTODANO\ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\#define\ TD\_SIMONIN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#define\ TD\_BURNS\_ET\_AL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\#define\ DIFFUSION\_IN\_VOF\ \ \ \ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \textcolor{comment}{/*\ methods\ for\ calculating\ turbulent\ dispersion\ force\ */}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\#define\ TI\_SATO\_BIT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00751\ \textcolor{preprocessor}{\#define\ TI\_TROSHKO\_HASSAN\ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00752\ \textcolor{preprocessor}{\#define\ TI\_SIMONIN\_ET\_AL\ \ \ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \textcolor{comment}{/*methods\ for\ calculating\ slip\ velocity\ */}}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\#define\ SLIP\_MANNINEN\_ET\_AL\ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \textcolor{comment}{/*methods\ for\ calculating\ bulk\ viscosity\ */}}
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\#define\ B\_MU\_LUN\_ET\_AL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00759\ }
+\DoxyCodeLine{00760\ \textcolor{comment}{/*methods\ for\ calculating\ friction\ viscosity\ */}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#define\ FRICTION\_MU\_SCHAEFFER\ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00762\ \textcolor{preprocessor}{\#define\ FRICTION\_MU\_JOHNSON\ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00763\ }
+\DoxyCodeLine{00764\ \textcolor{comment}{/*methods\ for\ calculating\ frictional\ pressure\ */}}
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\#define\ FRICTIONAL\_PRESSURE\_JOHNSON\ \ \ 10}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\#define\ FRICTIONAL\_PRESSURE\_SYAMLAL\ \ \ 11}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\#define\ FRICTIONAL\_PRESSURE\_KTGF\ \ \ \ \ \ 12}}
+\DoxyCodeLine{00768\ }
+\DoxyCodeLine{00769\ \textcolor{comment}{/*methods\ for\ calculating\ granular\ conductivity\ */}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{\#define\ GRAN\_CONDUCTIVITY\_SYAM\ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00771\ \textcolor{preprocessor}{\#define\ GRAN\_CONDUCTIVITY\_GIDS\ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00772\ }
+\DoxyCodeLine{00773\ \textcolor{comment}{/*methods\ for\ calculating\ relative\ viscosity\ */}}
+\DoxyCodeLine{00774\ \textcolor{preprocessor}{\#define\ REL\_VIS\_BRINKMAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00775\ \textcolor{preprocessor}{\#define\ REL\_VIS\_EINSTEIN\ \ \ \ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00776\ \textcolor{preprocessor}{\#define\ REL\_VIS\_BREUGEM\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \textcolor{comment}{/*methods\ for\ heat\ trasfer\ coefficient\ */}}
+\DoxyCodeLine{00779\ \textcolor{preprocessor}{\#define\ HEAT\_COEFF\_RANZ\_MARSHALL\ \ \ \ \ \ 11}}
+\DoxyCodeLine{00780\ \textcolor{preprocessor}{\#define\ HEAT\_COEFF\_GUNN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00781\ \textcolor{preprocessor}{\#define\ HEAT\_COEFF\_TOMIYAMA\ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00782\ \textcolor{preprocessor}{\#define\ HEAT\_COEFF\_HUGHMARK\ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00783\ \textcolor{preprocessor}{\#define\ HEAT\_COEFF\_LAVIEVILLE\ \ \ \ \ \ \ \ \ 15}}
+\DoxyCodeLine{00784\ \textcolor{preprocessor}{\#define\ HEAT\_COEFF\_TWO\_RESISTANCE\ \ \ \ \ 16}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\#define\ HEAT\_TRANSFER\_COEFFICINET\ \ \ \ \ 17}}
+\DoxyCodeLine{00786\ \textcolor{preprocessor}{\#define\ HEAT\_COEFF\_NUSSELT\_NUMBER\ \ \ \ \ 18}}
+\DoxyCodeLine{00787\ \textcolor{preprocessor}{\#define\ HEAT\_COEFF\_ZERO\_RESISTANCE\ \ \ \ 19}}
+\DoxyCodeLine{00788\ \textcolor{preprocessor}{\#define\ HEAT\_FIXED\_TO\_SAT\_TEMP\ \ \ \ \ \ \ \ 20}}
+\DoxyCodeLine{00789\ }
+\DoxyCodeLine{00790\ \textcolor{comment}{/*methods\ for\ calculating\ granular\ Temperature\ */}}
+\DoxyCodeLine{00791\ \textcolor{preprocessor}{\#define\ GRAN\_ALGEBRAIC\_SYAM\ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00792\ }
+\DoxyCodeLine{00793\ \textcolor{comment}{/*methods\ for\ calculating\ solids\ pressure\ */}}
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\#define\ GP\_LUN\_ET\_AL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00795\ \textcolor{preprocessor}{\#define\ GP\_SYAMLAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00796\ \textcolor{preprocessor}{\#define\ GP\_AHMADI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00797\ }
+\DoxyCodeLine{00798\ \textcolor{comment}{/*methods\ for\ calculating\ radial\ distribution\ function\ */}}
+\DoxyCodeLine{00799\ \textcolor{preprocessor}{\#define\ G0\_LUN\_ET\_AL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00800\ \textcolor{preprocessor}{\#define\ G0\_AHMADI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00801\ \textcolor{preprocessor}{\#define\ G0\_ARASTAPOUR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\#define\ G0\_SYAMLAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00803\ }
+\DoxyCodeLine{00804\ \textcolor{comment}{/*methods\ for\ calculating\ Elasticity\ Modulus\ */}}
+\DoxyCodeLine{00805\ \textcolor{preprocessor}{\#define\ DP\_DVOF\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00806\ }
+\DoxyCodeLine{00807\ \textcolor{comment}{/*methods\ for\ calculationg\ Frictional\ Modulus\ */}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\#define\ DP\_FRICTION\_DVOF\ \ \ \ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00809\ }
+\DoxyCodeLine{00810\ \textcolor{comment}{/*method\ for\ phase\ diameter\ when\ PB\ is\ on*/}}
+\DoxyCodeLine{00811\ \textcolor{preprocessor}{\#define\ PB\_SAUTER\_DIA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00812\ \textcolor{preprocessor}{\#define\ IAC\_SAUTER\_DIA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 11\ }\textcolor{comment}{/*\ interfacial\ area\ model\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00813\ \textcolor{preprocessor}{\#define\ NB\_SAUTER\_DIA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 12\ }\textcolor{comment}{/*\ boiling\ model\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00814\ }
+\DoxyCodeLine{00815\ \textcolor{comment}{/*\ method\ for\ vapor\ liquid\ equilibrium\ */}}
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\#define\ VPE\_RAOULT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00817\ }
+\DoxyCodeLine{00818\ \textcolor{comment}{/*\ method\ for\ interfacial\ area\ model\ */}}
+\DoxyCodeLine{00819\ \textcolor{preprocessor}{\#define\ IAC\_HI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00820\ \textcolor{preprocessor}{\#define\ IAC\_IK\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00821\ \textcolor{preprocessor}{\#define\ IAC\_WIK\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00822\ \textcolor{preprocessor}{\#define\ IAC\_FL\_KE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00823\ \textcolor{preprocessor}{\#define\ IAC\_YM\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 15}}
+\DoxyCodeLine{00824\ }
+\DoxyCodeLine{00825\ \textcolor{comment}{/*\ methods\ for\ calculating\ interfacial\ */}}
+\DoxyCodeLine{00826\ \textcolor{preprocessor}{\#define\ MP\_IA\_SYMMETRIC\ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{00827\ \textcolor{preprocessor}{\#define\ MP\_IA\_PARTICLE\ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00828\ \textcolor{preprocessor}{\#define\ MP\_IA\_ISHII\ \ \ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{00829\ \textcolor{preprocessor}{\#define\ MP\_IA\_GRADIENT\ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{00830\ \textcolor{preprocessor}{\#define\ MP\_IA\_AIAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 15\ }\textcolor{comment}{/*\ GM\ */}\textcolor{preprocessor}{\ }\textcolor{comment}{/*\ US\ 95649\ */}\textcolor{preprocessor}{\ }\textcolor{comment}{/*\ Defining\ Interfacial\ Area\ variable\ for\ AIAD\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00831\ \textcolor{preprocessor}{\#define\ MP\_IA\_GENTOP\ \ \ \ \ \ \ \ \ \ \ \ \ 16\ }\textcolor{comment}{/*\ GM\ */}\textcolor{preprocessor}{\ }\textcolor{comment}{/*\ US\ 150385\ */}\textcolor{preprocessor}{\ }\textcolor{comment}{/*\ Defining\ Interfacial\ Area\ variable\ for\ GENTOP\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00832\ }
+\DoxyCodeLine{00833\ \textcolor{comment}{/*\ methods\ for\ calculating\ nucleate\ site\ density\ */}}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\#define\ BOILING\_NUC\_LEMMERT\_CHAWLA\ \ \ \ 11}}
+\DoxyCodeLine{00835\ \textcolor{preprocessor}{\#define\ BOILING\_NUC\_KOCAMUSTAFAOGULLARI\_ISHII\ 12}}
+\DoxyCodeLine{00836\ }
+\DoxyCodeLine{00837\ \textcolor{comment}{/*\ methods\ for\ calculating\ bubble\ departure\ diameter\ \ */}}
+\DoxyCodeLine{00838\ \textcolor{preprocessor}{\#define\ BOILING\_BDD\_TOLUBINSKI\_ET\_AL\ \ 11}}
+\DoxyCodeLine{00839\ \textcolor{preprocessor}{\#define\ BOILING\_BDD\_UNAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00840\ \textcolor{preprocessor}{\#define\ BOILING\_BDD\_KOCAMUSTAFAOGULLARI\_ISHII\ 13}}
+\DoxyCodeLine{00841\ }
+\DoxyCodeLine{00842\ \textcolor{comment}{/*\ methods\ for\ calculating\ bubble\ departure\ frequency\ \ */}}
+\DoxyCodeLine{00843\ \textcolor{preprocessor}{\#define\ BOILING\_BDF\_COLE\ \ 11}}
+\DoxyCodeLine{00844\ }
+\DoxyCodeLine{00845\ \textcolor{comment}{/*methods\ for\ calculating\ area\ influence\ coefficient\ \ */}}
+\DoxyCodeLine{00846\ \textcolor{preprocessor}{\#define\ BOILING\_AIC\_DELVALLE\_KENNING\ \ 11}}
+\DoxyCodeLine{00847\ }
+\DoxyCodeLine{00848\ \textcolor{comment}{/*methods\ for\ calculating\ reference\ temp.for\ quenching\ \ */}}
+\DoxyCodeLine{00849\ \textcolor{preprocessor}{\#define\ BOILING\_QUENCH\_TEMPERATURE\ \ \ \ 11}}
+\DoxyCodeLine{00850\ }
+\DoxyCodeLine{00851\ \textcolor{comment}{/*\ methods\ for\ calculating\ forced\ convection\ htc\ */}}
+\DoxyCodeLine{00852\ \textcolor{preprocessor}{\#define\ BOILING\_QSP\_HTC\_STANDARD\ 11}}
+\DoxyCodeLine{00853\ \textcolor{preprocessor}{\#define\ BOILING\_QSP\_HTC\_DITTUS\_BOELTER\_CALIBRATION\ 12}}
+\DoxyCodeLine{00854\ }
+\DoxyCodeLine{00855\ \textcolor{comment}{/*\ methods\ for\ calculating\ forced\ convection\ reynolds\ factor\ */}}
+\DoxyCodeLine{00856\ \textcolor{preprocessor}{\#define\ BOILING\_QSP\_FAC1\_CHEN\ 11}}
+\DoxyCodeLine{00857\ }
+\DoxyCodeLine{00858\ \textcolor{comment}{/*\ methods\ for\ calculating\ nucleate\ boiling\ htc\ */}}
+\DoxyCodeLine{00859\ \textcolor{preprocessor}{\#define\ BOILING\_QNUC\_HTC\_FORSTER\_ZUBER\ 11}}
+\DoxyCodeLine{00860\ }
+\DoxyCodeLine{00861\ \textcolor{comment}{/*\ methods\ for\ flow-\/induced/sub-\/cooled\ boiling\ ht\ factor\ */}}
+\DoxyCodeLine{00862\ \textcolor{preprocessor}{\#define\ BOILING\_QNUC\_FAC1\_CHEN\_STEINER\ 11}}
+\DoxyCodeLine{00863\ \textcolor{preprocessor}{\#define\ BOILING\_QNUC\_FAC1\_CHEN\ 12}}
+\DoxyCodeLine{00864\ }
+\DoxyCodeLine{00865\ \textcolor{comment}{/*\ methods\ for\ calculating\ boiling\ reference\ velocity\ \ */}}
+\DoxyCodeLine{00866\ \textcolor{preprocessor}{\#define\ BOILING\_REF\_VEL\_YSTAR\ 11}}
+\DoxyCodeLine{00867\ }
+\DoxyCodeLine{00868\ \textcolor{comment}{/*\ methods\ for\ calculating\ boiling\ reference\ temperature\ */}}
+\DoxyCodeLine{00869\ \textcolor{preprocessor}{\#define\ BOILING\_REF\_TEMP\_YSTAR\ 11}}
+\DoxyCodeLine{00870\ \textcolor{preprocessor}{\#define\ BOILING\_REF\_TEMP\_BULK\ 12}}
+\DoxyCodeLine{00871\ }
+\DoxyCodeLine{00872\ \textcolor{comment}{/*\ methods\ for\ calculating\ minimun\ superheat\ */}}
+\DoxyCodeLine{00873\ \textcolor{preprocessor}{\#define\ BOILING\_SUPHT\_MIN\_HSU\ 11}}
+\DoxyCodeLine{00874\ }
+\DoxyCodeLine{00875\ \textcolor{comment}{/*\ methods\ for\ calculating\ wall\ liquid\ volume\ fraction\ */}}
+\DoxyCodeLine{00876\ \textcolor{preprocessor}{\#define\ BOILING\_WALL\_LIQ\_FRAC\_TRANSITION\ 11}}
+\DoxyCodeLine{00877\ \textcolor{preprocessor}{\#define\ BOILING\_WALL\_LIQ\_FRAC\_NEIGHBOR\ 12}}
+\DoxyCodeLine{00878\ }
+\DoxyCodeLine{00879\ \textcolor{comment}{/*methods\ for\ calculating\ limiting\ func.\ in\ TD\ force\ \ */}}
+\DoxyCodeLine{00880\ \textcolor{preprocessor}{\#define\ TD\_LIMITING\_FUNCTION\ \ \ \ 11}}
+\DoxyCodeLine{00881\ }
+\DoxyCodeLine{00882\ \textcolor{comment}{/*\ methods\ for\ calculating\ henry\ coefficient\ */}}
+\DoxyCodeLine{00883\ \textcolor{preprocessor}{\#define\ SPECIES\_TRANSFER\_HENRY\_CONST\_VANT\_HOFF\ \ \ \ \ \ 11}}
+\DoxyCodeLine{00884\ }
+\DoxyCodeLine{00885\ \textcolor{comment}{/*\ methods\ for\ calculating\ mass-\/transfer\ coefficient\ */}}
+\DoxyCodeLine{00886\ \textcolor{preprocessor}{\#define\ SPECIES\_TRANSFER\_RANZ\_MARSHALL\ \ \ \ \ \ 11}}
+\DoxyCodeLine{00887\ \textcolor{preprocessor}{\#define\ SPECIES\_TRANSFER\_HUGHMARK\ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{00888\ \textcolor{preprocessor}{\#define\ SPECIES\_TRANSFER\_SHERWOOD\_NUMBER\ \ \ \ 13}}
+\DoxyCodeLine{00889\ \textcolor{preprocessor}{\#define\ SPECIES\_TRANSFER\_ZERO\_RESISTANCE\ \ \ \ 14}}
+\DoxyCodeLine{00890\ }
+\DoxyCodeLine{00891\ \textcolor{comment}{/*\ methods\ for\ taylor-\/approxiamtion\ \ */}}
+\DoxyCodeLine{00892\ \textcolor{preprocessor}{\#define\ CAVITATION\_TAYLOR\_APPROXIMATION\ \ \ \ \ 11}}
+\DoxyCodeLine{00893\ }
+\DoxyCodeLine{00894\ }
+\DoxyCodeLine{00895\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00896\ \{}
+\DoxyCodeLine{00897\ \ \ \mbox{\hyperlink{materials_8h_a098384b0034af0daa7c9c5c82b563567ad2f786c3dec835b848be2ab24798b7b0}{PROP\_METHOD\_MASS\_WEIGHTED\_ARITHMETIC\_MIXTURE}}\ =\ 30,}
+\DoxyCodeLine{00898\ \ \ \mbox{\hyperlink{materials_8h_a098384b0034af0daa7c9c5c82b563567ad53bf2c1da466810ea11f84b65f9c435}{PROP\_METHOD\_MASS\_WEIGHTED\_HARMONIC\_MIXTURE}},}
+\DoxyCodeLine{00899\ \ \ \mbox{\hyperlink{materials_8h_a098384b0034af0daa7c9c5c82b563567ad2cf9a5282fcf6429f1905260220c5d5}{PROP\_METHOD\_REAL\_GAS\_PENG\_ROBINSON}}}
+\DoxyCodeLine{00900\ \};}
+\DoxyCodeLine{00901\ }
+\DoxyCodeLine{00902\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00903\ \{}
+\DoxyCodeLine{00904\ \ \ \mbox{\hyperlink{materials_8h_a92c4bd66c8074c3d126a069275a0a80ca1073ff64a50bc08e28508351e44c9600}{PROP\_METHOD\_DPM\_AVERAGE}}\ =\ 50}
+\DoxyCodeLine{00905\ \};}
+\DoxyCodeLine{00906\ }
+\DoxyCodeLine{00907\ \textcolor{comment}{/*\ methods\ for\ calculating\ critical\ constants\ for\ real\ gas\ mixtures\ */}}
+\DoxyCodeLine{00908\ \textcolor{preprocessor}{\#define\ MOLE\_WEIGHTED\_MIXTURE\ \ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{00909\ \textcolor{preprocessor}{\#define\ AUNGIER\_REDLICH\_KWONG\_MIXTURE\ \ \ \ \ 11}}
+\DoxyCodeLine{00910\ }
+\DoxyCodeLine{00911\ \textcolor{comment}{/*\ methods\ for\ calculating\ vapor\ saturation\ pressure\ used\ in\ Eulerian\ Wall\ Film\ \ model\ */}}
+\DoxyCodeLine{00912\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00913\ \{}
+\DoxyCodeLine{00914\ \ \ \mbox{\hyperlink{materials_8h_a2ee507fea44084259042ff7bb45ecabfa03fed23822e6095f226a9a1cd3f3733d}{PROP\_METHOD\_EWF\_SAT\_PRESSURE\_DEFAULT}}\ =\ 10}
+\DoxyCodeLine{00915\ \};}
+\DoxyCodeLine{00916\ }
+\DoxyCodeLine{00917\ \textcolor{comment}{/*\ methods\ for\ calculating\ saturation\ temperature\ used\ in\ mass\ transfer\ models\ */}}
+\DoxyCodeLine{00918\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00919\ \{}
+\DoxyCodeLine{00920\ \ \ \mbox{\hyperlink{materials_8h_aa7df87806f64f3b241c8cde9eb57cad5ad0f564ee812aee17510ec1d75678674d}{PROP\_METHOD\_TSAT\_TABULATION}}\ =\ 10,}
+\DoxyCodeLine{00921\ \ \ \mbox{\hyperlink{materials_8h_aa7df87806f64f3b241c8cde9eb57cad5ae7b7b5d79e1ab7a5076cfbcd0afc57f3}{PROP\_METHOD\_PT\_SAT\_TABULAR}}\ =\ 12,\ \ \textcolor{comment}{/*\ 11\ has\ conflict\ with\ taylor-\/approximation\ */}}
+\DoxyCodeLine{00922\ \ \ \mbox{\hyperlink{materials_8h_aa7df87806f64f3b241c8cde9eb57cad5a4bb16b21e2068655ec00ff76b5bce716}{PROP\_METHOD\_PTL\_SAT\_TABULAR}}\ =\ 13}
+\DoxyCodeLine{00923\ \};}
+\DoxyCodeLine{00924\ }
+\DoxyCodeLine{00928\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmaterial__params__struct}{material\_params\_struct}}}
+\DoxyCodeLine{00929\ \{}
+\DoxyCodeLine{00930\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmaterial__params__struct_aa2faa2abd2c32272484d08e873fd1d85}{blended\_table\_derivatives}};\ }
+\DoxyCodeLine{00931\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structmaterial__params__struct_af61a37b1c2b2446d30725fe0a5bb8cdd}{cueos\_cp\_departure\_limit}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00932\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmaterial__params__struct_ab6cb2b1e864668946a00260d2809e14b}{property\_warnings}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00933\ \}\ \mbox{\hyperlink{materials_8h_a39b0f2055c5b2e480cd5bfda11d7f9ac}{Material\_Params\_Type}};}
+\DoxyCodeLine{00934\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{structmaterial__params__struct}{Material\_Params\_Type}}\ \mbox{\hyperlink{materials_8h_abf2d8a1fe53ce2d4189603993f9cbf58}{material\_params}};}
+\DoxyCodeLine{00935\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_ad8e6698f604ab6436fcc2f95309d1c24}{Set\_Material\_Params}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00936\ }
+\DoxyCodeLine{00937\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_adc40240ca4b8778cdeba60854312153b}{Create\_Material}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mix\_name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *formula,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1}{Matl\_Type\_ID}}\ type,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ name\_and\_formula);}
+\DoxyCodeLine{00938\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_a70f85d8a5ecc48bbbb071685d536461d}{Set\_Material}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \mbox{\hyperlink{structobj}{Pointer}}\ y);}
+\DoxyCodeLine{00939\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_afe0f064bb41352b711dd5724086d6e5e}{Delete\_Material}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{00940\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_a025d730807449ef73446e75c86123f44}{Assign\_Species\_to\_Mixtures}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00941\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_a059750ad1a29b3b5229f7bd45e2f99b1}{Free\_Materials}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00942\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *\mbox{\hyperlink{materials_8h_a51fb6a518fbb3fb4145ec58b73b37fe8}{Pick\_Material}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mix\_name);}
+\DoxyCodeLine{00943\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *\mbox{\hyperlink{materials_8h_a22dda31e9edc9c0f6a5d755959bc8919}{Pick\_Material\_Name\_And\_Formula}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mix\_name);}
+\DoxyCodeLine{00944\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{materials_8h_a8414fc70aa88438e2786e10642cd49a1}{Matl\_Type\_ID}}\ \mbox{\hyperlink{materials_8h_acf6b1f91b5930bb84fa5630957e32a50}{Material\_Type}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00945\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212}{Property\_ID}}\ \ \mbox{\hyperlink{materials_8h_afdf6e804fe09a5091a7b5740abfbad5a}{Material\_Property\_ID}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00946\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{materials_8h_a214a0e7fbf89401e535b3fca37aa07da}{Property\_Method}}(\mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212}{Property\_ID}},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00947\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{char}\ \ \ *\mbox{\hyperlink{materials_8h_ad6c49eeab6739dd5dee33fd927f54c1a}{Material\_Property\_Name}}(\mbox{\hyperlink{materials_8h_af61ea47d47c40c4223d12dc662931212}{Property\_ID}}\ );}
+\DoxyCodeLine{00948\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{materials_8h_a27966192bfc77050d43e0ce0a23ae8b9}{Material\_Multicomponent\_Index}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \textcolor{keywordtype}{int}\ i1,\ \textcolor{keywordtype}{int}\ i2);}
+\DoxyCodeLine{00949\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{materials_8h_a0c5b77aefc6fe82044dce74cf41b556e}{MAX\_FLAMELET\_SPECIES}};}
+\DoxyCodeLine{00950\ }
+\DoxyCodeLine{00951\ \textcolor{comment}{/*************************************************************************}}
+\DoxyCodeLine{00952\ \textcolor{comment}{\ \ Reactions}}
+\DoxyCodeLine{00953\ \textcolor{comment}{*************************************************************************/}}
+\DoxyCodeLine{00954\ }
+\DoxyCodeLine{00955\ \textcolor{preprocessor}{\#define\ REACTION\_NAME\_LENGTH\ 32}}
+\DoxyCodeLine{00956\ \textcolor{preprocessor}{\#define\ STOICHIOMETRY\_LENGTH\ 128}}
+\DoxyCodeLine{00957\ }
+\DoxyCodeLine{00958\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00959\ \{}
+\DoxyCodeLine{00960\ \ \ \mbox{\hyperlink{materials_8h_a37f557cb3b5d81feecbf6cb66cd33c68a515047b45a5344634315d810680877a9}{ECHEM\_INPUT\_CONSTANT}}\ =\ 0,}
+\DoxyCodeLine{00961\ \ \ \mbox{\hyperlink{materials_8h_a37f557cb3b5d81feecbf6cb66cd33c68ac24e35dc740d43f9383d1eaa470d7482}{ECHEM\_INPUT\_POLYNOMIAL}},}
+\DoxyCodeLine{00962\ \ \ \mbox{\hyperlink{materials_8h_a37f557cb3b5d81feecbf6cb66cd33c68a1d41c6d9ce83dd6fbda043b58861df06}{ECHEM\_INPUT\_UDF}}}
+\DoxyCodeLine{00963\ \}\ \mbox{\hyperlink{materials_8h_a37f557cb3b5d81feecbf6cb66cd33c68}{Echem\_Input\_type}};}
+\DoxyCodeLine{00964\ }
+\DoxyCodeLine{00965\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structechem__input}{echem\_input}}}
+\DoxyCodeLine{00966\ \{}
+\DoxyCodeLine{00967\ \ \ \mbox{\hyperlink{materials_8h_a37f557cb3b5d81feecbf6cb66cd33c68}{Echem\_Input\_type}}\ \mbox{\hyperlink{structechem__input_a9ad914687c8cfc5f74b4920b8d7158ea}{type}};\ \ \textcolor{comment}{/*\ constant,\ polynomial\ or\ udf\ */}}
+\DoxyCodeLine{00968\ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00969\ \ \ \{}
+\DoxyCodeLine{00970\ \ \ \ \ \mbox{\hyperlink{structpolynomial__struct}{Polynomial}}\ *\mbox{\hyperlink{structechem__input_af0b0aa26dcbdf842f13f6a4397da7271}{pl}};}
+\DoxyCodeLine{00971\ \ \ \ \ \mbox{\hyperlink{dbgmsg_8h_a5f5a64ef503db0fc824df8320929b126}{real}}\ (*\mbox{\hyperlink{structechem__input_a3421deee1e15756438d863631a9849c5}{pudf}})(int,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00972\ \ \ \}\ \mbox{\hyperlink{structechem__input_a1774d4e93c91c945676f3efeb6e22070}{input}};}
+\DoxyCodeLine{00973\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structechem__input_acd952a2d1dcbd44e2e928ed662dad230}{xoutval}};}
+\DoxyCodeLine{00974\ \}\ \mbox{\hyperlink{materials_8h_a5685919e19ab40a6b517d45c04c26888}{Echem\_Pinput}};}
+\DoxyCodeLine{00975\ }
+\DoxyCodeLine{00976\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structreaction__struct}{reaction\_struct}}}
+\DoxyCodeLine{00977\ \{}
+\DoxyCodeLine{00978\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structreaction__struct_a36a781848c73963d0f48c92b5b2499b2}{name}}[\mbox{\hyperlink{materials_8h_ac47e2bb7bd6b44e164a5e93f009c3ff6}{REACTION\_NAME\_LENGTH}}];\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ reaction\ name\ */}}
+\DoxyCodeLine{00979\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structreaction__struct_abd0feb03592f38f7764ac655ceeb91a6}{stoichiometry}}[\mbox{\hyperlink{materials_8h_ad34062ec7a1ceddb2f92df69cd871db4}{STOICHIOMETRY\_LENGTH}}];\ \textcolor{comment}{/*\ stoichiometry\ equation\ */}}
+\DoxyCodeLine{00980\ }
+\DoxyCodeLine{00981\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_ab9b4c66a79e06198c5fc19ca24661b2b}{n\_reactants}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ reactants\ */}}
+\DoxyCodeLine{00982\ \ \ \mbox{\hyperlink{structmaterial__struct}{Material}}\ **\mbox{\hyperlink{structreaction__struct_a69c13fb6b10ca850c8f80e0c198d2f9b}{mat\_reactant}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ species\ materials\ of\ reactants\ */}}
+\DoxyCodeLine{00983\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structreaction__struct_adeb0b5df2b29ac9d16c0aa2ab80bad0b}{reactant}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ species\ indices\ of\ reactants\ */}}
+\DoxyCodeLine{00984\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_a476ec4d8763e3e805dd043dcb46ea9ad}{stoich\_reactant}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ stoichiometric\ coefficients\ of\ reactants\ */}}
+\DoxyCodeLine{00985\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_ade9b21da2cf50fa6d58fce8ea9e631a8}{exp\_reactant}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ rate\ exponents\ of\ reactants\ */}}
+\DoxyCodeLine{00986\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_a5430fe72986e9875fd20f5811486415f}{eff\_reactant}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 3rd\ body\ efficiencies\ of\ reactants\ */}}
+\DoxyCodeLine{00987\ }
+\DoxyCodeLine{00988\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_aa6632f5d16885b0bf3f9a8fdb1b1b0f3}{n\_products}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ products\ */}}
+\DoxyCodeLine{00989\ \ \ \mbox{\hyperlink{structmaterial__struct}{Material}}\ **\mbox{\hyperlink{structreaction__struct_ab19eeb56c6e478e0ef2ed8ce364da6ee}{mat\_product}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ species\ materials\ of\ products\ */}}
+\DoxyCodeLine{00990\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structreaction__struct_a7e51ea2c1905be067016a58f1656f48b}{product}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ species\ indices\ of\ products\ */}}
+\DoxyCodeLine{00991\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_a14b409824431f01b6a031a266ba8f921}{stoich\_product}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ stoichiometric\ coefficients\ of\ products\ */}}
+\DoxyCodeLine{00992\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_abae1c926ec02c3d53e8cd305b2c3a712}{exp\_product}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ rate\ exponents\ of\ products\ */}}
+\DoxyCodeLine{00993\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_a1e1c8af8764cd4110e7b1af91eed513c}{eff\_product}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 3rd\ body\ efficiencies\ of\ products\ */}}
+\DoxyCodeLine{00994\ }
+\DoxyCodeLine{00995\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a345739fa850c0585c546cf18d1321dfd}{n\_others}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ other\ species\ */}}
+\DoxyCodeLine{00996\ \ \ \mbox{\hyperlink{structmaterial__struct}{Material}}\ **\mbox{\hyperlink{structreaction__struct_a99d50915439085c737b284b7b0509853}{mat\_other}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ materials\ of\ other\ species\ */}}
+\DoxyCodeLine{00997\ }
+\DoxyCodeLine{00998\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structreaction__struct_ac83433cce820180a4b5c718bdbe1eced}{other}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ species\ indices\ of\ other\ species\ */}}
+\DoxyCodeLine{00999\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_ac890f7310d3826fb6d6aa54a0aaddfb4}{exp\_other}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ rate\ exponents\ of\ other\ species\ */}}
+\DoxyCodeLine{01000\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_a41135c55c6eeee9f9325330a39a97f2d}{eff\_other}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 3rd\ body\ efficiencies\ of\ other\ species\ */}}
+\DoxyCodeLine{01001\ }
+\DoxyCodeLine{01002\ \ \ \textcolor{comment}{/*\ Coefficients\ for\ Arrhenius\ rate\ expression\ */}}
+\DoxyCodeLine{01003\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structreaction__struct_a2941385b1be5280d3b1f546356f7ec99}{A}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ "{}pre-\/exponential"{}\ factor\ */}}
+\DoxyCodeLine{01004\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structreaction__struct_a52312cc4ff31f2fae8fb764c605a9161}{logA}};}
+\DoxyCodeLine{01005\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structreaction__struct_a1510a66dacf9cf3586de5fc89ae2a073}{b}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ temperature\ exponent\ \ \ \ \ */}}
+\DoxyCodeLine{01006\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structreaction__struct_a1eb62b8cb1f5e5f571d51179718e7d4c}{E}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ activation\ energy\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{01007\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structreaction__struct_a3dae5f16b06a6c85ed745c3eca6fa3c6}{Cmin}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ minimum\ concentration\ for\ negative\ reaction\ order\ */}}
+\DoxyCodeLine{01008\ }
+\DoxyCodeLine{01009\ \ \ \textcolor{comment}{/*\ Coefficients\ for\ turbulent\ mixing\ rate\ (eddy\ breakup)\ model\ */}}
+\DoxyCodeLine{01010\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structreaction__struct_a2025c42ec2180e6ddb83c4bce9bd1ef7}{Amix}},\ \mbox{\hyperlink{structreaction__struct_ad10836753f77f83ce567593786e3d40e}{Bmix}};}
+\DoxyCodeLine{01011\ }
+\DoxyCodeLine{01012\ \ \ \textcolor{comment}{/*\ Data\ for\ particle\ surface\ reaction\ */}}
+\DoxyCodeLine{01013\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a659f211add435277a8bb7a60e47210e7}{diffusion\_species}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ index\ for\ diffusion\ limited\ species\ */}}
+\DoxyCodeLine{01014\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a652c2d6624683f019024d5453fedba14}{catalyst\_species}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ index\ for\ catalyst\ species\ */}}
+\DoxyCodeLine{01015\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structreaction__struct_afb1672c802075da327f5557597dfeb24}{C1}},\ \mbox{\hyperlink{structreaction__struct_abf839a9518f8766ad3e31e958ed1b901}{eff}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ diffusion\ rate\ and\ effectiveness\ factor\ */}}
+\DoxyCodeLine{01016\ }
+\DoxyCodeLine{01017\ \ \ \textcolor{comment}{/*\ pressure\ dependent\ reaction\ */}}
+\DoxyCodeLine{01018\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_ab11e6c6608019a5eb280f659a9a0c097}{press\_react}};}
+\DoxyCodeLine{01019\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a06e88fa2943ae9851c24617f769da58f}{press\_type}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Lindeman,\ Troe,\ SRI\ */}}
+\DoxyCodeLine{01020\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a12acd2fbbfbe7523ade5881ce4991752}{bath\_gas}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ mixture\ or\ individual\ species\ */}}
+\DoxyCodeLine{01021\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a333f9b360e5cdeec20c7fe61cd805274}{chem\_act\_bi\_mol}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Chemically\ Activated\ Bimolecular\ Reaction\ */}}
+\DoxyCodeLine{01022\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structreaction__struct_ae0e2a3d1c952a8c4ce3dc36f2d09290d}{press\_params}}[8];}
+\DoxyCodeLine{01023\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_ac4f13118df8654021bd56d7e00ed1438}{plog\_reaction}};}
+\DoxyCodeLine{01024\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a734402e990fb39f5dd61f0f997382254}{nplog}};}
+\DoxyCodeLine{01025\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structreaction__struct_ab37c6cd1ed094fe30f52149dd5efc5f5}{plog\_params}}[4\ *\ \mbox{\hyperlink{materials_8h_a3790868df50b92fe7a3ceabf4c7df827}{MAX\_PLOG}}];}
+\DoxyCodeLine{01026\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a2971f76e5d13be82ec0ef524f35886e4}{plog\_npress}}[\mbox{\hyperlink{materials_8h_a3790868df50b92fe7a3ceabf4c7df827}{MAX\_PLOG}}];}
+\DoxyCodeLine{01027\ }
+\DoxyCodeLine{01028\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a1bc3a73e2078e6b722b4ee06f675011d}{use\_third\_body\_efficiencies}};}
+\DoxyCodeLine{01029\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_af29f2f0b9e5c107e712339433605554a}{surface\_reaction}};}
+\DoxyCodeLine{01030\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a99769f0e8c8b6abb3ae1f8e6ae430bf9}{particle\_reaction}};}
+\DoxyCodeLine{01031\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a242722dc51e35cf4cd6667a521f82257}{electro\_chem\_reaction}};}
+\DoxyCodeLine{01032\ }
+\DoxyCodeLine{01033\ \ \ \textcolor{comment}{/*\ reverse\ reaction\ */}}
+\DoxyCodeLine{01034\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a501853f3fb10831b0b973e6a0a6af9e2}{backward\_reaction}};}
+\DoxyCodeLine{01035\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a14600a44d66fccde4291836311c06d0a}{rev\_arrhenius}};}
+\DoxyCodeLine{01036\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structreaction__struct_a9ba9d5ae9f6829f616cf086f541e4a0b}{rev\_A}};}
+\DoxyCodeLine{01037\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structreaction__struct_a1d95456b1ab6ab31244334353ccd5cd2}{rev\_logA}};}
+\DoxyCodeLine{01038\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structreaction__struct_a9c1eeb503833230a5a0c0c022582896b}{rev\_E}};}
+\DoxyCodeLine{01039\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structreaction__struct_a4a924c6738f31eddd524749b86a10f9e}{rev\_b}};}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01041\ \ \ \textcolor{comment}{/*\ cache\ sum\ of\ exponents\ for\ rampant\ jacobians\ */}}
+\DoxyCodeLine{01042\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structreaction__struct_ab8fdb40ac32776ab53ba512de9409f0c}{sum\_exponents}};}
+\DoxyCodeLine{01043\ }
+\DoxyCodeLine{01044\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_af008d30268a4a3987cf8a719ca4a563c}{surface\_coverage}}\ ;}
+\DoxyCodeLine{01045\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreaction__struct_a96b7f993d178f3ccc90b355c29b6c337}{num\_cov\_sp}}\ ;}
+\DoxyCodeLine{01046\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structreaction__struct_a603a31ba8f01706a6e7f7bde8130a18a}{cov\_sp\_index}};}
+\DoxyCodeLine{01047\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_a4614399dcef29740dcdd8b8d95a33aab}{cover\_para0}};}
+\DoxyCodeLine{01048\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_a01565a12cd45e15b60e3197f60fb5b71}{cover\_para1}};}
+\DoxyCodeLine{01049\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_a01bc4040a3ddfcc5016695f01712fba9}{cover\_para2}};}
+\DoxyCodeLine{01050\ }
+\DoxyCodeLine{01051\ \ \ \textcolor{comment}{/*\ Butler-\/Volmer\ parameters\ */}}
+\DoxyCodeLine{01052\ \ \ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{structreaction__struct_a0a71671d6638001aa361d8f3bccfe698}{tafelmethod}};}
+\DoxyCodeLine{01053\ \ \ \mbox{\hyperlink{structechem__input}{Echem\_Pinput}}\ *\mbox{\hyperlink{structreaction__struct_a419560e25e2f7d57076385b17122ea74}{Palpha\_a}};}
+\DoxyCodeLine{01054\ \ \ \mbox{\hyperlink{structechem__input}{Echem\_Pinput}}\ *\mbox{\hyperlink{structreaction__struct_aa6f014f877dd087fd951674a2fed2d40}{Palpha\_c}};}
+\DoxyCodeLine{01055\ \ \ \mbox{\hyperlink{structechem__input}{Echem\_Pinput}}\ *\mbox{\hyperlink{structreaction__struct_a9e1aa0732e2f2e2fe3bafa2b5f32b632}{Pio}};}
+\DoxyCodeLine{01056\ \ \ \mbox{\hyperlink{structechem__input}{Echem\_Pinput}}\ *\mbox{\hyperlink{structreaction__struct_af7c33c9d0b61c3d026bfad5cf0be51cc}{PEeq}};}
+\DoxyCodeLine{01057\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structreaction__struct_a3cc235b1720d33108072cb663474a463}{yi\_ref}};}
+\DoxyCodeLine{01058\ }
+\DoxyCodeLine{01059\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structreaction__struct}{reaction\_struct}}\ *\mbox{\hyperlink{structreaction__struct_a25ee80b71c4cf49a6d006ee3577228f0}{next}};\ \ \ \textcolor{comment}{/*\ next\ reaction\ in\ list\ */}}
+\DoxyCodeLine{01060\ }
+\DoxyCodeLine{01061\ \}\ \mbox{\hyperlink{materials_8h_a5e25a0c25a3b7fe0ea9579775999857a}{Reaction}};}
+\DoxyCodeLine{01062\ }
+\DoxyCodeLine{01063\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_a9d78555b26cd3a84583be39bd9356b80}{Create\_Reaction}}(\mbox{\hyperlink{structobj}{Pointer}}\ l,\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01064\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_af3851a2fc9f2b4d4d6583a9386769719}{Free\_Reactions}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01065\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_a107d47f79010fb08025109e974f933fb}{Delete\_Reaction}}(\mbox{\hyperlink{structobj}{Pointer}}\ l,\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01066\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_a516a0308dc6713b42ced75ab34995e33}{List\_Reactions}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01067\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structreaction__struct}{Reaction}}\ *\mbox{\hyperlink{materials_8h_abed278ccee0f5c438d407b4d5788e8d3}{Pick\_Reaction}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structreaction__struct_a36a781848c73963d0f48c92b5b2499b2}{name}},\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01068\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{materials_8h_ad28df64bf7c38ca6f4cf1671afde5e78}{mixture\_specie\_index}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structreaction__struct_a36a781848c73963d0f48c92b5b2499b2}{name}});}
+\DoxyCodeLine{01069\ }
+\DoxyCodeLine{01070\ \textcolor{comment}{/*************************************************************************}}
+\DoxyCodeLine{01071\ \textcolor{comment}{\ \ Reaction\ Mechanisms}}
+\DoxyCodeLine{01072\ \textcolor{comment}{*************************************************************************/}}
+\DoxyCodeLine{01073\ }
+\DoxyCodeLine{01074\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{01075\ \{}
+\DoxyCodeLine{01076\ \ \ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407a1dd3d9dc5a4cf296fbce8ff969a347f1}{REACT\_UNKNOWN}}\ =\ -\/1,}
+\DoxyCodeLine{01077\ \ \ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407a0336bcb5204a73f4f6d5c7efe6f5daac}{REACT\_ALL}},}
+\DoxyCodeLine{01078\ \ \ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407a9bf788282f1c30b70ae3ac4b036fc583}{REACT\_VOL}},}
+\DoxyCodeLine{01079\ \ \ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407a7d0070cb8902ce96adf660e35d651a6d}{REACT\_SURF}},}
+\DoxyCodeLine{01080\ \ \ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407acf356414c3dcdced99dd6cfc41de380c}{REACT\_PART}},}
+\DoxyCodeLine{01081\ \ \ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407a3d23c9f16b3172546c029567318a5768}{REACT\_ECHEM}},}
+\DoxyCodeLine{01082\ \ \ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407a4c79613f270b34e2f4199c8cf17fc6dc}{REACT\_TYPE\_MAX}}}
+\DoxyCodeLine{01083\ \}\ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407}{React\_Type\_ID}};}
+\DoxyCodeLine{01084\ }
+\DoxyCodeLine{01085\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structreact__type__names__struct}{react\_type\_names\_struct}}}
+\DoxyCodeLine{01086\ \{}
+\DoxyCodeLine{01087\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structreact__type__names__struct_acf60de4c64d60c1b9449c056bc6bfcf7}{label}};}
+\DoxyCodeLine{01088\ \ \ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407}{React\_Type\_ID}}\ \mbox{\hyperlink{structreact__type__names__struct_ada0ae46bf2fc5c5a84256d86a360e5a8}{type\_id}};}
+\DoxyCodeLine{01089\ \}\ \mbox{\hyperlink{materials_8h_af9ee983af33bee02062c76eac05619d6}{React\_Type\_Names}};}
+\DoxyCodeLine{01090\ }
+\DoxyCodeLine{01091\ \textcolor{preprocessor}{\#define\ REACTION\_MECH\_NAME\_LENGTH\ 64}}
+\DoxyCodeLine{01092\ \textcolor{preprocessor}{\#define\ MAX\_SITE\ 50}}
+\DoxyCodeLine{01093\ \textcolor{preprocessor}{\#define\ NUM\_ENV\ 4}}
+\DoxyCodeLine{01094\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structreaction__mech__struct}{reaction\_mech\_struct}}}
+\DoxyCodeLine{01095\ \{}
+\DoxyCodeLine{01096\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structreaction__mech__struct_ad6c50aea785aa0a208bbb58d27505a5e}{name}}[\mbox{\hyperlink{materials_8h_a63ed9a5f6419ef648db475275f742f0c}{REACTION\_MECH\_NAME\_LENGTH}}];\ \ \ \textcolor{comment}{/*\ name\ of\ reaction\ mechanism\ */}}
+\DoxyCodeLine{01097\ }
+\DoxyCodeLine{01098\ \ \ \mbox{\hyperlink{materials_8h_a6842908fd7186005f17ca3f8c1016407}{React\_Type\_ID}}\ \ \ \ \mbox{\hyperlink{structreaction__mech__struct_a2763dd90425b8aa63dfb5e8a40b0506a}{type}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ volumetric,\ wall\ or\ particle\ */}}
+\DoxyCodeLine{01099\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \mbox{\hyperlink{structreaction__mech__struct_a33394733bb7965f8ef6f098102c08154}{n\_site\_types}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ site\ types\ */}}
+\DoxyCodeLine{01100\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \mbox{\hyperlink{structreaction__mech__struct_a5cd540914e79c2be4b37f495f5ad3402}{n\_reactions}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ reactions\ */}}
+\DoxyCodeLine{01101\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \mbox{\hyperlink{structreaction__mech__struct_a0b9ddf99317b964d8aca09902061d318}{tot\_site\_spe\_mech}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ site\ species\ per\ mech\ */}}
+\DoxyCodeLine{01102\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ *\mbox{\hyperlink{structreaction__mech__struct_a58a027e77a6cf60a8c3f5214df703bc9}{n\_site\_spe\_persite}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ site\ species\ per\ site\ */}}
+\DoxyCodeLine{01103\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ *\mbox{\hyperlink{structreaction__mech__struct_ad67e1290ddd85e9ef4cc108b53bbdcd3}{last\_site\_spe\_id}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ ID\ of\ last\ site\ species\ in\ each\ type\ */}}
+\DoxyCodeLine{01104\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ *\mbox{\hyperlink{structreaction__mech__struct_ab83a9d43a6eed2570a7305c4f94561c3}{site\_den}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ site\ density\ */}}
+\DoxyCodeLine{01105\ }
+\DoxyCodeLine{01106\ \ \ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{structreaction__mech__struct_aa19b7d698af6ad8fd20f1814a5c0aaa5}{site\_spe\_names}}[\mbox{\hyperlink{materials_8h_acb13d760259f415c4d0f0fb93f5bcfe4}{MAX\_SITE}}];\ \ \ \ \ \ \textcolor{comment}{/*site\ species\ names\ */}}
+\DoxyCodeLine{01107\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ \mbox{\hyperlink{structreaction__mech__struct_a9c305b7471cd88744c6f3ec607f20cb8}{site\_spe\_init\_cov}}[\mbox{\hyperlink{materials_8h_acb13d760259f415c4d0f0fb93f5bcfe4}{MAX\_SITE}}];}
+\DoxyCodeLine{01108\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \mbox{\hyperlink{structreaction__mech__struct_a2a8540309d516cec1f9b84a804182375}{site\_occupancy}}[\mbox{\hyperlink{materials_8h_acb13d760259f415c4d0f0fb93f5bcfe4}{MAX\_SITE}}];}
+\DoxyCodeLine{01109\ }
+\DoxyCodeLine{01110\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \mbox{\hyperlink{structreaction__mech__struct_a84f676b25c90093bca37ebeb08b2006f}{global\_id\_site\_spe}}[\mbox{\hyperlink{materials_8h_acb13d760259f415c4d0f0fb93f5bcfe4}{MAX\_SITE}}];\ \ \textcolor{comment}{/*global\ index\ of\ site\ species\ */}}
+\DoxyCodeLine{01111\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \mbox{\hyperlink{structreaction__mech__struct_a0e8ca9d863783871fdff6ef40c349ee4}{global\_id\_site\_spe\_t}}[\mbox{\hyperlink{materials_8h_acb13d760259f415c4d0f0fb93f5bcfe4}{MAX\_SITE}}][\mbox{\hyperlink{materials_8h_acb13d760259f415c4d0f0fb93f5bcfe4}{MAX\_SITE}}];}
+\DoxyCodeLine{01112\ \ \ \textcolor{comment}{/*global\ index\ of\ site\ species\ */}}
+\DoxyCodeLine{01113\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \mbox{\hyperlink{structreaction__mech__struct_afffacd7ca790fe586cc2477b0c53e514}{site\_id\_of\_spe}}[\mbox{\hyperlink{materials_8h_acb13d760259f415c4d0f0fb93f5bcfe4}{MAX\_SITE}}];\ \ \ \ \ \ \textcolor{comment}{/*given\ global\ index\ of\ site\ species,}}
+\DoxyCodeLine{01114\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ find\ the\ site\ ID\ */}}
+\DoxyCodeLine{01115\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{01116\ \ \ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *mat\_site\_species[\mbox{\hyperlink{materials_8h_aee6d7029bfa673b831eae06ff1dda000}{MAX\_SPE\_EQNS}}];\ \ \ \textcolor{comment}{/*given\ global\ index\ of\ site\ species,}}
+\DoxyCodeLine{01117\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ find\ its\ Material*\ */}}
+\DoxyCodeLine{01118\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01119\ \ \ \mbox{\hyperlink{structreaction__struct}{Reaction}}\ **\mbox{\hyperlink{structreaction__mech__struct_a306709f7c983941e114bb385ff5b2514}{reactions}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*reactions\ in\ this\ mech.\ */}}
+\DoxyCodeLine{01120\ \ \ \textcolor{keyword}{struct\ \ }\mbox{\hyperlink{structreaction__mech__struct}{reaction\_mech\_struct}}\ \ *\mbox{\hyperlink{structreaction__mech__struct_a3920463e0b5e52d77c358d271cc2b24f}{next}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ next\ in\ list\ */}}
+\DoxyCodeLine{01121\ \}\ \mbox{\hyperlink{materials_8h_ac33e144e152f83b46b85e5d84a033f2e}{Reaction\_Mech}};}
+\DoxyCodeLine{01122\ }
+\DoxyCodeLine{01123\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_aa095767e7ea52d752c611a3d1f90fb58}{Create\_Reaction\_Mech}}(\mbox{\hyperlink{structobj}{Pointer}}\ l,\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01124\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_a22335e948cfb8282d7576168c7a3cf99}{Free\_Reaction\_Mechs}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01125\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_a668d2d32dca22c77487bfe9c80ddbd06}{Delete\_Reaction\_Mech}}(\mbox{\hyperlink{structobj}{Pointer}}\ l,\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01126\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{materials_8h_a4b8e855dac2603e84906e98551873948}{List\_Reaction\_Mechs}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01127\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structreaction__mech__struct}{Reaction\_Mech}}\ *\mbox{\hyperlink{materials_8h_ae6fe7f390a26fb1e3671128e0ec1156c}{Pick\_Reaction\_Mech}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structreaction__mech__struct_ad6c50aea785aa0a208bbb58d27505a5e}{name}},\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01128\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{materials_8h_aef7fbb58e3200ac899a104edf9e7741c}{Reaction\_Mech\_Id\_to\_Name}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *m);}
+\DoxyCodeLine{01129\ }
+\DoxyCodeLine{01130\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{materials_8h_a3ff3c284c0059b1c04c63021b683bfb5}{Mixture\_Species\_ID}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structreaction__mech__struct_ad6c50aea785aa0a208bbb58d27505a5e}{name}});}
+\DoxyCodeLine{01131\ }
+\DoxyCodeLine{01132\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{materials_8h_a56a6582c8da8bddbb444f13cb5923cd6}{Check\_MATERIAL\_PARTICLE\_MIXTURE\_Exists}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01133\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{materials_8h_ad242dd921d696cbeb3b1f999832278c9}{Check\_Solid\_Density\_Required}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01134\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{materials_8h_a335eb3e7fd12921f6aab1ca242499b73}{Check\_Vapor\_Properties\_Required}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *mixture,\ \mbox{\hyperlink{structmaterial__struct}{Material}}\ *vm);}
+\DoxyCodeLine{01135\ }
+\DoxyCodeLine{01136\ }
+\DoxyCodeLine{01137\ \textcolor{comment}{/*\ property\ macros\ */}}
+\DoxyCodeLine{01138\ \textcolor{preprocessor}{\#define\ PROPERTY\_BOOLEAN(p,prop)(p)[prop].u.yes\_or\_no}}
+\DoxyCodeLine{01139\ \textcolor{preprocessor}{\#define\ PROPERTY\_CONSTANT(p,prop)(p)[prop].constant}}
+\DoxyCodeLine{01140\ \textcolor{preprocessor}{\#define\ PROPERTY\_METHOD(p,prop)(p)[prop].method}}
+\DoxyCodeLine{01141\ \textcolor{preprocessor}{\#define\ PROPERTY\_UDF\_NAME(p,prop)(p)[prop].udf\_name}}
+\DoxyCodeLine{01142\ \textcolor{preprocessor}{\#define\ PROPERTY\_POLYNOMIAL(p,prop)(p)[prop].u.poly}}
+\DoxyCodeLine{01143\ \textcolor{preprocessor}{\#define\ PROPERTY\_EXPR\_ARRAY(p,prop)(p)[prop].expr}}
+\DoxyCodeLine{01144\ }
+\DoxyCodeLine{01145\ \textcolor{preprocessor}{\#define\ DOMAIN\_PROP\_CONSTANT(d,id)PROPERTY\_CONSTANT(DOMAIN\_PROPERTY(d),id)}}
+\DoxyCodeLine{01146\ \textcolor{preprocessor}{\#define\ DOMAIN\_PROP\_METHOD(d,id)\ \ \ \ ((d)-\/>property[id].method)}}
+\DoxyCodeLine{01147\ \textcolor{preprocessor}{\#define\ DOMAIN\_PROP\_UDF\_NAME(d,id)\ \ ((d)-\/>property[id].udf\_name)}}
+\DoxyCodeLine{01148\ \textcolor{preprocessor}{\#define\ DOMAIN\_PROP\_POLYNOMIAL(d,id)((d)-\/>property[id].u.poly)}}
+\DoxyCodeLine{01149\ }
+\DoxyCodeLine{01150\ \textcolor{comment}{/*\ before\ R19.0\ is\ \#define\ COMPLEX\_PROP\_INDEX(i,j)((i)+(j)*((j)+1)/2)\ */}}
+\DoxyCodeLine{01151\ \textcolor{preprocessor}{\#define\ COMPLEX\_PROP\_INDEX(i,j)((i<j)?\ (i)+(j)*((j)+1)/2\ :\ (j)+(i)*((i)+1)/2)}}
+\DoxyCodeLine{01152\ \textcolor{preprocessor}{\#define\ DOMAIN\_COMPLEX\_PROP\_PROPERTY(d,id,i,j)(DOMAIN\_COMPLEX\_PROPERTY(d,id)+COMPLEX\_PROP\_INDEX(i,j))}}
+\DoxyCodeLine{01153\ \textcolor{preprocessor}{\#define\ DOMAIN\_COMPLEX\_PROP\_CONSTANT(d,id,i,j)PROPERTY\_CONSTANT(DOMAIN\_COMPLEX\_PROPERTY(d,id),COMPLEX\_PROP\_INDEX(i,j))}}
+\DoxyCodeLine{01154\ }
+\DoxyCodeLine{01155\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_MATERIALS\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

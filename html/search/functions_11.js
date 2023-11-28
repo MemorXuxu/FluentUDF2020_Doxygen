@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['q_5fassign_0',['Q_Assign',['../quaternion_8h.html#af5daffcf8f760d1742a647e62dd3216c',1,'quaternion.h']]],
+  ['q_5fconjugate_1',['Q_Conjugate',['../quaternion_8h.html#abe9cb83774a6dbc4ef9f12c762ce8404',1,'quaternion.h']]],
+  ['q_5fdistance_5ffast_2',['Q_Distance_Fast',['../quaternion_8h.html#a1bb1f1022f207afc8388e8f3010f12b6',1,'quaternion.h']]],
+  ['q_5ffrom_5faxis_5fangle_3',['Q_From_Axis_Angle',['../quaternion_8h.html#a4026c75d4472f52e2ca0c7f560215c4c',1,'quaternion.h']]],
+  ['q_5ffrom_5frot_5fmatrix_4',['Q_From_Rot_Matrix',['../quaternion_8h.html#a7596a3be552fc53fdd4ee9bce3b920c8',1,'quaternion.h']]],
+  ['q_5ffrom_5ftheta_5',['Q_From_Theta',['../quaternion_8h.html#a28e83d122924a635375084332279a87d',1,'quaternion.h']]],
+  ['q_5ffrom_5fvectors_6',['Q_From_Vectors',['../quaternion_8h.html#a045a332313967436c6f5960f6c2cb53d',1,'quaternion.h']]],
+  ['q_5finverse_7',['Q_Inverse',['../quaternion_8h.html#aed1950436574eebf92b969b027a87a44',1,'quaternion.h']]],
+  ['q_5fnormalize_8',['Q_Normalize',['../quaternion_8h.html#ac4fd88f732f0cce9401497e30631afed',1,'quaternion.h']]],
+  ['q_5fprod_9',['Q_Prod',['../quaternion_8h.html#a90847432ede8985459b362404a916122',1,'quaternion.h']]],
+  ['q_5fprod_5fnorm_10',['Q_Prod_Norm',['../quaternion_8h.html#a97e1085b4d36b00d014dc46ae7d4fd8b',1,'quaternion.h']]],
+  ['qmom_5fgeneralized_5fbu_5fpdf_11',['qmom_generalized_bu_pdf',['../sg__pb_8h.html#aff954de7ca280268b70849a9551c6f06',1,'sg_pb.h']]],
+  ['qr_12',['qr',['../namespacenumpy_1_1linalg_1_1linalg.html#a9b5f5a910ccf60de603e69fcf765e843',1,'numpy::linalg::linalg']]],
+  ['qr_5fmod_5fgram_5fshmit_13',['qr_mod_gram_shmit',['../lsq_8h.html#a79e67986355e6f469ade404077ae34db',1,'lsq.h']]],
+  ['qr_5fmult_5frhs_5fsolve_14',['QR_Mult_RHS_SOLVE',['../lsq_8h.html#a41f939ea9de9bd9a4ce7deb26953f607',1,'lsq.h']]],
+  ['qr_5fsolve_15',['QR_SOLVE',['../lsq_8h.html#a8caa098d0beceffd4d616bb67801e705',1,'lsq.h']]],
+  ['qr_5fsolve2_16',['qr_solve2',['../lsq_8h.html#ac15839f65079fdb9cbb1f14706a32bc9',1,'lsq.h']]],
+  ['qrfact_17',['QRfact',['../sundials__iterative_8h.html#af69ef36f31188212ae07a03fe1ead607',1,'sundials_iterative.h']]],
+  ['qrsol_18',['QRsol',['../sundials__iterative_8h.html#ae32399fcf4d75d54a2fde5107ec3362e',1,'sundials_iterative.h']]],
+  ['quad_5fface_5fnormal_5fvariation_19',['Quad_Face_Normal_Variation',['../grid_8h.html#ae0d53321cc0f59c68e016a6c3c1b3f63',1,'grid.h']]],
+  ['quantile_20',['quantile',['../namespacenumpy_1_1lib_1_1function__base.html#a15812780e27d42c2e1181cc799e6bb28',1,'numpy::lib::function_base']]],
+  ['quit_21',['quit',['../sprim_8h.html#a311ede82377025b07d59e8cc566a2b25',1,'sprim.h']]],
+  ['quote_5fargs_22',['quote_args',['../namespacenumpy_1_1distutils_1_1misc__util.html#ad6b0596541e0cda450efd92c027913ed',1,'numpy::distutils::misc_util']]]
+];

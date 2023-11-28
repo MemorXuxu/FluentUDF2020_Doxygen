@@ -1,0 +1,199 @@
+\doxysection{hash.\+h}
+\hypertarget{hash_8h_source}{}\label{hash_8h_source}\index{fluent20.1.0/tgrid/src/hash.h@{fluent20.1.0/tgrid/src/hash.h}}
+\mbox{\hyperlink{hash_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Hash\ function\ global\ declarations}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ Hash\_h}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ Hash\_h}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{std_8h}{std.h}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#if\ !defined(MAINWIN)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#if\ WIN64\ ||\ \_WIN32\ ||\ \_NT}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}basetsd.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#if\ (\_\_sun)}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <sys/types.h>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#if\ !defined(MAINWIN)}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#if\ !(\_\_sun\ ||\ \_\_hpux\ ||\ WIN64\ ||\ \_WIN32\ ||\ \_NT)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <stdint.h>}\ \ \ \ \ \textcolor{comment}{/*\ defines\ uint32\_t\ etc\ */}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#ifndef\ HASH\_STATISTICS}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#\ define\ HASH\_STATISTICS\ 0}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ MAX\_ALLOWED\_COLLISIONS\ 512}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#if\ WIN64}}
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ ULONG\_PTR\ \mbox{\hyperlink{hash_8h_a9aed68c51f9e73e53e06a22c4be02bd4}{Hash\_Key}};\ \textcolor{comment}{/*\ must\ be\ >=\ size\ of\ pointer\ */}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a9aed68c51f9e73e53e06a22c4be02bd4}{Hash\_Key}};\ \textcolor{comment}{/*\ must\ be\ >=\ size\ of\ pointer\ */}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#if\ !defined(MAINWIN)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#if\ WIN64\ ||\ \_WIN32\ ||\ \_NT}}
+\DoxyCodeLine{00045\ \textcolor{keyword}{typedef}\ UINT32\ uint32\_t;}
+\DoxyCodeLine{00046\ \textcolor{keyword}{typedef}\ UINT64\ uint64\_t;}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#ifndef\ MEM\_USEAGE}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ MEM\_USEAGE\ 0}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{typedef}\ uint32\_t\ \mbox{\hyperlink{hash_8h_a72bd4bda1a8158c8fef562323921a81e}{Hash\_Index\_32}};}
+\DoxyCodeLine{00055\ \textcolor{keyword}{typedef}\ uint64\_t\ \mbox{\hyperlink{hash_8h_a999de72e41cd5ec19d3660e0488587cd}{Hash\_Index\_64}};}
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ uint64\_t\ \mbox{\hyperlink{hash_8h_a4a8f983e17d3f5e86f22223387dc4548}{Hash\_Index}};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{hash_8h_a4a8f983e17d3f5e86f22223387dc4548}{Hash\_Index}}\ (*\mbox{\hyperlink{hash_8h_aff99f5c136f2932d5d16bb3e8596132a}{Hash\_Function}})(\textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{size\_t}\ key\_size,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ initval);}
+\DoxyCodeLine{00060\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{hash_8h_a319b8f8ff51a55eec5c5d8c2b44dcaf3}{Hash\_Callback}})(\textcolor{keywordtype}{void}\ *,\textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__entry}{hash\_entry}}\ \mbox{\hyperlink{struct_hash___entry}{Hash\_Entry}};}
+\DoxyCodeLine{00063\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__table}{hash\_table}}\ \mbox{\hyperlink{structhash__table}{Hash\_Table}};}
+\DoxyCodeLine{00064\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__iterator}{hash\_iterator}}\ \mbox{\hyperlink{structhash__iterator}{Hash\_Iterator}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__entry}{hash\_entry}}}
+\DoxyCodeLine{00068\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__entry}{hash\_entry}}\ *\mbox{\hyperlink{structhash__entry_aef3132e0e5b703f0c5f08d54e303b1e5}{next}};}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structhash__entry_afed088663f8704004425cdae2120b9b3}{len}};}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structhash__entry_abc0aa1cbd867a3cadba2c90d439d5ca4}{data}}[1];}
+\DoxyCodeLine{00072\ \};}
+\DoxyCodeLine{00073\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__table}{hash\_table}}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \mbox{\hyperlink{structhash__entry}{Hash\_Entry}}\ **\mbox{\hyperlink{structhash__table_a946b4da508e7819dd42bcb5936bf406f}{table}};}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__table_a2e2ba7d55d87a2c285b4c2eda2aa9772}{init\_table\_size}};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__table_a4b1e1710466cc61c28bae3d4b6e9c063}{table\_size}};}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__table_a97bfab9f86be5ac6808df0cfde3de97c}{mask}};}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__table_ad6bc120bffc64dfc5230863a8ba96596}{data\_size}};}
+\DoxyCodeLine{00080\ \ \ \ \ \mbox{\hyperlink{hash_8h_aff99f5c136f2932d5d16bb3e8596132a}{Hash\_Function}}\ \mbox{\hyperlink{structhash__table_a89fe9bc1b35663d4d1b41ae75bf7c029}{hash\_function}};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__table_a10d5d766a162fc8ac8087a47e027bdec}{num\_entries}};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__table_ad001875dac9911dd257b12f1fe99eb51}{no\_of\_keys}};}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__table_ae102c01788a1617aa7af9c5c25a92be5}{key\_size}};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structhash__table_a9a11c3143ecce98237da2285e287dad1}{hash\_key}};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{structhash__table_ac91a6ea78367aec3b0722f8c85b6a440}{prev\_hash}};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structhash__table_ad80883d5bf548d112cc46f9e1099501f}{high\_fill\_factor}};}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structhash__table_a3ae0997b20ac9309248bc568a3de5327}{low\_fill\_factor}};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structhash__table_ae3e5c03849a975980feff2d3cc044e75}{collisions}};}
+\DoxyCodeLine{00095\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structhash__table_a990a3355046d8af703c7b5620cfd9d08}{keys\_ordered\_p}};}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#if\ MEM\_USEAGE}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ max\_n;}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ max\_nu;}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#if\ HASH\_STATISTICS}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *index;}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{int}\ collision\_table[\mbox{\hyperlink{hash_8h_aa626558642f36e79289b1570c512d04c}{MAX\_ALLOWED\_COLLISIONS}}];}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{int}\ collisions\_overflow;}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ int\ (*\mbox{\hyperlink{structhash__table_aafce86f8933c1259fb9698e700d55378}{comp}})(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{00107\ \};}
+\DoxyCodeLine{00108\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__iterator}{hash\_iterator}}}
+\DoxyCodeLine{00109\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__iterator_a3f42f10d93f6edb91d7d3f6edad25921}{index}};}
+\DoxyCodeLine{00111\ \ \ \ \ \mbox{\hyperlink{structhash__entry}{Hash\_Entry}}\ *\mbox{\hyperlink{structhash__iterator_ab998c1f3c0725b1be88fbdf55212262c}{entry}};}
+\DoxyCodeLine{00112\ \};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00115\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structhash__table}{Hash\_Table}}*\ \mbox{\hyperlink{hash_8h_af027cf57d6353cd296d17ccf1d023a11}{Hash\_Init1}}(\textcolor{keywordtype}{size\_t}\ size,}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ data\_size,}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ no\_of\_keys,}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ key\_size,}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ keys\_ordered\_p,}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}*,\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hash_8h_ae7146b0dfb062850f7a114e375e533dc}{Hash\_Free}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ **ht,\ \mbox{\hyperlink{hash_8h_a319b8f8ff51a55eec5c5d8c2b44dcaf3}{Hash\_Callback}}\ hcb);}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hash_8h_a699f3ae4f8be71df950ede348bc7e002}{Hash\_Reset}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \mbox{\hyperlink{hash_8h_a319b8f8ff51a55eec5c5d8c2b44dcaf3}{Hash\_Callback}}\ hcb);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a015d4fc1eca6829ddb860efb29135c64}{Hash\_Put1}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *data,\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}*,\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a45311f82d3e916262a7e297e63fd9bf2}{Hash\_Update1}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *data,\ }
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}*,\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a5f14ad1926e739cb2e145e9dd6f60311}{Hash\_Update\_Existing}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_ab7107584164e815f358a521805cde1d8}{Hash\_Put\_Unique1}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key,\textcolor{keywordtype}{void}\ *data,\ }
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a7f34b52319357d2874aed7c7b59d96b1}{Hash\_Get}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{hash_8h_a6e5c7c92fc7cfd6dd1b4fa319a582c70}{Hash\_Get\_Pointer}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key);}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ **\mbox{\hyperlink{hash_8h_a8aecd224c6249bcd098728d1071d87f4}{Hash\_Get\_Data\_Pointer}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *hkey);}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a6756bb1d9e7d32a6163457c1329db64e}{Hash\_Find}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_ac2cecc04d37760d86ee79d0971d390c7}{Hash\_Remove1}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key,\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *func\_name);}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_aa3c5d154ac7d9bdc119f791e2b22a2a5}{Hash\_Remove\_Data1}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *data,}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *func\_name);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{hash_8h_a4a8f983e17d3f5e86f22223387dc4548}{Hash\_Index}}\ \mbox{\hyperlink{hash_8h_aec567892161c9d33da15e7a238924091}{Hash\_Get\_Index}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *hkey);}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\ \mbox{\hyperlink{hash_8h_adb7370b4518db0e26e25dcd3d5ec074d}{Hash\_Get\_At\_Index}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *hkey,\ \mbox{\hyperlink{hash_8h_a4a8f983e17d3f5e86f22223387dc4548}{Hash\_Index}}\ hi);}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a6a49d1cd2893e140537e8613690f2354}{Hash\_Put\_At\_Index1}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *hkey,\ \mbox{\hyperlink{hash_8h_a4a8f983e17d3f5e86f22223387dc4548}{Hash\_Index}}\ hi,}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *hash\_data,\ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *func\_name);}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{hash_8h_a053bb6a8439ceb772ee9d2781009fd2e}{Hash\_Memory\_Usage}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht);}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#if\ HASH\_STATISTICS}}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ Hash\_Print\_Statistics(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht);}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a62c3e61df489da83b96d0333c34d24a4}{Hash\_Get\_Collisions}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht);}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{hash_8h_ab7aefa3d969be8a5360c288791f1cc7c}{Hash\_Get\_Density}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht);}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hash_8h_a6b54bb067afd4929ed2670e9fa9e348f}{Hash\_Set\_Resize\_High\_Density}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ fill\_factor);}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hash_8h_a90cbdb6a1fa0e719a577846ea9763bf5}{Hash\_Set\_Resize\_Low\_Density}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \textcolor{keywordtype}{int}\ fill\_factor);}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a1b6073c313d72fee573264e41d0ac2d1}{Hash\_Get\_Resize\_High\_Density}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht);}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_a7571a1fc66882f48e88708ab2971117a}{Hash\_Get\_Resize\_Low\_Density}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht);}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{hash_8h_aedde22d05ab82f9b51aca11ba64cd0c4}{TG\_Sizeof\_Hash\_Entry}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{comment}{/*to\ access\ data*/}}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{hash_8h_a9f33111b1fdcc30aa6b2c9c310d9634b}{Hash\_Get\_Data\_Of\_Element}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\mbox{\hyperlink{struct_hash___entry}{Hash\_Entry}}*\ he);}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hash_8h_aafebbc09d938cad7c99b6430270d1976}{Hash\_Begin}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \mbox{\hyperlink{structhash__iterator}{Hash\_Iterator}}\ *it);}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{hash_8h_ae49df85df443ef99e9ab72fbf79bfcbe}{Hash\_End}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \mbox{\hyperlink{structhash__iterator}{Hash\_Iterator}}\ *it);}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hash_8h_a2c1c7e094d1a5f47abf991e1fde721c6}{Hash\_Iterator\_Key}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \mbox{\hyperlink{structhash__iterator}{Hash\_Iterator}}\ *it,\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{void}\ *key);}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hash_8h_a3bfd75825530506e69b68134756b977c}{Hash\_Iterator\_Data}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \mbox{\hyperlink{structhash__iterator}{Hash\_Iterator}}\ *it,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hash_8h_a0ea0142a6c79f699980aac6e54ede910}{Hash\_Increment}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht,\ \mbox{\hyperlink{structhash__iterator}{Hash\_Iterator}}\ *it);}
+\DoxyCodeLine{00170\ \ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{hash_8h_acdc6e52847d12080bf6e5b9fbbb24dba}{\_TG\_Get\_Hash\_Memory}}(\mbox{\hyperlink{structhash__table}{Hash\_Table}}\ *ht);}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00173\ \}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ Hash\_Init(size,data\_size,nkeys,key\_size,keys\_ordered\_p)\ \(\backslash\)}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\ \ \ \ Hash\_Init1(size,data\_size,nkeys,key\_size,\(\backslash\)}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ keys\_ordered\_p,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ Hash\_Put(ht,len,key,data)\ \(\backslash\)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\ \ \ \ Hash\_Put1(ht,len,key,data,\_\_FILE\_\_,\_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ Hash\_Update(ht,len,hkey,data)\(\backslash\)}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\ \ \ \ Hash\_Update1(ht,len,hkey,data,\_\_FILE\_\_,\_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#define\ Hash\_Put\_Unique(ht,\ len,\ key,\ data)\ \(\backslash\)}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\ \ \ \ Hash\_Put\_Unique1(ht,len,key,data,\_\_FILE\_\_,\_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ Hash\_Put\_At\_Index(ht,len,hkey,hi,data)\(\backslash\)}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\ \ \ \ Hash\_Put\_At\_Index1(ht,len,hkey,hi,data,\_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ Hash\_Remove(ht,\ len,\ key)\ \(\backslash\)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\ \ \ \ Hash\_Remove1(ht,\ len,\ key,\ \_\_FILE\_\_,\_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#define\ Hash\_Remove\_Data(ht,\ len,\ hkey,\ hdata)\(\backslash\)}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\ \ \ \ Hash\_Remove\_Data1(ht,\ len,hkey,hdata,\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_FUNCTION\_\_)}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ Hash\_h\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

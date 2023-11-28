@@ -1,0 +1,836 @@
+\doxysection{tg\+\_\+lib.\+h}
+\hypertarget{tg__lib_8h_source}{}\label{tg__lib_8h_source}\index{fluent20.1.0/tgrid/src/tg\_lib.h@{fluent20.1.0/tgrid/src/tg\_lib.h}}
+\mbox{\hyperlink{tg__lib_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ API\ for\ meshing\ library}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ TG\_LIB\_H}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ TG\_LIB\_H}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{std_8h}{std.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tg__handlers_8h}{tg\_handlers.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tg__geom_8h}{tg\_geom.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tg__list_8h}{tg\_list.h}}"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{/*\ enable\ auto\ code\ generation\ for\ TGLib\ always\ */}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ TGL\_CODE\_GEN\ 1}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ TG\_EMPTY\ 0}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\ define\ verbosity\ of\ output\ */}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ TG\_MESSAGES\_DISABLED\ -\/1}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{/*\ define\ array\ bounds\ */}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#\ define\ TG\_DIMENSIONS\ 3}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#\ define\ TG\_MAX\_NODES\_PER\_FACE\ 8}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#\ define\ TG\_MAX\_CELLS\_PER\_FACE\ 2}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#\ define\ TG\_MAX\_NODES\_PER\_CELL\ 20}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#\ define\ TG\_MAX\_FACES\_PER\_CELL\ 6}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{/*\ should\ share\ with\ entity.h\ */}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_NODE\ 0x0}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_EDGE\ 0x1}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_FACE\ 0x2}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_CELL\ 0x3}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ TG\_BOUNDARY\_ENTITY\_NODE\ 0x4}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ TG\_BOUNDARY\_ENTITY\_EDGE\ 0x5}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ TG\_BOUNDARY\_ENTITY\_FACE\ 0x6}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ TG\_ORDER\_BITS\ 0x3}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ TG\_BOUNDARY\_BITS\ 0x4}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{comment}{/*\ thread\ types\ (similar\ list\ also\ exists\ in\ entity.h)\ */}}
+\DoxyCodeLine{00053\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a13c65c26fe37564dff73f1bfbcc9d001}{TG\_DEAD\_CELL}}\ =\ 0,}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a8cedecc094606fbcb669fe7864f4fe58}{TG\_FLUID\_CELL}}\ =\ 1,}
+\DoxyCodeLine{00057\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974ae9c4180b6888d437568c5581c5136b92}{TG\_INTERIOR\_FACE}}\ =\ 2,}
+\DoxyCodeLine{00058\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a15d4ad786c04d6ab6dd2050973cd3b55}{TG\_WALL\_FACE}}\ =\ 3,}
+\DoxyCodeLine{00059\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974ae01bab369b91bb1e08c56f82011d430d}{TG\_INLET\_FACE}}\ =\ 4,}
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974ac4f6e0df94da6636c5c59496214a71fe}{TG\_OUTLET\_FACE}}\ =\ 5,}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a89b81647e245b2a644dc2dbfd7ae2ea0}{TG\_SYMMETRY\_FACE}}\ =\ 7,}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a2f7cfc6bd407106f14e34790432ba9b9}{TG\_SHADOW\_FACE}}\ =\ 8,}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a4faaf31c608d94a21ac1bd7d0d73bc25}{TG\_PRESSURE\_FIELD\_FACE}}\ =\ 9,}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a6d6a112ab8f949fd1644581d29dbd0a4}{TG\_VELOCITY\_INLET\_FACE}}\ =\ 10,}
+\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a78387e673140e0d98e95ec7a22b96904}{TG\_VELOCITY\_OUTLET\_FACE}}\ =\ 11,}
+\DoxyCodeLine{00066\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a9106962200cc3b2ab89e0e44c2df00bc}{TG\_PERIODIC\_FACE}}\ =\ 12,}
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974ac81e0b201839c6111e95dea0f43f5bd3}{TG\_VELOCITY\_FAR\_FIELD\_FACE}}\ =\ 13,}
+\DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a4e04dba7491bb359d3e39bf7feb155c6}{TG\_JUMP\_FACE}}\ =\ 14,}
+\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a7ee7fa9f408933fb18a20120dabff4cc}{TG\_INTERNAL\_FACE}}\ =\ 15,}
+\DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a0d9e58e578333e811aea001d8db25ec0}{TG\_SOLID\_CELL}}\ =\ 17,}
+\DoxyCodeLine{00071\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a6331e2bea4b1e6b99e37f3e9fc70ce56}{TG\_MASS\_FLOW\_INLET\_FACE}}\ =\ 20,}
+\DoxyCodeLine{00072\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a04d4d845b899867948e92d4389109898}{TG\_INTERFACE\_FACE}}\ =\ 24,}
+\DoxyCodeLine{00073\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a8ffb5399fa3c916648a4941ed1668cbd}{TG\_OVERSET\_FACE}}\ =\ 25,}
+\DoxyCodeLine{00074\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974ae465fa9ef74fdecb4f48b3c02e727e81}{TG\_PARENT\_FACE}}\ =\ 31,}
+\DoxyCodeLine{00075\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a58dc917a58e7a23fda6b18d8b741560c}{TG\_PARENT\_CELL}}\ =\ 32,}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a1d9e85c200db5ed55e18385a2dbd9ba3}{TG\_OUTFLOW\_FACE}}\ =\ 36,}
+\DoxyCodeLine{00077\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a733f6efcd5c58c3dc096e8039bb4b418}{TG\_AXIS\_FACE}}\ =\ 37,}
+\DoxyCodeLine{00078\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a3112dc375d34855bb69da73877bedacc}{TG\_GEOMETRY\_FACE}}\ =\ 40,}
+\DoxyCodeLine{00079\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a2d2ffc35d78151f4e831851befca6f3e}{TG\_THREAD\_TYPE\_MAX}},}
+\DoxyCodeLine{00080\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a60e995cf6931519d85f320e92f38610f}{TG\_TGRID\_RADIATOR\_FACE}}=41,}
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974ab88710e39b89bc576200818407ce0ce2}{TG\_TGRID\_FAN\_FACE}}=42,}
+\DoxyCodeLine{00082\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a26dd18043db226a38285f003d1ecba52}{TG\_TGRID\_WRAPPER\_FACE}}=43,}
+\DoxyCodeLine{00083\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974a23ce1456e5cef8f6585d6b28e3d89aa8}{TG\_TGRID\_THREAD\_TYPE\_MAX}}}
+\DoxyCodeLine{00084\ \}\ \mbox{\hyperlink{tg__lib_8h_a6b835b2413c20066281fbc911b14e974}{TG\_Thread\_Type}};}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{comment}{/*\ sorting\ methods\ */}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_SIZE\ 1}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_SKEW\ 4}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_SIZE\_RATIO\ 5}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_SIMPLEX\_SKEW\ 7}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{comment}{/*\ node\ insertion\ methods\ (similar\ list\ also\ exists\ in\ triang.h)\ */}}
+\DoxyCodeLine{00093\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00094\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a346fde35e80d0f8bd534b88a3de89dd5a9590afb72c3c319264d907f16e757e12}{TG\_INSERT\_CENTROID}}\ =\ 1,}
+\DoxyCodeLine{00096\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a346fde35e80d0f8bd534b88a3de89dd5a14bf690e1cbef45293738ec9beabe942}{TG\_INSERT\_CIRCUMCENTER}}\ =\ 2,}
+\DoxyCodeLine{00097\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a346fde35e80d0f8bd534b88a3de89dd5a143f1babc58ac823a71c2999831ff7a9}{TG\_INSERT\_BOUNDARY\_FRONT}}\ =\ 4,}
+\DoxyCodeLine{00098\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a346fde35e80d0f8bd534b88a3de89dd5a26cbb4aaa33ca478fb5b6dd0d25cb305}{TG\_INSERT\_ON\_FRONT}}\ =\ 8,}
+\DoxyCodeLine{00099\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a346fde35e80d0f8bd534b88a3de89dd5af471d6cece4c07ad3da4f89f46ed91e1}{TG\_INSERT\_NEAR\_CENTROID}}\ =\ 16}
+\DoxyCodeLine{00100\ \}\ \mbox{\hyperlink{tg__lib_8h_a346fde35e80d0f8bd534b88a3de89dd5}{TG\_Node\_Insert\_Methods}};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{comment}{/*\ quality\ measures\ (must\ match\ enum\ in\ gprops.h)\ */}}
+\DoxyCodeLine{00103\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00104\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13a01b2f7d81146286e047fe0db7e52d682}{TG\_EQUISIZE\_DEVIATION}}\ =\ 0,}
+\DoxyCodeLine{00106\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13a49af46d6372fe5a4324c319a56f86a0d}{TG\_EQUIANGLE\_DEVIATION}}\ =\ 1,}
+\DoxyCodeLine{00107\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13ad83b3d4af01ac9480b172edac695461e}{TG\_SIZE\_CHANGE}}\ =\ 2,}
+\DoxyCodeLine{00108\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13acff663eab83309a66e17638af11324f6}{TG\_EDGE\_RATIO}}\ =\ 3,}
+\DoxyCodeLine{00109\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13af3d498f3b60f91b4f4dc4970409fc53e}{TG\_SIZE}}\ =\ 4,}
+\DoxyCodeLine{00110\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13a03c0c7d3d42ebb459ad79b2c71117647}{TG\_ASPECT\_RATIO}}\ =\ 5,}
+\DoxyCodeLine{00111\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13a682cfbe56e35dc356bce769fcc4d5d41}{TG\_SQUISH}}\ \ \ \ \ \ \ \ \ =\ 6,}
+\DoxyCodeLine{00112\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13a9350a9e33ea723b8d3e796885af47a07}{TG\_FACE\_WARP}}\ \ \ \ \ \ =\ 7,}
+\DoxyCodeLine{00113\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13a52930f135144b18422c9a4b0d1f2ed21}{TG\_FACE\_DIHEDRAL}}\ \ =\ 8,}
+\DoxyCodeLine{00114\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13a82bc50fdc3839ba809f18714841b47d8}{TG\_ORTHOSKEW}}\ =\ 12}
+\DoxyCodeLine{00115\ \}\mbox{\hyperlink{tg__lib_8h_ab508e19d0c329b2b3b29c86c8aac2b13}{TG\_Quality\_Measures}};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ TG\_SIMPLEX\_SKEWNESS\ TG\_EQUISIZE\_DEVIATION}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{comment}{/*\ pyramid\ creation\ methods\ */}}
+\DoxyCodeLine{00120\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00121\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_af852bdc4f4a6b39406678e8a4453ef1eab4eb2eed0997f6924c25844e1ac2d67f}{TG\_PYRAMID\_CENTROID\_METHOD}}\ =\ 1,}
+\DoxyCodeLine{00123\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_af852bdc4f4a6b39406678e8a4453ef1eaeca45e184518a6130ce04b425521e9eb}{TG\_PYRAMID\_NEIGHBOR\_METHOD}}\ =\ 2,}
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_af852bdc4f4a6b39406678e8a4453ef1eadfd9d5e792260f4cf4e8ec6c2d9d55ab}{TG\_PYRAMID\_SKEWNESS\_METHOD}}\ =\ 3}
+\DoxyCodeLine{00125\ \}\ \mbox{\hyperlink{tg__lib_8h_af852bdc4f4a6b39406678e8a4453ef1e}{TG\_Pyramid\_Method}};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00128\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a00cfe48bee024e690f0daf2dc55ac869aacd7532b0958b6e3b183414e49593025}{TG\_SIMPLE\_NODE}}\ =\ 0,\ \ \ \ \textcolor{comment}{/*\ the\ default\ node\ type\ */}}
+\DoxyCodeLine{00130\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a00cfe48bee024e690f0daf2dc55ac869a30da3310ef7ad3e85b42ba32ea254059}{TG\_HARD\_NODE}}\ =\ 1,\ \ \ \ \ \ \textcolor{comment}{/*\ immovable\ node\ */}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{/*\ to\ be\ safe,\ I(kmb)\ am\ skipping\ 2\ and\ 3\ as\ node\ types\ \ because}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ \ \ \ \ *\ GEOMESH\ sometimes\ \ writes\ 2\ and\ 3\ as\ node\ types,\ refer\ to}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ \ \ \ \ *\ the\ comment\ above\ \_tg\_etype2memtype\ definition.\ */}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a00cfe48bee024e690f0daf2dc55ac869a5827df3092c7c8b21fe7044c29a13c4a}{TG\_FEATURE\_NODE}}\ =\ 4\ \ \ \ \textcolor{comment}{/*\ node\ that\ can\ be\ moved\ along\ feature\ edges\ */}}
+\DoxyCodeLine{00137\ \}\ \mbox{\hyperlink{tg__lib_8h_a00cfe48bee024e690f0daf2dc55ac869}{TG\_Node\_Element\_Type}};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00140\ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_afe8d212edf908c2697b1e01c46df681aad7b95538b9a3b9c8f787535d35224339}{TG\_LINEAR\_EDGE}}\ \ =\ 0,}
+\DoxyCodeLine{00142\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_afe8d212edf908c2697b1e01c46df681aac31ff9f5630bd605b58fa4646296044d}{TG\_LINEAR3\_EDGE}}\ =\ 1}
+\DoxyCodeLine{00143\ \}\ \mbox{\hyperlink{tg__lib_8h_afe8d212edf908c2697b1e01c46df681a}{TG\_Edge\_Element\_Type}};}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{comment}{/*\ face\ types\ */}}
+\DoxyCodeLine{00146\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00147\ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ac9746f26da3573926aa240b6dd05148da4807be4390c73005d0833b7924c16825}{TG\_MIXED\_FACE}}\ \ =\ 0,}
+\DoxyCodeLine{00149\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ac9746f26da3573926aa240b6dd05148daa046659f7fd2e30e89df5583a0075f6e}{TG\_LINEAR\_FACE}}\ =\ 2,}
+\DoxyCodeLine{00150\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ac9746f26da3573926aa240b6dd05148dae4747c2a6a0d11994e23b33fafaa7c09}{TG\_TRI\_FACE}}\ \ \ \ =\ 3,}
+\DoxyCodeLine{00151\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ac9746f26da3573926aa240b6dd05148da7a6104b4f88558a0e1120aa654a1bc76}{TG\_QUAD\_FACE}}\ \ \ =\ 4,}
+\DoxyCodeLine{00152\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ac9746f26da3573926aa240b6dd05148dad592c3463ad07e0c7bb7419821df2f6c}{TG\_POLY\_FACE}}\ \ \ =\ 5,}
+\DoxyCodeLine{00153\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ac9746f26da3573926aa240b6dd05148da0c202fb9c4f659752d860e7849b4be6c}{TG\_TRI6\_FACE}}\ \ \ =\ 6,}
+\DoxyCodeLine{00154\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_ac9746f26da3573926aa240b6dd05148da733184544de99faa12e7453314227338}{TG\_QUAD8\_FACE}}\ \ =\ 7}
+\DoxyCodeLine{00155\ \}\ \mbox{\hyperlink{tg__lib_8h_ac9746f26da3573926aa240b6dd05148d}{TG\_Face\_Element\_Type}};}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{comment}{/*\ cell\ types\ */}}
+\DoxyCodeLine{00158\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00159\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101ada15298159bdccdb45dbbba4afb6ea4d20}{TG\_MIXED\_CELL}}\ \ \ =\ 0,}
+\DoxyCodeLine{00161\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101adaac3a583686eacc20c5fd37a9bd4cd15b}{TG\_TRI\_CELL}}\ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00162\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101adad963e4cb9599ed1087a12f7172ca6cb1}{TG\_TET\_CELL}}\ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00163\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101adacb725f19fe82bafbc441cbde1588831a}{TG\_QUAD\_CELL}}\ \ \ \ =\ 3,}
+\DoxyCodeLine{00164\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101ada4290f438778a63290232592053471f8f}{TG\_HEX\_CELL}}\ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00165\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101ada2bf7416e7d78c506792286d7ee4efdcb}{TG\_PYRAMID\_CELL}}\ =\ 5,}
+\DoxyCodeLine{00166\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101adafbf9c2d5944395bcdd8300aa4dbb96d4}{TG\_WEDGE\_CELL}}\ \ \ =\ 6,}
+\DoxyCodeLine{00167\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101ada94e8f2cad815b2179baa034634f73e7f}{TG\_POLY\_CELL}}\ \ \ \ =\ 7,}
+\DoxyCodeLine{00168\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101ada8b07b0201c0b0f171f55a2185883990e}{TG\_TET10\_CELL}}\ \ \ =\ 9}
+\DoxyCodeLine{00169\ \}\ \mbox{\hyperlink{tg__lib_8h_a89cc12a31bc4f28b95c95ae5fdb101ad}{TG\_Cell\_Element\_Type}};}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{comment}{/*\ mesh\ size\ function\ types\ */}}
+\DoxyCodeLine{00172\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00173\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_af0c49e8bb7de50d259810a9cf5c47149a2d80e029b68ce104cfdffd3381dd2fbb}{TG\_NO\_SIZE\_FUNCTION}}\ =\ 0,}
+\DoxyCodeLine{00175\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_af0c49e8bb7de50d259810a9cf5c47149a1be0524188bef30641fee7c4ed7145dc}{TG\_BOUNDARY\_AVERAGED\_SMOOTH}}\ =\ 1,}
+\DoxyCodeLine{00176\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_af0c49e8bb7de50d259810a9cf5c47149ab217a32ef2dc90f2590dcc9fca4087f1}{TG\_SIMPLE\_SAMPLED\_AVERAGE}}\ =\ 2,}
+\DoxyCodeLine{00177\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_af0c49e8bb7de50d259810a9cf5c47149a297a7e49cd3dd7f0c809fb67177fed27}{TG\_DELAUNAY\_LOOP\_GRID}}\ =\ 3}
+\DoxyCodeLine{00178\ \}\ \mbox{\hyperlink{tg__lib_8h_af0c49e8bb7de50d259810a9cf5c47149}{TG\_Lscale\_Type}};}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{comment}{/*\ \ Entity\ Types\ \ */}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{tg__lib_8h_aac17492e202987ddad83893d6d81f11e}{TG\_EntityOrder}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ small\ integer:\ [0,7]\ */}}
+\DoxyCodeLine{00183\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a409c1bbe20a701a6ed7899299c3713eb}{TG\_EntityFlags}};\ \ \ \textcolor{comment}{/*\ must\ be\ 32\ bits\ */}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{comment}{/*\ structures\ */}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__domain__struct}{tg\_domain\_struct}}\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}};}
+\DoxyCodeLine{00188\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__thread__struct}{tg\_thread\_struct}}\ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}};}
+\DoxyCodeLine{00189\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__entity__header__struct}{tg\_entity\_header\_struct}}\ \mbox{\hyperlink{structtg__entity__header__struct}{TG\_Entity\_Header}};}
+\DoxyCodeLine{00190\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__entity__struct}{tg\_entity\_struct}}\ \mbox{\hyperlink{structtg__entity__struct}{TG\_Entity}};}
+\DoxyCodeLine{00191\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__node__struct}{tg\_node\_struct}}\ \mbox{\hyperlink{structtg__node__struct}{TG\_Node}};}
+\DoxyCodeLine{00192\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__edge__struct}{tg\_edge\_struct}}\ \mbox{\hyperlink{structtg__edge__struct}{TG\_Edge}};}
+\DoxyCodeLine{00193\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__face__struct}{tg\_face\_struct}}\ \mbox{\hyperlink{structtg__face__struct}{TG\_Face}};}
+\DoxyCodeLine{00194\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__cell__struct}{tg\_cell\_struct}}\ \mbox{\hyperlink{structtg__cell__struct}{TG\_Cell}};}
+\DoxyCodeLine{00195\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__surface__struct}{tg\_surface\_struct}}\ \mbox{\hyperlink{structtg__surface__struct}{TG\_Surface}};}
+\DoxyCodeLine{00196\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__lscale__struct}{tg\_lscale\_struct}}\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}};}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__domain__struct}{tg\_domain\_struct}}}
+\DoxyCodeLine{00199\ \{}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__domain__struct_a142a1b51e133e50c0a72b175958ac412}{next}};}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__domain__struct_a750b5d744c39a06bfb13e6eb010e35d0}{index}};}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__domain__struct_a824ac1af8a4229ed37411081a1ffd928}{nnodes}},\ \mbox{\hyperlink{structtg__domain__struct_a4cde3c8db240f7880ccc7d1cd39a52d0}{nedges}},\ \mbox{\hyperlink{structtg__domain__struct_a616f74cd19e2748e30b06efe879de7d3}{nfaces}},\ \mbox{\hyperlink{structtg__domain__struct_a7d1cae889b8379b3d74ee6f95c5244f2}{ncells}};}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__domain__struct_afbdf4e40cdcd20ffa8cf5d516e977672}{ntv}},\ \mbox{\hyperlink{structtg__domain__struct_afbb54dbcb3056eef837038e4233ff8e1}{tv}};}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__domain__struct_a6bcbb0de83476aa7adc1982400dff5a2}{nte}},\ \mbox{\hyperlink{structtg__domain__struct_a3fae7563fc6c810b9fbe4033797b3772}{te}};}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__domain__struct_a7de9189bc414089002691ee7386e421c}{ntf}},\ \mbox{\hyperlink{structtg__domain__struct_aa3fcd052f9384bf87811c64e70129ada}{tf}};}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__domain__struct_a40cdc44cb73b5955713e3beb119eac16}{ntc}},\ \mbox{\hyperlink{structtg__domain__struct_a0cea5104d05c6d3949115ddd0eed432e}{tc}};}
+\DoxyCodeLine{00207\ \};}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_EXISTS\_P(d)\ ((d)-\/>index\ ==\ TG\_EMPTY)}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_INDEX(d)\ \ (d)-\/>index}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_NEXT(d)\ \ \ (d)-\/>next}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_NNODES(d)\ (d)-\/>nnodes}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_NEDGES(d)\ (d)-\/>nedges}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_NFACES(d)\ (d)-\/>nfaces}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_NCELLS(d)\ (d)-\/>ncells}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_NODE\_THREAD(d)\ \ \ (d)-\/>tv}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_EDGE\_THREAD(d)\ \ \ (d)-\/>te}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_FACE\_THREAD(d)\ \ \ (d)-\/>tf}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_CELL\_THREAD(d)\ \ \ (d)-\/>tc}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_NODE\_NTHREADS(d)\ (d)-\/>ntv}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_EDGE\_NTHREADS(d)\ (d)-\/>nte}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_FACE\_NTHREADS(d)\ (d)-\/>ntf}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ TG\_DOMAIN\_CELL\_NTHREADS(d)\ (d)-\/>ntc}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__thread__struct}{tg\_thread\_struct}}}
+\DoxyCodeLine{00226\ \{}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_a142a1b51e133e50c0a72b175958ac412}{next}};}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_a750b5d744c39a06bfb13e6eb010e35d0}{index}};}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_af9393bbb1823236b682a2105ad7f523b}{threadclass}},\ \mbox{\hyperlink{structtg__thread__struct_ad43c3812e6d13e0518d9f8b8f463ffcf}{count}},\ \mbox{\hyperlink{structtg__thread__struct_ac765329451135abec74c45e1897abf26}{type}},\ \mbox{\hyperlink{structtg__thread__struct_a4c762b9c7f1fcd8f5fe50765b20d25b7}{etype}};}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_a6c8ec3c3e77241328358d43697f6f840}{first}};}
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keyword}{final};}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_acc128504834a67c06b246c155ca48807}{sub}};}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structtg__thread__struct_a735984d41155bc1032e09bece8f8d66d}{data}};}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00236\ \ \ \ \ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_ac765329451135abec74c45e1897abf26}{type}};}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_aa368ad6bffc555cf164b75f72cf731ab}{nlayers}};}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *\mbox{\hyperlink{structtg__thread__struct_a3031e37d19626a599ff6eb6fa485bd24}{displacements}};}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structtg__thread__struct_af497768629379efcee11a93e2e802b33}{lastpercent}};}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_a32b56170ed65ed9c964cd7c674a2f3de}{type1}};}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_abe0e55035dc611271103c59fbe56ac56}{nlayers1}};}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *\mbox{\hyperlink{structtg__thread__struct_a87569bb56a17992b0d668c47ecea0495}{displacements1}};}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structtg__thread__struct_a45bd539e01855d9092e6e9e10e2c073d}{lastpercent1}};}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__thread__struct_ac3dcdb9cbfcc4e42499505622dde9d23}{dangling\_wall}};}
+\DoxyCodeLine{00246\ \ \ \ \ \}\ \mbox{\hyperlink{structtg__thread__struct_a0afad8eb49bffc736e0eb7bb26e832b6}{prism}};}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{comment}{/*\ constructors\ */}}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structtg__thread__struct_a9ac8a28753d03c9012407ec7f57e3a77}{entity\_first}};}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keywordtype}{void}\ *(*entity\_next)(\textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__thread__struct}{tg\_thread\_struct}}\ *,\ int,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordtype}{void}\ *(*entity\_load)(\textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__thread__struct}{tg\_thread\_struct}}\ *,\ \textcolor{keywordtype}{void}\ *,\ int,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{/*\ This\ should\ probably\ be\ moved\ up\ in\ the\ struct,\ but\ doing\ so\ breaks}}
+\DoxyCodeLine{00254\ \textcolor{comment}{\ \ \ \ \ *\ library\ meshing\ in\ gambit\ until\ we\ get\ a\ successful\ build.}}
+\DoxyCodeLine{00255\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structtg__thread__struct_a5ac083a645d964373f022d03df4849c8}{name}};}
+\DoxyCodeLine{00257\ \};}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_NEXT(t)\ \ \ \ \ (t)-\/>next}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_CLASS(t)\ \ \ \ (t)-\/>threadclass}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_TYPE(t)\ \ \ \ \ (t)-\/>type}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_ETYPE(t)\ \ \ \ (t)-\/>etype}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_ORDER(t)\ \ \ \ (THREAD\_CLASS(t)\ \&\ TG\_ORDER\_BITS)}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ TG\_BOUNDARY\_THREAD(t)\ (TG\_THREAD\_CLASS(t)\ >=\ TG\_BOUNDARY\_BITS)}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#define\ TG\_ORIGINAL\_THREAD\ \ \ \ TG\_BOUNDARY\_THREAD}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_COUNT(t)\ \ \ \ (t)-\/>count}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_INDEX(t)\ \ \ \ (t)-\/>index}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_NAME(t)\ \ \ \ \ (t)-\/>name}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_FIRST(t)\ \ \ \ (t)-\/>first}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_FINAL(t)\ \ \ \ (t)-\/>final}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_SUB(t)\ \ \ \ \ \ (t)-\/>sub}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_CLIENT\_DATA(t)\ \ \ \ \ (t)-\/>data}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_CONSTRUCT\_FIRST(t)\ (t)-\/>entity\_first}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_CONSTRUCT\_NEXT(t)\ \ (t)-\/>entity\_next}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_CONSTRUCT\_LOAD(t)\ \ (t)-\/>entity\_load}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_PRISM\_NLAYERS(t)\ \ \ \ \ \ \ (t)-\/>prism.nlayers}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_PRISM\_DISPLACEMENTS(t)\ (t)-\/>prism.displacements}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_PRISM\_LASTPERCENT(t)\ (t)-\/>prism.lastpercent}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_PRISM\_OFFSET\_TYPE(t)\ (t)-\/>prism.type}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_PRISM\_NLAYERS1(t)\ \ \ \ \ \ \ (t)-\/>prism.nlayers1}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_PRISM\_DISPLACEMENTS1(t)\ (t)-\/>prism.displacements1}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_PRISM\_LASTPERCENT1(t)\ (t)-\/>prism.lastpercent1}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_PRISM\_OFFSET\_TYPE1(t)\ (t)-\/>prism.type1}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#define\ TG\_THREAD\_PRISM\_DWALL(t)\ (t)-\/>prism.dangling\_wall}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__entity__header__struct}{tg\_entity\_header\_struct}}}
+\DoxyCodeLine{00287\ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__entity__header__struct_a142a1b51e133e50c0a72b175958ac412}{next}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ index\ of\ next\ element\ in\ thread\ */}}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__entity__header__struct_a750b5d744c39a06bfb13e6eb010e35d0}{index}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ index\ of\ entity\ (offset\ into\ memory)\ */}}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__entity__header__struct_a7441ef0865bcb3db9b8064dd7375c1ea}{id}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ contiguous\ identifier\ */}}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__entity__header__struct_ac8bf36fe0577cba66bccda3a6f7e80a4}{flags}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ bit\ flags\ */}}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__entity__header__struct_a9b61df5d32336fad4da524d04a01b329}{thread}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ index\ of\ entitie's\ thread\ */}}
+\DoxyCodeLine{00293\ \};}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__entity__struct}{tg\_entity\_struct}}}
+\DoxyCodeLine{00296\ \{}
+\DoxyCodeLine{00297\ \ \ \ \ \mbox{\hyperlink{structtg__entity__header__struct}{TG\_Entity\_Header}}\ \mbox{\hyperlink{structtg__entity__struct_aff4e63dc16ea9e68c44de206a0a097f3}{header}};}
+\DoxyCodeLine{00298\ \};}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_NEXT(s)\ \ \ (s)-\/>header.next}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_FLAGS(s)\ \ (s)-\/>header.flags}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_ID(s)\ \ \ \ \ (s)-\/>header.id}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_INDEX(s)\ \ (s)-\/>header.index}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#define\ TG\_ENTITY\_THREAD(s)\ (s)-\/>header.thread}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__node__struct}{tg\_node\_struct}}}
+\DoxyCodeLine{00307\ \{}
+\DoxyCodeLine{00308\ \ \ \ \ \mbox{\hyperlink{structtg__entity__header__struct}{TG\_Entity\_Header}}\ \mbox{\hyperlink{structtg__node__struct_aff4e63dc16ea9e68c44de206a0a097f3}{header}};}
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structtg__node__struct_aecf6d0d8c6f9f183b832bb42fe74bab8}{coordinates}}[\mbox{\hyperlink{tg__lib_8h_aac0ad3bef966c7a491f50769ab381e08}{TG\_DIMENSIONS}}];}
+\DoxyCodeLine{00310\ \};}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#define\ TG\_NODE\_NEXT\ \ \ \ \ \ \ TG\_ENTITY\_NEXT}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#define\ TG\_NODE\_FLAGS\ \ \ \ \ \ TG\_ENTITY\_FLAGS}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#define\ TG\_NODE\_INDEX\ \ \ \ \ \ TG\_ENTITY\_INDEX}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\#define\ TG\_NODE\_ID\ \ \ \ \ \ \ \ \ TG\_ENTITY\_ID}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#define\ TG\_NODE\_THREAD\ \ \ \ \ TG\_ENTITY\_THREAD}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#define\ TG\_NODE\_COORD(v,i)\ (v)-\/>coordinates[i]}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#define\ tg\_node\_coord\_loop(v,i)\ for(i=0;\ i<TG\_DIMENSIONS;\ ++i)}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__edge__struct}{tg\_edge\_struct}}}
+\DoxyCodeLine{00322\ \{}
+\DoxyCodeLine{00323\ \ \ \ \ \mbox{\hyperlink{structtg__entity__header__struct}{TG\_Entity\_Header}}\ \mbox{\hyperlink{structtg__edge__struct_aff4e63dc16ea9e68c44de206a0a097f3}{header}};}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__edge__struct_ad2553a78d01ef396315d80f2c54c52b3}{nodes}}[2];}
+\DoxyCodeLine{00325\ \};}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#define\ TG\_EDGE\_NEXT\ \ \ \ \ \ \ TG\_ENTITY\_NEXT}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ TG\_EDGE\_FLAGS\ \ \ \ \ \ TG\_ENTITY\_FLAGS}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#define\ TG\_EDGE\_INDEX\ \ \ \ \ \ TG\_ENTITY\_INDEX}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#define\ TG\_EDGE\_ID\ \ \ \ \ \ \ \ \ TG\_ENTITY\_ID}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#define\ TG\_EDGE\_THREAD\ \ \ \ \ TG\_ENTITY\_THREAD}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#define\ TG\_EDGE\_NODE(e,i)\ \ (e)-\/>nodes[i]}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ tg\_edge\_node\_loop(e,i)\ for(i=0;\ i<2;\ ++i)}}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__face__struct}{tg\_face\_struct}}}
+\DoxyCodeLine{00336\ \{}
+\DoxyCodeLine{00337\ \ \ \ \ \mbox{\hyperlink{structtg__entity__header__struct}{TG\_Entity\_Header}}\ \mbox{\hyperlink{structtg__face__struct_aff4e63dc16ea9e68c44de206a0a097f3}{header}};}
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__face__struct_adda4ecd0e6804c7733823951d44130ee}{nodes}}[\mbox{\hyperlink{tg__lib_8h_a719049e618960a29aa210d0f99670037}{TG\_MAX\_NODES\_PER\_FACE}}];}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__face__struct_a31e68e0d403d0069886f193bda58f252}{cells}}[\mbox{\hyperlink{tg__lib_8h_a51ed4caf12424c8db10b864dd02ba16c}{TG\_MAX\_CELLS\_PER\_FACE}}];}
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__face__struct_a824ac1af8a4229ed37411081a1ffd928}{nnodes}};}
+\DoxyCodeLine{00341\ \};}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#define\ TG\_FACE\_NEXT\ \ \ \ \ \ TG\_ENTITY\_NEXT}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#define\ TG\_FACE\_FLAGS\ \ \ \ \ TG\_ENTITY\_FLAGS}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ TG\_FACE\_INDEX\ \ \ \ \ TG\_ENTITY\_INDEX}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#define\ TG\_FACE\_ID\ \ \ \ \ \ \ \ TG\_ENTITY\_ID}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ TG\_FACE\_THREAD\ \ \ \ TG\_ENTITY\_THREAD}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#define\ TG\_FACE\_TYPE(f)\ \ \ (f)-\/>nnodes}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#define\ TG\_FACE\_NNODES(f)\ (f)-\/>nnodes}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\#define\ TG\_FACE\_NODE(f,i)\ (f)-\/>nodes[i]}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#define\ TG\_FACE\_CELL(f,i)\ (f)-\/>cells[i]}}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#define\ tg\_face\_node\_loop(f,i)\ for(i=0;\ i<TG\_FACE\_NNODES(f);\ ++i)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#define\ tg\_face\_cell\_loop(f,i)\ for(i=0;\ i<TG\_MAX\_CELLS\_PER\_FACE;\ ++i)}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__cell__struct}{tg\_cell\_struct}}}
+\DoxyCodeLine{00357\ \{}
+\DoxyCodeLine{00358\ \ \ \ \ \mbox{\hyperlink{structtg__entity__header__struct}{TG\_Entity\_Header}}\ \mbox{\hyperlink{structtg__cell__struct_aff4e63dc16ea9e68c44de206a0a097f3}{header}};}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__cell__struct_aee9ac30804202f0486e6d7f23e76dd50}{nodes}}[\mbox{\hyperlink{tg__lib_8h_ad29f1f469acf58be177ceb8bd24ba1f9}{TG\_MAX\_NODES\_PER\_CELL}}];}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__cell__struct_a5977c029f082acaba0bfafc578572b5b}{faces}}[\mbox{\hyperlink{tg__lib_8h_a1d8c81d286088ea5d7ca9ebee8a3fe9b}{TG\_MAX\_FACES\_PER\_CELL}}];}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__cell__struct_a824ac1af8a4229ed37411081a1ffd928}{nnodes}},\ \mbox{\hyperlink{structtg__cell__struct_a616f74cd19e2748e30b06efe879de7d3}{nfaces}};}
+\DoxyCodeLine{00362\ \};}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\#define\ TG\_CELL\_NEXT\ \ \ \ \ \ TG\_ENTITY\_NEXT}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#define\ TG\_CELL\_FLAGS\ \ \ \ \ TG\_ENTITY\_FLAGS}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#define\ TG\_CELL\_INDEX\ \ \ \ \ TG\_ENTITY\_INDEX}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#define\ TG\_CELL\_ID\ \ \ \ \ \ \ \ TG\_ENTITY\_ID}}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\#define\ TG\_CELL\_THREAD\ \ \ \ TG\_ENTITY\_THREAD}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#define\ TG\_CELL\_TYPE(c)\ \ \ (c)-\/>nnodes}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\#define\ TG\_CELL\_NNODES(c)\ (c)-\/>nnodes}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\#define\ TG\_CELL\_NODE(c,i)\ (c)-\/>nodes[i]}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\#define\ TG\_CELL\_NFACES(c)\ (c)-\/>nfaces}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#define\ TG\_CELL\_FACE(c,i)\ (c)-\/>faces[i]}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\#define\ tg\_cell\_node\_loop(c,i)\ for(i=0;\ i<TG\_CELL\_NNODES(c);\ ++i)}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\#define\ tg\_cell\_face\_loop(c,i)\ for(i=0;\ i<TG\_CELL\_NFACES(c);\ ++i)}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__surface__struct}{tg\_surface\_struct}}}
+\DoxyCodeLine{00379\ \{}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtg__surface__struct_ac765329451135abec74c45e1897abf26}{type}};}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structtg__surface__struct_a589d6c46624aaf799a24c5dc0d5d5922}{rep}};}
+\DoxyCodeLine{00382\ \ \ \ \ void\ (*\mbox{\hyperlink{structtg__surface__struct_af699ea4cee6aae354eb3d900a08d91b3}{closest\_point}})(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{void}\ *,\ double,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00383\ \ \ \ \ void\ (*\mbox{\hyperlink{structtg__surface__struct_a5f0bc5c5cbd23a9a92b3eae462fd2942}{ray\_project}})(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{void}\ *,\ double,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00384\ \ \ \ \ void\ (*\mbox{\hyperlink{structtg__surface__struct_aa515476ee9738d01b9137cc814287631}{normal\_vector}})(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00385\ \ \ \ \ void\ (*\mbox{\hyperlink{structtg__surface__struct_a0ccc6687f13af04b6d36f214fb63e451}{normal\_vector\_at\_closest\_point}})(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00386\ \ \ \ \ void\ (*\mbox{\hyperlink{structtg__surface__struct_a7602007a82a6515ec9b3343074320e66}{edge\_normal}})(\textcolor{keywordtype}{double}[],\textcolor{keywordtype}{double}[],\textcolor{keywordtype}{double}[],\textcolor{keywordtype}{void}*,\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{00387\ \ \ \ \ void\ (*\mbox{\hyperlink{structtg__surface__struct_a4214367f7d7186da762a941f3d3ebc6c}{bounding\_box}})(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00388\ \};}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtg__lscale__struct}{tg\_lscale\_struct}}}
+\DoxyCodeLine{00391\ \{}
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structtg__lscale__struct_a589d6c46624aaf799a24c5dc0d5d5922}{rep}};}
+\DoxyCodeLine{00393\ \ \ \ \ void\ (*\mbox{\hyperlink{structtg__lscale__struct_af173dbbc99955201b3b503e613402122}{element\_size}})(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ [],\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structtg__lscale__struct_a772ed4d143cb1b54f407eb4ff5f9a729}{global\_size}};}
+\DoxyCodeLine{00395\ \ \ \ \ \mbox{\hyperlink{tg__lib_8h_af0c49e8bb7de50d259810a9cf5c47149}{TG\_Lscale\_Type}}\ \mbox{\hyperlink{structtg__lscale__struct_abe01b0f8ff58babb4bfd657183fe6363}{type}};}
+\DoxyCodeLine{00396\ \};}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__extern__tg__lib}{\_tg\_extern\_tg\_lib}}}
+\DoxyCodeLine{00399\ \{}
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{struct__tg__extern__tg__lib_a4bb13d9347430cff91a6346571ea2c86}{\_meshdir}}[1024];}
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{struct__tg__extern__tg__lib_a4df5cdfd411b62aac2f3a3f4b6b74f7d}{\_tmp\_file\_name}}[1024];}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__tg__lib_ae8ab13777f317bffe096dd48172308f2}{\_write\_debug\_files}};}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__extern__tg__lib_ad62ca2d19bd64e610375e398751378ac}{\_body\_count}};}
+\DoxyCodeLine{00404\ \};}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#define\ extern\_tg\_lib(field)\ EXTERN\_INSTANCE\_VAR(tg\_lib,\ field)}}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#define\ meshdir\ \ \ \ \ \ \ \ \ \ \ extern\_tg\_lib(\_meshdir)}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\#define\ tmp\_file\_name\ \ \ \ \ extern\_tg\_lib(\_tmp\_file\_name)}}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#define\ write\_debug\_files\ extern\_tg\_lib(\_write\_debug\_files)}}
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\#define\ body\_count\ \ \ \ \ \ \ \ extern\_tg\_lib(\_body\_count)}}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\#define\ INIT\_TMP\_FILE\_NAME(op,ext)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\ \ \ \ sprintf(tmp\_file\_name,\ "{}\%s\%d\_\%d\_\%s.\%s"{},\ meshdir,\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ MYTG\_HANDLE(),\ body\_count,\ op,\ ext);}}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\#if\ TGL\_CODE\_GEN}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#\ define\ TGL\_FILE\_OPEN\_P\ \ \ \ \ \ tgl\_file\_p}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\#\ define\ TGL\_SET\_FILE\_OPENED\ (tgl\_file\_p\ =\ TRUE)}}
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\#\ define\ TGL\_SET\_FILE\_CLOSED\ (tgl\_file\_p\ =\ FALSE)}}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#\ define\ CGN(expr)\ if\ (TGL\_FILE\_OPEN\_P)\ expr}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#\ define\ CGN(expr)}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ TGL\_CODE\_GEN\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#define\ DBG\_TGL(expr)\ if\ (write\_debug\_files)\ expr}}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00430\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00431\ \{}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \ \ \mbox{\hyperlink{tginstance_8h_adaf6e5f72f916fc6075db32ad85c8f8d}{EXTERN\_INSTANCE\_PROTOTYPE}}(tg\_lib);}
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#if\ TGL\_CODE\_GEN}}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ FILE\ *\mbox{\hyperlink{tg__lib_8h_a37306c08450508d46a5678c017e660f4}{tgl\_file}};}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae012d4546e5c1e2b35586d9000e852c6}{tgl\_file\_p}};}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8ec5fb0ae98f3fc19b03614f71fb5207}{tgl\_sf\_file\_p}};}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00440\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a6379a8824fc39587a03aaa31c0a93d9d}{CGN\_Write}}(\textcolor{keywordtype}{char}\ *,\ ...);}
+\DoxyCodeLine{00441\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00442\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a86bd008fabf8a1a38bb0ad528f402455}{TG\_Initialize}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab5b712503fee08193f1e3e4105aa7511}{TG\_Finalize}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a5e187ced968ca69446e492821b599caf}{TG\_Reset}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aafc80c2a3ece26d70ea7ce0b59d878ee}{TG\_Handlers\_Install}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a2f13f415fde10f08512650b80dd7eb48}{TG\_Handlers\_Restore}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7f25e1e2ca5e6331b460331c42c3209d}{TG\_Parallel\_Communicator\_Set}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a27dc351f2117b649e2bce6f88b7e7c67}{TG\_Parallel\_Communicator\_Restore}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#define\ TG\_Parallel\_Communicator\_Disable()\ \(\backslash\)}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\ \ \ \ TG\_Parallel\_Communicator\_Set\ (-\/2)}}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_add4bf3fa38bdad237fe1cce219533a19}{TGLIB\_Create\_Subcomm}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a63e37c2d402201a7b22fd15f7fea2127}{TGLIB\_Destroy\_Subcomm}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a858b37eafbf4f497b644488143793ef9}{TGLIB\_Set\_Thread\_Interface}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00457\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad6a7b2be536da58f7be3d0bd3562d91e}{TGLIB\_Init\_Neighborhood}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a5816cc190c5ff44b6bb9985dc4e06d10}{TGLIB\_Fill\_Interface\_Nodes}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1299df7b4c26f0fcdd4e676744ec0c11}{TGLIB\_Fill\_Corner\_Nodes}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a3e6759e787e3b8108b5de6426188f326}{TGLIB\_Set\_Max\_Id\_Sync}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a2651278d6eb01464943e1e9ab20e4bc3}{TGLIB\_Init\_Para\_Entities}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a54d885403e27cdc5b4df16462d96fa83}{TGLIB\_Set\_Thread\_Id}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00464\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af91ce78980517836c95bd75fb48f6cd7}{TGLIB\_Get\_Max\_Thread\_Id}}\ (\textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af46534aa0385d737d3be9bd3a0fc785b}{TGLIB\_Create\_Thread\_With\_Id}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_affc57e44c9fc3662f19b1a603d8ee51d}{TG\_Domain\_Initialize}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00467\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a83483ba6ecea6bdd2348c49abdfe1612}{TG\_Domain\_Extract}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a672ef13afbe36fefabbd271ecf774a9d}{TG\_Domain\_Create}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00469\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a49055a84406f91b691e475023e2dcca9}{TG\_Domain\_Delete}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00470\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0bd378b7692f862666a78108d1c828b4}{TG\_Domain\_Report}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_afc3b09eb91ae9aef090498d6c5fced07}{TG\_Domain\_Add\_Node\_Thread}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00472\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae15da203ee82e5f66931fe83212c36d3}{TG\_Domain\_Add\_Face\_Thread}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00473\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af819b30e28e51f6d456caea3ba21dfac}{TG\_Domain\_Enumerate}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9c2304a6f9945ff48831226eff2cf12c}{TG\_Thread\_Initialize}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *);}
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8de665522cc99749fe7cada46761c9b7}{TG\_Thread\_Create}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00477\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a17a695cc71f1941f2ff1b0d6047bc0e9}{TG\_Thread\_Extract}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00478\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aea441704808d6691a15a297cda9cffb9}{TG\_Thread\_Set\_Double\_Sided}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0154998b01af92febc346ad8cee2a402}{TG\_Thread\_Set\_Mesh\_Freeze}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a93867aa512ef7a4371e0d2345eeac819}{TG\_Thread\_Set\_Domain\_Excluded}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00481\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a52b55805a00bba6b01798f857c5bd884}{TG\_Super\_Thread\_Index}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab988d34a7f744d629800002793f14589}{TG\_Mark\_Fix\_Nodes\_On\_Thread}}(\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad51df591e4441b81b72a8e1e8960f57d}{TG\_Node\_Initialize}}(\mbox{\hyperlink{structtg__node__struct}{TG\_Node}}\ *);}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7d1ef9fb2eb9e8492ff52391cea77337}{TG\_Node\_Create}}(\mbox{\hyperlink{structtg__node__struct}{TG\_Node}}\ *,\ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00486\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ade4333d233cb3b1c1b54d4f852b0161c}{TG\_Node\_Extract}}(\mbox{\hyperlink{structtg__node__struct}{TG\_Node}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1ab86140bac882b1afc10cbf34fff579}{TG\_Mark\_Fix\_Node}}(\mbox{\hyperlink{structtg__node__struct}{TG\_Node}}\ *);}
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a042363ad6c42b2d32e8520e4ca28ffab}{TG\_Check\_Mark\_Fix\_Node}}(\mbox{\hyperlink{structtg__node__struct}{TG\_Node}}\ *);}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac4cdcb30b3f41e28a688d2bb54933902}{TG\_Edge\_Initialize}}(\mbox{\hyperlink{structtg__edge__struct}{TG\_Edge}}\ *);}
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_adb63f070799034a24c45f76ce85d39f3}{TG\_Edge\_Create}}(\mbox{\hyperlink{structtg__edge__struct}{TG\_Edge}}\ *,\ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00492\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab792ce17b9cc99a0320603454653a33f}{TG\_Edge\_Extract}}(\mbox{\hyperlink{structtg__edge__struct}{TG\_Edge}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00493\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8ca007aab8af99973e71dfa0b2db6623}{TG\_Mark\_Fix\_Edge}}(\mbox{\hyperlink{structtg__edge__struct}{TG\_Edge}}\ *);}
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_afe15c0ad38f730d3a9883be91503e9e3}{TG\_Check\_Mark\_Fix\_Edge}}(\mbox{\hyperlink{structtg__edge__struct}{TG\_Edge}}\ *);}
+\DoxyCodeLine{00495\ }
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1bf4338074e700e38422438c176ddb86}{TG\_Face\_Initialize}}(\mbox{\hyperlink{structtg__face__struct}{TG\_Face}}\ *);}
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a16548a3410fae8130eb34a91df3ba706}{TG\_Face\_Create}}(\mbox{\hyperlink{structtg__face__struct}{TG\_Face}}\ *,\ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1b44e3b9c73e2d7b5feb2e5fbe9e6443}{TG\_Face\_Extract}}(\mbox{\hyperlink{structtg__face__struct}{TG\_Face}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a5a31420fa8f151ec1f3c8f0e8fc642e1}{TG\_Mark\_Fix\_Face}}(\mbox{\hyperlink{structtg__face__struct}{TG\_Face}}\ *);}
+\DoxyCodeLine{00500\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae36498650b8f5c4847c1bc86f97396dc}{TG\_Check\_Mark\_Fix\_Face}}(\mbox{\hyperlink{structtg__face__struct}{TG\_Face}}\ *);}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00502\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a4f33e227150c786beb007482bf4ec2b3}{TG\_Cell\_Initialize}}(\mbox{\hyperlink{structtg__cell__struct}{TG\_Cell}}\ *);}
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1eba405376d31607ecc7dd144c4db948}{TG\_Cell\_Create}}(\mbox{\hyperlink{structtg__cell__struct}{TG\_Cell}}\ *,\ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00504\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a4184a84bf690f49ddbd7f40112a05463}{TG\_Cell\_Extract}}(\mbox{\hyperlink{structtg__cell__struct}{TG\_Cell}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a79755ed4840923b217b8e239c56feb6f}{TG\_Surface\_Initialize}}(\mbox{\hyperlink{structtg__surface__struct}{TG\_Surface}}\ *);}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aaf5cff2af2eef63885c83835fd628a4b}{TG\_Lscale\_Initialize}}(\mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *);}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00510\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac2741fbf6603091df291e48cbd6bea7d}{TG\_Gambit\_Prism\_Domain}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a68fd04f5ac3c95aa35698e057446a3f8}{TG\_Prism\_Domain}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a54ab46234a146c691b1303d5a4335bbc}{TG\_Mesh\_Domain}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00513\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a5af97aeda5583dfa0168a8ea47096133}{TG\_Mesh\_Check}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a2d912a0244bff5a50dcafee0d1916889}{TG\_Sort\_Faces}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_acdb92e9c153174248190af86f57f2235}{TG\_Sort\_Cells}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0303aec106fce0a8a1bc9537c3163af6}{TG\_Mesh\_Set\_Int\_Parameter}}(\textcolor{keywordtype}{char}*,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00519\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac78ac1c90823fa802d68d86d72d83e8a}{TG\_Mesh\_Get\_Int\_Parameter}}(\textcolor{keywordtype}{char}*,\ \textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00520\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a28493152b23fd7bde50c4335ea6168d5}{TG\_Mesh\_Set\_Real\_Parameter}}(\textcolor{keywordtype}{char}*,\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00521\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae87782ebb934b026c45d6a31b4470f52}{TG\_Mesh\_Get\_Real\_Parameter}}(\textcolor{keywordtype}{char}*,\ \textcolor{keywordtype}{double}*);}
+\DoxyCodeLine{00522\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a83a740f71489ba258b19add3ccc99eb2}{TG\_Mesh\_Set\_Domain\_Specific\_Default\_Parameters}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a92ca195e8c0dbb7e53238e89f6315a94}{TG\_Mesh\_Print\_Parameters}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00524\ }
+\DoxyCodeLine{00525\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a60d20decb6fe0f82a10b0401193a10f4}{TG\_Mesh\_Jiggle\_Nodes}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00526\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8bd14b2186971eeac42f268cfbddb487}{TG\_Mesh\_Init}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00527\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a72e6b5ce85500306ddb3ac45e25ac25f}{TG\_Mesh\_Refine}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}*);}
+\DoxyCodeLine{00528\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a18c55488637006353bc7c40820e60683}{TG\_Mesh\_Refine\_Boundary\_Cells}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac0809b969e37c079be93a7cecb562a5c}{TG\_Mesh\_Refine\_Cells}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7c248b51a2edd1296cbf89106f148d25}{TG\_Mesh\_Refine\_Skewed\_Cells}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{double},\textcolor{keywordtype}{double},\textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00531\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a78ac156b5c35f4fdde0ea23e951c2a04}{TG\_Mesh\_Improve\_Skew}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00532\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad66b23766a291f58dd1dc3f0dff0b47d}{TG\_Mesh\_Collapse\_Slivers}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00533\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a059586d6ccc29e268e708f4397b528fd}{TG\_Mesh\_Move\_Skewed\_Cells}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00534\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a3acf37c6302e5bd8a7dfe45e7278f576}{TG\_Mesh\_Improve\_Mesh}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00535\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af97d671faa75f6a63c6c750de4de7f32}{TG\_Mesh\_Remove\_Skewed\_Cells}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a96ac465f2ffee9d2a73001fd4a2d4b48}{TG\_Mesh\_Swap\_Cells}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *\ ,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00538\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9a4afd2d47cb110412212cb57dcedc8f}{TG\_Mesh\_Smooth\_Cells}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *\ ,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00539\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a70bc722fa3628e75a5e5d4d7b31265c5}{TG\_Mesh\_Splx\_Smooth\_Cells}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00540\ }
+\DoxyCodeLine{00541\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab1d338351cb2690bb29943eb82a398e9}{TG\_Init\_Surfer\_Domain}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00542\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac8279180d9a91eeb3eb287c2ac4f52dc}{TG\_Mesh\_Surface}}(\mbox{\hyperlink{structtg__surface__struct}{TG\_Surface}}\ *,\mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *,\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00543\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a4c291c870509213e8bbc6560786fa96a}{TG\_Define\_FaceSeed\_Null\_Id}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00544\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a78c3b31a02152bc65c3a85a7ce23871c}{TG\_Node\_Set\_FaceSeed\_Id}}(\mbox{\hyperlink{structtg__node__struct}{TG\_Node}}\ *,\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00545\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8134429ca1894ba026fd7a25c8de0fc6}{TG\_Node\_Get\_FaceSeed\_Id}}(\mbox{\hyperlink{structtg__node__struct}{TG\_Node}}\ *,\textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00546\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ade09f3be126ae0065e17269c52bbf176}{TG\_Collapse\_Bad\_Tris}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00548\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ace46f40b309e5270a95dcf2082595c8e}{TG\_Create\_Poly\_Domain}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00549\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a588cb4a7bb942a761e0fc2278f922ec4}{TG\_Delete\_Poly\_Domain}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00550\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a664730b1404d6f7546c4279f94c65bd6}{TG\_Put\_Poly\_Nodes}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\mbox{\hyperlink{structtg__node__struct}{TG\_Node}}\ [],\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00551\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a24ff448267b86b7a08033fb4c766eaf0}{TG\_Poly\_Triangulate}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\textcolor{keywordtype}{double}\ []);}
+\DoxyCodeLine{00552\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a4696020a1c99c91d17ff557f52fdd00d}{TG\_Get\_Poly\_Triangles}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\textcolor{keywordtype}{int}\ [][3],\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a12e023f7a8756ec95ea558d586af6225}{TG\_Unmeshed\_Node\_Count}}(\textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00555\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_acb4ae3d59d96e62cb0036f6de8863bfd}{TG\_Unmeshed\_Node\_List}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a20bbc8d1a6fe03b288937d24ec6e347e}{TG\_Unmeshed\_Face\_Node\_Count}}(\textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00557\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a189c08131ee09885c1c5dc808e9854e9}{TG\_Unmeshed\_Face\_Node\_List}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00558\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a6e80d70f993b75c8151d306b069aac84}{TG\_Unused\_Node\_Count}}(\textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aec99edee7e27407fd9d1642ebbb193cb}{TG\_Unused\_Node\_List}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_afca83836215701005c725c56a4afac70}{TG\_Unused\_Node\_Delete}}(\textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae4fd170c0abd6b2992b47774ff361a12}{TG\_Free\_Node\_Count}}(\textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00562\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a57c4bb4a00ce3cb7270ee65b1ae8c22e}{TG\_Free\_Node\_List}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00563\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a83943471a5328a57f9ef97ee37e79dfa}{TG\_Multi\_Node\_Count}}(\textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_abfd6bf203801d29675a1da0e492b4164}{TG\_Multi\_Node\_List}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac7540dd1acfdbf6b5405af2a5b4dd703}{TG\_NonDelaunay\_Face\_Count}}(\textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00567\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_acbbe8473e8238a2fa4ece9f4d8c8c8fa}{TG\_NonDelaunay\_Face\_List}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00568\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8bfeb0efe1719998e4907a1aa0b16d44}{TG\_Improve\_Boundary\_Mesh}}\ (\mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00569\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a440d5cd1c7f1c9b315cea8915ba1b7cd}{TG\_Separate\_Cell\_Thread}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a203c32d2e743ae9b1201cd3b19fef58c}{TG\_Face\_Quality\_Limits}}(\textcolor{keywordtype}{int}\ *,\textcolor{keywordtype}{double}\ *,\textcolor{keywordtype}{double}\ *,\textcolor{keywordtype}{double}\ *,}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00573\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_acc45f6e892fde649bf51c0dc9a617079}{TG\_Face\_Size\_Limits}}(\textcolor{keywordtype}{int}\ *,\textcolor{keywordtype}{double}\ *,\textcolor{keywordtype}{double}\ *,\textcolor{keywordtype}{double}\ *,}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a348e8866fef56f85e00b2696fb14ca74}{TG\_Cell\_Limits}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\textcolor{keywordtype}{double}\ *,\textcolor{keywordtype}{double}\ *,\textcolor{keywordtype}{double}\ *,}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structtg__thread__struct}{TG\_Thread}}\ *,\ \mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *);}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#define\ TG\_Cell\_Quality\_Limits(n,\ ll,\ ul,\ tot,\ t,\ d)\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\ \ \ \ TG\_Cell\_Limits(TG\_ENTITY\_SKEW,\ n,\ ll,\ ul,\ tot,\ t,\ d)}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#define\ TG\_Cell\_Size\_Limits(n,\ ll,\ ul,\ tot,\ t,\ d)\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\ \ \ \ TG\_Cell\_Limits(TG\_ENTITY\_SIZE,\ n,\ ll,\ ul,\ tot,\ t,\ d)}}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00582\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac7073cf7dfd182ed671407dc007c7656}{TG\_Face\_Quality}}(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ x[][3],\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00583\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a97e5553072ff4c0f3b73bd643ca69b92}{TG\_Cell\_Quality}}(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ x[][3],\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00584\ }
+\DoxyCodeLine{00585\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a234262f9c91da55023f2fee6d283649a}{TG\_Get\_Quality\_Using\_CellID}}(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{int}\ ,\ \textcolor{keywordtype}{int}\ );}
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab18c00dc3e0acbbfe6c65aed12586dc0}{TG\_Get\_Quality\_Using\_FaceID}}(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{int}\ ,\ \textcolor{keywordtype}{int}\ );}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00588\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a95ac59c82aea1dd53ff8d92e3860c876}{TG\_Write\_Face\_Based\_File}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a244619157d94403f2b2d89837285fbb8}{TG\_Hexcore}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *);}
+\DoxyCodeLine{00590\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1f82a6aa7572afedafe92efe1528beb3}{TG\_Write\_Nastran\_File}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00591\ }
+\DoxyCodeLine{00592\ \ \ \ \ \textcolor{comment}{/*\ prototypes\ for\ new\ interfaces\ */}}
+\DoxyCodeLine{00593\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__lib_8h_a849da10422879b406e5662cd2ec30ae5}{TGLIB\_Initialize}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00594\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af74cb00b2f10ec5e01712dbc102c1957}{TGLIB\_Init\_Global\_Domain}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00595\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1fd7ea8fbebf799b62c3a318c4b550ba}{TGLIB\_Create\_Domain}}\ (\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a827fde964726a982b19564c2c923dd0c}{TGLIB\_Free\_Domain}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00597\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a3b7221c4fcced8bddf5550208ef6922a}{TGLIB\_Delete\_Domain}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00598\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_abf6d8163d76f781c3578af6646780933}{TGLIB\_Set\_Current\_Domain}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00599\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a60991693336786b8274e09ed26bac646}{TGLIB\_Insert\_Thread\_Into\_Domain}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00600\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8a6b72eded6cbcfc3d3f051542616570}{TGLIB\_Remove\_Thread\_From\_Domain}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00601\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a29ccfd2c732ef5555dcc91bee940787c}{TGLIB\_Select\_Domain}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0e9abff88d111566366ef8388a8d3e83}{TGLIB\_Print\_Domain}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00603\ }
+\DoxyCodeLine{00604\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a78ef845ca3bc9972f46803bbb7e2623f}{TGLIB\_Create\_Thread}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00605\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae0e8136c9abdc330bc3bba103e161613}{TGLIB\_Delete\_Thread}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00606\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a42b8413c920c30bfc781bdcda530f231}{TGLIB\_Set\_Thread\_Name}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00607\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0bafdf58f47e953844b63df907d3dde9}{TGLIB\_Set\_Thread\_Type}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1ac36122a92ebd2f7661466bd497dd3c}{TGLIB\_Set\_Thread\_Flags}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00609\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae561a5c8785636ad05d981192641abda}{TGLIB\_Sync\_Threads}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00610\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae819e663907bd97f889f3362b9ec5683}{TGLIB\_Set\_Entity\_Thread\_Flags}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00611\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a893336a2ab44b055bd207e01480ec473}{TGLIB\_Clear\_Thread\_Flags}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00612\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9b1abd48940ac8568ac5d38e6d5173a3}{TGLIB\_Set\_Current\_Thread}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00613\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9b37a560e4a93ab59ce1e6585f75ce71}{TGLIB\_Duplicate\_Thread}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00614\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad4ab700923fcef120ee06b1b63447d34}{TGLIB\_Merge\_Threads}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00615\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a605935d6a15ffac1052566d78ed3e658}{TGLIB\_Thread\_Set\_Mesh\_Freeze}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a2e15aaaccf99ee2abeaaffd4fab68de0}{TGLIB\_Super\_Thread}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00617\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a941770869bd81ebc3ea5f2601ebf2c42}{TGLIB\_Attach\_Thread\_Prism}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ [],\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a2a2225a77ff3a6ab7d27228b1e4ad1db}{TGLIB\_Get\_Entity\_Thread}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1637d7c900796f754fc043510dbc77dd}{TGLIB\_Boundary\_Thread}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00620\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a3ba2c6d073cc7c23b51b42016c0e138e}{TGLIB\_Inquire\_Parent\_Face\_Threads}}(\textcolor{keywordtype}{int},\ \mbox{\hyperlink{structcons__cell}{List}}\ **);}
+\DoxyCodeLine{00621\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a811f2534d44e43a4c54e51196e7f0c64}{TGLIB\_Get\_Face\_Children}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00622\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9d3dece61afbfcc0f4055ff1a17d6ef3}{TGLIB\_Set\_Parent\_Thread}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00623\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a589c1a14db4ca34dfa588e4d05e74a1b}{TGLIB\_Set\_Face\_Children}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00624\ }
+\DoxyCodeLine{00625\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0137e8fe71dcfe6ff4bcb1f3f245125b}{TGLIB\_Create\_Node}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ [],\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00626\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae4e460a7439f47d61f26f78cef2c8542}{TGLIB\_Create\_Edge}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00627\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a79a551f46ac9427dc0da9af169db843a}{TGLIB\_Create\_Face}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00628\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a362514f7373ad2262017872398bf1097}{TGLIB\_Create\_Cell}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00629\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a38b801346f9a9c195af964ff31c53ed7}{TGLIB\_Mark\_Fix\_Node}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00630\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a515f0bbac6431c3dabb5b28186c058b5}{TGLIB\_Check\_Mark\_Fix\_Node}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00631\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0f760670c8e6391f451eacaa4fd264c2}{TGLIB\_Mark\_Fix\_Face}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00632\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af3882627fc59912b7463b61ae97aa584}{TGLIB\_Check\_Mark\_Fix\_Face}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00633\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a663d2848939f41a6da5515dc2118dbe6}{TGLIB\_Get\_Face\_Neighbors}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac7b849e4c69a1e4d2d12799d7d431fa2}{TGLIB\_Move\_Face\_To\_Thread}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac728c94e45aace8463095923367e2b61}{TGLIB\_Delete\_Unused\_Faces}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00638\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_afb26553aa6209011e5b908823e8df967}{TGLIB\_Delete\_Unused\_Nodes}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00639\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a98a77bdcc4612c86c64ad9e848a1dd62}{TGLIB\_Delete\_All\_Edges}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00640\ }
+\DoxyCodeLine{00641\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a00a99ef97fff3a1d34ece9518060fadc}{TGLIB\_Inquire\_Threads}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structcons__cell}{List}}\ **);}
+\DoxyCodeLine{00642\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9dede5c785a43b34adebdb98ea22729b}{TGLIB\_Inquire\_Threads\_By\_Class}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structcons__cell}{List}}\ **);}
+\DoxyCodeLine{00643\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a23fe1fab9923a1b075ddc93fc51c2e1d}{TGLIB\_Inquire\_Edge\_Loops\_By\_Class}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structcons__cell}{List}}\ **);}
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad9c875c44923eec9e90039a556330ce0}{TGLIB\_Inquire\_Thread\_Count}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab81abfb613054a15abc4d2306739c4ff}{TGLIB\_Enforce\_Contiguous\_Enumeration}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00646\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a391452445d508d6d8997d98ef748c878}{TGLIB\_Enumerate\_Entities}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00647\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a52f4680a6c6e8484ab933a0de639add2}{TGLIB\_First\_Entity}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00648\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af1aba322a64a968402ee97762d507dc9}{TGLIB\_Next\_Entity}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00649\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae3fcfe3ffae7e1250a7bb7f51ebe9d7a}{TGLIB\_Get\_Node}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ []);}
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9547e68d6db5c5f6811e2ddc49babddb}{TGLIB\_Get\_Edge}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00651\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_afb444906a53b437a174c88fedd34ecff}{TGLIB\_Get\_Face}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00652\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a62f435f61c09acf33688b2b5d4ca5aae}{TGLIB\_Get\_Cell}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00653\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7c45d74cb176e8defb9d4140772426a5}{TGLIB\_Get\_Node\_Id}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ [],\ \textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00654\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a6d4a2f47cae7158e81a956c773734a9d}{TGLIB\_Get\_Edge\_Id}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00655\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a92a875013ad8dccc0ba718fea9664dad}{TGLIB\_Get\_Face\_Id}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}*,\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00656\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9240fd83f93c0f77c6cfe290319da7fc}{TGLIB\_Get\_Cell\_Id}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}*,\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9c2d2ec94966c26d1daf55fe96271b49}{TGLIB\_Construct\_Edge\_Loops}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00659\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af7ae072476f1a3784f56aa032d3bfdf7}{TGLIB\_Create\_Feature\_Edge\_Loops}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00660\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a66544a79e69411cc7824dec16716668d}{TGLIB\_Create\_Intersection\_Loop}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00661\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_acc2cae669ac35663d5837894a893dba3}{TGLIB\_Create\_Intersection\_Plane}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ vx[4][3]);}
+\DoxyCodeLine{00662\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a756198c054e10dabd18a605af6eff197}{TGLIB\_Remesh\_Mark\_Faces\_On\_Thread}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *,\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00663\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a4d2f7eef61747300ac43586d6f006239}{TGLIB\_Remesh\_Surface}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00664\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a817231715d3a98cf8ed17914ca13cc4a}{TGLIB\_Remesh\_Loop\_Size\_Fn}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *);}
+\DoxyCodeLine{00665\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aea27347fdf66e6013cc8fc6f81d0a5a7}{TGLIB\_Remesh\_Loop\_Size\_Fn\_Ext}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00666\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af26e07b4ded720dfc1057045cbed4e50}{TGLIB\_Remesh\_Loop}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00667\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a91eac86a1029e2c587dba949fc7c7fef}{TGLIB\_Remesh\_Edges}}(\textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *,\ \textcolor{keywordtype}{double}\ [],\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00668\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a6757915029aad6cf19cd86db50b664e0}{TGLIB\_Poly\_Loops}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00669\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a5876054f8480a7cc85416982d12479dd}{TGLIB\_Triangulate\_Loops}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00670\ }
+\DoxyCodeLine{00671\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a6f68b8215bbfec2fceeb87f8b6c9cabd}{TGLIB\_Init\_Mesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00672\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0b8aa7fa2f630c818f1cd10223ffc326}{TGLIB\_Mesh\_Nodes}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ (*xp)[3]);}
+\DoxyCodeLine{00673\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aa5ceb8f626deaef33128478fa11bcece}{TGLIB\_Refine\_Mesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *);}
+\DoxyCodeLine{00674\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ace1d8947c49e3024adc1e882c58f2cbd}{TGLIB\_Front\_Refine\_Mesh}}\ (\textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *);}
+\DoxyCodeLine{00675\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1dd5be629a01fd5a5a6fa5268c84679a}{TGLIB\_Skew\_Improve\_Mesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00677\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aeb7d75b4aa6464d497d8634c392592c2}{TGLIB\_Tet}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}*);}
+\DoxyCodeLine{00678\ }
+\DoxyCodeLine{00679\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a525268d6278050021fc8932ba63960d0}{TGLIB\_Smooth\_Mesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00680\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a721506f4be817e37eaa91b4446f88cee}{TGLIB\_Swap\_Mesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00681\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a694c000cf9fe321dbbc8eaa8cabe26e0}{TGLIB\_Swap\_Boundary\_Mesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00682\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad5d79ca7a78a2569b98028235a27b55a}{TGLIB\_Smooth\_Boundary\_Mesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00683\ }
+\DoxyCodeLine{00684\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a97be586ea297e564cd5021e880520b60}{TGLIB\_Create\_Search\_Tree}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00685\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a22e7eb6a9d572e9b47deb22826ddd6ee}{TGLIB\_Delete\_Search\_Tree}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00686\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab40bc0cd8a88e5462cab053c41dba958}{TGLIB\_Find\_Entities\_Within\_Range}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{double}\ [],}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00688\ }
+\DoxyCodeLine{00689\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a24dd204befb93f821540554ba486b7d6}{TGLIB\_Unmark\_Entities}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00690\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aac340e647459f734939a321982239dda}{TGLIB\_Mark\_Entities}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00691\ }
+\DoxyCodeLine{00692\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8438badc2d16206bcb13195cbab38239}{TGLIB\_Cell\_Limits}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00693\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aec1f7005d4f63ac4eac7d90a673326ae}{TGLIB\_Face\_Limits}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00694\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8c7f39ed0b37fb01ca69f0c9659b4664}{TGLIB\_Face\_Min\_Direction\_Height}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ [3],\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00695\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8f7a50d1956f3d67411646b95496463f}{TGLIB\_Check\_Face\_Handedness}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00696\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab1e35b195de8350cf3a636d0fe8f9f78}{TGLIB\_Get\_Poly\_Cell\_Quality}}(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00697\ }
+\DoxyCodeLine{00698\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aa6f95b6e13433c24e2e095abf6f3f861}{TGLIB\_Create\_BgMesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00699\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad7781b3853b2d79d1b57b5522f468cb8}{TGLIB\_Delete\_BgMesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00700\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a97308666fba13db7abfbc2c086832711}{TGLIB\_Project\_Points}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ (*)[3],\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00701\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\ \mbox{\hyperlink{tg__lib_8h_aad83dab62a9057872d0bd445ecb2fc2a}{TGLIB\_Define\_BgMesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00702\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac73405b24a38bd08e650e4ffe813c0d6}{TGLIB\_Reset\_BgMesh}}\ (\textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00703\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aed24ccd04e92cf826bba3c51b3e80f88}{TGLIB\_Bg\_Closest\_Point}}\ (\textcolor{keywordtype}{double}\ [],\ \textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00704\ }
+\DoxyCodeLine{00705\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a391cd68ae04e32eb93260038f199df32}{TGLIB\_ShellBL\_Mesh}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00706\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aaf9866566a208781c3db530fc3c8000d}{TGLIB\_Prism\_Mesh}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00707\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a68c7c267bf50040858fbd47effc3876e}{TGLIB\_Tet\_Mesh}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}*);}
+\DoxyCodeLine{00708\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac1518cbcc8b59852a8ebff5a440ee52d}{TGLIB\_Hexcore}}\ (\textcolor{keywordtype}{int},\ \mbox{\hyperlink{structtg__lscale__struct}{TG\_Lscale}}\ *);}
+\DoxyCodeLine{00709\ }
+\DoxyCodeLine{00710\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad4c20fcddd53e697776b2f46f8824be6}{TGLIB\_Get\_Decompose\_Cell\_Thread}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00711\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad48674a4c0c86e9d47d1a9b8660c5c6c}{TGLIB\_Get\_Thread\_Copy}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00712\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1cc231b9b15c735e495f88fefc3d58aa}{TGLIB\_Define\_Object}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00713\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a51fb8ffda0f9c34e3aa5422e4ba171bb}{TGLIB\_Free\_Objects}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00714\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a61ffe0ed466296ea1e2c9e3c8b0e9de2}{TGLIB\_Find\_Object}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00715\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a32b77ba9965042759d4fd0a5cd26ebc2}{TGLIB\_Create\_Geometry\_BgMesh}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00716\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1b51ac843fef027719ec16db7759438d}{TGLIB\_Delete\_Geometry\_BgMesh}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00717\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a5f0e4d7649bfa183aa93875dd60e48bc}{TGLIB\_Init\_BgMesh\_Sizes}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00718\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9808537c89e6829aae8b440cb6fbd4f6}{TGLIB\_Init\_BgMesh\_Level}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00719\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af9767b5e596dc62c8d22b772bed535d5}{TGLIB\_Set\_BgMesh\_Size}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00720\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a4a542be5f4f4e4b43f4d8d2bf6e2c338}{TGLIB\_Set\_BgMesh\_Level}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00721\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7e54364e76992f5c0a24430d6a377496}{TGLIB\_Compute\_BgMesh\_Sizes}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00722\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a433ecacd735ab82964b5bbd78b653f5a}{TGLIB\_Init\_Cart\_Domain}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ [3]);}
+\DoxyCodeLine{00723\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0b9b77d30ac67914bcf4e1fc8abee62e}{TGLIB\_Mark\_Intersected\_Cells}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00724\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_acd7de076cfd3fc189b2bb4886a619c26}{TGLIB\_Refine\_Intersected\_Cells}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00725\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac67cce634aff4d0b41aada49dbcdb63d}{TGLIB\_Aniso\_Refine\_Intersected\_Cells}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ []);}
+\DoxyCodeLine{00726\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a31245378a090a554e35d82e405d59fdb}{TGLIB\_Decompose\_Intersected\_Cells}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ (*)(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ *),\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00727\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a4399d9ab842e3baa57417d2b04739dfb}{TGLIB\_Decompose\_Cells}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ (*)(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ *));}
+\DoxyCodeLine{00728\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a62d41fca1163344f1ffc3058eb50670b}{TGLIB\_Stair\_Step\_Mesh}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ (*)(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ *));}
+\DoxyCodeLine{00729\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac245e3d3b577b2e457a0ab76b3249bde}{TGLIB\_Improve\_Decompose\_Cells}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00730\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab0d113270be00dc8d0febdfe19f6da13}{TGLIB\_Process\_Proximity\_SF}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00732\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a4d0b86f28ff7b5c662737b6e526c8210}{TGLIB\_Process\_Curvature\_SF}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00734\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9a808513b5fe873b84223f31a09eaaa3}{TGLIB\_Process\_Hard\_SF}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00735\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ada2ed70e7099d75653ebae290eea528d}{TGLIB\_Process\_Soft\_SF}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00736\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a30d13a3da495ad694b3ca4633e1b36fe}{TGLIB\_Process\_Meshed\_SF}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00737\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a3937f90f47d4079d096811350a484243}{TGLIB\_Process\_BOI\_SF}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00738\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae8ff9363837ca241d0aa47e3778426bc}{TGLIB\_Mark\_Cart\_Cells\_To\_Refine}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00739\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a87d5991b296b17699ca3f0cdf85866df}{TGLIB\_Subdivide\_Cart\_Cells}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00740\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a297afe48f8927259975d26b0b6cb0017}{TGLIB\_Gocart\_Delete\_Unused\_Faces}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00741\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9ddff7a44810aa2f9f4c74eb140cd4de}{TGLIB\_SF\_Grid\_Create\_BGrid}}(\textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00744\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae57cbf513174f906025fa74f3dd8c8b7}{TGLIB\_Recover\_Gocart\_Boundary}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00745\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aa1948dfe8a82d99feae0c0b8681a64f5}{TGLIB\_Resolve\_Scattered\_Children}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00746\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a30ce953a9dd65bc4779d1a3168bae628}{TGLIB\_Post\_Improve\_Gocart\_Mesh}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00747\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a72b665608ce0c5d45c1d510657c5569b}{TGLIB\_Delete\_Unused\_Gocart\_Threads}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00748\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ada71bd4adcf611665f174f2c1a397bf6}{TGLIB\_List\_Entity}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00749\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a521c5a9b08beec267c77be62af8a32da}{TGLIB\_Print\_Memory\_Usage}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00750\ }
+\DoxyCodeLine{00751\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae171fc90869133148666f1d5d5bf0279}{TGLIB\_Create\_Prism\_Layer}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ [],\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ [],}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ [],\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00753\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9b1e9473357f578f0e2aa4db6c513c98}{TGLIB\_Non\_Conf\_Interface\_Pre}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00754\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a68f8d5c1964f1f9446f5061921d7aa01}{TGLIB\_Non\_Conf\_Interface\_Post}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00755\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a91f1a32871c38be21ca226b832cc0aa7}{TGLIB\_Prism\_Create\_Non\_Conformal\_Interfaces}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af1abd2e14ac09ab2f0eea9f4906c08fc}{TGLIB\_Quadrangulate\_Tri\_Surface}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7db3aba00e2f6d6876a0e7cd9749ccc6}{TGLIB\_Write\_Face\_Based\_File}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00760\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7dff22b6e126a899f8aa82996f3e672d}{TGLIB\_Write\_Boundary\_Mesh}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00761\ }
+\DoxyCodeLine{00762\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a6b9dcdf44c50192dc81ea8b5e8739410}{TGLIB\_Improve\_Skewed\_Faces}}\ (\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00763\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_af3ea84d55bcd60c8cb28f86d068ca77f}{TGLIB\_Auto\_Improve\_Cells}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double}\ ,\ \textcolor{keywordtype}{int}\ ,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00765\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a8dbe4e7be33a8be4a7e8d49adb8dfb64}{TGLIB\_Mesh\_Set\_Domain\_Specific\_Default\_Parameters}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00766\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7dd1c598de118c606788a5602699b633}{TGLIB\_Retri\_Skewed\_Cells}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00767\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a5a0a16f8909bb8ca1c421a9706a39891}{TGLIB\_Remove\_Isolated\_Cells}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00768\ }
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\#if\ 1}}
+\DoxyCodeLine{00770\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab5f6edc284c8feeda831b2448232b5cc}{TGLIB\_SF\_Grid\_Create}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00771\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_abd75257c2b20d8eeb2d008df40bd819d}{TGLIB\_SF\_Grid\_Delete}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00772\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a00764037a3b9c23997793c4d484a04fa}{TGLIB\_SF\_Grid\_Delete\_All}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00773\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a34a5c91c4be0d3c7e72e186b86bdacf0}{TGLIB\_SF\_Grid\_Get\_ID}}(\textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00774\ }
+\DoxyCodeLine{00775\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a30ed082273505bb67f1fc5c0891bc73e}{TGLIB\_SF\_Grid\_Set\_Current}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00776\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aa066bf84c52d1eeb8ad6a853fcdd2527}{TGLIB\_SF\_Grid\_Get\_Current\_ID}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00777\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a19cffea55a10979ce9f08f726a83aba5}{TGLIB\_SF\_Grid\_Clear\_Current}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00778\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1e11f22420606b5bccf100d8a06af0df}{TGLIB\_SF\_Grid\_Set\_Axis}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00779\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ad5dbffe9fc4fe6324d4c02d8d8aa116f}{TGLIB\_SF\_Grid\_Set\_Spans}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00780\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab7cbd2bd3b1181afc8cbce37abe4577d}{TGLIB\_SF\_Grid\_Set\_Max\_Ref\_Level}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00781\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_abdb7ccdafef9108a57a26072216ce17a}{TGLIB\_SF\_Grid\_Set\_Min\_Mesh\_Size}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00782\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a1026473952a0f884de3970ec2da8046c}{TGLIB\_SF\_Grid\_Set\_Max\_Mesh\_Size}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00783\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a5cfa2b9fe5978b937fd692ab93fae80c}{TGLIB\_SF\_Grid\_Set\_Refine\_Factor}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00784\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0b36f6bd0bd867a6067a4cc031feb187}{TGLIB\_SF\_Grid\_Make\_Size\_Continuous}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00785\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7f9aaf913b63a906b3d709c6e4518f5b}{TGLIB\_SF\_Grid\_Limit\_Gradient}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00786\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a94f4e7bac691e90bd1d47e5d7622fd26}{TGLIB\_SF\_Grid\_Enforce\_Gradient}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00787\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a540cb42ada6413f879f29203678e6310}{TGLIB\_SF\_Grid\_Get\_Size\_At}}(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00788\ }
+\DoxyCodeLine{00789\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a769bb3c5045e97f1d7e0dba221210c70}{TGLIB\_SF\_Source\_Set\_Diffusion\_Type}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00790\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a5dcdeda2a536670f6fe551a17b460191}{TGLIB\_SF\_Source\_Set\_Diffysion\_Type}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00791\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0042f0b0161d275f4dbfaf25901c1e31}{TGLIB\_SF\_Source\_Growth\_Rate}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00792\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_abf9b3cbd3e5453d0de6c810700a93c8d}{TGLIB\_SF\_Source\_Radius\_Factor}}(\textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00793\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aabc3386167cf0981c788851d05e71d80}{TGLIB\_SF\_Source\_Check\_Diffusion\_Setup}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00794\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a23bb728532581c21ec5bf9c648053797}{TGLIB\_SF\_Source\_Add\_Vertex}}(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00795\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aaeed05dd3020f4921c15796d18ce5404}{TGLIB\_SF\_Source\_Add\_Vertices}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00796\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a2fc9b1b8b8492cae36626011f8e46131}{TGLIB\_SF\_Source\_Add\_Edge}}(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00798\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ac3b6d02cfc7a22fd349891746d038962}{TGLIB\_SF\_Source\_Add\_Edges}}(\textcolor{keywordtype}{int},\ \ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{double}\ *);}
+\DoxyCodeLine{00800\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a92400d3208e626158171d766fd1baf50}{TGLIB\_SF\_Source\_Add\_Face}}(\textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,}
+\DoxyCodeLine{00801\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{double},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00802\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aa57923a0a8584d521994e9fda9b1989f}{TGLIB\_SF\_Source\_Add\_Faces}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{double}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00803\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a90374502cb38973eab18167259cecbdf}{TGLIB\_SF\_Source\_Get\_Count}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00804\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a64816d958d50f0041839ccb84eae42dc}{TGLIB\_SF\_Source\_Clear\_Entities}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00805\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a9657454e20ac398a6540b7aab6d89b58}{TGLIB\_SF\_Source\_Initialize\_Entities}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00806\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a3d49d0cdf97e4b31257d712f36586088}{TGLIB\_SF\_Source\_Process\_Entities}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00807\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a2efce93bba079a23b887bbc5202c7192}{TGLIB\_SF\_Source\_Do\_Global\_Diffusion}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00808\ }
+\DoxyCodeLine{00809\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a54aa4d4edf3d22038c83b6cd15bdec45}{TGLIB\_SF\_Create\_Size\_Fn}}(\textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00810\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae26a5da6dba969f4f263662efdc3316a}{TGLIB\_SF\_Delete\_Size\_Fn}}(\textcolor{keywordtype}{int}\ sf\_id);}
+\DoxyCodeLine{00811\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_aca7cb7a6364f82ab409249e7b3557e5d}{TGLIB\_SF\_Set\_Current}}(\textcolor{keywordtype}{int}\ sf\_id);}
+\DoxyCodeLine{00812\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a600da980ec45e61c774aa452ff7060ae}{TGLIB\_SF\_Attach\_BGrid}}(\textcolor{keywordtype}{int}\ bgrid\_id);}
+\DoxyCodeLine{00813\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a2f969eb8922df6bbb20f0889d7a23e53}{TGLIB\_SF\_Dettach\_BGrid}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00814\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a00ed79f2a1389ded8fb528a97b8a66b3}{TGLIB\_SF\_Set\_Dimension}}(\textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_ae6afe2eb307f68e56aa6b74ae09a793c}{dim}});}
+\DoxyCodeLine{00815\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a946a426161afedcb9a004c1206d02e60}{TGLIB\_SF\_Set\_Min\_Mesh\_Size}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00816\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a58ea3a3c05df98c63e5d93f79ac2cf34}{TGLIB\_SF\_Set\_Max\_Mesh\_Size}}(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00817\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a30c0f2c164e712c9ad5636039a978e8f}{TGLIB\_SF\_Add\_Edge\_Zone}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00818\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a39ccdde31698d817ad31d95977fe09df}{TGLIB\_SF\_Add\_Face\_Zone}}(\mbox{\hyperlink{structtg__domain__struct}{TG\_Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00819\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ae7b72fa0f209f38310bb508aff85d594}{TGLIB\_SF\_Set\_Type}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00820\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a7904a3c42c10621f9fbb9adde4ba3894}{TGLIB\_SF\_Set\_Num\_Cells\_Per\_Gap}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00821\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a0f2dc5d06a33da21e240720758c28bba}{TGLIB\_SF\_Update\_BGrid}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00822\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_ab8389729500eff5f6cb488cfa1a2da0f}{TGLIB\_SF\_Prox\_Set\_Exact\_Evaluation}}(\textcolor{keywordtype}{int}\ eval\_opt);}
+\DoxyCodeLine{00823\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__lib_8h_a30307c4d49783531aca82372e3f7cfe3}{TGLIB\_SF\_Prox\_Get\_Exact\_Evaluation}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00824\ }
+\DoxyCodeLine{00825\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00826\ }
+\DoxyCodeLine{00827\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00828\ \}}
+\DoxyCodeLine{00829\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00830\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ TG\_Lib\_h\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

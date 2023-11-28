@@ -1,0 +1,1320 @@
+\doxysection{fluent20.1.0/addons/msmdbatt/src/cae\+\_\+echem.h File Reference}
+\hypertarget{cae__echem_8h}{}\label{cae__echem_8h}\index{fluent20.1.0/addons/msmdbatt/src/cae\_echem.h@{fluent20.1.0/addons/msmdbatt/src/cae\_echem.h}}
+{\ttfamily \#include "{}udf.\+h"{}}\newline
+{\ttfamily \#include "{}cae\+\_\+mem.\+h"{}}\newline
+{\ttfamily \#include $<$nvector/nvector\+\_\+serial.\+h$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct__ida__io}{\+\_\+ida\+\_\+io}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a4015628335d37e177cfdc66d44bfd753}{N\+\_\+\+CS\+\_\+P}}~(\mbox{\hyperlink{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5}{n\+\_\+\+RP}}\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}})
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a0450fc1c0886173bd3bb9fa1fb2f9bee}{N\+\_\+\+CS\+\_\+N}}~(\mbox{\hyperlink{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8}{n\+\_\+\+RN}}\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_adbd3da5fa2cc161202a9852970e9dedb}{n\+\_\+\+XN}})
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_ac6f49e0f77eb101f7bbeda1669214dc9}{N\+\_\+\+CE\+\_\+X}}~(\mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + \mbox{\hyperlink{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4}{n\+\_\+\+XS}} + \mbox{\hyperlink{cae__echem_8h_adbd3da5fa2cc161202a9852970e9dedb}{n\+\_\+\+XN}})
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_acd3b735a7a99f82508d6254d1c75ff34}{N\+\_\+\+VAR\+\_\+\+TOTAL}}~(\mbox{\hyperlink{cae__echem_8h_a4015628335d37e177cfdc66d44bfd753}{N\+\_\+\+CS\+\_\+P}} + \mbox{\hyperlink{cae__echem_8h_ac6f49e0f77eb101f7bbeda1669214dc9}{N\+\_\+\+CE\+\_\+X}} + \mbox{\hyperlink{cae__echem_8h_a0450fc1c0886173bd3bb9fa1fb2f9bee}{N\+\_\+\+CS\+\_\+N}})
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a374ea641ee71ce5a2f15f4bfd87772a4}{N\+\_\+\+ECM\+\_\+Y}}~(\mbox{\hyperlink{cae__echem_8h_a16145985952110723c0fdcaae5e44c8b}{ECM\+\_\+\+Eqns}}) /\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{cae__echem_8h_a279c778f0a76ea6add0ffd502178c603}{n\+\_\+tot\+\_\+\+Eqn}} \texorpdfstring{$\ast$}{*}/
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a0355aae9ed43ea059d6329646fad76d3}{C\+\_\+\+CS\+\_\+P}}(c,  t,  i,  j)~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a6bae4e5b970f276665a19dc873f042d9}{BV\+\_\+\+CS}}, ((i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5}{n\+\_\+\+RP}} + (j)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_aba0d10112a05c673f969e0b0011551a2}{C\+\_\+\+CS\+\_\+N}}(c,  t,  i,  j)~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a6bae4e5b970f276665a19dc873f042d9}{BV\+\_\+\+CS}}, (\mbox{\hyperlink{cae__echem_8h_a4015628335d37e177cfdc66d44bfd753}{N\+\_\+\+CS\+\_\+P}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8}{n\+\_\+\+RN}} + (j)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a1d7c2a205f2af2c1155b7d8256508597}{C\+\_\+\+CE\+\_\+P}}(c,  t,  i)~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a0e44f2d2513c62101cf791d17a6f599c}{BV\+\_\+\+CE}}, (i))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_adbb0c2f9e53ab3e231762e69af37df8e}{C\+\_\+\+CE\+\_\+S}}(c,  t,  i)~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a0e44f2d2513c62101cf791d17a6f599c}{BV\+\_\+\+CE}}, (\mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + (i)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a4c7dbfdc930d7f5eb6428b32d09b6c16}{C\+\_\+\+CE\+\_\+N}}(c,  t,  i)~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a0e44f2d2513c62101cf791d17a6f599c}{BV\+\_\+\+CE}}, (\mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + \mbox{\hyperlink{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4}{n\+\_\+\+XS}} + (i)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_ae7b809335d5575301ca78de1bbf62ead}{C\+\_\+\+ECM\+\_\+Y}}(c,  t,  i)~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a4e5690695cf813e50ab7e961cb1e88f4}{BV\+\_\+\+ECM}}, (i))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a45330aff4c75bb751d9c61504283e52f}{C\+\_\+\+USER\+\_\+\+DEFINED}}(c,  t,  i)~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6ae300783e7f50d3887613450c5cc05c56}{BV\+\_\+\+USER\+\_\+\+DEFINED}}, (i))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_aba18f3a5ab1296f675fe7cf19acd4e61}{C\+\_\+\+CELL\+\_\+u}}(c,  t)~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a48620636cc62654d41ad347f20fcbe98}{BV\+\_\+\+UDM}}, 0)
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_addba1ac64e606a345556f4c2ff743c46}{C\+\_\+\+CELL\+\_\+r}}(c,  t)~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a48620636cc62654d41ad347f20fcbe98}{BV\+\_\+\+UDM}}, 1)
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_aff2185284926a6cfdb3b9b339b695614}{CS\+\_\+\+P\+\_\+\+OFFSET}}~\mbox{\hyperlink{battery_8h_adf764cbdea00d65edcd07bb9953ad2b7ab7228bfb236acf356cc7c6210f335dc8}{NO\+\_\+\+OF\+\_\+\+UDMS}}
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}{CE\+\_\+\+X\+\_\+\+OFFSET}}~(\mbox{\hyperlink{cae__echem_8h_aff2185284926a6cfdb3b9b339b695614}{CS\+\_\+\+P\+\_\+\+OFFSET}} + \mbox{\hyperlink{cae__echem_8h_a4015628335d37e177cfdc66d44bfd753}{N\+\_\+\+CS\+\_\+P}})
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_aa916292a9988f0c695040966a4c98dc5}{CS\+\_\+\+N\+\_\+\+OFFSET}}~(\mbox{\hyperlink{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}{CE\+\_\+\+X\+\_\+\+OFFSET}} + \mbox{\hyperlink{cae__echem_8h_ac6f49e0f77eb101f7bbeda1669214dc9}{N\+\_\+\+CE\+\_\+X}})
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a4fb46d250e79d45608edd9e7d5b894b0}{N\+\_\+\+UDM\+\_\+\+TOTAL}}~(\mbox{\hyperlink{battery_8h_adf764cbdea00d65edcd07bb9953ad2b7ab7228bfb236acf356cc7c6210f335dc8}{NO\+\_\+\+OF\+\_\+\+UDMS}} + \mbox{\hyperlink{cae__echem_8h_acd3b735a7a99f82508d6254d1c75ff34}{N\+\_\+\+VAR\+\_\+\+TOTAL}})
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a96f60b4039295649508c30e9ccc44b02}{\+\_\+\+C\+\_\+\+CS\+\_\+P}}(c,  t,  i,  j)~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_aff2185284926a6cfdb3b9b339b695614}{CS\+\_\+\+P\+\_\+\+OFFSET}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5}{n\+\_\+\+RP}} + (j)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_ab12a7af29f4c92068ddd1a21a6c45bd9}{\+\_\+\+C\+\_\+\+CS\+\_\+N}}(c,  t,  i,  j)~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_aa916292a9988f0c695040966a4c98dc5}{CS\+\_\+\+N\+\_\+\+OFFSET}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8}{n\+\_\+\+RN}} + (j)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a748b5fac67d05f08b1828b3f4021fc93}{\+\_\+\+C\+\_\+\+CE\+\_\+P}}(c,  t,  i)~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}{CE\+\_\+\+X\+\_\+\+OFFSET}} + (i)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a82f17830ed0c352ff913a7c7310a4665}{\+\_\+\+C\+\_\+\+CE\+\_\+S}}(c,  t,  i)~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}{CE\+\_\+\+X\+\_\+\+OFFSET}} + \mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + (i)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_abc95dd863771b9ee2658bdebf0075a15}{\+\_\+\+C\+\_\+\+CE\+\_\+N}}(c,  t,  i)~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}{CE\+\_\+\+X\+\_\+\+OFFSET}} + \mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + \mbox{\hyperlink{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4}{n\+\_\+\+XS}} + (i)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a3ffd05a11a78e6273e863bea4e4364f5}{Ce\+\_\+N}}(i)~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},  (\mbox{\hyperlink{cae__echem_8h_ab753fd45a7e47e5c172f6c432c9a515b}{begin\+\_\+\+NE\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a1399f3c184b0b28eaa0e559f8fd838bc}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+NE}} + \mbox{\hyperlink{cae__echem_8h_a0ed70d7038f19733f5e8bb08bb55f51e}{Ce\+\_\+\+NE\+\_\+\+Index}})))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a834b9981fb6b05749588bd1fbccb22e3}{Ce\+\_\+S}}(i)~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},  (\mbox{\hyperlink{cae__echem_8h_aa6de34fe4c1b67670961377fdf09255a}{begin\+\_\+\+SP\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a8d76f4df9dacca28a7c327ced3f2f440}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+SP}} + \mbox{\hyperlink{cae__echem_8h_a2cfbaf3105dfe826c4dc83895209bf16}{Ce\+\_\+\+SP\+\_\+\+Index}})))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a786aad2af62eb3975162d8cf85035e25}{Ce\+\_\+P}}(i)~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},  (\mbox{\hyperlink{cae__echem_8h_abc14c7fea95557b64efd49b2356d0593}{begin\+\_\+\+PE\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a6e7774dc69f101ccd3a3c5d703eda0e2}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+PE}} + \mbox{\hyperlink{cae__echem_8h_a268d29a7faea0672ec79267fc48a4f3a}{Ce\+\_\+\+PE\+\_\+\+Index}})))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_adc8270db3092f9d4ab41c7dae37c5da5}{Cs\+\_\+\+N\+\_\+p}}(i)~(\&\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}}, (\mbox{\hyperlink{cae__echem_8h_ab753fd45a7e47e5c172f6c432c9a515b}{begin\+\_\+\+NE\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a1399f3c184b0b28eaa0e559f8fd838bc}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+NE}} + \mbox{\hyperlink{cae__echem_8h_aa25038f959df59c2477a7fa78873d09c}{Begin\+\_\+\+Cs\+\_\+\+NE\+\_\+\+Index}})))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_a78bc072537752f04aca0df2a4225b0e9}{Cs\+\_\+\+P\+\_\+p}}(i)~(\&\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}}, (\mbox{\hyperlink{cae__echem_8h_abc14c7fea95557b64efd49b2356d0593}{begin\+\_\+\+PE\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a6e7774dc69f101ccd3a3c5d703eda0e2}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+PE}} + \mbox{\hyperlink{cae__echem_8h_a54f09baff93d7a397e9dcce1b4d02325}{Begin\+\_\+\+Cs\+\_\+\+PE\+\_\+\+Index}})))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_ab53758bdebcf898e02c4e645ebc0c5ca}{ECM\+\_\+Y}}(i)~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}}, (i)))
+\item 
+\#define \mbox{\hyperlink{cae__echem_8h_acd6ac25bc57f67eddb6fd05dfac5f84e}{NTGK\+\_\+Y}}(i)~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}}, (i)))
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct__ida__io}{\+\_\+ida\+\_\+io}} \mbox{\hyperlink{cae__echem_8h_a60ec57cc1a93e561e6330f73b37c3086}{IDA\+\_\+\+IO}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \mbox{\hyperlink{cae__echem_8h_a05589fbab0657f08285ebdfe93f5ec9ea0900af0d6b038f40645923708ab2a510}{XF\+\_\+\+BATTERY\+\_\+\+DATA}} = 900
+ \}
+\item 
+enum \{ \newline
+\mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da5ed25185a708521c903b621b33d67a43}{XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+NTGK}} = 10
+, \mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4dad04e33a0a12ae6b1eb08d9340c577a90}{XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+ECM}} = 11
+, \mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4dabb51ef3b435c923009469b61cb22650e}{XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+NEWMAN\+\_\+\+CS}} = 12
+, \mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da5fb254dde933dc96c74bef7184ebef09}{XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+NEWMAN\+\_\+\+CE}} = 13
+, \newline
+\mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da016d85b6b42c46a6a93e295577d6e333}{XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+USER}} = 14
+ \}
+\item 
+enum \{ \mbox{\hyperlink{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a126dc231c69e6a7774a558fabe85e711}{ECHEM\+\_\+\+NTGK}} = 0
+, \mbox{\hyperlink{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a4c06d571570b36e8709344ca6de92fef}{ECHEM\+\_\+\+ECM}}
+, \mbox{\hyperlink{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a6de57e3f71068a2378694b945e81d8e1}{ECHEM\+\_\+\+NEWMAN}}
+, \mbox{\hyperlink{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a7b39c123fe6e6584e9f5f2cd9db39aa1}{ECHEM\+\_\+\+USER\+\_\+\+DEFINED}}
+ \}
+\item 
+enum \{ \mbox{\hyperlink{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fceac1d9c85b6d0b5f0c3a86103d0026663b}{CURR}} = 0
+, \mbox{\hyperlink{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea9889316c6fd4ad6218289003f5d63291}{VOLTAGE}}
+, \mbox{\hyperlink{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea316771101d4b4b1dea7d7e2a82ef1658}{POWER}}
+, \mbox{\hyperlink{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea5fe5d33bd0fbe032cd2abdf6f895e887}{RESISTANCE}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{cae__echem_8h_aba6eb88b777f234a942a73d540e4ca89}{Compute\+\_\+\+ECM\+\_\+\+VOC\+\_\+and\+\_\+\+CR}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} soc, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} T, int mode, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}Voc, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}RRs, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}RR1, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}RR2, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}CC1, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}CC2)
+\item 
+void \mbox{\hyperlink{cae__echem_8h_a40c110a9d9539e8511dc345ee220adda}{Compute\+\_\+\+VOC\+\_\+and\+\_\+\+CR\+\_\+standard}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} soc, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} T, int mode, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}Voc, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}RRs, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}RR1, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}RR2, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}CC1, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}CC2)
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a1a8a91d44c67a28505e02d61f6b0bc22}{Compute\+\_\+entropy\+\_\+heat}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} soc)
+\item 
+void \mbox{\hyperlink{cae__echem_8h_acf2c3ad8e1dba6cf98373777093cb3c6}{user\+\_\+defined\+\_\+echem\+\_\+model}} (int zero\+\_\+start, int mode, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} temperature, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} voltage, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} current, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} dtime, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}j\+\_\+tmp, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}Qe\+\_\+tmp, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}voltage\+\_\+end)
+\item 
+void \mbox{\hyperlink{cae__echem_8h_ad0ddf0bf5ab8dcc10ed336ef3a157ca8}{get\+\_\+cluster\+\_\+info}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, int \texorpdfstring{$\ast$}{*}cluster, int \texorpdfstring{$\ast$}{*}total\+\_\+cell\+\_\+in\+\_\+cluster, \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} cell\+\_\+list\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{cae__echem_8h_ae5d8930457d304f8b9f49eeb9b066162}{Get\+\_\+p2d\+\_\+\+Postprocessing\+\_\+\+Info}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} T, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Vp, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Vn)
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a59214dc2363cac4be9c47a990f8e7a50}{IDA\+\_\+\+Startup}} (void)
+\item 
+int \mbox{\hyperlink{cae__echem_8h_ad5524b44eec5a4b4a85b58dfe0222de5}{IDA\+\_\+\+Cleanup}} (void)
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a9eca31afdc7df661342919a06e0a733e}{IDA\+\_\+\+EChem\+\_\+\+Parameters}} (int \mbox{\hyperlink{cae__echem_8h_aca11bf14250e21c92b34fc20473d5c8d}{echem\+\_\+model}})
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a75b905b0882a84c202aafce990f5b341}{ecm\+\_\+p2d}} (\mbox{\hyperlink{cae__echem_8h_a60ec57cc1a93e561e6330f73b37c3086}{IDA\+\_\+\+IO}} \texorpdfstring{$\ast$}{*}ida\+\_\+args)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{cae__echem_8h_ae887174e150d531e5efd8af1cbcadf35}{btv\+\_\+store\+\_\+ok}}
+\item 
+\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{cae__echem_8h_a51675b0f9785c1605b8566d8202b2470}{ida\+\_\+start\+\_\+ok}}
+\item 
+\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{cae__echem_8h_a0c8e66a609964edbfe6665ae51e93d5b}{ida\+\_\+input\+\_\+ok}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_aca11bf14250e21c92b34fc20473d5c8d}{echem\+\_\+model}}
+\item 
+\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{cae__echem_8h_ab9d9682702afae904eb25890a6b347a4}{if\+\_\+use\+\_\+simple}}
+\item 
+\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{cae__echem_8h_a0ad4a8513733269228148db988bf6b4a}{if\+\_\+use\+\_\+rom}}
+\item 
+\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{cae__echem_8h_a621e171a8ee58dc970a7b89e19ad45dc}{if\+\_\+global\+\_\+scaling}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_ace2ae6e0677ff8c7c46956e38d42b854}{rom\+\_\+substeps}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a90993a43d0d1a7bdb0db680a7d0d050d}{echem\+\_\+update\+\_\+interval}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a8a4d646934e72bc1f92ff978a3e19e11}{echem\+\_\+ida\+\_\+sub\+\_\+steps}}
+\item 
+\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{cae__echem_8h_a12565cdfb180af54775f0fb094d027bc}{echem\+\_\+verbosity}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a1f36f599625db15d6388533d2a843069}{number\+\_\+unit}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a9e63d745453bef75c4325f1223083348}{ntgk\+\_\+data\+\_\+type}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ad526ee96b2d8ab047fbba9ecd9ffd3a6}{U\+\_\+\+Coef}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_adb7e2626492a7cc7f168d41613cb5149}{Y\+\_\+\+Coef}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a3d61e533d803c781a3e7de9a3c900f65}{T\+\_\+\+Coef}} \mbox{[}$\,$\mbox{]}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a16145985952110723c0fdcaae5e44c8b}{ECM\+\_\+\+Eqns}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a0aea3a4453dba31626ae0e80eff0f647}{ECM\+\_\+\+SOC\+\_\+\+Init}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a8422e485717463c97c0e3b60bdb0c857}{ecm\+\_\+data\+\_\+type}}
+\item 
+\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{cae__echem_8h_a263135dab62664f72efd894c58d91f77}{ecm\+\_\+twosetdata}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_affb12653708362cd5202cf78fd483206}{Rs\+\_\+\+Coef}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a0ff6b176395a6f3ac5455ed9026526b7}{R1\+\_\+\+Coef}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a9d68e1761422fcf0afd7f529e6352511}{R2\+\_\+\+Coef}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a9c53d2544bb4217b825472851d8464e6}{C1\+\_\+\+Coef}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a0447024ca81406fb64fbb43bfdf4283b}{C2\+\_\+\+Coef}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a1900e9b417345f680a6340a5b1101f3e}{Voc\+\_\+\+Coef}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a7b4b01297f53728021a119279cca07b5}{Rs\+\_\+\+Coef\+\_\+poly}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_af1fbe925712f84ac52cebcaeecb4c8cc}{R1\+\_\+\+Coef\+\_\+poly}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a3da8847beddca04e53682ce8b381fb43}{R2\+\_\+\+Coef\+\_\+poly}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_aed768ff5d2242210f70e5ca06fa25f32}{C1\+\_\+\+Coef\+\_\+poly}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a0b15a2681dd8a04de424c4c2f8afeb1e}{C2\+\_\+\+Coef\+\_\+poly}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_abaae08fba9e4d7ede62e3198bd033781}{Voc\+\_\+\+Coef\+\_\+poly}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a4c4bc0ec05a02aeaf525c7e43308ed91}{Rs\+\_\+\+Coef\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_adf6f02d202f3a3f944fe82a9b73fdd8e}{R1\+\_\+\+Coef\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a0c23bd645fccc8cd33022c6eba7357ec}{R2\+\_\+\+Coef\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a0b0c6ec063ec4b2f943688702a6f4201}{C1\+\_\+\+Coef\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_aa7830ab116d77abb3327290554549bb0}{C2\+\_\+\+Coef\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_af608bed75511dd838ac005f48fdc7f73}{Voc\+\_\+\+Coef\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a082ba5a33c2c6cf60043a8852ab75ebf}{Rs\+\_\+\+Coef\+\_\+poly\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a71db6f6fe85cde0882313e85f83b4865}{R1\+\_\+\+Coef\+\_\+poly\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a62392b2960390c7e2ffa347c959a22a8}{R2\+\_\+\+Coef\+\_\+poly\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_aab8745dfe583bf39b788ef8c40e3d65f}{C1\+\_\+\+Coef\+\_\+poly\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ac211e397e2149322d94ecc81c63acc38}{C2\+\_\+\+Coef\+\_\+poly\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ad6008e6dead7d2c1ac9ac9dee4705cd5}{Voc\+\_\+\+Coef\+\_\+poly\+\_\+c}} \mbox{[}$\,$\mbox{]}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5}{n\+\_\+\+RP}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8}{n\+\_\+\+RN}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4}{n\+\_\+\+XS}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_adbd3da5fa2cc161202a9852970e9dedb}{n\+\_\+\+XN}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ac108db95d5a05d7ad4e4b545d2843bf1}{gr\+\_\+\+RP}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a89fc8096bf90e33ded8f79319ff11651}{gr\+\_\+\+RN}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a2a5d4ad26f3a1b1e38d01c69be897615}{gr\+\_\+\+XP}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a8295a3926a1c64223ff0f9e6c7ea00a3}{gr\+\_\+\+XN}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_af1c49c9ab729159390e9bc942c514a35}{R\+\_\+\+RP}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a9794a960189823e2f98e8415d91cd132}{R\+\_\+\+RN}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ac41e326e2e37d458ac8d6e4a735c9e90}{L\+\_\+\+XP}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a62cbb045ea93436a658d02d67e3d3c89}{L\+\_\+\+XS}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ada07fc651777cb92d37bf56b31b476e4}{L\+\_\+\+XN}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a993749cc9b530214028f409bc2a3e4c2}{E\+\_\+P}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a59e3e8ef0132f24f5df2af0831ade36b}{E\+\_\+S}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a04b51aec3ca0cb68b6ff75c2c6782c67}{E\+\_\+N}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a2a2e6196ad6d304835da4fa47a8ddcde}{Ef\+\_\+P}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a76db0e3f3884cdb567a2634729e43962}{Ef\+\_\+N}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_af8c47d3e283c4e361f135f6799add472}{Ds\+\_\+P}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a989dc089665e89f635fec6f1ee5cb301}{Ds\+\_\+N}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a129e43d97ec754679a0b06246e7f03ef}{Ds\+\_\+\+P\+\_\+\+Act}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ab3c04f08a3e9362b5fbfd783b8bb923c}{Ds\+\_\+\+N\+\_\+\+Act}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ac014dadc9f084c583478e2ad3aacd823}{Br\+\_\+P}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a201450398416c091a490ad663cfd0bc2}{Br\+\_\+S}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a170862a33f10adfc49fb3fb66e5af7ea}{Br\+\_\+N}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_af456dfcc1feed55540eaa8e25fda584f}{De\+\_\+X}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a973e5e680b3ca00db46a0e4fc2febe08}{T\+\_\+\+Plus}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a7609a34e9e17d16d7d4c9b78ac9a9686}{Sm\+\_\+P}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_afb6bf526ce1da29f7239a9ebd0830ca4}{Sm\+\_\+N}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a433128da902bac4ce3fefd5b274dcb80}{K0\+\_\+P}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a92ff037597f8bb42cdb9047469bc1e87}{K0\+\_\+N}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a91080369e0a4ab760f4d577cd872c5f2}{K0\+\_\+\+P\+\_\+\+Act}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a81a69934a5db4e2cb63f21142915001a}{K0\+\_\+\+N\+\_\+\+Act}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a1792400381e5dbaa465bc940e4c6cc6f}{Aa\+\_\+P}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a4c4822a70558ce56aaf1e7169443bba7}{Ac\+\_\+P}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a635d3849eae3f6d813629d6c70cf795c}{Aa\+\_\+N}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a9c622f53b2eda7a122777f84df551800}{Ac\+\_\+N}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_abba13f5b9d84af83ce74979962fd6e96}{Cs\+\_\+\+P\+\_\+\+Init}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a1034ec19da72a002a70b507a7f39e7c6}{Cs\+\_\+\+P\+\_\+\+Maxi}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a4765238584b242a7243e9e57d42a803f}{Cs\+\_\+\+N\+\_\+\+Init}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ac95a521802de85f9238fbfda75c5ecc1}{Cs\+\_\+\+N\+\_\+\+Maxi}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a7a455b0016d7643a56f83fc37b4800fc}{Ce\+\_\+\+P\+\_\+\+Init}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_ac28b0b9df4d92f7846f7a8e1821de489}{Ce\+\_\+\+S\+\_\+\+Init}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_a01e831247dafbcf7969b29992ffafdb8}{Ce\+\_\+\+N\+\_\+\+Init}}
+\item 
+\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{cae__echem_8h_ad6cfb747ba63cee244cb9cfb2d6a5448}{NM\+\_\+\+Analytical\+\_\+\+Cs}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_af059ed0b3957729707832361914c6101}{n\+\_\+\+IGen}}
+\item 
+\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{cae__echem_8h_acb94e50bd9c350ca3b119c1fabd6c52e}{T\+\_\+ref}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_ab753fd45a7e47e5c172f6c432c9a515b}{begin\+\_\+\+NE\+\_\+\+Domain}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_aa6de34fe4c1b67670961377fdf09255a}{begin\+\_\+\+SP\+\_\+\+Domain}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_abc14c7fea95557b64efd49b2356d0593}{begin\+\_\+\+PE\+\_\+\+Domain}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a1399f3c184b0b28eaa0e559f8fd838bc}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+NE}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a8d76f4df9dacca28a7c327ced3f2f440}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+SP}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a6e7774dc69f101ccd3a3c5d703eda0e2}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+PE}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a279c778f0a76ea6add0ffd502178c603}{n\+\_\+tot\+\_\+\+Eqn}}
+\item 
+\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int \mbox{\hyperlink{cae__echem_8h_a0ed70d7038f19733f5e8bb08bb55f51e}{Ce\+\_\+\+NE\+\_\+\+Index}}
+\item 
+\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int \mbox{\hyperlink{cae__echem_8h_a2cfbaf3105dfe826c4dc83895209bf16}{Ce\+\_\+\+SP\+\_\+\+Index}}
+\item 
+\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int \mbox{\hyperlink{cae__echem_8h_a268d29a7faea0672ec79267fc48a4f3a}{Ce\+\_\+\+PE\+\_\+\+Index}}
+\item 
+\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int \mbox{\hyperlink{cae__echem_8h_aa25038f959df59c2477a7fa78873d09c}{Begin\+\_\+\+Cs\+\_\+\+NE\+\_\+\+Index}}
+\item 
+\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int \mbox{\hyperlink{cae__echem_8h_a54f09baff93d7a397e9dcce1b4d02325}{Begin\+\_\+\+Cs\+\_\+\+PE\+\_\+\+Index}}
+\item 
+\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\+\_\+\+Vector}} \mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}}
+\item 
+int \mbox{\hyperlink{cae__echem_8h_a00d7d81b02b851ba879790e6fdd87718}{Control\+\_\+\+Mode}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{cae__echem_8h_abc95dd863771b9ee2658bdebf0075a15}\label{cae__echem_8h_abc95dd863771b9ee2658bdebf0075a15} 
+\index{cae\_echem.h@{cae\_echem.h}!\_C\_CE\_N@{\_C\_CE\_N}}
+\index{\_C\_CE\_N@{\_C\_CE\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{\_C\_CE\_N}{\_C\_CE\_N}}
+{\footnotesize\ttfamily \#define \+\_\+\+C\+\_\+\+CE\+\_\+N(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i }\end{DoxyParamCaption})~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}{CE\+\_\+\+X\+\_\+\+OFFSET}} + \mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + \mbox{\hyperlink{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4}{n\+\_\+\+XS}} + (i)))}
+
+\Hypertarget{cae__echem_8h_a748b5fac67d05f08b1828b3f4021fc93}\label{cae__echem_8h_a748b5fac67d05f08b1828b3f4021fc93} 
+\index{cae\_echem.h@{cae\_echem.h}!\_C\_CE\_P@{\_C\_CE\_P}}
+\index{\_C\_CE\_P@{\_C\_CE\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{\_C\_CE\_P}{\_C\_CE\_P}}
+{\footnotesize\ttfamily \#define \+\_\+\+C\+\_\+\+CE\+\_\+P(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i }\end{DoxyParamCaption})~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}{CE\+\_\+\+X\+\_\+\+OFFSET}} + (i)))}
+
+\Hypertarget{cae__echem_8h_a82f17830ed0c352ff913a7c7310a4665}\label{cae__echem_8h_a82f17830ed0c352ff913a7c7310a4665} 
+\index{cae\_echem.h@{cae\_echem.h}!\_C\_CE\_S@{\_C\_CE\_S}}
+\index{\_C\_CE\_S@{\_C\_CE\_S}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{\_C\_CE\_S}{\_C\_CE\_S}}
+{\footnotesize\ttfamily \#define \+\_\+\+C\+\_\+\+CE\+\_\+S(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i }\end{DoxyParamCaption})~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}{CE\+\_\+\+X\+\_\+\+OFFSET}} + \mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + (i)))}
+
+\Hypertarget{cae__echem_8h_ab12a7af29f4c92068ddd1a21a6c45bd9}\label{cae__echem_8h_ab12a7af29f4c92068ddd1a21a6c45bd9} 
+\index{cae\_echem.h@{cae\_echem.h}!\_C\_CS\_N@{\_C\_CS\_N}}
+\index{\_C\_CS\_N@{\_C\_CS\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{\_C\_CS\_N}{\_C\_CS\_N}}
+{\footnotesize\ttfamily \#define \+\_\+\+C\+\_\+\+CS\+\_\+N(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i,  }\item[{}]{j }\end{DoxyParamCaption})~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_aa916292a9988f0c695040966a4c98dc5}{CS\+\_\+\+N\+\_\+\+OFFSET}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8}{n\+\_\+\+RN}} + (j)))}
+
+\Hypertarget{cae__echem_8h_a96f60b4039295649508c30e9ccc44b02}\label{cae__echem_8h_a96f60b4039295649508c30e9ccc44b02} 
+\index{cae\_echem.h@{cae\_echem.h}!\_C\_CS\_P@{\_C\_CS\_P}}
+\index{\_C\_CS\_P@{\_C\_CS\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{\_C\_CS\_P}{\_C\_CS\_P}}
+{\footnotesize\ttfamily \#define \+\_\+\+C\+\_\+\+CS\+\_\+P(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i,  }\item[{}]{j }\end{DoxyParamCaption})~\mbox{\hyperlink{mem_8h_a60698edb154225803ca78a42db03ad48}{C\+\_\+\+UDMI}}(c, t, (\mbox{\hyperlink{cae__echem_8h_aff2185284926a6cfdb3b9b339b695614}{CS\+\_\+\+P\+\_\+\+OFFSET}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5}{n\+\_\+\+RP}} + (j)))}
+
+\Hypertarget{cae__echem_8h_a4c7dbfdc930d7f5eb6428b32d09b6c16}\label{cae__echem_8h_a4c7dbfdc930d7f5eb6428b32d09b6c16} 
+\index{cae\_echem.h@{cae\_echem.h}!C\_CE\_N@{C\_CE\_N}}
+\index{C\_CE\_N@{C\_CE\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C\_CE\_N}{C\_CE\_N}}
+{\footnotesize\ttfamily \#define C\+\_\+\+CE\+\_\+N(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i }\end{DoxyParamCaption})~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a0e44f2d2513c62101cf791d17a6f599c}{BV\+\_\+\+CE}}, (\mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + \mbox{\hyperlink{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4}{n\+\_\+\+XS}} + (i)))}
+
+\Hypertarget{cae__echem_8h_a1d7c2a205f2af2c1155b7d8256508597}\label{cae__echem_8h_a1d7c2a205f2af2c1155b7d8256508597} 
+\index{cae\_echem.h@{cae\_echem.h}!C\_CE\_P@{C\_CE\_P}}
+\index{C\_CE\_P@{C\_CE\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C\_CE\_P}{C\_CE\_P}}
+{\footnotesize\ttfamily \#define C\+\_\+\+CE\+\_\+P(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i }\end{DoxyParamCaption})~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a0e44f2d2513c62101cf791d17a6f599c}{BV\+\_\+\+CE}}, (i))}
+
+\Hypertarget{cae__echem_8h_adbb0c2f9e53ab3e231762e69af37df8e}\label{cae__echem_8h_adbb0c2f9e53ab3e231762e69af37df8e} 
+\index{cae\_echem.h@{cae\_echem.h}!C\_CE\_S@{C\_CE\_S}}
+\index{C\_CE\_S@{C\_CE\_S}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C\_CE\_S}{C\_CE\_S}}
+{\footnotesize\ttfamily \#define C\+\_\+\+CE\+\_\+S(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i }\end{DoxyParamCaption})~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a0e44f2d2513c62101cf791d17a6f599c}{BV\+\_\+\+CE}}, (\mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + (i)))}
+
+\Hypertarget{cae__echem_8h_addba1ac64e606a345556f4c2ff743c46}\label{cae__echem_8h_addba1ac64e606a345556f4c2ff743c46} 
+\index{cae\_echem.h@{cae\_echem.h}!C\_CELL\_r@{C\_CELL\_r}}
+\index{C\_CELL\_r@{C\_CELL\_r}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C\_CELL\_r}{C\_CELL\_r}}
+{\footnotesize\ttfamily \#define C\+\_\+\+CELL\+\_\+r(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a48620636cc62654d41ad347f20fcbe98}{BV\+\_\+\+UDM}}, 1)}
+
+\Hypertarget{cae__echem_8h_aba18f3a5ab1296f675fe7cf19acd4e61}\label{cae__echem_8h_aba18f3a5ab1296f675fe7cf19acd4e61} 
+\index{cae\_echem.h@{cae\_echem.h}!C\_CELL\_u@{C\_CELL\_u}}
+\index{C\_CELL\_u@{C\_CELL\_u}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C\_CELL\_u}{C\_CELL\_u}}
+{\footnotesize\ttfamily \#define C\+\_\+\+CELL\+\_\+u(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a48620636cc62654d41ad347f20fcbe98}{BV\+\_\+\+UDM}}, 0)}
+
+\Hypertarget{cae__echem_8h_aba0d10112a05c673f969e0b0011551a2}\label{cae__echem_8h_aba0d10112a05c673f969e0b0011551a2} 
+\index{cae\_echem.h@{cae\_echem.h}!C\_CS\_N@{C\_CS\_N}}
+\index{C\_CS\_N@{C\_CS\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C\_CS\_N}{C\_CS\_N}}
+{\footnotesize\ttfamily \#define C\+\_\+\+CS\+\_\+N(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i,  }\item[{}]{j }\end{DoxyParamCaption})~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a6bae4e5b970f276665a19dc873f042d9}{BV\+\_\+\+CS}}, (\mbox{\hyperlink{cae__echem_8h_a4015628335d37e177cfdc66d44bfd753}{N\+\_\+\+CS\+\_\+P}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8}{n\+\_\+\+RN}} + (j)))}
+
+\Hypertarget{cae__echem_8h_a0355aae9ed43ea059d6329646fad76d3}\label{cae__echem_8h_a0355aae9ed43ea059d6329646fad76d3} 
+\index{cae\_echem.h@{cae\_echem.h}!C\_CS\_P@{C\_CS\_P}}
+\index{C\_CS\_P@{C\_CS\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C\_CS\_P}{C\_CS\_P}}
+{\footnotesize\ttfamily \#define C\+\_\+\+CS\+\_\+P(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i,  }\item[{}]{j }\end{DoxyParamCaption})~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a6bae4e5b970f276665a19dc873f042d9}{BV\+\_\+\+CS}}, ((i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5}{n\+\_\+\+RP}} + (j)))}
+
+\Hypertarget{cae__echem_8h_ae7b809335d5575301ca78de1bbf62ead}\label{cae__echem_8h_ae7b809335d5575301ca78de1bbf62ead} 
+\index{cae\_echem.h@{cae\_echem.h}!C\_ECM\_Y@{C\_ECM\_Y}}
+\index{C\_ECM\_Y@{C\_ECM\_Y}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C\_ECM\_Y}{C\_ECM\_Y}}
+{\footnotesize\ttfamily \#define C\+\_\+\+ECM\+\_\+Y(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i }\end{DoxyParamCaption})~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6a4e5690695cf813e50ab7e961cb1e88f4}{BV\+\_\+\+ECM}}, (i))}
+
+\Hypertarget{cae__echem_8h_a45330aff4c75bb751d9c61504283e52f}\label{cae__echem_8h_a45330aff4c75bb751d9c61504283e52f} 
+\index{cae\_echem.h@{cae\_echem.h}!C\_USER\_DEFINED@{C\_USER\_DEFINED}}
+\index{C\_USER\_DEFINED@{C\_USER\_DEFINED}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C\_USER\_DEFINED}{C\_USER\_DEFINED}}
+{\footnotesize\ttfamily \#define C\+\_\+\+USER\+\_\+\+DEFINED(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t,  }\item[{}]{i }\end{DoxyParamCaption})~\mbox{\hyperlink{cae__mem_8h_ab216e60b78133b51476d40463c810b88}{BC\+\_\+\+STORAGE\+\_\+\+R\+\_\+\+XV}}(c, \mbox{\hyperlink{cae__mem_8h_a289d0f86e0acd1fe1a3e04a909396af3}{B\+\_\+\+THREAD}}(t), \mbox{\hyperlink{cae__mem_8h_aa1befb44875ab15d0d9c67dd435cd7c6ae300783e7f50d3887613450c5cc05c56}{BV\+\_\+\+USER\+\_\+\+DEFINED}}, (i))}
+
+\Hypertarget{cae__echem_8h_a3ffd05a11a78e6273e863bea4e4364f5}\label{cae__echem_8h_a3ffd05a11a78e6273e863bea4e4364f5} 
+\index{cae\_echem.h@{cae\_echem.h}!Ce\_N@{Ce\_N}}
+\index{Ce\_N@{Ce\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ce\_N}{Ce\_N}}
+{\footnotesize\ttfamily \#define Ce\+\_\+N(\begin{DoxyParamCaption}\item[{}]{i }\end{DoxyParamCaption})~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},  (\mbox{\hyperlink{cae__echem_8h_ab753fd45a7e47e5c172f6c432c9a515b}{begin\+\_\+\+NE\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a1399f3c184b0b28eaa0e559f8fd838bc}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+NE}} + \mbox{\hyperlink{cae__echem_8h_a0ed70d7038f19733f5e8bb08bb55f51e}{Ce\+\_\+\+NE\+\_\+\+Index}})))}
+
+\Hypertarget{cae__echem_8h_a786aad2af62eb3975162d8cf85035e25}\label{cae__echem_8h_a786aad2af62eb3975162d8cf85035e25} 
+\index{cae\_echem.h@{cae\_echem.h}!Ce\_P@{Ce\_P}}
+\index{Ce\_P@{Ce\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ce\_P}{Ce\_P}}
+{\footnotesize\ttfamily \#define Ce\+\_\+P(\begin{DoxyParamCaption}\item[{}]{i }\end{DoxyParamCaption})~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},  (\mbox{\hyperlink{cae__echem_8h_abc14c7fea95557b64efd49b2356d0593}{begin\+\_\+\+PE\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a6e7774dc69f101ccd3a3c5d703eda0e2}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+PE}} + \mbox{\hyperlink{cae__echem_8h_a268d29a7faea0672ec79267fc48a4f3a}{Ce\+\_\+\+PE\+\_\+\+Index}})))}
+
+\Hypertarget{cae__echem_8h_a834b9981fb6b05749588bd1fbccb22e3}\label{cae__echem_8h_a834b9981fb6b05749588bd1fbccb22e3} 
+\index{cae\_echem.h@{cae\_echem.h}!Ce\_S@{Ce\_S}}
+\index{Ce\_S@{Ce\_S}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ce\_S}{Ce\_S}}
+{\footnotesize\ttfamily \#define Ce\+\_\+S(\begin{DoxyParamCaption}\item[{}]{i }\end{DoxyParamCaption})~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},  (\mbox{\hyperlink{cae__echem_8h_aa6de34fe4c1b67670961377fdf09255a}{begin\+\_\+\+SP\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a8d76f4df9dacca28a7c327ced3f2f440}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+SP}} + \mbox{\hyperlink{cae__echem_8h_a2cfbaf3105dfe826c4dc83895209bf16}{Ce\+\_\+\+SP\+\_\+\+Index}})))}
+
+\Hypertarget{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}\label{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014} 
+\index{cae\_echem.h@{cae\_echem.h}!CE\_X\_OFFSET@{CE\_X\_OFFSET}}
+\index{CE\_X\_OFFSET@{CE\_X\_OFFSET}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{CE\_X\_OFFSET}{CE\_X\_OFFSET}}
+{\footnotesize\ttfamily \#define CE\+\_\+\+X\+\_\+\+OFFSET~(\mbox{\hyperlink{cae__echem_8h_aff2185284926a6cfdb3b9b339b695614}{CS\+\_\+\+P\+\_\+\+OFFSET}} + \mbox{\hyperlink{cae__echem_8h_a4015628335d37e177cfdc66d44bfd753}{N\+\_\+\+CS\+\_\+P}})}
+
+\Hypertarget{cae__echem_8h_aa916292a9988f0c695040966a4c98dc5}\label{cae__echem_8h_aa916292a9988f0c695040966a4c98dc5} 
+\index{cae\_echem.h@{cae\_echem.h}!CS\_N\_OFFSET@{CS\_N\_OFFSET}}
+\index{CS\_N\_OFFSET@{CS\_N\_OFFSET}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{CS\_N\_OFFSET}{CS\_N\_OFFSET}}
+{\footnotesize\ttfamily \#define CS\+\_\+\+N\+\_\+\+OFFSET~(\mbox{\hyperlink{cae__echem_8h_a529410c8bbd3dcbc11a19d50fcbfa014}{CE\+\_\+\+X\+\_\+\+OFFSET}} + \mbox{\hyperlink{cae__echem_8h_ac6f49e0f77eb101f7bbeda1669214dc9}{N\+\_\+\+CE\+\_\+X}})}
+
+\Hypertarget{cae__echem_8h_adc8270db3092f9d4ab41c7dae37c5da5}\label{cae__echem_8h_adc8270db3092f9d4ab41c7dae37c5da5} 
+\index{cae\_echem.h@{cae\_echem.h}!Cs\_N\_p@{Cs\_N\_p}}
+\index{Cs\_N\_p@{Cs\_N\_p}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Cs\_N\_p}{Cs\_N\_p}}
+{\footnotesize\ttfamily \#define Cs\+\_\+\+N\+\_\+p(\begin{DoxyParamCaption}\item[{}]{i }\end{DoxyParamCaption})~(\&\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}}, (\mbox{\hyperlink{cae__echem_8h_ab753fd45a7e47e5c172f6c432c9a515b}{begin\+\_\+\+NE\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a1399f3c184b0b28eaa0e559f8fd838bc}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+NE}} + \mbox{\hyperlink{cae__echem_8h_aa25038f959df59c2477a7fa78873d09c}{Begin\+\_\+\+Cs\+\_\+\+NE\+\_\+\+Index}})))}
+
+\Hypertarget{cae__echem_8h_aff2185284926a6cfdb3b9b339b695614}\label{cae__echem_8h_aff2185284926a6cfdb3b9b339b695614} 
+\index{cae\_echem.h@{cae\_echem.h}!CS\_P\_OFFSET@{CS\_P\_OFFSET}}
+\index{CS\_P\_OFFSET@{CS\_P\_OFFSET}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{CS\_P\_OFFSET}{CS\_P\_OFFSET}}
+{\footnotesize\ttfamily \#define CS\+\_\+\+P\+\_\+\+OFFSET~\mbox{\hyperlink{battery_8h_adf764cbdea00d65edcd07bb9953ad2b7ab7228bfb236acf356cc7c6210f335dc8}{NO\+\_\+\+OF\+\_\+\+UDMS}}}
+
+\Hypertarget{cae__echem_8h_a78bc072537752f04aca0df2a4225b0e9}\label{cae__echem_8h_a78bc072537752f04aca0df2a4225b0e9} 
+\index{cae\_echem.h@{cae\_echem.h}!Cs\_P\_p@{Cs\_P\_p}}
+\index{Cs\_P\_p@{Cs\_P\_p}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Cs\_P\_p}{Cs\_P\_p}}
+{\footnotesize\ttfamily \#define Cs\+\_\+\+P\+\_\+p(\begin{DoxyParamCaption}\item[{}]{i }\end{DoxyParamCaption})~(\&\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}}, (\mbox{\hyperlink{cae__echem_8h_abc14c7fea95557b64efd49b2356d0593}{begin\+\_\+\+PE\+\_\+\+Domain}} + (i)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a6e7774dc69f101ccd3a3c5d703eda0e2}{n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+PE}} + \mbox{\hyperlink{cae__echem_8h_a54f09baff93d7a397e9dcce1b4d02325}{Begin\+\_\+\+Cs\+\_\+\+PE\+\_\+\+Index}})))}
+
+\Hypertarget{cae__echem_8h_ab53758bdebcf898e02c4e645ebc0c5ca}\label{cae__echem_8h_ab53758bdebcf898e02c4e645ebc0c5ca} 
+\index{cae\_echem.h@{cae\_echem.h}!ECM\_Y@{ECM\_Y}}
+\index{ECM\_Y@{ECM\_Y}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{ECM\_Y}{ECM\_Y}}
+{\footnotesize\ttfamily \#define ECM\+\_\+Y(\begin{DoxyParamCaption}\item[{}]{i }\end{DoxyParamCaption})~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}}, (i)))}
+
+\Hypertarget{cae__echem_8h_ac6f49e0f77eb101f7bbeda1669214dc9}\label{cae__echem_8h_ac6f49e0f77eb101f7bbeda1669214dc9} 
+\index{cae\_echem.h@{cae\_echem.h}!N\_CE\_X@{N\_CE\_X}}
+\index{N\_CE\_X@{N\_CE\_X}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{N\_CE\_X}{N\_CE\_X}}
+{\footnotesize\ttfamily \#define N\+\_\+\+CE\+\_\+X~(\mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}} + \mbox{\hyperlink{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4}{n\+\_\+\+XS}} + \mbox{\hyperlink{cae__echem_8h_adbd3da5fa2cc161202a9852970e9dedb}{n\+\_\+\+XN}})}
+
+\Hypertarget{cae__echem_8h_a0450fc1c0886173bd3bb9fa1fb2f9bee}\label{cae__echem_8h_a0450fc1c0886173bd3bb9fa1fb2f9bee} 
+\index{cae\_echem.h@{cae\_echem.h}!N\_CS\_N@{N\_CS\_N}}
+\index{N\_CS\_N@{N\_CS\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{N\_CS\_N}{N\_CS\_N}}
+{\footnotesize\ttfamily \#define N\+\_\+\+CS\+\_\+N~(\mbox{\hyperlink{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8}{n\+\_\+\+RN}}\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_adbd3da5fa2cc161202a9852970e9dedb}{n\+\_\+\+XN}})}
+
+\Hypertarget{cae__echem_8h_a4015628335d37e177cfdc66d44bfd753}\label{cae__echem_8h_a4015628335d37e177cfdc66d44bfd753} 
+\index{cae\_echem.h@{cae\_echem.h}!N\_CS\_P@{N\_CS\_P}}
+\index{N\_CS\_P@{N\_CS\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{N\_CS\_P}{N\_CS\_P}}
+{\footnotesize\ttfamily \#define N\+\_\+\+CS\+\_\+P~(\mbox{\hyperlink{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5}{n\+\_\+\+RP}}\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\+\_\+\+XP}})}
+
+\Hypertarget{cae__echem_8h_a374ea641ee71ce5a2f15f4bfd87772a4}\label{cae__echem_8h_a374ea641ee71ce5a2f15f4bfd87772a4} 
+\index{cae\_echem.h@{cae\_echem.h}!N\_ECM\_Y@{N\_ECM\_Y}}
+\index{N\_ECM\_Y@{N\_ECM\_Y}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{N\_ECM\_Y}{N\_ECM\_Y}}
+{\footnotesize\ttfamily \#define N\+\_\+\+ECM\+\_\+Y~(\mbox{\hyperlink{cae__echem_8h_a16145985952110723c0fdcaae5e44c8b}{ECM\+\_\+\+Eqns}}) /\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{cae__echem_8h_a279c778f0a76ea6add0ffd502178c603}{n\+\_\+tot\+\_\+\+Eqn}} \texorpdfstring{$\ast$}{*}/}
+
+\Hypertarget{cae__echem_8h_a4fb46d250e79d45608edd9e7d5b894b0}\label{cae__echem_8h_a4fb46d250e79d45608edd9e7d5b894b0} 
+\index{cae\_echem.h@{cae\_echem.h}!N\_UDM\_TOTAL@{N\_UDM\_TOTAL}}
+\index{N\_UDM\_TOTAL@{N\_UDM\_TOTAL}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{N\_UDM\_TOTAL}{N\_UDM\_TOTAL}}
+{\footnotesize\ttfamily \#define N\+\_\+\+UDM\+\_\+\+TOTAL~(\mbox{\hyperlink{battery_8h_adf764cbdea00d65edcd07bb9953ad2b7ab7228bfb236acf356cc7c6210f335dc8}{NO\+\_\+\+OF\+\_\+\+UDMS}} + \mbox{\hyperlink{cae__echem_8h_acd3b735a7a99f82508d6254d1c75ff34}{N\+\_\+\+VAR\+\_\+\+TOTAL}})}
+
+\Hypertarget{cae__echem_8h_acd3b735a7a99f82508d6254d1c75ff34}\label{cae__echem_8h_acd3b735a7a99f82508d6254d1c75ff34} 
+\index{cae\_echem.h@{cae\_echem.h}!N\_VAR\_TOTAL@{N\_VAR\_TOTAL}}
+\index{N\_VAR\_TOTAL@{N\_VAR\_TOTAL}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{N\_VAR\_TOTAL}{N\_VAR\_TOTAL}}
+{\footnotesize\ttfamily \#define N\+\_\+\+VAR\+\_\+\+TOTAL~(\mbox{\hyperlink{cae__echem_8h_a4015628335d37e177cfdc66d44bfd753}{N\+\_\+\+CS\+\_\+P}} + \mbox{\hyperlink{cae__echem_8h_ac6f49e0f77eb101f7bbeda1669214dc9}{N\+\_\+\+CE\+\_\+X}} + \mbox{\hyperlink{cae__echem_8h_a0450fc1c0886173bd3bb9fa1fb2f9bee}{N\+\_\+\+CS\+\_\+N}})}
+
+\Hypertarget{cae__echem_8h_acd6ac25bc57f67eddb6fd05dfac5f84e}\label{cae__echem_8h_acd6ac25bc57f67eddb6fd05dfac5f84e} 
+\index{cae\_echem.h@{cae\_echem.h}!NTGK\_Y@{NTGK\_Y}}
+\index{NTGK\_Y@{NTGK\_Y}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{NTGK\_Y}{NTGK\_Y}}
+{\footnotesize\ttfamily \#define NTGK\+\_\+Y(\begin{DoxyParamCaption}\item[{}]{i }\end{DoxyParamCaption})~(\mbox{\hyperlink{nvector__serial_8h_adee88603674453cafecc6aa38e09d439}{NV\+\_\+\+Ith\+\_\+S}}(\mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}}, (i)))}
+
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{cae__echem_8h_a60ec57cc1a93e561e6330f73b37c3086}\label{cae__echem_8h_a60ec57cc1a93e561e6330f73b37c3086} 
+\index{cae\_echem.h@{cae\_echem.h}!IDA\_IO@{IDA\_IO}}
+\index{IDA\_IO@{IDA\_IO}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{IDA\_IO}{IDA\_IO}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct__ida__io}{\+\_\+ida\+\_\+io}} \mbox{\hyperlink{cae__echem_8h_a60ec57cc1a93e561e6330f73b37c3086}{IDA\+\_\+\+IO}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{cae__echem_8h_a05589fbab0657f08285ebdfe93f5ec9e}\label{cae__echem_8h_a05589fbab0657f08285ebdfe93f5ec9e} 
+\doxysubsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{XF\_BATTERY\_DATA@{XF\_BATTERY\_DATA}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!XF\_BATTERY\_DATA@{XF\_BATTERY\_DATA}}}\Hypertarget{cae__echem_8h_a05589fbab0657f08285ebdfe93f5ec9ea0900af0d6b038f40645923708ab2a510}\label{cae__echem_8h_a05589fbab0657f08285ebdfe93f5ec9ea0900af0d6b038f40645923708ab2a510} 
+XF\+\_\+\+BATTERY\+\_\+\+DATA&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4d}\label{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4d} 
+\doxysubsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{XF\_BT\_ECHEM\_NTGK@{XF\_BT\_ECHEM\_NTGK}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!XF\_BT\_ECHEM\_NTGK@{XF\_BT\_ECHEM\_NTGK}}}\Hypertarget{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da5ed25185a708521c903b621b33d67a43}\label{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da5ed25185a708521c903b621b33d67a43} 
+XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+NTGK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{XF\_BT\_ECHEM\_ECM@{XF\_BT\_ECHEM\_ECM}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!XF\_BT\_ECHEM\_ECM@{XF\_BT\_ECHEM\_ECM}}}\Hypertarget{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4dad04e33a0a12ae6b1eb08d9340c577a90}\label{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4dad04e33a0a12ae6b1eb08d9340c577a90} 
+XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+ECM&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{XF\_BT\_ECHEM\_NEWMAN\_CS@{XF\_BT\_ECHEM\_NEWMAN\_CS}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!XF\_BT\_ECHEM\_NEWMAN\_CS@{XF\_BT\_ECHEM\_NEWMAN\_CS}}}\Hypertarget{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4dabb51ef3b435c923009469b61cb22650e}\label{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4dabb51ef3b435c923009469b61cb22650e} 
+XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+NEWMAN\+\_\+\+CS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{XF\_BT\_ECHEM\_NEWMAN\_CE@{XF\_BT\_ECHEM\_NEWMAN\_CE}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!XF\_BT\_ECHEM\_NEWMAN\_CE@{XF\_BT\_ECHEM\_NEWMAN\_CE}}}\Hypertarget{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da5fb254dde933dc96c74bef7184ebef09}\label{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da5fb254dde933dc96c74bef7184ebef09} 
+XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+NEWMAN\+\_\+\+CE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{XF\_BT\_ECHEM\_USER@{XF\_BT\_ECHEM\_USER}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!XF\_BT\_ECHEM\_USER@{XF\_BT\_ECHEM\_USER}}}\Hypertarget{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da016d85b6b42c46a6a93e295577d6e333}\label{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da016d85b6b42c46a6a93e295577d6e333} 
+XF\+\_\+\+BT\+\_\+\+ECHEM\+\_\+\+USER&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25}\label{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25} 
+\doxysubsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ECHEM\_NTGK@{ECHEM\_NTGK}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!ECHEM\_NTGK@{ECHEM\_NTGK}}}\Hypertarget{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a126dc231c69e6a7774a558fabe85e711}\label{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a126dc231c69e6a7774a558fabe85e711} 
+ECHEM\+\_\+\+NTGK&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ECHEM\_ECM@{ECHEM\_ECM}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!ECHEM\_ECM@{ECHEM\_ECM}}}\Hypertarget{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a4c06d571570b36e8709344ca6de92fef}\label{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a4c06d571570b36e8709344ca6de92fef} 
+ECHEM\+\_\+\+ECM&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ECHEM\_NEWMAN@{ECHEM\_NEWMAN}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!ECHEM\_NEWMAN@{ECHEM\_NEWMAN}}}\Hypertarget{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a6de57e3f71068a2378694b945e81d8e1}\label{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a6de57e3f71068a2378694b945e81d8e1} 
+ECHEM\+\_\+\+NEWMAN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ECHEM\_USER\_DEFINED@{ECHEM\_USER\_DEFINED}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!ECHEM\_USER\_DEFINED@{ECHEM\_USER\_DEFINED}}}\Hypertarget{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a7b39c123fe6e6584e9f5f2cd9db39aa1}\label{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a7b39c123fe6e6584e9f5f2cd9db39aa1} 
+ECHEM\+\_\+\+USER\+\_\+\+DEFINED&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fce}\label{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fce} 
+\doxysubsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CURR@{CURR}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!CURR@{CURR}}}\Hypertarget{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fceac1d9c85b6d0b5f0c3a86103d0026663b}\label{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fceac1d9c85b6d0b5f0c3a86103d0026663b} 
+CURR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{VOLTAGE@{VOLTAGE}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!VOLTAGE@{VOLTAGE}}}\Hypertarget{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea9889316c6fd4ad6218289003f5d63291}\label{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea9889316c6fd4ad6218289003f5d63291} 
+VOLTAGE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{POWER@{POWER}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!POWER@{POWER}}}\Hypertarget{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea316771101d4b4b1dea7d7e2a82ef1658}\label{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea316771101d4b4b1dea7d7e2a82ef1658} 
+POWER&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RESISTANCE@{RESISTANCE}!cae\_echem.h@{cae\_echem.h}}\index{cae\_echem.h@{cae\_echem.h}!RESISTANCE@{RESISTANCE}}}\Hypertarget{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea5fe5d33bd0fbe032cd2abdf6f895e887}\label{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea5fe5d33bd0fbe032cd2abdf6f895e887} 
+RESISTANCE&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{cae__echem_8h_aba6eb88b777f234a942a73d540e4ca89}\label{cae__echem_8h_aba6eb88b777f234a942a73d540e4ca89} 
+\index{cae\_echem.h@{cae\_echem.h}!Compute\_ECM\_VOC\_and\_CR@{Compute\_ECM\_VOC\_and\_CR}}
+\index{Compute\_ECM\_VOC\_and\_CR@{Compute\_ECM\_VOC\_and\_CR}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Compute\_ECM\_VOC\_and\_CR()}{Compute\_ECM\_VOC\_and\_CR()}}
+{\footnotesize\ttfamily void Compute\+\_\+\+ECM\+\_\+\+VOC\+\_\+and\+\_\+\+CR (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{soc,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{T,  }\item[{int}]{mode,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{Voc,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{RRs,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{RR1,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{RR2,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{CC1,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{CC2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a1a8a91d44c67a28505e02d61f6b0bc22}\label{cae__echem_8h_a1a8a91d44c67a28505e02d61f6b0bc22} 
+\index{cae\_echem.h@{cae\_echem.h}!Compute\_entropy\_heat@{Compute\_entropy\_heat}}
+\index{Compute\_entropy\_heat@{Compute\_entropy\_heat}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Compute\_entropy\_heat()}{Compute\_entropy\_heat()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Compute\+\_\+entropy\+\_\+heat (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{soc }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a40c110a9d9539e8511dc345ee220adda}\label{cae__echem_8h_a40c110a9d9539e8511dc345ee220adda} 
+\index{cae\_echem.h@{cae\_echem.h}!Compute\_VOC\_and\_CR\_standard@{Compute\_VOC\_and\_CR\_standard}}
+\index{Compute\_VOC\_and\_CR\_standard@{Compute\_VOC\_and\_CR\_standard}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Compute\_VOC\_and\_CR\_standard()}{Compute\_VOC\_and\_CR\_standard()}}
+{\footnotesize\ttfamily void Compute\+\_\+\+VOC\+\_\+and\+\_\+\+CR\+\_\+standard (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{soc,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{T,  }\item[{int}]{mode,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{Voc,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{RRs,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{RR1,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{RR2,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{CC1,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{CC2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a75b905b0882a84c202aafce990f5b341}\label{cae__echem_8h_a75b905b0882a84c202aafce990f5b341} 
+\index{cae\_echem.h@{cae\_echem.h}!ecm\_p2d@{ecm\_p2d}}
+\index{ecm\_p2d@{ecm\_p2d}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{ecm\_p2d()}{ecm\_p2d()}}
+{\footnotesize\ttfamily int ecm\+\_\+p2d (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cae__echem_8h_a60ec57cc1a93e561e6330f73b37c3086}{IDA\+\_\+\+IO}} \texorpdfstring{$\ast$}{*}}]{ida\+\_\+args }\end{DoxyParamCaption})}
+
+\Hypertarget{cae__echem_8h_ad0ddf0bf5ab8dcc10ed336ef3a157ca8}\label{cae__echem_8h_ad0ddf0bf5ab8dcc10ed336ef3a157ca8} 
+\index{cae\_echem.h@{cae\_echem.h}!get\_cluster\_info@{get\_cluster\_info}}
+\index{get\_cluster\_info@{get\_cluster\_info}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{get\_cluster\_info()}{get\_cluster\_info()}}
+{\footnotesize\ttfamily void get\+\_\+cluster\+\_\+info (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{int \texorpdfstring{$\ast$}{*}}]{cluster,  }\item[{int \texorpdfstring{$\ast$}{*}}]{total\+\_\+cell\+\_\+in\+\_\+cluster,  }\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{cell\+\_\+list\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ae5d8930457d304f8b9f49eeb9b066162}\label{cae__echem_8h_ae5d8930457d304f8b9f49eeb9b066162} 
+\index{cae\_echem.h@{cae\_echem.h}!Get\_p2d\_Postprocessing\_Info@{Get\_p2d\_Postprocessing\_Info}}
+\index{Get\_p2d\_Postprocessing\_Info@{Get\_p2d\_Postprocessing\_Info}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Get\_p2d\_Postprocessing\_Info()}{Get\_p2d\_Postprocessing\_Info()}}
+{\footnotesize\ttfamily void Get\+\_\+p2d\+\_\+\+Postprocessing\+\_\+\+Info (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{T,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{Vp,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{Vn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ad5524b44eec5a4b4a85b58dfe0222de5}\label{cae__echem_8h_ad5524b44eec5a4b4a85b58dfe0222de5} 
+\index{cae\_echem.h@{cae\_echem.h}!IDA\_Cleanup@{IDA\_Cleanup}}
+\index{IDA\_Cleanup@{IDA\_Cleanup}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{IDA\_Cleanup()}{IDA\_Cleanup()}}
+{\footnotesize\ttfamily int IDA\+\_\+\+Cleanup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{cae__echem_8h_a9eca31afdc7df661342919a06e0a733e}\label{cae__echem_8h_a9eca31afdc7df661342919a06e0a733e} 
+\index{cae\_echem.h@{cae\_echem.h}!IDA\_EChem\_Parameters@{IDA\_EChem\_Parameters}}
+\index{IDA\_EChem\_Parameters@{IDA\_EChem\_Parameters}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{IDA\_EChem\_Parameters()}{IDA\_EChem\_Parameters()}}
+{\footnotesize\ttfamily int IDA\+\_\+\+EChem\+\_\+\+Parameters (\begin{DoxyParamCaption}\item[{int}]{echem\+\_\+model }\end{DoxyParamCaption})}
+
+\Hypertarget{cae__echem_8h_a59214dc2363cac4be9c47a990f8e7a50}\label{cae__echem_8h_a59214dc2363cac4be9c47a990f8e7a50} 
+\index{cae\_echem.h@{cae\_echem.h}!IDA\_Startup@{IDA\_Startup}}
+\index{IDA\_Startup@{IDA\_Startup}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{IDA\_Startup()}{IDA\_Startup()}}
+{\footnotesize\ttfamily int IDA\+\_\+\+Startup (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{cae__echem_8h_acf2c3ad8e1dba6cf98373777093cb3c6}\label{cae__echem_8h_acf2c3ad8e1dba6cf98373777093cb3c6} 
+\index{cae\_echem.h@{cae\_echem.h}!user\_defined\_echem\_model@{user\_defined\_echem\_model}}
+\index{user\_defined\_echem\_model@{user\_defined\_echem\_model}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{user\_defined\_echem\_model()}{user\_defined\_echem\_model()}}
+{\footnotesize\ttfamily void user\+\_\+defined\+\_\+echem\+\_\+model (\begin{DoxyParamCaption}\item[{int}]{zero\+\_\+start,  }\item[{int}]{mode,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{temperature,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{voltage,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{current,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{dtime,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{j\+\_\+tmp,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{Qe\+\_\+tmp,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{voltage\+\_\+end }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{cae__echem_8h_a635d3849eae3f6d813629d6c70cf795c}\label{cae__echem_8h_a635d3849eae3f6d813629d6c70cf795c} 
+\index{cae\_echem.h@{cae\_echem.h}!Aa\_N@{Aa\_N}}
+\index{Aa\_N@{Aa\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Aa\_N}{Aa\_N}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Aa\+\_\+N\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a1792400381e5dbaa465bc940e4c6cc6f}\label{cae__echem_8h_a1792400381e5dbaa465bc940e4c6cc6f} 
+\index{cae\_echem.h@{cae\_echem.h}!Aa\_P@{Aa\_P}}
+\index{Aa\_P@{Aa\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Aa\_P}{Aa\_P}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Aa\+\_\+P\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a9c622f53b2eda7a122777f84df551800}\label{cae__echem_8h_a9c622f53b2eda7a122777f84df551800} 
+\index{cae\_echem.h@{cae\_echem.h}!Ac\_N@{Ac\_N}}
+\index{Ac\_N@{Ac\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ac\_N}{Ac\_N}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ac\+\_\+N\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a4c4822a70558ce56aaf1e7169443bba7}\label{cae__echem_8h_a4c4822a70558ce56aaf1e7169443bba7} 
+\index{cae\_echem.h@{cae\_echem.h}!Ac\_P@{Ac\_P}}
+\index{Ac\_P@{Ac\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ac\_P}{Ac\_P}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ac\+\_\+P\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_aa25038f959df59c2477a7fa78873d09c}\label{cae__echem_8h_aa25038f959df59c2477a7fa78873d09c} 
+\index{cae\_echem.h@{cae\_echem.h}!Begin\_Cs\_NE\_Index@{Begin\_Cs\_NE\_Index}}
+\index{Begin\_Cs\_NE\_Index@{Begin\_Cs\_NE\_Index}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Begin\_Cs\_NE\_Index}{Begin\_Cs\_NE\_Index}}
+{\footnotesize\ttfamily \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int Begin\+\_\+\+Cs\+\_\+\+NE\+\_\+\+Index\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a54f09baff93d7a397e9dcce1b4d02325}\label{cae__echem_8h_a54f09baff93d7a397e9dcce1b4d02325} 
+\index{cae\_echem.h@{cae\_echem.h}!Begin\_Cs\_PE\_Index@{Begin\_Cs\_PE\_Index}}
+\index{Begin\_Cs\_PE\_Index@{Begin\_Cs\_PE\_Index}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Begin\_Cs\_PE\_Index}{Begin\_Cs\_PE\_Index}}
+{\footnotesize\ttfamily \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int Begin\+\_\+\+Cs\+\_\+\+PE\+\_\+\+Index\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ab753fd45a7e47e5c172f6c432c9a515b}\label{cae__echem_8h_ab753fd45a7e47e5c172f6c432c9a515b} 
+\index{cae\_echem.h@{cae\_echem.h}!begin\_NE\_Domain@{begin\_NE\_Domain}}
+\index{begin\_NE\_Domain@{begin\_NE\_Domain}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{begin\_NE\_Domain}{begin\_NE\_Domain}}
+{\footnotesize\ttfamily int begin\+\_\+\+NE\+\_\+\+Domain\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_abc14c7fea95557b64efd49b2356d0593}\label{cae__echem_8h_abc14c7fea95557b64efd49b2356d0593} 
+\index{cae\_echem.h@{cae\_echem.h}!begin\_PE\_Domain@{begin\_PE\_Domain}}
+\index{begin\_PE\_Domain@{begin\_PE\_Domain}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{begin\_PE\_Domain}{begin\_PE\_Domain}}
+{\footnotesize\ttfamily int begin\+\_\+\+PE\+\_\+\+Domain}
+
+\Hypertarget{cae__echem_8h_aa6de34fe4c1b67670961377fdf09255a}\label{cae__echem_8h_aa6de34fe4c1b67670961377fdf09255a} 
+\index{cae\_echem.h@{cae\_echem.h}!begin\_SP\_Domain@{begin\_SP\_Domain}}
+\index{begin\_SP\_Domain@{begin\_SP\_Domain}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{begin\_SP\_Domain}{begin\_SP\_Domain}}
+{\footnotesize\ttfamily int begin\+\_\+\+SP\+\_\+\+Domain}
+
+\Hypertarget{cae__echem_8h_a170862a33f10adfc49fb3fb66e5af7ea}\label{cae__echem_8h_a170862a33f10adfc49fb3fb66e5af7ea} 
+\index{cae\_echem.h@{cae\_echem.h}!Br\_N@{Br\_N}}
+\index{Br\_N@{Br\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Br\_N}{Br\_N}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Br\+\_\+N\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ac014dadc9f084c583478e2ad3aacd823}\label{cae__echem_8h_ac014dadc9f084c583478e2ad3aacd823} 
+\index{cae\_echem.h@{cae\_echem.h}!Br\_P@{Br\_P}}
+\index{Br\_P@{Br\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Br\_P}{Br\_P}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Br\+\_\+P\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a201450398416c091a490ad663cfd0bc2}\label{cae__echem_8h_a201450398416c091a490ad663cfd0bc2} 
+\index{cae\_echem.h@{cae\_echem.h}!Br\_S@{Br\_S}}
+\index{Br\_S@{Br\_S}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Br\_S}{Br\_S}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Br\+\_\+S\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ae887174e150d531e5efd8af1cbcadf35}\label{cae__echem_8h_ae887174e150d531e5efd8af1cbcadf35} 
+\index{cae\_echem.h@{cae\_echem.h}!btv\_store\_ok@{btv\_store\_ok}}
+\index{btv\_store\_ok@{btv\_store\_ok}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{btv\_store\_ok}{btv\_store\_ok}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} btv\+\_\+store\+\_\+ok\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a9c53d2544bb4217b825472851d8464e6}\label{cae__echem_8h_a9c53d2544bb4217b825472851d8464e6} 
+\index{cae\_echem.h@{cae\_echem.h}!C1\_Coef@{C1\_Coef}}
+\index{C1\_Coef@{C1\_Coef}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C1\_Coef}{C1\_Coef}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} C1\+\_\+\+Coef\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a0b0c6ec063ec4b2f943688702a6f4201}\label{cae__echem_8h_a0b0c6ec063ec4b2f943688702a6f4201} 
+\index{cae\_echem.h@{cae\_echem.h}!C1\_Coef\_c@{C1\_Coef\_c}}
+\index{C1\_Coef\_c@{C1\_Coef\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C1\_Coef\_c}{C1\_Coef\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} C1\+\_\+\+Coef\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_aed768ff5d2242210f70e5ca06fa25f32}\label{cae__echem_8h_aed768ff5d2242210f70e5ca06fa25f32} 
+\index{cae\_echem.h@{cae\_echem.h}!C1\_Coef\_poly@{C1\_Coef\_poly}}
+\index{C1\_Coef\_poly@{C1\_Coef\_poly}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C1\_Coef\_poly}{C1\_Coef\_poly}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} C1\+\_\+\+Coef\+\_\+poly\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_aab8745dfe583bf39b788ef8c40e3d65f}\label{cae__echem_8h_aab8745dfe583bf39b788ef8c40e3d65f} 
+\index{cae\_echem.h@{cae\_echem.h}!C1\_Coef\_poly\_c@{C1\_Coef\_poly\_c}}
+\index{C1\_Coef\_poly\_c@{C1\_Coef\_poly\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C1\_Coef\_poly\_c}{C1\_Coef\_poly\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} C1\+\_\+\+Coef\+\_\+poly\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a0447024ca81406fb64fbb43bfdf4283b}\label{cae__echem_8h_a0447024ca81406fb64fbb43bfdf4283b} 
+\index{cae\_echem.h@{cae\_echem.h}!C2\_Coef@{C2\_Coef}}
+\index{C2\_Coef@{C2\_Coef}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C2\_Coef}{C2\_Coef}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} C2\+\_\+\+Coef\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_aa7830ab116d77abb3327290554549bb0}\label{cae__echem_8h_aa7830ab116d77abb3327290554549bb0} 
+\index{cae\_echem.h@{cae\_echem.h}!C2\_Coef\_c@{C2\_Coef\_c}}
+\index{C2\_Coef\_c@{C2\_Coef\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C2\_Coef\_c}{C2\_Coef\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} C2\+\_\+\+Coef\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a0b15a2681dd8a04de424c4c2f8afeb1e}\label{cae__echem_8h_a0b15a2681dd8a04de424c4c2f8afeb1e} 
+\index{cae\_echem.h@{cae\_echem.h}!C2\_Coef\_poly@{C2\_Coef\_poly}}
+\index{C2\_Coef\_poly@{C2\_Coef\_poly}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C2\_Coef\_poly}{C2\_Coef\_poly}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} C2\+\_\+\+Coef\+\_\+poly\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ac211e397e2149322d94ecc81c63acc38}\label{cae__echem_8h_ac211e397e2149322d94ecc81c63acc38} 
+\index{cae\_echem.h@{cae\_echem.h}!C2\_Coef\_poly\_c@{C2\_Coef\_poly\_c}}
+\index{C2\_Coef\_poly\_c@{C2\_Coef\_poly\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{C2\_Coef\_poly\_c}{C2\_Coef\_poly\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} C2\+\_\+\+Coef\+\_\+poly\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a01e831247dafbcf7969b29992ffafdb8}\label{cae__echem_8h_a01e831247dafbcf7969b29992ffafdb8} 
+\index{cae\_echem.h@{cae\_echem.h}!Ce\_N\_Init@{Ce\_N\_Init}}
+\index{Ce\_N\_Init@{Ce\_N\_Init}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ce\_N\_Init}{Ce\_N\_Init}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ce\+\_\+\+N\+\_\+\+Init\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a0ed70d7038f19733f5e8bb08bb55f51e}\label{cae__echem_8h_a0ed70d7038f19733f5e8bb08bb55f51e} 
+\index{cae\_echem.h@{cae\_echem.h}!Ce\_NE\_Index@{Ce\_NE\_Index}}
+\index{Ce\_NE\_Index@{Ce\_NE\_Index}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ce\_NE\_Index}{Ce\_NE\_Index}}
+{\footnotesize\ttfamily \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int Ce\+\_\+\+NE\+\_\+\+Index\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a7a455b0016d7643a56f83fc37b4800fc}\label{cae__echem_8h_a7a455b0016d7643a56f83fc37b4800fc} 
+\index{cae\_echem.h@{cae\_echem.h}!Ce\_P\_Init@{Ce\_P\_Init}}
+\index{Ce\_P\_Init@{Ce\_P\_Init}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ce\_P\_Init}{Ce\_P\_Init}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ce\+\_\+\+P\+\_\+\+Init\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a268d29a7faea0672ec79267fc48a4f3a}\label{cae__echem_8h_a268d29a7faea0672ec79267fc48a4f3a} 
+\index{cae\_echem.h@{cae\_echem.h}!Ce\_PE\_Index@{Ce\_PE\_Index}}
+\index{Ce\_PE\_Index@{Ce\_PE\_Index}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ce\_PE\_Index}{Ce\_PE\_Index}}
+{\footnotesize\ttfamily \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int Ce\+\_\+\+PE\+\_\+\+Index\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ac28b0b9df4d92f7846f7a8e1821de489}\label{cae__echem_8h_ac28b0b9df4d92f7846f7a8e1821de489} 
+\index{cae\_echem.h@{cae\_echem.h}!Ce\_S\_Init@{Ce\_S\_Init}}
+\index{Ce\_S\_Init@{Ce\_S\_Init}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ce\_S\_Init}{Ce\_S\_Init}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ce\+\_\+\+S\+\_\+\+Init\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a2cfbaf3105dfe826c4dc83895209bf16}\label{cae__echem_8h_a2cfbaf3105dfe826c4dc83895209bf16} 
+\index{cae\_echem.h@{cae\_echem.h}!Ce\_SP\_Index@{Ce\_SP\_Index}}
+\index{Ce\_SP\_Index@{Ce\_SP\_Index}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ce\_SP\_Index}{Ce\_SP\_Index}}
+{\footnotesize\ttfamily \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} int Ce\+\_\+\+SP\+\_\+\+Index\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a00d7d81b02b851ba879790e6fdd87718}\label{cae__echem_8h_a00d7d81b02b851ba879790e6fdd87718} 
+\index{cae\_echem.h@{cae\_echem.h}!Control\_Mode@{Control\_Mode}}
+\index{Control\_Mode@{Control\_Mode}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Control\_Mode}{Control\_Mode}}
+{\footnotesize\ttfamily int Control\+\_\+\+Mode}
+
+\Hypertarget{cae__echem_8h_a4765238584b242a7243e9e57d42a803f}\label{cae__echem_8h_a4765238584b242a7243e9e57d42a803f} 
+\index{cae\_echem.h@{cae\_echem.h}!Cs\_N\_Init@{Cs\_N\_Init}}
+\index{Cs\_N\_Init@{Cs\_N\_Init}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Cs\_N\_Init}{Cs\_N\_Init}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Cs\+\_\+\+N\+\_\+\+Init\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ac95a521802de85f9238fbfda75c5ecc1}\label{cae__echem_8h_ac95a521802de85f9238fbfda75c5ecc1} 
+\index{cae\_echem.h@{cae\_echem.h}!Cs\_N\_Maxi@{Cs\_N\_Maxi}}
+\index{Cs\_N\_Maxi@{Cs\_N\_Maxi}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Cs\_N\_Maxi}{Cs\_N\_Maxi}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Cs\+\_\+\+N\+\_\+\+Maxi\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_abba13f5b9d84af83ce74979962fd6e96}\label{cae__echem_8h_abba13f5b9d84af83ce74979962fd6e96} 
+\index{cae\_echem.h@{cae\_echem.h}!Cs\_P\_Init@{Cs\_P\_Init}}
+\index{Cs\_P\_Init@{Cs\_P\_Init}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Cs\_P\_Init}{Cs\_P\_Init}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Cs\+\_\+\+P\+\_\+\+Init\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a1034ec19da72a002a70b507a7f39e7c6}\label{cae__echem_8h_a1034ec19da72a002a70b507a7f39e7c6} 
+\index{cae\_echem.h@{cae\_echem.h}!Cs\_P\_Maxi@{Cs\_P\_Maxi}}
+\index{Cs\_P\_Maxi@{Cs\_P\_Maxi}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Cs\_P\_Maxi}{Cs\_P\_Maxi}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Cs\+\_\+\+P\+\_\+\+Maxi\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_af456dfcc1feed55540eaa8e25fda584f}\label{cae__echem_8h_af456dfcc1feed55540eaa8e25fda584f} 
+\index{cae\_echem.h@{cae\_echem.h}!De\_X@{De\_X}}
+\index{De\_X@{De\_X}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{De\_X}{De\_X}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} De\+\_\+X\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a989dc089665e89f635fec6f1ee5cb301}\label{cae__echem_8h_a989dc089665e89f635fec6f1ee5cb301} 
+\index{cae\_echem.h@{cae\_echem.h}!Ds\_N@{Ds\_N}}
+\index{Ds\_N@{Ds\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ds\_N}{Ds\_N}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ds\+\_\+N\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ab3c04f08a3e9362b5fbfd783b8bb923c}\label{cae__echem_8h_ab3c04f08a3e9362b5fbfd783b8bb923c} 
+\index{cae\_echem.h@{cae\_echem.h}!Ds\_N\_Act@{Ds\_N\_Act}}
+\index{Ds\_N\_Act@{Ds\_N\_Act}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ds\_N\_Act}{Ds\_N\_Act}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ds\+\_\+\+N\+\_\+\+Act\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_af8c47d3e283c4e361f135f6799add472}\label{cae__echem_8h_af8c47d3e283c4e361f135f6799add472} 
+\index{cae\_echem.h@{cae\_echem.h}!Ds\_P@{Ds\_P}}
+\index{Ds\_P@{Ds\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ds\_P}{Ds\_P}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ds\+\_\+P\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a129e43d97ec754679a0b06246e7f03ef}\label{cae__echem_8h_a129e43d97ec754679a0b06246e7f03ef} 
+\index{cae\_echem.h@{cae\_echem.h}!Ds\_P\_Act@{Ds\_P\_Act}}
+\index{Ds\_P\_Act@{Ds\_P\_Act}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ds\_P\_Act}{Ds\_P\_Act}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ds\+\_\+\+P\+\_\+\+Act\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a04b51aec3ca0cb68b6ff75c2c6782c67}\label{cae__echem_8h_a04b51aec3ca0cb68b6ff75c2c6782c67} 
+\index{cae\_echem.h@{cae\_echem.h}!E\_N@{E\_N}}
+\index{E\_N@{E\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{E\_N}{E\_N}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} E\+\_\+N\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a993749cc9b530214028f409bc2a3e4c2}\label{cae__echem_8h_a993749cc9b530214028f409bc2a3e4c2} 
+\index{cae\_echem.h@{cae\_echem.h}!E\_P@{E\_P}}
+\index{E\_P@{E\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{E\_P}{E\_P}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} E\+\_\+P\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a59e3e8ef0132f24f5df2af0831ade36b}\label{cae__echem_8h_a59e3e8ef0132f24f5df2af0831ade36b} 
+\index{cae\_echem.h@{cae\_echem.h}!E\_S@{E\_S}}
+\index{E\_S@{E\_S}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{E\_S}{E\_S}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} E\+\_\+S\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a8a4d646934e72bc1f92ff978a3e19e11}\label{cae__echem_8h_a8a4d646934e72bc1f92ff978a3e19e11} 
+\index{cae\_echem.h@{cae\_echem.h}!echem\_ida\_sub\_steps@{echem\_ida\_sub\_steps}}
+\index{echem\_ida\_sub\_steps@{echem\_ida\_sub\_steps}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{echem\_ida\_sub\_steps}{echem\_ida\_sub\_steps}}
+{\footnotesize\ttfamily int echem\+\_\+ida\+\_\+sub\+\_\+steps\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_aca11bf14250e21c92b34fc20473d5c8d}\label{cae__echem_8h_aca11bf14250e21c92b34fc20473d5c8d} 
+\index{cae\_echem.h@{cae\_echem.h}!echem\_model@{echem\_model}}
+\index{echem\_model@{echem\_model}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{echem\_model}{echem\_model}}
+{\footnotesize\ttfamily int echem\+\_\+model\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a90993a43d0d1a7bdb0db680a7d0d050d}\label{cae__echem_8h_a90993a43d0d1a7bdb0db680a7d0d050d} 
+\index{cae\_echem.h@{cae\_echem.h}!echem\_update\_interval@{echem\_update\_interval}}
+\index{echem\_update\_interval@{echem\_update\_interval}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{echem\_update\_interval}{echem\_update\_interval}}
+{\footnotesize\ttfamily int echem\+\_\+update\+\_\+interval\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a12565cdfb180af54775f0fb094d027bc}\label{cae__echem_8h_a12565cdfb180af54775f0fb094d027bc} 
+\index{cae\_echem.h@{cae\_echem.h}!echem\_verbosity@{echem\_verbosity}}
+\index{echem\_verbosity@{echem\_verbosity}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{echem\_verbosity}{echem\_verbosity}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} echem\+\_\+verbosity\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a8422e485717463c97c0e3b60bdb0c857}\label{cae__echem_8h_a8422e485717463c97c0e3b60bdb0c857} 
+\index{cae\_echem.h@{cae\_echem.h}!ecm\_data\_type@{ecm\_data\_type}}
+\index{ecm\_data\_type@{ecm\_data\_type}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{ecm\_data\_type}{ecm\_data\_type}}
+{\footnotesize\ttfamily int ecm\+\_\+data\+\_\+type\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a16145985952110723c0fdcaae5e44c8b}\label{cae__echem_8h_a16145985952110723c0fdcaae5e44c8b} 
+\index{cae\_echem.h@{cae\_echem.h}!ECM\_Eqns@{ECM\_Eqns}}
+\index{ECM\_Eqns@{ECM\_Eqns}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{ECM\_Eqns}{ECM\_Eqns}}
+{\footnotesize\ttfamily int ECM\+\_\+\+Eqns\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a0aea3a4453dba31626ae0e80eff0f647}\label{cae__echem_8h_a0aea3a4453dba31626ae0e80eff0f647} 
+\index{cae\_echem.h@{cae\_echem.h}!ECM\_SOC\_Init@{ECM\_SOC\_Init}}
+\index{ECM\_SOC\_Init@{ECM\_SOC\_Init}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{ECM\_SOC\_Init}{ECM\_SOC\_Init}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} ECM\+\_\+\+SOC\+\_\+\+Init\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a263135dab62664f72efd894c58d91f77}\label{cae__echem_8h_a263135dab62664f72efd894c58d91f77} 
+\index{cae\_echem.h@{cae\_echem.h}!ecm\_twosetdata@{ecm\_twosetdata}}
+\index{ecm\_twosetdata@{ecm\_twosetdata}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{ecm\_twosetdata}{ecm\_twosetdata}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} ecm\+\_\+twosetdata\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a76db0e3f3884cdb567a2634729e43962}\label{cae__echem_8h_a76db0e3f3884cdb567a2634729e43962} 
+\index{cae\_echem.h@{cae\_echem.h}!Ef\_N@{Ef\_N}}
+\index{Ef\_N@{Ef\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ef\_N}{Ef\_N}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ef\+\_\+N\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a2a2e6196ad6d304835da4fa47a8ddcde}\label{cae__echem_8h_a2a2e6196ad6d304835da4fa47a8ddcde} 
+\index{cae\_echem.h@{cae\_echem.h}!Ef\_P@{Ef\_P}}
+\index{Ef\_P@{Ef\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Ef\_P}{Ef\_P}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Ef\+\_\+P\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a89fc8096bf90e33ded8f79319ff11651}\label{cae__echem_8h_a89fc8096bf90e33ded8f79319ff11651} 
+\index{cae\_echem.h@{cae\_echem.h}!gr\_RN@{gr\_RN}}
+\index{gr\_RN@{gr\_RN}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{gr\_RN}{gr\_RN}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} gr\+\_\+\+RN\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ac108db95d5a05d7ad4e4b545d2843bf1}\label{cae__echem_8h_ac108db95d5a05d7ad4e4b545d2843bf1} 
+\index{cae\_echem.h@{cae\_echem.h}!gr\_RP@{gr\_RP}}
+\index{gr\_RP@{gr\_RP}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{gr\_RP}{gr\_RP}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} gr\+\_\+\+RP\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a8295a3926a1c64223ff0f9e6c7ea00a3}\label{cae__echem_8h_a8295a3926a1c64223ff0f9e6c7ea00a3} 
+\index{cae\_echem.h@{cae\_echem.h}!gr\_XN@{gr\_XN}}
+\index{gr\_XN@{gr\_XN}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{gr\_XN}{gr\_XN}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} gr\+\_\+\+XN\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a2a5d4ad26f3a1b1e38d01c69be897615}\label{cae__echem_8h_a2a5d4ad26f3a1b1e38d01c69be897615} 
+\index{cae\_echem.h@{cae\_echem.h}!gr\_XP@{gr\_XP}}
+\index{gr\_XP@{gr\_XP}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{gr\_XP}{gr\_XP}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} gr\+\_\+\+XP\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a0c8e66a609964edbfe6665ae51e93d5b}\label{cae__echem_8h_a0c8e66a609964edbfe6665ae51e93d5b} 
+\index{cae\_echem.h@{cae\_echem.h}!ida\_input\_ok@{ida\_input\_ok}}
+\index{ida\_input\_ok@{ida\_input\_ok}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{ida\_input\_ok}{ida\_input\_ok}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} ida\+\_\+input\+\_\+ok\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a51675b0f9785c1605b8566d8202b2470}\label{cae__echem_8h_a51675b0f9785c1605b8566d8202b2470} 
+\index{cae\_echem.h@{cae\_echem.h}!ida\_start\_ok@{ida\_start\_ok}}
+\index{ida\_start\_ok@{ida\_start\_ok}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{ida\_start\_ok}{ida\_start\_ok}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} ida\+\_\+start\+\_\+ok\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a621e171a8ee58dc970a7b89e19ad45dc}\label{cae__echem_8h_a621e171a8ee58dc970a7b89e19ad45dc} 
+\index{cae\_echem.h@{cae\_echem.h}!if\_global\_scaling@{if\_global\_scaling}}
+\index{if\_global\_scaling@{if\_global\_scaling}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{if\_global\_scaling}{if\_global\_scaling}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} if\+\_\+global\+\_\+scaling\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a0ad4a8513733269228148db988bf6b4a}\label{cae__echem_8h_a0ad4a8513733269228148db988bf6b4a} 
+\index{cae\_echem.h@{cae\_echem.h}!if\_use\_rom@{if\_use\_rom}}
+\index{if\_use\_rom@{if\_use\_rom}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{if\_use\_rom}{if\_use\_rom}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} if\+\_\+use\+\_\+rom\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ab9d9682702afae904eb25890a6b347a4}\label{cae__echem_8h_ab9d9682702afae904eb25890a6b347a4} 
+\index{cae\_echem.h@{cae\_echem.h}!if\_use\_simple@{if\_use\_simple}}
+\index{if\_use\_simple@{if\_use\_simple}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{if\_use\_simple}{if\_use\_simple}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} if\+\_\+use\+\_\+simple\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a92ff037597f8bb42cdb9047469bc1e87}\label{cae__echem_8h_a92ff037597f8bb42cdb9047469bc1e87} 
+\index{cae\_echem.h@{cae\_echem.h}!K0\_N@{K0\_N}}
+\index{K0\_N@{K0\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{K0\_N}{K0\_N}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} K0\+\_\+N\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a81a69934a5db4e2cb63f21142915001a}\label{cae__echem_8h_a81a69934a5db4e2cb63f21142915001a} 
+\index{cae\_echem.h@{cae\_echem.h}!K0\_N\_Act@{K0\_N\_Act}}
+\index{K0\_N\_Act@{K0\_N\_Act}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{K0\_N\_Act}{K0\_N\_Act}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} K0\+\_\+\+N\+\_\+\+Act\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a433128da902bac4ce3fefd5b274dcb80}\label{cae__echem_8h_a433128da902bac4ce3fefd5b274dcb80} 
+\index{cae\_echem.h@{cae\_echem.h}!K0\_P@{K0\_P}}
+\index{K0\_P@{K0\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{K0\_P}{K0\_P}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} K0\+\_\+P\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a91080369e0a4ab760f4d577cd872c5f2}\label{cae__echem_8h_a91080369e0a4ab760f4d577cd872c5f2} 
+\index{cae\_echem.h@{cae\_echem.h}!K0\_P\_Act@{K0\_P\_Act}}
+\index{K0\_P\_Act@{K0\_P\_Act}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{K0\_P\_Act}{K0\_P\_Act}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} K0\+\_\+\+P\+\_\+\+Act\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ada07fc651777cb92d37bf56b31b476e4}\label{cae__echem_8h_ada07fc651777cb92d37bf56b31b476e4} 
+\index{cae\_echem.h@{cae\_echem.h}!L\_XN@{L\_XN}}
+\index{L\_XN@{L\_XN}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{L\_XN}{L\_XN}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} L\+\_\+\+XN\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ac41e326e2e37d458ac8d6e4a735c9e90}\label{cae__echem_8h_ac41e326e2e37d458ac8d6e4a735c9e90} 
+\index{cae\_echem.h@{cae\_echem.h}!L\_XP@{L\_XP}}
+\index{L\_XP@{L\_XP}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{L\_XP}{L\_XP}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} L\+\_\+\+XP\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a62cbb045ea93436a658d02d67e3d3c89}\label{cae__echem_8h_a62cbb045ea93436a658d02d67e3d3c89} 
+\index{cae\_echem.h@{cae\_echem.h}!L\_XS@{L\_XS}}
+\index{L\_XS@{L\_XS}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{L\_XS}{L\_XS}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} L\+\_\+\+XS\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a1399f3c184b0b28eaa0e559f8fd838bc}\label{cae__echem_8h_a1399f3c184b0b28eaa0e559f8fd838bc} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_eqn\_per\_x\_NE@{n\_eqn\_per\_x\_NE}}
+\index{n\_eqn\_per\_x\_NE@{n\_eqn\_per\_x\_NE}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_eqn\_per\_x\_NE}{n\_eqn\_per\_x\_NE}}
+{\footnotesize\ttfamily int n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+NE\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a6e7774dc69f101ccd3a3c5d703eda0e2}\label{cae__echem_8h_a6e7774dc69f101ccd3a3c5d703eda0e2} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_eqn\_per\_x\_PE@{n\_eqn\_per\_x\_PE}}
+\index{n\_eqn\_per\_x\_PE@{n\_eqn\_per\_x\_PE}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_eqn\_per\_x\_PE}{n\_eqn\_per\_x\_PE}}
+{\footnotesize\ttfamily int n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+PE}
+
+\Hypertarget{cae__echem_8h_a8d76f4df9dacca28a7c327ced3f2f440}\label{cae__echem_8h_a8d76f4df9dacca28a7c327ced3f2f440} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_eqn\_per\_x\_SP@{n\_eqn\_per\_x\_SP}}
+\index{n\_eqn\_per\_x\_SP@{n\_eqn\_per\_x\_SP}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_eqn\_per\_x\_SP}{n\_eqn\_per\_x\_SP}}
+{\footnotesize\ttfamily int n\+\_\+eqn\+\_\+per\+\_\+x\+\_\+\+SP}
+
+\Hypertarget{cae__echem_8h_af059ed0b3957729707832361914c6101}\label{cae__echem_8h_af059ed0b3957729707832361914c6101} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_IGen@{n\_IGen}}
+\index{n\_IGen@{n\_IGen}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_IGen}{n\_IGen}}
+{\footnotesize\ttfamily int n\+\_\+\+IGen\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8}\label{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_RN@{n\_RN}}
+\index{n\_RN@{n\_RN}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_RN}{n\_RN}}
+{\footnotesize\ttfamily int n\+\_\+\+RN\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5}\label{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_RP@{n\_RP}}
+\index{n\_RP@{n\_RP}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_RP}{n\_RP}}
+{\footnotesize\ttfamily int n\+\_\+\+RP\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a279c778f0a76ea6add0ffd502178c603}\label{cae__echem_8h_a279c778f0a76ea6add0ffd502178c603} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_tot\_Eqn@{n\_tot\_Eqn}}
+\index{n\_tot\_Eqn@{n\_tot\_Eqn}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_tot\_Eqn}{n\_tot\_Eqn}}
+{\footnotesize\ttfamily int n\+\_\+tot\+\_\+\+Eqn\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_adbd3da5fa2cc161202a9852970e9dedb}\label{cae__echem_8h_adbd3da5fa2cc161202a9852970e9dedb} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_XN@{n\_XN}}
+\index{n\_XN@{n\_XN}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_XN}{n\_XN}}
+{\footnotesize\ttfamily int n\+\_\+\+XN\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}\label{cae__echem_8h_a147e925efb38ca4b00d1faa903603666} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_XP@{n\_XP}}
+\index{n\_XP@{n\_XP}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_XP}{n\_XP}}
+{\footnotesize\ttfamily int n\+\_\+\+XP\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4}\label{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4} 
+\index{cae\_echem.h@{cae\_echem.h}!n\_XS@{n\_XS}}
+\index{n\_XS@{n\_XS}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{n\_XS}{n\_XS}}
+{\footnotesize\ttfamily int n\+\_\+\+XS\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ad6cfb747ba63cee244cb9cfb2d6a5448}\label{cae__echem_8h_ad6cfb747ba63cee244cb9cfb2d6a5448} 
+\index{cae\_echem.h@{cae\_echem.h}!NM\_Analytical\_Cs@{NM\_Analytical\_Cs}}
+\index{NM\_Analytical\_Cs@{NM\_Analytical\_Cs}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{NM\_Analytical\_Cs}{NM\_Analytical\_Cs}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} NM\+\_\+\+Analytical\+\_\+\+Cs\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a9e63d745453bef75c4325f1223083348}\label{cae__echem_8h_a9e63d745453bef75c4325f1223083348} 
+\index{cae\_echem.h@{cae\_echem.h}!ntgk\_data\_type@{ntgk\_data\_type}}
+\index{ntgk\_data\_type@{ntgk\_data\_type}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{ntgk\_data\_type}{ntgk\_data\_type}}
+{\footnotesize\ttfamily int ntgk\+\_\+data\+\_\+type\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a1f36f599625db15d6388533d2a843069}\label{cae__echem_8h_a1f36f599625db15d6388533d2a843069} 
+\index{cae\_echem.h@{cae\_echem.h}!number\_unit@{number\_unit}}
+\index{number\_unit@{number\_unit}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{number\_unit}{number\_unit}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} number\+\_\+unit\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a0ff6b176395a6f3ac5455ed9026526b7}\label{cae__echem_8h_a0ff6b176395a6f3ac5455ed9026526b7} 
+\index{cae\_echem.h@{cae\_echem.h}!R1\_Coef@{R1\_Coef}}
+\index{R1\_Coef@{R1\_Coef}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R1\_Coef}{R1\_Coef}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R1\+\_\+\+Coef\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_adf6f02d202f3a3f944fe82a9b73fdd8e}\label{cae__echem_8h_adf6f02d202f3a3f944fe82a9b73fdd8e} 
+\index{cae\_echem.h@{cae\_echem.h}!R1\_Coef\_c@{R1\_Coef\_c}}
+\index{R1\_Coef\_c@{R1\_Coef\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R1\_Coef\_c}{R1\_Coef\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R1\+\_\+\+Coef\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_af1fbe925712f84ac52cebcaeecb4c8cc}\label{cae__echem_8h_af1fbe925712f84ac52cebcaeecb4c8cc} 
+\index{cae\_echem.h@{cae\_echem.h}!R1\_Coef\_poly@{R1\_Coef\_poly}}
+\index{R1\_Coef\_poly@{R1\_Coef\_poly}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R1\_Coef\_poly}{R1\_Coef\_poly}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R1\+\_\+\+Coef\+\_\+poly\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a71db6f6fe85cde0882313e85f83b4865}\label{cae__echem_8h_a71db6f6fe85cde0882313e85f83b4865} 
+\index{cae\_echem.h@{cae\_echem.h}!R1\_Coef\_poly\_c@{R1\_Coef\_poly\_c}}
+\index{R1\_Coef\_poly\_c@{R1\_Coef\_poly\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R1\_Coef\_poly\_c}{R1\_Coef\_poly\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R1\+\_\+\+Coef\+\_\+poly\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a9d68e1761422fcf0afd7f529e6352511}\label{cae__echem_8h_a9d68e1761422fcf0afd7f529e6352511} 
+\index{cae\_echem.h@{cae\_echem.h}!R2\_Coef@{R2\_Coef}}
+\index{R2\_Coef@{R2\_Coef}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R2\_Coef}{R2\_Coef}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R2\+\_\+\+Coef\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a0c23bd645fccc8cd33022c6eba7357ec}\label{cae__echem_8h_a0c23bd645fccc8cd33022c6eba7357ec} 
+\index{cae\_echem.h@{cae\_echem.h}!R2\_Coef\_c@{R2\_Coef\_c}}
+\index{R2\_Coef\_c@{R2\_Coef\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R2\_Coef\_c}{R2\_Coef\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R2\+\_\+\+Coef\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a3da8847beddca04e53682ce8b381fb43}\label{cae__echem_8h_a3da8847beddca04e53682ce8b381fb43} 
+\index{cae\_echem.h@{cae\_echem.h}!R2\_Coef\_poly@{R2\_Coef\_poly}}
+\index{R2\_Coef\_poly@{R2\_Coef\_poly}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R2\_Coef\_poly}{R2\_Coef\_poly}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R2\+\_\+\+Coef\+\_\+poly\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a62392b2960390c7e2ffa347c959a22a8}\label{cae__echem_8h_a62392b2960390c7e2ffa347c959a22a8} 
+\index{cae\_echem.h@{cae\_echem.h}!R2\_Coef\_poly\_c@{R2\_Coef\_poly\_c}}
+\index{R2\_Coef\_poly\_c@{R2\_Coef\_poly\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R2\_Coef\_poly\_c}{R2\_Coef\_poly\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R2\+\_\+\+Coef\+\_\+poly\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a9794a960189823e2f98e8415d91cd132}\label{cae__echem_8h_a9794a960189823e2f98e8415d91cd132} 
+\index{cae\_echem.h@{cae\_echem.h}!R\_RN@{R\_RN}}
+\index{R\_RN@{R\_RN}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R\_RN}{R\_RN}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R\+\_\+\+RN\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_af1c49c9ab729159390e9bc942c514a35}\label{cae__echem_8h_af1c49c9ab729159390e9bc942c514a35} 
+\index{cae\_echem.h@{cae\_echem.h}!R\_RP@{R\_RP}}
+\index{R\_RP@{R\_RP}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{R\_RP}{R\_RP}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} R\+\_\+\+RP\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ace2ae6e0677ff8c7c46956e38d42b854}\label{cae__echem_8h_ace2ae6e0677ff8c7c46956e38d42b854} 
+\index{cae\_echem.h@{cae\_echem.h}!rom\_substeps@{rom\_substeps}}
+\index{rom\_substeps@{rom\_substeps}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{rom\_substeps}{rom\_substeps}}
+{\footnotesize\ttfamily int rom\+\_\+substeps\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_affb12653708362cd5202cf78fd483206}\label{cae__echem_8h_affb12653708362cd5202cf78fd483206} 
+\index{cae\_echem.h@{cae\_echem.h}!Rs\_Coef@{Rs\_Coef}}
+\index{Rs\_Coef@{Rs\_Coef}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Rs\_Coef}{Rs\_Coef}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Rs\+\_\+\+Coef\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a4c4bc0ec05a02aeaf525c7e43308ed91}\label{cae__echem_8h_a4c4bc0ec05a02aeaf525c7e43308ed91} 
+\index{cae\_echem.h@{cae\_echem.h}!Rs\_Coef\_c@{Rs\_Coef\_c}}
+\index{Rs\_Coef\_c@{Rs\_Coef\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Rs\_Coef\_c}{Rs\_Coef\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Rs\+\_\+\+Coef\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a7b4b01297f53728021a119279cca07b5}\label{cae__echem_8h_a7b4b01297f53728021a119279cca07b5} 
+\index{cae\_echem.h@{cae\_echem.h}!Rs\_Coef\_poly@{Rs\_Coef\_poly}}
+\index{Rs\_Coef\_poly@{Rs\_Coef\_poly}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Rs\_Coef\_poly}{Rs\_Coef\_poly}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Rs\+\_\+\+Coef\+\_\+poly\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a082ba5a33c2c6cf60043a8852ab75ebf}\label{cae__echem_8h_a082ba5a33c2c6cf60043a8852ab75ebf} 
+\index{cae\_echem.h@{cae\_echem.h}!Rs\_Coef\_poly\_c@{Rs\_Coef\_poly\_c}}
+\index{Rs\_Coef\_poly\_c@{Rs\_Coef\_poly\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Rs\_Coef\_poly\_c}{Rs\_Coef\_poly\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Rs\+\_\+\+Coef\+\_\+poly\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_afb6bf526ce1da29f7239a9ebd0830ca4}\label{cae__echem_8h_afb6bf526ce1da29f7239a9ebd0830ca4} 
+\index{cae\_echem.h@{cae\_echem.h}!Sm\_N@{Sm\_N}}
+\index{Sm\_N@{Sm\_N}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Sm\_N}{Sm\_N}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Sm\+\_\+N\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a7609a34e9e17d16d7d4c9b78ac9a9686}\label{cae__echem_8h_a7609a34e9e17d16d7d4c9b78ac9a9686} 
+\index{cae\_echem.h@{cae\_echem.h}!Sm\_P@{Sm\_P}}
+\index{Sm\_P@{Sm\_P}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Sm\_P}{Sm\_P}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Sm\+\_\+P\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a3d61e533d803c781a3e7de9a3c900f65}\label{cae__echem_8h_a3d61e533d803c781a3e7de9a3c900f65} 
+\index{cae\_echem.h@{cae\_echem.h}!T\_Coef@{T\_Coef}}
+\index{T\_Coef@{T\_Coef}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{T\_Coef}{T\_Coef}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} T\+\_\+\+Coef\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a973e5e680b3ca00db46a0e4fc2febe08}\label{cae__echem_8h_a973e5e680b3ca00db46a0e4fc2febe08} 
+\index{cae\_echem.h@{cae\_echem.h}!T\_Plus@{T\_Plus}}
+\index{T\_Plus@{T\_Plus}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{T\_Plus}{T\_Plus}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} T\+\_\+\+Plus\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_acb94e50bd9c350ca3b119c1fabd6c52e}\label{cae__echem_8h_acb94e50bd9c350ca3b119c1fabd6c52e} 
+\index{cae\_echem.h@{cae\_echem.h}!T\_ref@{T\_ref}}
+\index{T\_ref@{T\_ref}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{T\_ref}{T\_ref}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} T\+\_\+ref\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ad526ee96b2d8ab047fbba9ecd9ffd3a6}\label{cae__echem_8h_ad526ee96b2d8ab047fbba9ecd9ffd3a6} 
+\index{cae\_echem.h@{cae\_echem.h}!U\_Coef@{U\_Coef}}
+\index{U\_Coef@{U\_Coef}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{U\_Coef}{U\_Coef}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} U\+\_\+\+Coef\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a1900e9b417345f680a6340a5b1101f3e}\label{cae__echem_8h_a1900e9b417345f680a6340a5b1101f3e} 
+\index{cae\_echem.h@{cae\_echem.h}!Voc\_Coef@{Voc\_Coef}}
+\index{Voc\_Coef@{Voc\_Coef}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Voc\_Coef}{Voc\_Coef}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Voc\+\_\+\+Coef\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_af608bed75511dd838ac005f48fdc7f73}\label{cae__echem_8h_af608bed75511dd838ac005f48fdc7f73} 
+\index{cae\_echem.h@{cae\_echem.h}!Voc\_Coef\_c@{Voc\_Coef\_c}}
+\index{Voc\_Coef\_c@{Voc\_Coef\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Voc\_Coef\_c}{Voc\_Coef\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Voc\+\_\+\+Coef\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_abaae08fba9e4d7ede62e3198bd033781}\label{cae__echem_8h_abaae08fba9e4d7ede62e3198bd033781} 
+\index{cae\_echem.h@{cae\_echem.h}!Voc\_Coef\_poly@{Voc\_Coef\_poly}}
+\index{Voc\_Coef\_poly@{Voc\_Coef\_poly}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Voc\_Coef\_poly}{Voc\_Coef\_poly}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Voc\+\_\+\+Coef\+\_\+poly\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_ad6008e6dead7d2c1ac9ac9dee4705cd5}\label{cae__echem_8h_ad6008e6dead7d2c1ac9ac9dee4705cd5} 
+\index{cae\_echem.h@{cae\_echem.h}!Voc\_Coef\_poly\_c@{Voc\_Coef\_poly\_c}}
+\index{Voc\_Coef\_poly\_c@{Voc\_Coef\_poly\_c}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Voc\_Coef\_poly\_c}{Voc\_Coef\_poly\_c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Voc\+\_\+\+Coef\+\_\+poly\+\_\+c\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_adb7e2626492a7cc7f168d41613cb5149}\label{cae__echem_8h_adb7e2626492a7cc7f168d41613cb5149} 
+\index{cae\_echem.h@{cae\_echem.h}!Y\_Coef@{Y\_Coef}}
+\index{Y\_Coef@{Y\_Coef}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{Y\_Coef}{Y\_Coef}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} Y\+\_\+\+Coef\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}\label{cae__echem_8h_a68e983772ff4be472efcf322afbb0362} 
+\index{cae\_echem.h@{cae\_echem.h}!yy@{yy}}
+\index{yy@{yy}!cae\_echem.h@{cae\_echem.h}}
+\doxysubsubsection{\texorpdfstring{yy}{yy}}
+{\footnotesize\ttfamily \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\+\_\+\+Vector}} yy\hspace{0.3cm}{\ttfamily [extern]}}
+

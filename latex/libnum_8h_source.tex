@@ -1,0 +1,158 @@
+\doxysection{libnum.\+h}
+\hypertarget{libnum_8h_source}{}\label{libnum_8h_source}\index{fluent20.1.0/cpropep/libnum/libnum.h@{fluent20.1.0/cpropep/libnum/libnum.h}}
+\mbox{\hyperlink{libnum_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*\ num.c\ \ -\/\ \ Library\ of\ numerical\ method\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00002\ \textcolor{comment}{/*\ Copyright\ (C)\ 2000\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*\ Antoine\ Lefebvre\ <antoine.lefebvre@polymtl.ca\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*\ This\ program\ is\ free\ software;\ you\ can\ redistribute\ it\ and/or\ modify*/}}
+\DoxyCodeLine{00006\ \textcolor{comment}{/*\ it\ under\ the\ terms\ of\ the\ GNU\ General\ Public\ License\ as\ published\ by*/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{/*\ the\ Free\ Software\ Foundation;\ either\ version\ 2\ of\ the\ License,\ or\ \ \ */}}
+\DoxyCodeLine{00008\ \textcolor{comment}{/*\ (at\ your\ option)\ any\ later\ version.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ This\ program\ is\ distributed\ in\ the\ hope\ that\ it\ will\ be\ useful,\ \ \ \ \ */}}
+\DoxyCodeLine{00011\ \textcolor{comment}{/*\ but\ WITHOUT\ ANY\ WARRANTY;\ without\ even\ the\ implied\ warranty\ of\ \ \ \ \ \ */}}
+\DoxyCodeLine{00012\ \textcolor{comment}{/*\ MERCHANTABILITY\ or\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE.\ \ See\ the\ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00013\ \textcolor{comment}{/*\ GNU\ General\ Public\ License\ for\ more\ details.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{/*\ You\ should\ have\ received\ a\ copy\ of\ the\ GNU\ General\ Public\ License\ \ \ */}}
+\DoxyCodeLine{00016\ \textcolor{comment}{/*\ along\ with\ this\ program;\ if\ not,\ write\ to\ the\ Free\ Software\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00017\ \textcolor{comment}{/*\ Foundation,\ Inc.,\ 675\ Mass\ Ave,\ Cambridge,\ MA\ 02139,\ USA.\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}..\(\backslash\)cpropep\(\backslash\)fluent6.h"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}../cpropep/fluent6.h"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ num\_h}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ num\_h}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{00027\ \textcolor{comment}{FUNCTION:\ This\ is\ a\ function\ to\ solve\ a\ matrix\ of\ linear}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ equation.\ It\ use\ the\ Gauus\ elimination\ method\ as}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ \ \ \ explain\ in\ 'Advanced\ engineering\ mathematics'\ bye}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ \ \ Erwin\ Kreyszig.}}
+\DoxyCodeLine{00031\ \textcolor{comment}{}}
+\DoxyCodeLine{00032\ \textcolor{comment}{PARAMETER:\ **matrix\ is\ a\ pointer\ to\ an\ array\ of\ [neq]x[neq+1]}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ which\ is\ an\ augmented\ matrix.}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ \ \ \ \ *solution\ is\ an\ array\ that\ will\ contain\ the\ solution}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ \ \ \ \ if\ there\ is\ one\ and\ junk\ if\ there\ is\ no\ solution.\ It}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ \ \ \ \ must\ be\ allocated.}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ \ \ \ \ neq\ is\ the\ number\ of\ unknoen\ in\ the\ system}}
+\DoxyCodeLine{00038\ \textcolor{comment}{}}
+\DoxyCodeLine{00039\ \textcolor{comment}{OUTPUT:\ 0\ on\ success,\ -\/1\ on\ failure}}
+\DoxyCodeLine{00040\ \textcolor{comment}{}}
+\DoxyCodeLine{00041\ \textcolor{comment}{COMMENTS:\ the\ number\ of\ operation\ can\ be\ estimated\ by\ 2*n\string^3/3}}
+\DoxyCodeLine{00042\ \textcolor{comment}{}}
+\DoxyCodeLine{00043\ \textcolor{comment}{AUTHOR:\ \ Antoine\ Lefebvre}}
+\DoxyCodeLine{00044\ \textcolor{comment}{}}
+\DoxyCodeLine{00045\ \textcolor{comment}{DATE:\ February\ 6,\ 2000}}
+\DoxyCodeLine{00046\ \textcolor{comment}{***************************************************************/}}
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{libnum_8h_a8aac018047bc89345cd47a77d2cdcb70}{gauss}}(\textcolor{keywordtype}{double}\ **matrix,\ \textcolor{keywordtype}{double}\ *solution,\ \textcolor{keywordtype}{int}\ neq);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{00051\ \textcolor{comment}{FUNCTION:\ This\ function\ solve\ system\ of\ linear\ equation\ with}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ the\ LU-\/Factorisation\ method\ as\ explain\ in}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ \ \ \ 'Advanced\ engineering\ mathematics'\ bye\ Erwin\ Kreyszig.}}
+\DoxyCodeLine{00054\ \textcolor{comment}{}}
+\DoxyCodeLine{00055\ \textcolor{comment}{THEORY:\ \ \ To\ solve\ the\ system\ Ax=b\ ,\ we\ could\ decompose\ A\ such}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ that\ A\ =\ LU.\ L\ is\ a\ lower\ triangular\ matrix\ and}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ \ \ \ U\ is\ an\ upper\ triangular\ matrix.\ We\ could\ then\ solve}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ \ \ \ the\ system\ bye\ substitution\ cause\ Ly=b\ and\ Ux=y.}}
+\DoxyCodeLine{00059\ \textcolor{comment}{}}
+\DoxyCodeLine{00060\ \textcolor{comment}{PARAMETER:\ Same\ as\ for\ gauss}}
+\DoxyCodeLine{00061\ \textcolor{comment}{}}
+\DoxyCodeLine{00062\ \textcolor{comment}{OUTPUT:\ 0\ on\ success,\ -\/1\ on\ failure}}
+\DoxyCodeLine{00063\ \textcolor{comment}{}}
+\DoxyCodeLine{00064\ \textcolor{comment}{COMMENTS:\ the\ number\ of\ operation\ is\ estimate\ by\ n\string^3/3,\ about}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ half\ as\ many\ as\ the\ Gauss\ elimination.}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ \ \ \ Should\ be\ interesting\ to\ compare\ the\ speed\ in\ case}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ \ \ \ of\ big\ matrix}}
+\DoxyCodeLine{00068\ \textcolor{comment}{}}
+\DoxyCodeLine{00069\ \textcolor{comment}{AUTHOR:\ \ Antoine\ Lefebvre}}
+\DoxyCodeLine{00070\ \textcolor{comment}{}}
+\DoxyCodeLine{00071\ \textcolor{comment}{DATE:\ February\ 6,\ 2000}}
+\DoxyCodeLine{00072\ \textcolor{comment}{***************************************************************/}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#ifdef\ TRUE\_ARRAY}}
+\DoxyCodeLine{00074\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{libnum_8h_acda1a39cdf15520751bf151017a4461c}{lu}}(\textcolor{keywordtype}{double}\ *matrix,\ \textcolor{keywordtype}{double}\ *solution,\ \textcolor{keywordtype}{int}\ neq);}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00076\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{libnum_8h_acda1a39cdf15520751bf151017a4461c}{lu}}(\textcolor{keywordtype}{double}\ **matrix,\ \textcolor{keywordtype}{double}\ *solution,\ \textcolor{keywordtype}{int}\ neq);}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#ifdef\ lapack}}
+\DoxyCodeLine{00079\ \textcolor{keywordtype}{int}\ matsol(\textcolor{keywordtype}{double}\ **matrix,\ \textcolor{keywordtype}{double}\ *solution,\ \textcolor{keywordtype}{int}\ neq);}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{00083\ \textcolor{comment}{FUNCTION:\ This\ function\ print\ the\ coefficient\ of\ the\ matrix\ to}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ the\ screen.}}
+\DoxyCodeLine{00085\ \textcolor{comment}{}}
+\DoxyCodeLine{00086\ \textcolor{comment}{PARAMETER:\ Same\ as\ for\ gauss}}
+\DoxyCodeLine{00087\ \textcolor{comment}{***************************************************************/}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#ifdef\ TRUE\_ARRAY}}
+\DoxyCodeLine{00089\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{libnum_8h_a8f3f322ce17b9e39ae64ae09b6cd3e1e}{print\_matrix}}(\textcolor{keywordtype}{double}\ *matrix,\ \textcolor{keywordtype}{int}\ neq);}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{libnum_8h_a8f3f322ce17b9e39ae64ae09b6cd3e1e}{print\_matrix}}(\textcolor{keywordtype}{double}\ **matrix,\ \textcolor{keywordtype}{int}\ neq);}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{comment}{/*\ same\ thing\ but\ for\ square\ matrix\ instead\ of\ (N)x(N-\/1)\ */}}
+\DoxyCodeLine{00095\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{libnum_8h_a0c1d22739d7190a60e2f367343d35cf9}{print\_square\_matrix}}(\textcolor{keywordtype}{double}\ **matrix,\ \textcolor{keywordtype}{int}\ neq);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{00098\ \textcolor{comment}{FUNCTION:\ This\ function\ print\ the\ contents\ of\ the\ vector\ to}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ the\ screen.}}
+\DoxyCodeLine{00100\ \textcolor{comment}{}}
+\DoxyCodeLine{00101\ \textcolor{comment}{PARAMETER:\ Same\ as\ for\ gauss}}
+\DoxyCodeLine{00102\ \textcolor{comment}{***************************************************************/}}
+\DoxyCodeLine{00103\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{libnum_8h_affa0c354becfa82141b1e163f5496e03}{print\_vec}}(\textcolor{keywordtype}{double}\ *\mbox{\hyperlink{structvec}{vec}},\ \textcolor{keywordtype}{int}\ neq);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{comment}{/**************************************************************}}
+\DoxyCodeLine{00107\ \textcolor{comment}{FUNCTION:\ This\ function\ solve\ systems\ of\ ODE\ of\ the\ first\ order}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ with\ the\ Runge-\/Kutta\ method\ of\ the\ fourth\ order.}}
+\DoxyCodeLine{00109\ \textcolor{comment}{}}
+\DoxyCodeLine{00110\ \textcolor{comment}{PARAMETER:\ The\ first\ parameter\ is\ a\ pointer\ to\ the\ function\ we}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ we\ want\ to\ solve.\ This\ function\ take\ five\ parameter}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ \ \ \ \ neq\ is\ the\ number\ of\ equations\ in\ the\ system}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ \ \ \ \ time\ is\ the\ time\ at\ which\ we\ want\ to\ evaluate}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ \ \ \ \ y\ is\ an\ array\ containing\ an\ initial\ value}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ \ \ \ \ dy\ will\ store\ the\ result\ of\ the\ function}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ \ \ \ \ ierr\ any\ error\ field}}
+\DoxyCodeLine{00117\ \textcolor{comment}{}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ \ \ \ \ step\ is\ the\ time\ variation}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ \ \ \ \ duration\ is\ the\ total\ time\ of\ the\ simulation}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ \ \ \ \ ic\ are\ the\ initial\ conditions}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ \ \ \ \ **y\ is\ an\ array\ containing\ all\ the\ data}}
+\DoxyCodeLine{00122\ \textcolor{comment}{}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ \ \ \ \ void\ *\ is\ nay\ user\ data}}
+\DoxyCodeLine{00124\ \textcolor{comment}{}}
+\DoxyCodeLine{00125\ \textcolor{comment}{COMMENTS:\ **y\ must\ be\ properly\ allocated,\ [number\ of\ points]X[neq]}}
+\DoxyCodeLine{00126\ \textcolor{comment}{}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ It\ could\ be\ interesting\ to\ add\ a\ tolerance\ and\ use}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ \ \ \ variable\ step\ to\ reach\ our\ tolerance\ instead\ of\ using\ a}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ \ \ \ fixed\ step.}}
+\DoxyCodeLine{00130\ \textcolor{comment}{}}
+\DoxyCodeLine{00131\ \textcolor{comment}{AUTHOR:\ Antoine\ Lefebvre}}
+\DoxyCodeLine{00132\ \textcolor{comment}{}}
+\DoxyCodeLine{00133\ \textcolor{comment}{DATE:\ February\ 11}}
+\DoxyCodeLine{00134\ \textcolor{comment}{*****************************************************************/}}
+\DoxyCodeLine{00135\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{libnum_8h_ad2aa25b0ba5879b27a53d5c59fbd6d60}{rk4}}(\ \textcolor{keywordtype}{int}\ (*f)(\textcolor{keywordtype}{int}\ neq,\ \textcolor{keywordtype}{double}\ time,\ \textcolor{keywordtype}{double}\ *y,\ \textcolor{keywordtype}{double}\ *dy,}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *data),}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ neq,\ \textcolor{keywordtype}{double}\ step,\ \textcolor{keywordtype}{double}\ duration,\ \textcolor{keywordtype}{double}\ *ic,}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ **y,\ \textcolor{keywordtype}{void}\ *data\ );}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{comment}{/*\ this\ function\ return\ the\ nearest\ integer\ to\ a\ */}}
+\DoxyCodeLine{00142\ \textcolor{comment}{/*\ it\ is\ a\ replacement\ of\ rint\ which\ is\ not\ ANSI\ complient\ */}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#if\ FLUENT6}}
+\DoxyCodeLine{00144\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{libnum_8h_a5317e7723da5979c1c177bb3f91b8d51}{round\_fl}}(\textcolor{keywordtype}{double}\ a);}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00146\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacenumpy_1_1ma_1_1core_a08fcf5be300f50771cdd6d21174b4610}{round}}(\textcolor{keywordtype}{double}\ a);}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ }
+
+\end{DoxyCode}

@@ -1,0 +1,683 @@
+\doxysection{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\+\_\+impl.h File Reference}
+\hypertarget{ida__impl_8h}{}\label{ida__impl_8h}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_impl.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_impl.h}}
+{\ttfamily \#include $<$stdarg.\+h$>$}\newline
+{\ttfamily \#include $<$ida/ida.\+h$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMem\+Rec}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ae25d15a9b819a5794085745e5106a1f8}{HMAX\+\_\+\+INV\+\_\+\+DEFAULT}}~RCONST(0.\+0) /\texorpdfstring{$\ast$}{*} hmax\+\_\+inv default value          \texorpdfstring{$\ast$}{*}/
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ad634e43b6ae3c2f8ecfc6036abec6a64}{MAXORD\+\_\+\+DEFAULT}}~5           /\texorpdfstring{$\ast$}{*} maxord default value            \texorpdfstring{$\ast$}{*}/
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_addbf1dafd1c1d7d9b8d1f9625ba2cdbc}{MXORDP1}}~6           /\texorpdfstring{$\ast$}{*} max. number of N\+\_\+\+Vectors in phi \texorpdfstring{$\ast$}{*}/
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ae3667493be085361f0ee927fa83f79c5}{MXSTEP\+\_\+\+DEFAULT}}~500         /\texorpdfstring{$\ast$}{*} mxstep default value            \texorpdfstring{$\ast$}{*}/
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aa0ab63945e78901b00671a2657298095}{MSG\+\_\+\+TIME}}~"{}t = \%g, "{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ab592995493b3c71e9719a5c77692852d}{MSG\+\_\+\+TIME\+\_\+H}}~"{}t = \%g and h = \%g, "{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a392e9950182d71334e14386505426730}{MSG\+\_\+\+TIME\+\_\+\+INT}}~"{}t = \%g is not between tcur -\/ hu = \%g and tcur = \%g."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a6853f51045fe787247cc863e9f8127de}{MSG\+\_\+\+TIME\+\_\+\+TOUT}}~"{}tout = \%g"{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ae8efebac325ae7bb3e3b000f2cb24286}{MSG\+\_\+\+TIME\+\_\+\+TSTOP}}~"{}tstop = \%g"{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aa440763ddeec861d612fb2d8237ef708}{MSG\+\_\+\+MEM\+\_\+\+FAIL}}~"{}A memory request failed."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ac9fff57ef86e1b03f92f19d16d5a7cde}{MSG\+\_\+\+NO\+\_\+\+MEM}}~"{}ida\+\_\+mem = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_af2d55cff3d79d96213fb196337986d1a}{MSG\+\_\+\+NO\+\_\+\+MALLOC}}~"{}Attempt to call before IDAMalloc."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aa77484842e8209e6da1e67225ea5fe45}{MSG\+\_\+\+BAD\+\_\+\+NVECTOR}}~"{}A required vector operation is not implemented."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a33553167e682d49b9bf1c8b356f4fb3e}{MSG\+\_\+\+Y0\+\_\+\+NULL}}~"{}y0 = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a09c0e76257ed1cb96a80d6e5e4deab0b}{MSG\+\_\+\+YP0\+\_\+\+NULL}}~"{}yp0 = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a6e4a956c83fa9299da26cd73484c5370}{MSG\+\_\+\+BAD\+\_\+\+ITOL}}~"{}Illegal value for itol. The legal values are IDA\+\_\+\+SS, IDA\+\_\+\+SV, and IDA\+\_\+\+WF."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_af965dc2d944be83f5e1f857f32bfcfa4}{MSG\+\_\+\+RES\+\_\+\+NULL}}~"{}res = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a7657c51942c241a9df8286c3d9bd3feb}{MSG\+\_\+\+BAD\+\_\+\+RTOL}}~"{}reltol $<$ 0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a8434447f7b336a764b87f9e0dbfbe2e9}{MSG\+\_\+\+ATOL\+\_\+\+NULL}}~"{}abstol = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a08ff05d5eb6a613458172a2be45f9ffb}{MSG\+\_\+\+BAD\+\_\+\+ATOL}}~"{}Some abstol component $<$ 0.\+0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_af1358d82296a28685c1f2fde5b592ca2}{MSG\+\_\+\+ROOT\+\_\+\+FUNC\+\_\+\+NULL}}~"{}g = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a3cbf27e94a391f72ae2d1716c745a7f7}{MSG\+\_\+\+MISSING\+\_\+\+ID}}~"{}id = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} but suppressalg option on."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a52544f015a66a69372101dd71710247d}{MSG\+\_\+\+NO\+\_\+\+TOLS}}~"{}No integration tolerances have been specified."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aecf903d3d2cb7a12f9e5e1340d8cd91e}{MSG\+\_\+\+FAIL\+\_\+\+EWT}}~"{}The user-\/provide Ewt\+Set \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a09962bb986d3e130f8256f61b434f969}{MSG\+\_\+\+BAD\+\_\+\+EWT}}~"{}Some initial ewt component = 0.\+0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a016a2797c5fdafdad883363d9e06df60}{MSG\+\_\+\+Y0\+\_\+\+FAIL\+\_\+\+CONSTR}}~"{}y0 fails to satisfy constraints."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a7e5511000b200301c7640cf14f7e84f2}{MSG\+\_\+\+LSOLVE\+\_\+\+NULL}}~"{}The linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}}\textquotesingle{}s solve routine is NULL."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ab3b250b06f41b6770e8e1dda595e9ab0}{MSG\+\_\+\+LINIT\+\_\+\+FAIL}}~"{}The linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}}\textquotesingle{}s init routine failed."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a9f00155161ce0a7884e873e2b0fbd6a9}{MSG\+\_\+\+IC\+\_\+\+BAD\+\_\+\+ICOPT}}~"{}icopt has an illegal value."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ab2176fcdfcfd5df9a602a4d74426cef3}{MSG\+\_\+\+IC\+\_\+\+MISSING\+\_\+\+ID}}~"{}id = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} conflicts with icopt."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a9a3a4fdf2e6a45caa288ceadba821ccb}{MSG\+\_\+\+IC\+\_\+\+TOO\+\_\+\+CLOSE}}~"{}tout1 too close to t0 to attempt initial condition calculation."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_adbe9c3c493ef6d52f978b336bc893e85}{MSG\+\_\+\+IC\+\_\+\+BAD\+\_\+\+ID}}~"{}id has illegal values."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aa08ad8db4fc77b1fb7ee84d09cdbb16d}{MSG\+\_\+\+IC\+\_\+\+BAD\+\_\+\+EWT}}~"{}Some initial ewt component = 0.\+0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aa90f01c16d60c3d47b688f73c70d01ca}{MSG\+\_\+\+IC\+\_\+\+RES\+\_\+\+NONREC}}~"{}The residual \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed unrecoverably. "{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a494835807da6ea125c99cc14f9a57bcb}{MSG\+\_\+\+IC\+\_\+\+RES\+\_\+\+FAIL}}~"{}The residual \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed at the first call. "{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ac320e1a7b592b470e27b409685bc0409}{MSG\+\_\+\+IC\+\_\+\+SETUP\+\_\+\+FAIL}}~"{}The linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}} setup failed unrecoverably."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ad9f99999ad79f3639190ff013e39af9a}{MSG\+\_\+\+IC\+\_\+\+SOLVE\+\_\+\+FAIL}}~"{}The linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}} solve failed unrecoverably."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a07762dca4b2a43b75a6b5d895f538c76}{MSG\+\_\+\+IC\+\_\+\+NO\+\_\+\+RECOVERY}}~"{}The residual routine or the linear setup or solve routine had a recoverable error, but \mbox{\hyperlink{ida_8h_af71ad807198c0b4d3ea4674369bf3800}{IDACalc\+IC}} was unable to recover."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a5f592b3d2c27fc4d5877e030f6869c17}{MSG\+\_\+\+IC\+\_\+\+FAIL\+\_\+\+CONSTR}}~"{}Unable to satisfy the inequality constraints."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a51ab838060687e7b77aef0d228ed308f}{MSG\+\_\+\+IC\+\_\+\+FAILED\+\_\+\+LINS}}~"{}The linesearch algorithm failed with too small a step."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a0b1e5a024afce60a6939b9f798f76f05}{MSG\+\_\+\+IC\+\_\+\+CONV\+\_\+\+FAILED}}~"{}Newton/Linesearch algorithm failed to converge."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a0554a1b42ee2357e951f84002d9f2103}{MSG\+\_\+\+YRET\+\_\+\+NULL}}~"{}yret = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ae03a95bb80f2c397cd6e2789472382f4}{MSG\+\_\+\+YPRET\+\_\+\+NULL}}~"{}ypret = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a0c2646a6428c596e85b33936fc925c80}{MSG\+\_\+\+TRET\+\_\+\+NULL}}~"{}tret = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a5669353272b16528a47ab10467af1a76}{MSG\+\_\+\+BAD\+\_\+\+ITASK}}~"{}itask has an illegal value."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_abc3178203e1e6a22ccade4eedcaf7d2a}{MSG\+\_\+\+TOO\+\_\+\+CLOSE}}~"{}tout too close to t0 to start integration."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a25f2169ad9855b04a2c1203e181f44b9}{MSG\+\_\+\+BAD\+\_\+\+HINIT}}~"{}Initial step is not towards tout."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ab4e7f8e0ca7701927075502f9bab9024}{MSG\+\_\+\+BAD\+\_\+\+TSTOP}}~"{}The value "{} MSG\+\_\+\+TIME\+\_\+\+TSTOP "{} is behind current "{} MSG\+\_\+\+TIME "{}in the direction of integration."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a80b564b4b643b8512ec7d8acbe252245}{MSG\+\_\+\+CLOSE\+\_\+\+ROOTS}}~"{}Root found at and very near "{} MSG\+\_\+\+TIME "{}."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a2e71dcc982d1589776d38a5c66964f6e}{MSG\+\_\+\+MAX\+\_\+\+STEPS}}~"{}At "{} MSG\+\_\+\+TIME "{}, mxstep steps taken before reaching tout."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a7c4a817a3c3794ed1e753624cecffe1f}{MSG\+\_\+\+EWT\+\_\+\+NOW\+\_\+\+FAIL}}~"{}At "{} MSG\+\_\+\+TIME "{}the user-\/provide Ewt\+Set \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a78088ee0837708fd2156e71cbea7e10a}{MSG\+\_\+\+EWT\+\_\+\+NOW\+\_\+\+BAD}}~"{}At "{} MSG\+\_\+\+TIME "{}some ewt component has become $<$= 0.\+0."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ae3775e9bbb799918832dacba9af449ab}{MSG\+\_\+\+TOO\+\_\+\+MUCH\+\_\+\+ACC}}~"{}At "{} MSG\+\_\+\+TIME "{}too much accuracy requested."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_af0f8b28dbdfba486f076a485448db919}{MSG\+\_\+\+BAD\+\_\+K}}~"{}Illegal value for k."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a4985fcba7ab339735d6cc273b456482f}{MSG\+\_\+\+NULL\+\_\+\+DKY}}~"{}dky = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a33c8fd3a56c962dd5b77967e825074fa}{MSG\+\_\+\+BAD\+\_\+T}}~"{}Illegal value for t."{} \mbox{\hyperlink{ida__impl_8h_a392e9950182d71334e14386505426730}{MSG\+\_\+\+TIME\+\_\+\+INT}}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a79229c63aa129dc9f6f42a3e4ceaacfc}{MSG\+\_\+\+BAD\+\_\+\+TOUT}}~"{}Trouble interpolating at "{} MSG\+\_\+\+TIME\+\_\+\+TOUT "{}. tout too far back in direction of integration."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a7b63a19375129eea32fd49946c5d915e}{MSG\+\_\+\+ERR\+\_\+\+FAILS}}~"{}At "{} MSG\+\_\+\+TIME\+\_\+H "{}the error test failed repeatedly or with \texorpdfstring{$\vert$}{|}h\texorpdfstring{$\vert$}{|} = hmin."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a60fc22840934dc28c745fc0ebee5d70c}{MSG\+\_\+\+CONV\+\_\+\+FAILS}}~"{}At "{} MSG\+\_\+\+TIME\+\_\+H "{}the corrector \mbox{\hyperlink{equilibrium_8c_a4d16022a9f459c3de62a74d2a1e3b967}{convergence}} failed repeatedly or with \texorpdfstring{$\vert$}{|}h\texorpdfstring{$\vert$}{|} = hmin."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ae330d2e754c5b5a381b44766a03f17eb}{MSG\+\_\+\+SETUP\+\_\+\+FAILED}}~"{}At "{} MSG\+\_\+\+TIME "{}the linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}} setup failed unrecoverably."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a5a7a2d0ea0cd43a5e5324e0c6ebe920c}{MSG\+\_\+\+SOLVE\+\_\+\+FAILED}}~"{}At "{} MSG\+\_\+\+TIME "{}the linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}} solve failed unrecoverably."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a4390e629f9dc66d5fda649a59f20c3b4}{MSG\+\_\+\+REP\+\_\+\+RES\+\_\+\+ERR}}~"{}At "{} MSG\+\_\+\+TIME "{}repeated recoverable residual errors."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a3e3955d6999049b5f485a0aab4ee4b4c}{MSG\+\_\+\+RES\+\_\+\+NONRECOV}}~"{}At "{} MSG\+\_\+\+TIME "{}the residual \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed unrecoverably."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aab11b5272de087cfa8668851cbc38e02}{MSG\+\_\+\+FAILED\+\_\+\+CONSTR}}~"{}At "{} MSG\+\_\+\+TIME "{}unable to satisfy inequality constraints."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aec76c90486602a52d463559a19f26b19}{MSG\+\_\+\+RTFUNC\+\_\+\+FAILED}}~"{}At "{} MSG\+\_\+\+TIME "{}, the rootfinding routine failed in an unrecoverable manner."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a9b0e29f3b677c2ba51b022a42eae0407}{MSG\+\_\+\+NO\+\_\+\+ROOT}}~"{}Rootfinding was not initialized."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a32461182de5d489f743f46e295c333a0}{MSG\+\_\+\+INACTIVE\+\_\+\+ROOTS}}~"{}At the end of the first step, there are still some root functions identically 0. This warning will not be issued again."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a10f8ce52157ba23f08252f5254fbfa9b}{MSG\+\_\+\+NEG\+\_\+\+MAXORD}}~"{}maxord $<$= 0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aa7f53a8b38854aa8355c4b3308c56331}{MSG\+\_\+\+BAD\+\_\+\+MAXORD}}~"{}Illegal attempt to increase maximum order."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a2f6a59716fc1961fc604593b0db33a18}{MSG\+\_\+\+NEG\+\_\+\+HMAX}}~"{}hmax $<$ 0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a83c3be93af60da64fd43674c2926671b}{MSG\+\_\+\+NEG\+\_\+\+EPCON}}~"{}epcon $<$= 0.\+0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a410fc6e98c93f9485b6ecde4db90c508}{MSG\+\_\+\+BAD\+\_\+\+CONSTR}}~"{}Illegal values in constraints vector."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ab03b31d5201e55cd96beddf25eb97cad}{MSG\+\_\+\+BAD\+\_\+\+EPICCON}}~"{}epiccon $<$= 0.\+0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_aded6ccdeeffd8f178e39565e2506d0f1}{MSG\+\_\+\+BAD\+\_\+\+MAXNH}}~"{}maxnh $<$= 0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a718ec96b59457402a174bd625943e4df}{MSG\+\_\+\+BAD\+\_\+\+MAXNJ}}~"{}maxnj $<$= 0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ae8e864ae8879a98e777fb9be8b6df7db}{MSG\+\_\+\+BAD\+\_\+\+MAXNIT}}~"{}maxnit $<$= 0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_a6b09ed5174c55322be081bfc76bda8f0}{MSG\+\_\+\+BAD\+\_\+\+STEPTOL}}~"{}steptol $<$= 0.\+0 illegal."{}
+\item 
+\#define \mbox{\hyperlink{ida__impl_8h_ad16e906a70a1806f95f50efe3bc3de78}{MSG\+\_\+\+TOO\+\_\+\+LATE}}~"{}IDAGet\+Consistent\+IC can only be called before IDASolve."{}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMem\+Rec}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{ida__impl_8h_a47968eecaefd81f8b70742eb09b1c609}{IDAMem}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{ida__impl_8h_a1502aad5f00d8ce66cc3b84c3db52a1a}{IDAEwt\+Set}} (\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\+\_\+\+Vector}} ycur, \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\+\_\+\+Vector}} weight, void \texorpdfstring{$\ast$}{*}data)
+\item 
+void \mbox{\hyperlink{ida__impl_8h_a8401cec99cd95b3d7264659b629c9583}{IDAProcess\+Error}} (\mbox{\hyperlink{ida__impl_8h_a47968eecaefd81f8b70742eb09b1c609}{IDAMem}} IDA\+\_\+mem, int error\+\_\+code, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}module, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}fname, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}msgfmt,...)
+\item 
+void \mbox{\hyperlink{ida__impl_8h_a2fa9da29b2ffeebc20e65c44e6418e3c}{IDAErr\+Handler}} (int error\+\_\+code, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}module, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{dbgmsg_8h_a98858dd5dea59756cfe716f0168de035}{msg}}, void \texorpdfstring{$\ast$}{*}data)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{ida__impl_8h_ae25d15a9b819a5794085745e5106a1f8}\label{ida__impl_8h_ae25d15a9b819a5794085745e5106a1f8} 
+\index{ida\_impl.h@{ida\_impl.h}!HMAX\_INV\_DEFAULT@{HMAX\_INV\_DEFAULT}}
+\index{HMAX\_INV\_DEFAULT@{HMAX\_INV\_DEFAULT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{HMAX\_INV\_DEFAULT}{HMAX\_INV\_DEFAULT}}
+{\footnotesize\ttfamily \#define HMAX\+\_\+\+INV\+\_\+\+DEFAULT~RCONST(0.\+0) /\texorpdfstring{$\ast$}{*} hmax\+\_\+inv default value          \texorpdfstring{$\ast$}{*}/}
+
+\Hypertarget{ida__impl_8h_ad634e43b6ae3c2f8ecfc6036abec6a64}\label{ida__impl_8h_ad634e43b6ae3c2f8ecfc6036abec6a64} 
+\index{ida\_impl.h@{ida\_impl.h}!MAXORD\_DEFAULT@{MAXORD\_DEFAULT}}
+\index{MAXORD\_DEFAULT@{MAXORD\_DEFAULT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MAXORD\_DEFAULT}{MAXORD\_DEFAULT}}
+{\footnotesize\ttfamily \#define MAXORD\+\_\+\+DEFAULT~5           /\texorpdfstring{$\ast$}{*} maxord default value            \texorpdfstring{$\ast$}{*}/}
+
+\Hypertarget{ida__impl_8h_a8434447f7b336a764b87f9e0dbfbe2e9}\label{ida__impl_8h_a8434447f7b336a764b87f9e0dbfbe2e9} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_ATOL\_NULL@{MSG\_ATOL\_NULL}}
+\index{MSG\_ATOL\_NULL@{MSG\_ATOL\_NULL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_ATOL\_NULL}{MSG\_ATOL\_NULL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+ATOL\+\_\+\+NULL~"{}abstol = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_a08ff05d5eb6a613458172a2be45f9ffb}\label{ida__impl_8h_a08ff05d5eb6a613458172a2be45f9ffb} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_ATOL@{MSG\_BAD\_ATOL}}
+\index{MSG\_BAD\_ATOL@{MSG\_BAD\_ATOL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_ATOL}{MSG\_BAD\_ATOL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+ATOL~"{}Some abstol component $<$ 0.\+0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_a410fc6e98c93f9485b6ecde4db90c508}\label{ida__impl_8h_a410fc6e98c93f9485b6ecde4db90c508} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_CONSTR@{MSG\_BAD\_CONSTR}}
+\index{MSG\_BAD\_CONSTR@{MSG\_BAD\_CONSTR}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_CONSTR}{MSG\_BAD\_CONSTR}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+CONSTR~"{}Illegal values in constraints vector."{}}
+
+\Hypertarget{ida__impl_8h_ab03b31d5201e55cd96beddf25eb97cad}\label{ida__impl_8h_ab03b31d5201e55cd96beddf25eb97cad} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_EPICCON@{MSG\_BAD\_EPICCON}}
+\index{MSG\_BAD\_EPICCON@{MSG\_BAD\_EPICCON}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_EPICCON}{MSG\_BAD\_EPICCON}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+EPICCON~"{}epiccon $<$= 0.\+0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_a09962bb986d3e130f8256f61b434f969}\label{ida__impl_8h_a09962bb986d3e130f8256f61b434f969} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_EWT@{MSG\_BAD\_EWT}}
+\index{MSG\_BAD\_EWT@{MSG\_BAD\_EWT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_EWT}{MSG\_BAD\_EWT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+EWT~"{}Some initial ewt component = 0.\+0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_a25f2169ad9855b04a2c1203e181f44b9}\label{ida__impl_8h_a25f2169ad9855b04a2c1203e181f44b9} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_HINIT@{MSG\_BAD\_HINIT}}
+\index{MSG\_BAD\_HINIT@{MSG\_BAD\_HINIT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_HINIT}{MSG\_BAD\_HINIT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+HINIT~"{}Initial step is not towards tout."{}}
+
+\Hypertarget{ida__impl_8h_a5669353272b16528a47ab10467af1a76}\label{ida__impl_8h_a5669353272b16528a47ab10467af1a76} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_ITASK@{MSG\_BAD\_ITASK}}
+\index{MSG\_BAD\_ITASK@{MSG\_BAD\_ITASK}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_ITASK}{MSG\_BAD\_ITASK}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+ITASK~"{}itask has an illegal value."{}}
+
+\Hypertarget{ida__impl_8h_a6e4a956c83fa9299da26cd73484c5370}\label{ida__impl_8h_a6e4a956c83fa9299da26cd73484c5370} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_ITOL@{MSG\_BAD\_ITOL}}
+\index{MSG\_BAD\_ITOL@{MSG\_BAD\_ITOL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_ITOL}{MSG\_BAD\_ITOL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+ITOL~"{}Illegal value for itol. The legal values are IDA\+\_\+\+SS, IDA\+\_\+\+SV, and IDA\+\_\+\+WF."{}}
+
+\Hypertarget{ida__impl_8h_af0f8b28dbdfba486f076a485448db919}\label{ida__impl_8h_af0f8b28dbdfba486f076a485448db919} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_K@{MSG\_BAD\_K}}
+\index{MSG\_BAD\_K@{MSG\_BAD\_K}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_K}{MSG\_BAD\_K}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+K~"{}Illegal value for k."{}}
+
+\Hypertarget{ida__impl_8h_aded6ccdeeffd8f178e39565e2506d0f1}\label{ida__impl_8h_aded6ccdeeffd8f178e39565e2506d0f1} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_MAXNH@{MSG\_BAD\_MAXNH}}
+\index{MSG\_BAD\_MAXNH@{MSG\_BAD\_MAXNH}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_MAXNH}{MSG\_BAD\_MAXNH}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+MAXNH~"{}maxnh $<$= 0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_ae8e864ae8879a98e777fb9be8b6df7db}\label{ida__impl_8h_ae8e864ae8879a98e777fb9be8b6df7db} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_MAXNIT@{MSG\_BAD\_MAXNIT}}
+\index{MSG\_BAD\_MAXNIT@{MSG\_BAD\_MAXNIT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_MAXNIT}{MSG\_BAD\_MAXNIT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+MAXNIT~"{}maxnit $<$= 0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_a718ec96b59457402a174bd625943e4df}\label{ida__impl_8h_a718ec96b59457402a174bd625943e4df} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_MAXNJ@{MSG\_BAD\_MAXNJ}}
+\index{MSG\_BAD\_MAXNJ@{MSG\_BAD\_MAXNJ}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_MAXNJ}{MSG\_BAD\_MAXNJ}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+MAXNJ~"{}maxnj $<$= 0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_aa7f53a8b38854aa8355c4b3308c56331}\label{ida__impl_8h_aa7f53a8b38854aa8355c4b3308c56331} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_MAXORD@{MSG\_BAD\_MAXORD}}
+\index{MSG\_BAD\_MAXORD@{MSG\_BAD\_MAXORD}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_MAXORD}{MSG\_BAD\_MAXORD}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+MAXORD~"{}Illegal attempt to increase maximum order."{}}
+
+\Hypertarget{ida__impl_8h_aa77484842e8209e6da1e67225ea5fe45}\label{ida__impl_8h_aa77484842e8209e6da1e67225ea5fe45} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_NVECTOR@{MSG\_BAD\_NVECTOR}}
+\index{MSG\_BAD\_NVECTOR@{MSG\_BAD\_NVECTOR}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_NVECTOR}{MSG\_BAD\_NVECTOR}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+NVECTOR~"{}A required vector operation is not implemented."{}}
+
+\Hypertarget{ida__impl_8h_a7657c51942c241a9df8286c3d9bd3feb}\label{ida__impl_8h_a7657c51942c241a9df8286c3d9bd3feb} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_RTOL@{MSG\_BAD\_RTOL}}
+\index{MSG\_BAD\_RTOL@{MSG\_BAD\_RTOL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_RTOL}{MSG\_BAD\_RTOL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+RTOL~"{}reltol $<$ 0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_a6b09ed5174c55322be081bfc76bda8f0}\label{ida__impl_8h_a6b09ed5174c55322be081bfc76bda8f0} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_STEPTOL@{MSG\_BAD\_STEPTOL}}
+\index{MSG\_BAD\_STEPTOL@{MSG\_BAD\_STEPTOL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_STEPTOL}{MSG\_BAD\_STEPTOL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+STEPTOL~"{}steptol $<$= 0.\+0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_a33c8fd3a56c962dd5b77967e825074fa}\label{ida__impl_8h_a33c8fd3a56c962dd5b77967e825074fa} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_T@{MSG\_BAD\_T}}
+\index{MSG\_BAD\_T@{MSG\_BAD\_T}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_T}{MSG\_BAD\_T}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+T~"{}Illegal value for t."{} \mbox{\hyperlink{ida__impl_8h_a392e9950182d71334e14386505426730}{MSG\+\_\+\+TIME\+\_\+\+INT}}}
+
+\Hypertarget{ida__impl_8h_a79229c63aa129dc9f6f42a3e4ceaacfc}\label{ida__impl_8h_a79229c63aa129dc9f6f42a3e4ceaacfc} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_TOUT@{MSG\_BAD\_TOUT}}
+\index{MSG\_BAD\_TOUT@{MSG\_BAD\_TOUT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_TOUT}{MSG\_BAD\_TOUT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+TOUT~"{}Trouble interpolating at "{} MSG\+\_\+\+TIME\+\_\+\+TOUT "{}. tout too far back in direction of integration."{}}
+
+\Hypertarget{ida__impl_8h_ab4e7f8e0ca7701927075502f9bab9024}\label{ida__impl_8h_ab4e7f8e0ca7701927075502f9bab9024} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_BAD\_TSTOP@{MSG\_BAD\_TSTOP}}
+\index{MSG\_BAD\_TSTOP@{MSG\_BAD\_TSTOP}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BAD\_TSTOP}{MSG\_BAD\_TSTOP}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+BAD\+\_\+\+TSTOP~"{}The value "{} MSG\+\_\+\+TIME\+\_\+\+TSTOP "{} is behind current "{} MSG\+\_\+\+TIME "{}in the direction of integration."{}}
+
+\Hypertarget{ida__impl_8h_a80b564b4b643b8512ec7d8acbe252245}\label{ida__impl_8h_a80b564b4b643b8512ec7d8acbe252245} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_CLOSE\_ROOTS@{MSG\_CLOSE\_ROOTS}}
+\index{MSG\_CLOSE\_ROOTS@{MSG\_CLOSE\_ROOTS}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_CLOSE\_ROOTS}{MSG\_CLOSE\_ROOTS}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+CLOSE\+\_\+\+ROOTS~"{}Root found at and very near "{} MSG\+\_\+\+TIME "{}."{}}
+
+\Hypertarget{ida__impl_8h_a60fc22840934dc28c745fc0ebee5d70c}\label{ida__impl_8h_a60fc22840934dc28c745fc0ebee5d70c} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_CONV\_FAILS@{MSG\_CONV\_FAILS}}
+\index{MSG\_CONV\_FAILS@{MSG\_CONV\_FAILS}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_CONV\_FAILS}{MSG\_CONV\_FAILS}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+CONV\+\_\+\+FAILS~"{}At "{} MSG\+\_\+\+TIME\+\_\+H "{}the corrector \mbox{\hyperlink{equilibrium_8c_a4d16022a9f459c3de62a74d2a1e3b967}{convergence}} failed repeatedly or with \texorpdfstring{$\vert$}{|}h\texorpdfstring{$\vert$}{|} = hmin."{}}
+
+\Hypertarget{ida__impl_8h_a7b63a19375129eea32fd49946c5d915e}\label{ida__impl_8h_a7b63a19375129eea32fd49946c5d915e} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_ERR\_FAILS@{MSG\_ERR\_FAILS}}
+\index{MSG\_ERR\_FAILS@{MSG\_ERR\_FAILS}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_ERR\_FAILS}{MSG\_ERR\_FAILS}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+ERR\+\_\+\+FAILS~"{}At "{} MSG\+\_\+\+TIME\+\_\+H "{}the error test failed repeatedly or with \texorpdfstring{$\vert$}{|}h\texorpdfstring{$\vert$}{|} = hmin."{}}
+
+\Hypertarget{ida__impl_8h_a78088ee0837708fd2156e71cbea7e10a}\label{ida__impl_8h_a78088ee0837708fd2156e71cbea7e10a} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_EWT\_NOW\_BAD@{MSG\_EWT\_NOW\_BAD}}
+\index{MSG\_EWT\_NOW\_BAD@{MSG\_EWT\_NOW\_BAD}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_EWT\_NOW\_BAD}{MSG\_EWT\_NOW\_BAD}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+EWT\+\_\+\+NOW\+\_\+\+BAD~"{}At "{} MSG\+\_\+\+TIME "{}some ewt component has become $<$= 0.\+0."{}}
+
+\Hypertarget{ida__impl_8h_a7c4a817a3c3794ed1e753624cecffe1f}\label{ida__impl_8h_a7c4a817a3c3794ed1e753624cecffe1f} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_EWT\_NOW\_FAIL@{MSG\_EWT\_NOW\_FAIL}}
+\index{MSG\_EWT\_NOW\_FAIL@{MSG\_EWT\_NOW\_FAIL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_EWT\_NOW\_FAIL}{MSG\_EWT\_NOW\_FAIL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+EWT\+\_\+\+NOW\+\_\+\+FAIL~"{}At "{} MSG\+\_\+\+TIME "{}the user-\/provide Ewt\+Set \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed."{}}
+
+\Hypertarget{ida__impl_8h_aecf903d3d2cb7a12f9e5e1340d8cd91e}\label{ida__impl_8h_aecf903d3d2cb7a12f9e5e1340d8cd91e} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_FAIL\_EWT@{MSG\_FAIL\_EWT}}
+\index{MSG\_FAIL\_EWT@{MSG\_FAIL\_EWT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_FAIL\_EWT}{MSG\_FAIL\_EWT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+FAIL\+\_\+\+EWT~"{}The user-\/provide Ewt\+Set \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed."{}}
+
+\Hypertarget{ida__impl_8h_aab11b5272de087cfa8668851cbc38e02}\label{ida__impl_8h_aab11b5272de087cfa8668851cbc38e02} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_FAILED\_CONSTR@{MSG\_FAILED\_CONSTR}}
+\index{MSG\_FAILED\_CONSTR@{MSG\_FAILED\_CONSTR}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_FAILED\_CONSTR}{MSG\_FAILED\_CONSTR}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+FAILED\+\_\+\+CONSTR~"{}At "{} MSG\+\_\+\+TIME "{}unable to satisfy inequality constraints."{}}
+
+\Hypertarget{ida__impl_8h_aa08ad8db4fc77b1fb7ee84d09cdbb16d}\label{ida__impl_8h_aa08ad8db4fc77b1fb7ee84d09cdbb16d} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_BAD\_EWT@{MSG\_IC\_BAD\_EWT}}
+\index{MSG\_IC\_BAD\_EWT@{MSG\_IC\_BAD\_EWT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_BAD\_EWT}{MSG\_IC\_BAD\_EWT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+BAD\+\_\+\+EWT~"{}Some initial ewt component = 0.\+0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_a9f00155161ce0a7884e873e2b0fbd6a9}\label{ida__impl_8h_a9f00155161ce0a7884e873e2b0fbd6a9} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_BAD\_ICOPT@{MSG\_IC\_BAD\_ICOPT}}
+\index{MSG\_IC\_BAD\_ICOPT@{MSG\_IC\_BAD\_ICOPT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_BAD\_ICOPT}{MSG\_IC\_BAD\_ICOPT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+BAD\+\_\+\+ICOPT~"{}icopt has an illegal value."{}}
+
+\Hypertarget{ida__impl_8h_adbe9c3c493ef6d52f978b336bc893e85}\label{ida__impl_8h_adbe9c3c493ef6d52f978b336bc893e85} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_BAD\_ID@{MSG\_IC\_BAD\_ID}}
+\index{MSG\_IC\_BAD\_ID@{MSG\_IC\_BAD\_ID}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_BAD\_ID}{MSG\_IC\_BAD\_ID}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+BAD\+\_\+\+ID~"{}id has illegal values."{}}
+
+\Hypertarget{ida__impl_8h_a0b1e5a024afce60a6939b9f798f76f05}\label{ida__impl_8h_a0b1e5a024afce60a6939b9f798f76f05} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_CONV\_FAILED@{MSG\_IC\_CONV\_FAILED}}
+\index{MSG\_IC\_CONV\_FAILED@{MSG\_IC\_CONV\_FAILED}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_CONV\_FAILED}{MSG\_IC\_CONV\_FAILED}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+CONV\+\_\+\+FAILED~"{}Newton/Linesearch algorithm failed to converge."{}}
+
+\Hypertarget{ida__impl_8h_a5f592b3d2c27fc4d5877e030f6869c17}\label{ida__impl_8h_a5f592b3d2c27fc4d5877e030f6869c17} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_FAIL\_CONSTR@{MSG\_IC\_FAIL\_CONSTR}}
+\index{MSG\_IC\_FAIL\_CONSTR@{MSG\_IC\_FAIL\_CONSTR}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_FAIL\_CONSTR}{MSG\_IC\_FAIL\_CONSTR}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+FAIL\+\_\+\+CONSTR~"{}Unable to satisfy the inequality constraints."{}}
+
+\Hypertarget{ida__impl_8h_a51ab838060687e7b77aef0d228ed308f}\label{ida__impl_8h_a51ab838060687e7b77aef0d228ed308f} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_FAILED\_LINS@{MSG\_IC\_FAILED\_LINS}}
+\index{MSG\_IC\_FAILED\_LINS@{MSG\_IC\_FAILED\_LINS}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_FAILED\_LINS}{MSG\_IC\_FAILED\_LINS}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+FAILED\+\_\+\+LINS~"{}The linesearch algorithm failed with too small a step."{}}
+
+\Hypertarget{ida__impl_8h_ab2176fcdfcfd5df9a602a4d74426cef3}\label{ida__impl_8h_ab2176fcdfcfd5df9a602a4d74426cef3} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_MISSING\_ID@{MSG\_IC\_MISSING\_ID}}
+\index{MSG\_IC\_MISSING\_ID@{MSG\_IC\_MISSING\_ID}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_MISSING\_ID}{MSG\_IC\_MISSING\_ID}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+MISSING\+\_\+\+ID~"{}id = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} conflicts with icopt."{}}
+
+\Hypertarget{ida__impl_8h_a07762dca4b2a43b75a6b5d895f538c76}\label{ida__impl_8h_a07762dca4b2a43b75a6b5d895f538c76} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_NO\_RECOVERY@{MSG\_IC\_NO\_RECOVERY}}
+\index{MSG\_IC\_NO\_RECOVERY@{MSG\_IC\_NO\_RECOVERY}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_NO\_RECOVERY}{MSG\_IC\_NO\_RECOVERY}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+NO\+\_\+\+RECOVERY~"{}The residual routine or the linear setup or solve routine had a recoverable error, but \mbox{\hyperlink{ida_8h_af71ad807198c0b4d3ea4674369bf3800}{IDACalc\+IC}} was unable to recover."{}}
+
+\Hypertarget{ida__impl_8h_a494835807da6ea125c99cc14f9a57bcb}\label{ida__impl_8h_a494835807da6ea125c99cc14f9a57bcb} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_RES\_FAIL@{MSG\_IC\_RES\_FAIL}}
+\index{MSG\_IC\_RES\_FAIL@{MSG\_IC\_RES\_FAIL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_RES\_FAIL}{MSG\_IC\_RES\_FAIL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+RES\+\_\+\+FAIL~"{}The residual \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed at the first call. "{}}
+
+\Hypertarget{ida__impl_8h_aa90f01c16d60c3d47b688f73c70d01ca}\label{ida__impl_8h_aa90f01c16d60c3d47b688f73c70d01ca} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_RES\_NONREC@{MSG\_IC\_RES\_NONREC}}
+\index{MSG\_IC\_RES\_NONREC@{MSG\_IC\_RES\_NONREC}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_RES\_NONREC}{MSG\_IC\_RES\_NONREC}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+RES\+\_\+\+NONREC~"{}The residual \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed unrecoverably. "{}}
+
+\Hypertarget{ida__impl_8h_ac320e1a7b592b470e27b409685bc0409}\label{ida__impl_8h_ac320e1a7b592b470e27b409685bc0409} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_SETUP\_FAIL@{MSG\_IC\_SETUP\_FAIL}}
+\index{MSG\_IC\_SETUP\_FAIL@{MSG\_IC\_SETUP\_FAIL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_SETUP\_FAIL}{MSG\_IC\_SETUP\_FAIL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+SETUP\+\_\+\+FAIL~"{}The linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}} setup failed unrecoverably."{}}
+
+\Hypertarget{ida__impl_8h_ad9f99999ad79f3639190ff013e39af9a}\label{ida__impl_8h_ad9f99999ad79f3639190ff013e39af9a} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_SOLVE\_FAIL@{MSG\_IC\_SOLVE\_FAIL}}
+\index{MSG\_IC\_SOLVE\_FAIL@{MSG\_IC\_SOLVE\_FAIL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_SOLVE\_FAIL}{MSG\_IC\_SOLVE\_FAIL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+SOLVE\+\_\+\+FAIL~"{}The linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}} solve failed unrecoverably."{}}
+
+\Hypertarget{ida__impl_8h_a9a3a4fdf2e6a45caa288ceadba821ccb}\label{ida__impl_8h_a9a3a4fdf2e6a45caa288ceadba821ccb} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_IC\_TOO\_CLOSE@{MSG\_IC\_TOO\_CLOSE}}
+\index{MSG\_IC\_TOO\_CLOSE@{MSG\_IC\_TOO\_CLOSE}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_IC\_TOO\_CLOSE}{MSG\_IC\_TOO\_CLOSE}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+IC\+\_\+\+TOO\+\_\+\+CLOSE~"{}tout1 too close to t0 to attempt initial condition calculation."{}}
+
+\Hypertarget{ida__impl_8h_a32461182de5d489f743f46e295c333a0}\label{ida__impl_8h_a32461182de5d489f743f46e295c333a0} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_INACTIVE\_ROOTS@{MSG\_INACTIVE\_ROOTS}}
+\index{MSG\_INACTIVE\_ROOTS@{MSG\_INACTIVE\_ROOTS}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_INACTIVE\_ROOTS}{MSG\_INACTIVE\_ROOTS}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+INACTIVE\+\_\+\+ROOTS~"{}At the end of the first step, there are still some root functions identically 0. This warning will not be issued again."{}}
+
+\Hypertarget{ida__impl_8h_ab3b250b06f41b6770e8e1dda595e9ab0}\label{ida__impl_8h_ab3b250b06f41b6770e8e1dda595e9ab0} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_LINIT\_FAIL@{MSG\_LINIT\_FAIL}}
+\index{MSG\_LINIT\_FAIL@{MSG\_LINIT\_FAIL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_LINIT\_FAIL}{MSG\_LINIT\_FAIL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+LINIT\+\_\+\+FAIL~"{}The linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}}\textquotesingle{}s init routine failed."{}}
+
+\Hypertarget{ida__impl_8h_a7e5511000b200301c7640cf14f7e84f2}\label{ida__impl_8h_a7e5511000b200301c7640cf14f7e84f2} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_LSOLVE\_NULL@{MSG\_LSOLVE\_NULL}}
+\index{MSG\_LSOLVE\_NULL@{MSG\_LSOLVE\_NULL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_LSOLVE\_NULL}{MSG\_LSOLVE\_NULL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+LSOLVE\+\_\+\+NULL~"{}The linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}}\textquotesingle{}s solve routine is NULL."{}}
+
+\Hypertarget{ida__impl_8h_a2e71dcc982d1589776d38a5c66964f6e}\label{ida__impl_8h_a2e71dcc982d1589776d38a5c66964f6e} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_MAX\_STEPS@{MSG\_MAX\_STEPS}}
+\index{MSG\_MAX\_STEPS@{MSG\_MAX\_STEPS}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_MAX\_STEPS}{MSG\_MAX\_STEPS}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+MAX\+\_\+\+STEPS~"{}At "{} MSG\+\_\+\+TIME "{}, mxstep steps taken before reaching tout."{}}
+
+\Hypertarget{ida__impl_8h_aa440763ddeec861d612fb2d8237ef708}\label{ida__impl_8h_aa440763ddeec861d612fb2d8237ef708} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_MEM\_FAIL@{MSG\_MEM\_FAIL}}
+\index{MSG\_MEM\_FAIL@{MSG\_MEM\_FAIL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_MEM\_FAIL}{MSG\_MEM\_FAIL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+MEM\+\_\+\+FAIL~"{}A memory request failed."{}}
+
+\Hypertarget{ida__impl_8h_a3cbf27e94a391f72ae2d1716c745a7f7}\label{ida__impl_8h_a3cbf27e94a391f72ae2d1716c745a7f7} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_MISSING\_ID@{MSG\_MISSING\_ID}}
+\index{MSG\_MISSING\_ID@{MSG\_MISSING\_ID}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_MISSING\_ID}{MSG\_MISSING\_ID}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+MISSING\+\_\+\+ID~"{}id = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} but suppressalg option on."{}}
+
+\Hypertarget{ida__impl_8h_a83c3be93af60da64fd43674c2926671b}\label{ida__impl_8h_a83c3be93af60da64fd43674c2926671b} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_NEG\_EPCON@{MSG\_NEG\_EPCON}}
+\index{MSG\_NEG\_EPCON@{MSG\_NEG\_EPCON}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_NEG\_EPCON}{MSG\_NEG\_EPCON}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+NEG\+\_\+\+EPCON~"{}epcon $<$= 0.\+0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_a2f6a59716fc1961fc604593b0db33a18}\label{ida__impl_8h_a2f6a59716fc1961fc604593b0db33a18} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_NEG\_HMAX@{MSG\_NEG\_HMAX}}
+\index{MSG\_NEG\_HMAX@{MSG\_NEG\_HMAX}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_NEG\_HMAX}{MSG\_NEG\_HMAX}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+NEG\+\_\+\+HMAX~"{}hmax $<$ 0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_a10f8ce52157ba23f08252f5254fbfa9b}\label{ida__impl_8h_a10f8ce52157ba23f08252f5254fbfa9b} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_NEG\_MAXORD@{MSG\_NEG\_MAXORD}}
+\index{MSG\_NEG\_MAXORD@{MSG\_NEG\_MAXORD}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_NEG\_MAXORD}{MSG\_NEG\_MAXORD}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+NEG\+\_\+\+MAXORD~"{}maxord $<$= 0 illegal."{}}
+
+\Hypertarget{ida__impl_8h_af2d55cff3d79d96213fb196337986d1a}\label{ida__impl_8h_af2d55cff3d79d96213fb196337986d1a} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_NO\_MALLOC@{MSG\_NO\_MALLOC}}
+\index{MSG\_NO\_MALLOC@{MSG\_NO\_MALLOC}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_NO\_MALLOC}{MSG\_NO\_MALLOC}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+NO\+\_\+\+MALLOC~"{}Attempt to call before IDAMalloc."{}}
+
+\Hypertarget{ida__impl_8h_ac9fff57ef86e1b03f92f19d16d5a7cde}\label{ida__impl_8h_ac9fff57ef86e1b03f92f19d16d5a7cde} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_NO\_MEM@{MSG\_NO\_MEM}}
+\index{MSG\_NO\_MEM@{MSG\_NO\_MEM}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_NO\_MEM}{MSG\_NO\_MEM}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+NO\+\_\+\+MEM~"{}ida\+\_\+mem = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_a9b0e29f3b677c2ba51b022a42eae0407}\label{ida__impl_8h_a9b0e29f3b677c2ba51b022a42eae0407} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_NO\_ROOT@{MSG\_NO\_ROOT}}
+\index{MSG\_NO\_ROOT@{MSG\_NO\_ROOT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_NO\_ROOT}{MSG\_NO\_ROOT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+NO\+\_\+\+ROOT~"{}Rootfinding was not initialized."{}}
+
+\Hypertarget{ida__impl_8h_a52544f015a66a69372101dd71710247d}\label{ida__impl_8h_a52544f015a66a69372101dd71710247d} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_NO\_TOLS@{MSG\_NO\_TOLS}}
+\index{MSG\_NO\_TOLS@{MSG\_NO\_TOLS}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_NO\_TOLS}{MSG\_NO\_TOLS}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+NO\+\_\+\+TOLS~"{}No integration tolerances have been specified."{}}
+
+\Hypertarget{ida__impl_8h_a4985fcba7ab339735d6cc273b456482f}\label{ida__impl_8h_a4985fcba7ab339735d6cc273b456482f} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_NULL\_DKY@{MSG\_NULL\_DKY}}
+\index{MSG\_NULL\_DKY@{MSG\_NULL\_DKY}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_NULL\_DKY}{MSG\_NULL\_DKY}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+NULL\+\_\+\+DKY~"{}dky = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_a4390e629f9dc66d5fda649a59f20c3b4}\label{ida__impl_8h_a4390e629f9dc66d5fda649a59f20c3b4} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_REP\_RES\_ERR@{MSG\_REP\_RES\_ERR}}
+\index{MSG\_REP\_RES\_ERR@{MSG\_REP\_RES\_ERR}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_REP\_RES\_ERR}{MSG\_REP\_RES\_ERR}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+REP\+\_\+\+RES\+\_\+\+ERR~"{}At "{} MSG\+\_\+\+TIME "{}repeated recoverable residual errors."{}}
+
+\Hypertarget{ida__impl_8h_a3e3955d6999049b5f485a0aab4ee4b4c}\label{ida__impl_8h_a3e3955d6999049b5f485a0aab4ee4b4c} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_RES\_NONRECOV@{MSG\_RES\_NONRECOV}}
+\index{MSG\_RES\_NONRECOV@{MSG\_RES\_NONRECOV}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_RES\_NONRECOV}{MSG\_RES\_NONRECOV}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+RES\+\_\+\+NONRECOV~"{}At "{} MSG\+\_\+\+TIME "{}the residual \mbox{\hyperlink{num_8c_a34c1b818c2b60ca9884153ee8891e7b0}{function}} failed unrecoverably."{}}
+
+\Hypertarget{ida__impl_8h_af965dc2d944be83f5e1f857f32bfcfa4}\label{ida__impl_8h_af965dc2d944be83f5e1f857f32bfcfa4} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_RES\_NULL@{MSG\_RES\_NULL}}
+\index{MSG\_RES\_NULL@{MSG\_RES\_NULL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_RES\_NULL}{MSG\_RES\_NULL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+RES\+\_\+\+NULL~"{}res = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_af1358d82296a28685c1f2fde5b592ca2}\label{ida__impl_8h_af1358d82296a28685c1f2fde5b592ca2} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_ROOT\_FUNC\_NULL@{MSG\_ROOT\_FUNC\_NULL}}
+\index{MSG\_ROOT\_FUNC\_NULL@{MSG\_ROOT\_FUNC\_NULL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_ROOT\_FUNC\_NULL}{MSG\_ROOT\_FUNC\_NULL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+ROOT\+\_\+\+FUNC\+\_\+\+NULL~"{}g = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_aec76c90486602a52d463559a19f26b19}\label{ida__impl_8h_aec76c90486602a52d463559a19f26b19} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_RTFUNC\_FAILED@{MSG\_RTFUNC\_FAILED}}
+\index{MSG\_RTFUNC\_FAILED@{MSG\_RTFUNC\_FAILED}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_RTFUNC\_FAILED}{MSG\_RTFUNC\_FAILED}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+RTFUNC\+\_\+\+FAILED~"{}At "{} MSG\+\_\+\+TIME "{}, the rootfinding routine failed in an unrecoverable manner."{}}
+
+\Hypertarget{ida__impl_8h_ae330d2e754c5b5a381b44766a03f17eb}\label{ida__impl_8h_ae330d2e754c5b5a381b44766a03f17eb} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_SETUP\_FAILED@{MSG\_SETUP\_FAILED}}
+\index{MSG\_SETUP\_FAILED@{MSG\_SETUP\_FAILED}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_SETUP\_FAILED}{MSG\_SETUP\_FAILED}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+SETUP\+\_\+\+FAILED~"{}At "{} MSG\+\_\+\+TIME "{}the linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}} setup failed unrecoverably."{}}
+
+\Hypertarget{ida__impl_8h_a5a7a2d0ea0cd43a5e5324e0c6ebe920c}\label{ida__impl_8h_a5a7a2d0ea0cd43a5e5324e0c6ebe920c} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_SOLVE\_FAILED@{MSG\_SOLVE\_FAILED}}
+\index{MSG\_SOLVE\_FAILED@{MSG\_SOLVE\_FAILED}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_SOLVE\_FAILED}{MSG\_SOLVE\_FAILED}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+SOLVE\+\_\+\+FAILED~"{}At "{} MSG\+\_\+\+TIME "{}the linear \mbox{\hyperlink{solver__intf_8h_a2debe316c6874c013213554b33d598bf}{solver}} solve failed unrecoverably."{}}
+
+\Hypertarget{ida__impl_8h_aa0ab63945e78901b00671a2657298095}\label{ida__impl_8h_aa0ab63945e78901b00671a2657298095} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_TIME@{MSG\_TIME}}
+\index{MSG\_TIME@{MSG\_TIME}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_TIME}{MSG\_TIME}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+TIME~"{}t = \%g, "{}}
+
+\Hypertarget{ida__impl_8h_ab592995493b3c71e9719a5c77692852d}\label{ida__impl_8h_ab592995493b3c71e9719a5c77692852d} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_TIME\_H@{MSG\_TIME\_H}}
+\index{MSG\_TIME\_H@{MSG\_TIME\_H}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_TIME\_H}{MSG\_TIME\_H}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+TIME\+\_\+H~"{}t = \%g and h = \%g, "{}}
+
+\Hypertarget{ida__impl_8h_a392e9950182d71334e14386505426730}\label{ida__impl_8h_a392e9950182d71334e14386505426730} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_TIME\_INT@{MSG\_TIME\_INT}}
+\index{MSG\_TIME\_INT@{MSG\_TIME\_INT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_TIME\_INT}{MSG\_TIME\_INT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+TIME\+\_\+\+INT~"{}t = \%g is not between tcur -\/ hu = \%g and tcur = \%g."{}}
+
+\Hypertarget{ida__impl_8h_a6853f51045fe787247cc863e9f8127de}\label{ida__impl_8h_a6853f51045fe787247cc863e9f8127de} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_TIME\_TOUT@{MSG\_TIME\_TOUT}}
+\index{MSG\_TIME\_TOUT@{MSG\_TIME\_TOUT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_TIME\_TOUT}{MSG\_TIME\_TOUT}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+TIME\+\_\+\+TOUT~"{}tout = \%g"{}}
+
+\Hypertarget{ida__impl_8h_ae8efebac325ae7bb3e3b000f2cb24286}\label{ida__impl_8h_ae8efebac325ae7bb3e3b000f2cb24286} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_TIME\_TSTOP@{MSG\_TIME\_TSTOP}}
+\index{MSG\_TIME\_TSTOP@{MSG\_TIME\_TSTOP}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_TIME\_TSTOP}{MSG\_TIME\_TSTOP}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+TIME\+\_\+\+TSTOP~"{}tstop = \%g"{}}
+
+\Hypertarget{ida__impl_8h_abc3178203e1e6a22ccade4eedcaf7d2a}\label{ida__impl_8h_abc3178203e1e6a22ccade4eedcaf7d2a} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_TOO\_CLOSE@{MSG\_TOO\_CLOSE}}
+\index{MSG\_TOO\_CLOSE@{MSG\_TOO\_CLOSE}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_TOO\_CLOSE}{MSG\_TOO\_CLOSE}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+TOO\+\_\+\+CLOSE~"{}tout too close to t0 to start integration."{}}
+
+\Hypertarget{ida__impl_8h_ad16e906a70a1806f95f50efe3bc3de78}\label{ida__impl_8h_ad16e906a70a1806f95f50efe3bc3de78} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_TOO\_LATE@{MSG\_TOO\_LATE}}
+\index{MSG\_TOO\_LATE@{MSG\_TOO\_LATE}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_TOO\_LATE}{MSG\_TOO\_LATE}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+TOO\+\_\+\+LATE~"{}IDAGet\+Consistent\+IC can only be called before IDASolve."{}}
+
+\Hypertarget{ida__impl_8h_ae3775e9bbb799918832dacba9af449ab}\label{ida__impl_8h_ae3775e9bbb799918832dacba9af449ab} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_TOO\_MUCH\_ACC@{MSG\_TOO\_MUCH\_ACC}}
+\index{MSG\_TOO\_MUCH\_ACC@{MSG\_TOO\_MUCH\_ACC}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_TOO\_MUCH\_ACC}{MSG\_TOO\_MUCH\_ACC}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+TOO\+\_\+\+MUCH\+\_\+\+ACC~"{}At "{} MSG\+\_\+\+TIME "{}too much accuracy requested."{}}
+
+\Hypertarget{ida__impl_8h_a0c2646a6428c596e85b33936fc925c80}\label{ida__impl_8h_a0c2646a6428c596e85b33936fc925c80} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_TRET\_NULL@{MSG\_TRET\_NULL}}
+\index{MSG\_TRET\_NULL@{MSG\_TRET\_NULL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_TRET\_NULL}{MSG\_TRET\_NULL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+TRET\+\_\+\+NULL~"{}tret = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_a016a2797c5fdafdad883363d9e06df60}\label{ida__impl_8h_a016a2797c5fdafdad883363d9e06df60} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_Y0\_FAIL\_CONSTR@{MSG\_Y0\_FAIL\_CONSTR}}
+\index{MSG\_Y0\_FAIL\_CONSTR@{MSG\_Y0\_FAIL\_CONSTR}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_Y0\_FAIL\_CONSTR}{MSG\_Y0\_FAIL\_CONSTR}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+Y0\+\_\+\+FAIL\+\_\+\+CONSTR~"{}y0 fails to satisfy constraints."{}}
+
+\Hypertarget{ida__impl_8h_a33553167e682d49b9bf1c8b356f4fb3e}\label{ida__impl_8h_a33553167e682d49b9bf1c8b356f4fb3e} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_Y0\_NULL@{MSG\_Y0\_NULL}}
+\index{MSG\_Y0\_NULL@{MSG\_Y0\_NULL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_Y0\_NULL}{MSG\_Y0\_NULL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+Y0\+\_\+\+NULL~"{}y0 = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_a09c0e76257ed1cb96a80d6e5e4deab0b}\label{ida__impl_8h_a09c0e76257ed1cb96a80d6e5e4deab0b} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_YP0\_NULL@{MSG\_YP0\_NULL}}
+\index{MSG\_YP0\_NULL@{MSG\_YP0\_NULL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_YP0\_NULL}{MSG\_YP0\_NULL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+YP0\+\_\+\+NULL~"{}yp0 = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_ae03a95bb80f2c397cd6e2789472382f4}\label{ida__impl_8h_ae03a95bb80f2c397cd6e2789472382f4} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_YPRET\_NULL@{MSG\_YPRET\_NULL}}
+\index{MSG\_YPRET\_NULL@{MSG\_YPRET\_NULL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_YPRET\_NULL}{MSG\_YPRET\_NULL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+YPRET\+\_\+\+NULL~"{}ypret = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_a0554a1b42ee2357e951f84002d9f2103}\label{ida__impl_8h_a0554a1b42ee2357e951f84002d9f2103} 
+\index{ida\_impl.h@{ida\_impl.h}!MSG\_YRET\_NULL@{MSG\_YRET\_NULL}}
+\index{MSG\_YRET\_NULL@{MSG\_YRET\_NULL}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_YRET\_NULL}{MSG\_YRET\_NULL}}
+{\footnotesize\ttfamily \#define MSG\+\_\+\+YRET\+\_\+\+NULL~"{}yret = \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}} illegal."{}}
+
+\Hypertarget{ida__impl_8h_addbf1dafd1c1d7d9b8d1f9625ba2cdbc}\label{ida__impl_8h_addbf1dafd1c1d7d9b8d1f9625ba2cdbc} 
+\index{ida\_impl.h@{ida\_impl.h}!MXORDP1@{MXORDP1}}
+\index{MXORDP1@{MXORDP1}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MXORDP1}{MXORDP1}}
+{\footnotesize\ttfamily \#define MXORDP1~6           /\texorpdfstring{$\ast$}{*} max. number of N\+\_\+\+Vectors in phi \texorpdfstring{$\ast$}{*}/}
+
+\Hypertarget{ida__impl_8h_ae3667493be085361f0ee927fa83f79c5}\label{ida__impl_8h_ae3667493be085361f0ee927fa83f79c5} 
+\index{ida\_impl.h@{ida\_impl.h}!MXSTEP\_DEFAULT@{MXSTEP\_DEFAULT}}
+\index{MXSTEP\_DEFAULT@{MXSTEP\_DEFAULT}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{MXSTEP\_DEFAULT}{MXSTEP\_DEFAULT}}
+{\footnotesize\ttfamily \#define MXSTEP\+\_\+\+DEFAULT~500         /\texorpdfstring{$\ast$}{*} mxstep default value            \texorpdfstring{$\ast$}{*}/}
+
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{ida__impl_8h_a47968eecaefd81f8b70742eb09b1c609}\label{ida__impl_8h_a47968eecaefd81f8b70742eb09b1c609} 
+\index{ida\_impl.h@{ida\_impl.h}!IDAMem@{IDAMem}}
+\index{IDAMem@{IDAMem}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{IDAMem}{IDAMem}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_i_d_a_mem_rec}{IDAMem\+Rec}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{ida__impl_8h_a47968eecaefd81f8b70742eb09b1c609}{IDAMem}}}
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{ida__impl_8h_a2fa9da29b2ffeebc20e65c44e6418e3c}\label{ida__impl_8h_a2fa9da29b2ffeebc20e65c44e6418e3c} 
+\index{ida\_impl.h@{ida\_impl.h}!IDAErrHandler@{IDAErrHandler}}
+\index{IDAErrHandler@{IDAErrHandler}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{IDAErrHandler()}{IDAErrHandler()}}
+{\footnotesize\ttfamily void IDAErr\+Handler (\begin{DoxyParamCaption}\item[{int}]{error\+\_\+code,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{module,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{function,  }\item[{char \texorpdfstring{$\ast$}{*}}]{msg,  }\item[{void \texorpdfstring{$\ast$}{*}}]{data }\end{DoxyParamCaption})}
+
+\Hypertarget{ida__impl_8h_a1502aad5f00d8ce66cc3b84c3db52a1a}\label{ida__impl_8h_a1502aad5f00d8ce66cc3b84c3db52a1a} 
+\index{ida\_impl.h@{ida\_impl.h}!IDAEwtSet@{IDAEwtSet}}
+\index{IDAEwtSet@{IDAEwtSet}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{IDAEwtSet()}{IDAEwtSet()}}
+{\footnotesize\ttfamily int IDAEwt\+Set (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\+\_\+\+Vector}}}]{ycur,  }\item[{\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\+\_\+\+Vector}}}]{weight,  }\item[{void \texorpdfstring{$\ast$}{*}}]{data }\end{DoxyParamCaption})}
+
+\Hypertarget{ida__impl_8h_a8401cec99cd95b3d7264659b629c9583}\label{ida__impl_8h_a8401cec99cd95b3d7264659b629c9583} 
+\index{ida\_impl.h@{ida\_impl.h}!IDAProcessError@{IDAProcessError}}
+\index{IDAProcessError@{IDAProcessError}!ida\_impl.h@{ida\_impl.h}}
+\doxysubsubsection{\texorpdfstring{IDAProcessError()}{IDAProcessError()}}
+{\footnotesize\ttfamily void IDAProcess\+Error (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ida__impl_8h_a47968eecaefd81f8b70742eb09b1c609}{IDAMem}}}]{IDA\+\_\+mem,  }\item[{int}]{error\+\_\+code,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{module,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{fname,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{msgfmt,  }\item[{}]{... }\end{DoxyParamCaption})}
+

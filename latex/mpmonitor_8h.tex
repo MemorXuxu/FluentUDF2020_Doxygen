@@ -1,0 +1,1083 @@
+\doxysection{fluent20.1.0/multiport/src/mpmonitor.h File Reference}
+\hypertarget{mpmonitor_8h}{}\label{mpmonitor_8h}\index{fluent20.1.0/multiport/src/mpmonitor.h@{fluent20.1.0/multiport/src/mpmonitor.h}}
+{\ttfamily \#include $<$setjmp.\+h$>$}\newline
+{\ttfamily \#include $<$pthread.\+h$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structmpt__monitor__process__connection__info__t}{mpt\+\_\+monitor\+\_\+process\+\_\+connection\+\_\+info\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structmpt__monitor__connection__topology__info__t}{mpt\+\_\+monitor\+\_\+connection\+\_\+topology\+\_\+info\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a6da6a42be60fe56ad911450fe0b43ae3}{MPT\+\_\+\+MONITOR\+\_\+\+DURATION\+\_\+\+INFINITE}}~-\/1
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a2e706d310d54a8b489822648b124d59b}{MPT\+\_\+\+MONITOR\+\_\+\+KEEPALIVE\+\_\+\+DEFAULT}}~10
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_af525fc6a75d401a9653c835f2a082d6a}{MPT\+\_\+\+MONITOR\+\_\+\+NULL}}~-\/1
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a92ded4e87c32daa923f2bb49ea25a63e}{MPT\+\_\+\+MONITOR\+\_\+\+SIGNAL\+\_\+\+NULL}}~-\/1
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_aa045f6c3e51702a5c8fa6750d14f91af}{MPTJMPBUF}}~int\texorpdfstring{$\ast$}{*}
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\+\_\+T}}~pthread\+\_\+mutex\+\_\+t
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_ad597c854e856562989f581f0fc69c7bb}{MPT\+\_\+\+MONITOR\+\_\+\+SUCCESS}}~0
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a2abddfb5cb1f5d0bb39a3fbcf508125b}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+LOOKUP}}~-\/1
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a75b0327e5660af08073cc494412032e5}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+THREAD}}~-\/2
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a5c5b8895b37f564e640c44fdb90f50c3}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+MUTEX}}~-\/3
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a420b6220da218eaa7931abc3b5ea4412}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CLEANUP}}~-\/4
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a90e994770a1678c8a54bbcbc16c9da1e}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+INITIALIZE}}~-\/5
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a64c7347a37c197e03a335c5523c64b0d}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+CLEANUP}}~-\/6
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a61835e6eaac53d720c3e96d9ef258a81}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+NULL}}~-\/7
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_ab276b6e691ade69746da8c369652a7d7}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+STATE}}~-\/8
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_af6cb1db7d39ddb9621ee97faa62031a7}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+NOMEM}}~-\/9
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_ad47c1b9257283dc895be563d3151f476}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+MPI}}~-\/10
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a1feb299054318d0cdddfde2f559882b1}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+CREATE}}~-\/11
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a951a631217a38473d9450ba19d1d2dce}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+ACCEPT}}~-\/12
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a83b04b108d86462dd04448621e345eae}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+CONNECT}}~-\/13
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a52c4b87d154fb98baeb223d01a273ffa}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+CLOSE}}~-\/14
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a3eeb14c6b588b6feaa34bf236e2032b3}{MPT\+\_\+\+MONITOR\+\_\+\+SOCK\+\_\+\+CLOSED}}~-\/15
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a764077a5be751c60d0f92cfaa1ad5405}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+SEND}}~-\/16
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a2420f1899f287c215f542008fa8c6c23}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+RECV}}~-\/17
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a76b8e208340cf26070780aafdc67f209}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CMD\+\_\+\+PARSE}}~-\/18
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a81b6c2f485e543d336bc4b74e94ceb06}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+COMMAND}}~-\/19
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a7e00005b2bfc21cc1103c286bfc05ece}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+HOSTENT}}~-\/20
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_ab41681f8845ae57c4d456adece735798}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+ARGS}}~-\/21
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_abf92df12825674b958924ad1e2b9a356}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CONDVAR}}~-\/22
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_af2c7a98deb1bd8fcce9f18c6b7bdcfc7}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CRITSECTION}}~-\/23
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_ad2bddcc8e1f7fdf5709408f6ca9d87fd}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+INTERRUPT}}~-\/24
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_af1482a07280996e824007bf4ae037477}{MPT\+\_\+\+MONITOR\+\_\+\+TOPO\+\_\+\+NULL}}~-\/25
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_afdc5b7442acfd756e521a3d10ae96526}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+GETPEERNAME}}~-\/26
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_ad710b9c69e2fcbb6805e5b915fbf851b}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SIGNAL}}~-\/27
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_ac0fc026729b96b251a85c1db1578fcac}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CREATE\+\_\+\+SOCKETS}}~-\/28
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a68a5db26cd15010f27a0cca6bd592b92}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+GATHER}}~-\/29
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_ad912e3b95f44f4af780615cf52f46b1f}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+BCAST}}~-\/30
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a72749845ea2032cbd97c47b724bbdba7}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+BARRIER}}~-\/31
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a24d7134e2ebe07ccc3fa34da21195e2e}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CALLBACK\+\_\+\+TYPE}}~-\/32
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_a88bf00f1b126f462769f7801fe737d6f}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CALLBACK\+\_\+\+NULL}}~-\/33
+\item 
+\#define \mbox{\hyperlink{mpmonitor_8h_abea684faa3da071f4592014f43f68d48}{MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+INTERNAL}}~-\/34
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef int \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}
+\item 
+typedef struct \mbox{\hyperlink{structmpt__monitor__process__connection__info__t}{mpt\+\_\+monitor\+\_\+process\+\_\+connection\+\_\+info\+\_\+t}} \mbox{\hyperlink{mpmonitor_8h_a1abd20db914aad839490789328494748}{MPT\+\_\+\+Monitor\+\_\+\+Process\+\_\+\+Connection\+\_\+\+Info}}
+\item 
+typedef int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_a99a3012266eda253878d30952af55927}{MPT\+\_\+\+Monitor\+\_\+\+Exit\+\_\+\+Callback}}) (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} id)
+\item 
+typedef int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_ae4e23760d6bd2d98ffd2e6303d61beb4}{MPT\+\_\+\+Monitor\+\_\+\+Status\+\_\+\+Callback}}) (\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} command, int msg\+Len, char \texorpdfstring{$\ast$}{*}message)
+\item 
+typedef struct \mbox{\hyperlink{structmpt__monitor__connection__topology__info__t}{mpt\+\_\+monitor\+\_\+connection\+\_\+topology\+\_\+info\+\_\+t}} \mbox{\hyperlink{mpmonitor_8h_a71c35373e871ad0152517982ebbc7b34}{MPT\+\_\+\+Monitor\+\_\+\+Topology\+\_\+\+Info}}
+\item 
+typedef int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_a168129f98b986cc6da49d8e652e5f090}{MPT\+\_\+\+Monitor\+\_\+main\+\_\+thread\+\_\+interrupt\+\_\+fp}}) (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} id)
+\item 
+typedef void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_af6349e7974fc46771eb42c165ea06a7a}{MPT\+\_\+\+Monitor\+\_\+\+Remote\+\_\+\+Connector}}) (int listener\+Port, char \texorpdfstring{$\ast$}{*}address)
+\item 
+typedef int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\+\_\+\+Monitor\+\_\+callback}}) (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} id, int msg\+Len, char \texorpdfstring{$\ast$}{*}message)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} \{ \newline
+\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea38a2ce91e55be8dfc0708170efa7577d}{MPT\+\_\+\+MONITOR\+\_\+\+COMMAND\+\_\+\+MIN}} = -\/1
+, \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea50d1448013c6f17125caee18aa418af7}{NORMAL}} = 0
+, \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea3b5b9843649b0f629ecb6eabc837acc7}{NORMAL\+\_\+\+EXITING}}
+, \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eab688f39139474a306dfce8ebf0a93518}{CLEANUP\+\_\+\+EXITING}}
+, \newline
+\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea7bf859ff46184194a806496e5c41793c}{INTERRUPT\+\_\+\+AND\+\_\+\+SYNC}}
+, \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea6e30b387abd047d0d88e0eb9ee894f46}{RECREATE\+\_\+\+MONITOR\+\_\+\+THREAD}}
+, \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea5309de8b5eca46346e05eb35ecb9b80c}{MONITOR\+\_\+\+TIMED\+\_\+\+OUT}}
+, \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eaef10b8804992b6a16960332346c21493}{BARRIER}}
+, \newline
+\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eaf3b2fee54f403246ea2cd747b55db31e}{MPT\+\_\+\+MONITOR\+\_\+\+COMMAND\+\_\+\+MAX}}
+ \}
+\item 
+enum \mbox{\hyperlink{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1}{MPT\+\_\+\+Monitor\+\_\+\+Connection\+\_\+\+Topotype}} \{ \mbox{\hyperlink{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a792a408687b0d4e5ccca7bee6aed7541}{MPT\+\_\+\+CART}} = 0
+, \mbox{\hyperlink{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a6007ce8ca871aebc2a0fe6e934547c30}{MPT\+\_\+\+TREE}}
+, \mbox{\hyperlink{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a7c65ca5371d112ffacfa6a6b2846ee3a}{MPT\+\_\+\+GRAPH}}
+ \}
+\item 
+enum \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}} \{ \newline
+\mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24ca0e964199c78af2d94ae458be132196ae}{MPT\+\_\+\+MONITOR\+\_\+\+CALLBACK\+\_\+\+MIN}} = -\/1
+, \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa6160da3d147c897d800efe3a69c941e}{INTERNAL\+\_\+\+ERROR}} = 0
+, \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caadf2c0630d7e5d68d469575843b17e54}{MONITOR\+\_\+\+STATUS}}
+, \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa2ccb134a0887021df0b51d2b48226c0}{RECREATE\+\_\+\+COMMS}}
+, \newline
+\mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa63821ed533a9e8723fc728b87521bc1}{MPT\+\_\+\+MONITOR\+\_\+\+CALLBACK\+\_\+\+MAX}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a8f574d16f98442f81d05a9cd9bff3950}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+verbosity}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, int verbosity)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a5cad46cf24a930605d874c599647c04d}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+verbosity}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a555c8f4f775a2b9b450a69c841e58713}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+create}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} \texorpdfstring{$\ast$}{*}mpt\+Monitor\+ID, long duration, int keepalive\+Interval, int verbosity, void \texorpdfstring{$\ast$}{*}mpi\+Comm)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a4603635480f85b2761f904e25e5656c9}{MPT\+\_\+\+Monitor\+\_\+register\+\_\+exit\+\_\+callback}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_a99a3012266eda253878d30952af55927}{MPT\+\_\+\+Monitor\+\_\+\+Exit\+\_\+\+Callback}} callback)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a84bf29fb5bce925de0d7e56c7bac6367}{MPT\+\_\+\+Monitor\+\_\+unregister\+\_\+exit\+\_\+callback}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a219127c2959ffc273f0eaad5c152aeb2}{MPT\+\_\+\+Monitor\+\_\+register\+\_\+status\+\_\+callback}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_ae4e23760d6bd2d98ffd2e6303d61beb4}{MPT\+\_\+\+Monitor\+\_\+\+Status\+\_\+\+Callback}} callback)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_af6ce9aa9b13b47cb55115f73711de6b2}{MPT\+\_\+\+Monitor\+\_\+unregister\+\_\+status\+\_\+callback}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_aa99e1d26d41b2f0cc5a1128f4fe3217a}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+start}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_a71c35373e871ad0152517982ebbc7b34}{MPT\+\_\+\+Monitor\+\_\+\+Topology\+\_\+\+Info}} connection\+Topology, \mbox{\hyperlink{mpmonitor_8h_a1abd20db914aad839490789328494748}{MPT\+\_\+\+Monitor\+\_\+\+Process\+\_\+\+Connection\+\_\+\+Info}} \texorpdfstring{$\ast$}{*}mpt\+Controller\+Info, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}proc\+Name)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a41092dd20826eedfc9093438e586ea78}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+stop}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} unsigned char \mbox{\hyperlink{mpmonitor_8h_a859360020c782ccd7031f5a9e24fd37b}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+is\+\_\+alive}} (void)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a0db866d50f35bbbd54099e6a7c8fbd96}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+current}} (void)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} FILE \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_a61e70fafd2f8e0b7df6be008022fa0cd}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+backtrace\+\_\+file}} (int)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} FILE \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_a2c5bcdd72acbbb7c38681e6b3cb6e73c}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+open\+\_\+btrace\+\_\+file}} (int)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_ab9e3471e8725382e8e1e5644d1b4ff0b}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+myid}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a6a90af976b47a1600ba3fe96a084966e}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+controller}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} unsigned char \mbox{\hyperlink{mpmonitor_8h_ae013c290c66575584c3c6e305b01d384}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+is\+\_\+exiting}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} void \mbox{\hyperlink{mpmonitor_8h_a543b95482915522b64d50ad6bb8bf4a7}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+sleep}} (unsigned int milliseconds)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a15a45be17a74ca9c05d1996fd08b181e}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+destroy}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_ad5678dc96dbcaea2e6f78ac61db7910a}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+command\+\_\+stringify}} (\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} command)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_a09ad848a30a3fc3765ad533f2b46fdf7}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+signal\+\_\+description}} (int signum)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_adfa9cef6632a32315522f77d8be3371d}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+signal\+\_\+stringify}} (int signum)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} unsigned char \mbox{\hyperlink{mpmonitor_8h_a9cebdfb61d345ea369700fb06a6998d0}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+cleanup\+\_\+exiting}} (\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} command)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} unsigned char \mbox{\hyperlink{mpmonitor_8h_a90323726827a7b9f3e1f5df3afed3d7c}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+normal\+\_\+exiting}} (\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} command)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} \mbox{\hyperlink{mpmonitor_8h_afeca63a5e82eb472d2fbaf3e9d8e0dd8}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+query\+\_\+command}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} double \mbox{\hyperlink{mpmonitor_8h_a2964a05b1d61dc23df34f8e80e0c48b2}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+lifetime}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a15d63f0d0b9df8a6ef9e70edd9cff107}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+gather}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, int root, int nflags, unsigned char \texorpdfstring{$\ast$}{*}i\+Flag, unsigned char \texorpdfstring{$\ast$}{*}r\+Flag)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a7ea15a634acd2a759a10035aeebff70d}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+bcast}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, int root, int nflags, unsigned char \texorpdfstring{$\ast$}{*}flags)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a055d14bf0e7e14e30636e650e43c7773}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+barrier}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a82c3e48c0d25ad8a789352ec11758a07}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+asyncsafe\+\_\+print\+\_\+error}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, int signal, int error\+Msg\+Len, char \texorpdfstring{$\ast$}{*}error\+Message)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_ad9064ed8544c692fffbcc78a55e916b0}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+register\+\_\+main\+\_\+thread\+\_\+interrupt\+\_\+function}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_a168129f98b986cc6da49d8e652e5f090}{MPT\+\_\+\+Monitor\+\_\+main\+\_\+thread\+\_\+interrupt\+\_\+fp}} main\+Thread\+Interrupt)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a79b443bcab08a822bafea044db4d7b6b}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+main\+\_\+interrupt\+\_\+flag}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, unsigned char \texorpdfstring{$\ast$}{*}main\+Thread\+Interrupted)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a7eb4810647f88c96ab74a1094e7b4d89}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+main\+\_\+interrupt\+\_\+flag}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, unsigned char main\+Thread\+Interrupted)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a4e8d72750f86c69e7d6642f03a4b8701}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+signal\+\_\+handler\+\_\+flag}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, unsigned char signal\+Handler\+Flag)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_aa4c2afa3de8fe4b8b86b9c7d8667b732}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+error\+\_\+function\+\_\+flag}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, unsigned char error\+Function\+Flag)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a2836b9901504d10980bd8d66ce923d98}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+inject\+\_\+command}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} command)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_abf9e578169150a9517b42b6ef4bb732e}{MPT\+\_\+\+Monitor\+\_\+signal\+\_\+command\+\_\+propagation}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, unsigned char command\+Propagation\+Complete)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a9f5b2726a95042e3325b4451b750a490}{MPT\+\_\+\+Monitor\+\_\+wait\+\_\+command\+\_\+propagation}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} command)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a231eb1b5acaaefd278fe32ca0b77d4eb}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+listener\+\_\+info}} (char \texorpdfstring{$\ast$}{*}hostname, int \texorpdfstring{$\ast$}{*}monitor\+Server\+Thread\+Port)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_ab6d0080e42a388f306d73b714cdc4fdb}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+connect}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} \texorpdfstring{$\ast$}{*}mpt\+Monitor\+ID, int controller\+ID, int connecting\+Process\+ID, \mbox{\hyperlink{mpmonitor_8h_af6349e7974fc46771eb42c165ea06a7a}{MPT\+\_\+\+Monitor\+\_\+\+Remote\+\_\+\+Connector}} mpt\+Remote\+Connector, \mbox{\hyperlink{mpmonitor_8h_a1abd20db914aad839490789328494748}{MPT\+\_\+\+Monitor\+\_\+\+Process\+\_\+\+Connection\+\_\+\+Info}} \texorpdfstring{$\ast$}{*}host\+Info)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a5df2d6ed47b3b02c377b144e94f5b392}{MPT\+\_\+\+Monitor\+\_\+register\+\_\+callbacks}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} id, unsigned int ncallbacks, \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}} \texorpdfstring{$\ast$}{*}callback\+Types, \mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\+\_\+\+Monitor\+\_\+callback}} \texorpdfstring{$\ast$}{*}callbacks)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_adaf9ced54dca91210dfad85ba14db93a}{MPT\+\_\+\+Monitor\+\_\+unregister\+\_\+callback}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} id, \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}} callback\+Type)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a354702502edce709b7964e5a57b5a78b}{MPT\+\_\+\+Monitor\+\_\+register\+\_\+repair\+\_\+comm\+\_\+callback}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\+\_\+\+Monitor\+\_\+callback}} \texorpdfstring{$\ast$}{*}callback)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_ab08e352afbb6a1649fe3eae75ac80306}{MPT\+\_\+\+Monitor\+\_\+unregister\+\_\+repair\+\_\+comm\+\_\+callback}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_ae143f115176fc03461dbcafd56099920}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type\+\_\+stringify}} (\mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}} callback\+Type)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_afd2272e23c5a331ae5a1e2c7246a52c1}{MPT\+\_\+\+Monitor\+\_\+get\+\_\+callback}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}} callback\+Type, \mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\+\_\+\+Monitor\+\_\+callback}} \texorpdfstring{$\ast$}{*}callback)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a511acc7f94467bfe7a32008d2c746739}{MPT\+\_\+\+Monitor\+\_\+invoke\+\_\+callback}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} mpt\+Monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}} callback\+Type, int msg\+Len, char \texorpdfstring{$\ast$}{*}message)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_ad92e29899b43fc2265e422afcdcc2437}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+setjmp}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_aa045f6c3e51702a5c8fa6750d14f91af}{MPTJMPBUF}} \texorpdfstring{$\ast$}{*}setjmpenv, int setjmpval)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a8e80a37b954e33f0a82d6fb680de0eae}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+longjmp}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a87aae61c3d331be1eb03984dee13cfd0}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+setup\+\_\+error\+\_\+recovery}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID, \mbox{\hyperlink{mpmonitor_8h_aa045f6c3e51702a5c8fa6750d14f91af}{MPTJMPBUF}} \texorpdfstring{$\ast$}{*}setjmpenv, int setjmpval)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a7858fade1d694451683a13514cd423c2}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+error\+\_\+recovery}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID, unsigned char signal\+Handler, unsigned char error\+Function)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a211881af19bbd27fe9d7d427b406984a}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+backtrace\+\_\+data}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID, int signum, size\+\_\+t size, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}strings)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a10f14559300c7a689de84bc201653c41}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+print\+\_\+backtrace\+\_\+data}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID, FILE \texorpdfstring{$\ast$}{*}fp, unsigned char print\+Support\+Message)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a35e6edf51b5e922e8d898658c1601ef5}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+async\+\_\+signal\+\_\+safe\+\_\+flag}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID, unsigned char use\+Async\+Signal\+Unsafe\+Functions)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_ae77eb8955c0a26e73908355b69ce55d5}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+async\+\_\+signal\+\_\+safe\+\_\+flag}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID, unsigned char \texorpdfstring{$\ast$}{*}use\+Async\+Signal\+Unsafe\+Functions)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a6e13922e4e814dc14942f0952db2a940}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+is\+\_\+fatal\+\_\+signal}} (int signum, unsigned char \texorpdfstring{$\ast$}{*}is\+Fatal\+Or\+Not)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a01dde51805b6b816ed0c31d6a188b6cc}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+fatal\+\_\+signal\+\_\+received}} (int signum, unsigned char \texorpdfstring{$\ast$}{*}is\+Fatal\+Or\+Not)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a5a25ba53b4cd1a03048dc809cebfdf31}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+repair\+\_\+communicator}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{mpmonitor_8h_af9bfff078fccc4e266d1a9e77c5d0af1}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+communicator}} (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} monitor\+ID)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a471c58e703f910e9d6f934899d4872dc}{MPT\+\_\+\+Monitor\+\_\+create\+\_\+mutex}} (\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\+\_\+T}} \texorpdfstring{$\ast$}{*}mutex)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_af1aae024ed6d60da0b074dcaed9cbc58}{MPT\+\_\+\+Monitor\+\_\+destroy\+\_\+mutex}} (\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\+\_\+T}} \texorpdfstring{$\ast$}{*}mutex)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_af3a758d18498bb24b019855fdf5d3611}{MPT\+\_\+\+Monitor\+\_\+start\+\_\+mutex}} (\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\+\_\+T}} \texorpdfstring{$\ast$}{*}mutex)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_aaf1d12e1c195f91b1fd373f2d9870fdb}{MPT\+\_\+\+Monitor\+\_\+stop\+\_\+mutex}} (\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\+\_\+T}} \texorpdfstring{$\ast$}{*}mutex)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a71e04c6f4986ae06722af85fdf8a01f3}{MPT\+\_\+\+Create\+\_\+\+Wait\+\_\+\+Sock}} (int \texorpdfstring{$\ast$}{*}, int, int allnodes)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_aaf99f107ae31146c4ed9a53dd1b927dc}{MPT\+\_\+\+Destroy\+\_\+\+Wait\+\_\+\+Sock}} (void)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_aff4aaea1c72557c314487be5c0350055}{MPT\+\_\+\+Sock\+\_\+\+Wait}} (int \texorpdfstring{$\ast$}{*}, int, int, int allnodes)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a7806c91d575269eabf34b1316e548ca4}{MPT\+\_\+\+Monitor\+\_\+system\+\_\+sock\+\_\+read}} (int, char \texorpdfstring{$\ast$}{*}, int)
+\item 
+\mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int \mbox{\hyperlink{mpmonitor_8h_a16ddead8e12c5f970557ecbc796c6b4d}{MPT\+\_\+monitor\+\_\+add\+\_\+process\+\_\+to\+\_\+cleanup\+\_\+file}} (\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}host, int pid)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{mpmonitor_8h_a6da6a42be60fe56ad911450fe0b43ae3}\label{mpmonitor_8h_a6da6a42be60fe56ad911450fe0b43ae3} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_DURATION\_INFINITE@{MPT\_MONITOR\_DURATION\_INFINITE}}
+\index{MPT\_MONITOR\_DURATION\_INFINITE@{MPT\_MONITOR\_DURATION\_INFINITE}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_DURATION\_INFINITE}{MPT\_MONITOR\_DURATION\_INFINITE}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+DURATION\+\_\+\+INFINITE~-\/1}
+
+\Hypertarget{mpmonitor_8h_ab41681f8845ae57c4d456adece735798}\label{mpmonitor_8h_ab41681f8845ae57c4d456adece735798} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_ARGS@{MPT\_MONITOR\_ERR\_ARGS}}
+\index{MPT\_MONITOR\_ERR\_ARGS@{MPT\_MONITOR\_ERR\_ARGS}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_ARGS}{MPT\_MONITOR\_ERR\_ARGS}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+ARGS~-\/21}
+
+\Hypertarget{mpmonitor_8h_a72749845ea2032cbd97c47b724bbdba7}\label{mpmonitor_8h_a72749845ea2032cbd97c47b724bbdba7} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_BARRIER@{MPT\_MONITOR\_ERR\_BARRIER}}
+\index{MPT\_MONITOR\_ERR\_BARRIER@{MPT\_MONITOR\_ERR\_BARRIER}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_BARRIER}{MPT\_MONITOR\_ERR\_BARRIER}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+BARRIER~-\/31}
+
+\Hypertarget{mpmonitor_8h_ad912e3b95f44f4af780615cf52f46b1f}\label{mpmonitor_8h_ad912e3b95f44f4af780615cf52f46b1f} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_BCAST@{MPT\_MONITOR\_ERR\_BCAST}}
+\index{MPT\_MONITOR\_ERR\_BCAST@{MPT\_MONITOR\_ERR\_BCAST}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_BCAST}{MPT\_MONITOR\_ERR\_BCAST}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+BCAST~-\/30}
+
+\Hypertarget{mpmonitor_8h_a88bf00f1b126f462769f7801fe737d6f}\label{mpmonitor_8h_a88bf00f1b126f462769f7801fe737d6f} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_CALLBACK\_NULL@{MPT\_MONITOR\_ERR\_CALLBACK\_NULL}}
+\index{MPT\_MONITOR\_ERR\_CALLBACK\_NULL@{MPT\_MONITOR\_ERR\_CALLBACK\_NULL}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_CALLBACK\_NULL}{MPT\_MONITOR\_ERR\_CALLBACK\_NULL}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CALLBACK\+\_\+\+NULL~-\/33}
+
+\Hypertarget{mpmonitor_8h_a24d7134e2ebe07ccc3fa34da21195e2e}\label{mpmonitor_8h_a24d7134e2ebe07ccc3fa34da21195e2e} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_CALLBACK\_TYPE@{MPT\_MONITOR\_ERR\_CALLBACK\_TYPE}}
+\index{MPT\_MONITOR\_ERR\_CALLBACK\_TYPE@{MPT\_MONITOR\_ERR\_CALLBACK\_TYPE}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_CALLBACK\_TYPE}{MPT\_MONITOR\_ERR\_CALLBACK\_TYPE}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CALLBACK\+\_\+\+TYPE~-\/32}
+
+\Hypertarget{mpmonitor_8h_a420b6220da218eaa7931abc3b5ea4412}\label{mpmonitor_8h_a420b6220da218eaa7931abc3b5ea4412} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_CLEANUP@{MPT\_MONITOR\_ERR\_CLEANUP}}
+\index{MPT\_MONITOR\_ERR\_CLEANUP@{MPT\_MONITOR\_ERR\_CLEANUP}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_CLEANUP}{MPT\_MONITOR\_ERR\_CLEANUP}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CLEANUP~-\/4}
+
+\Hypertarget{mpmonitor_8h_a76b8e208340cf26070780aafdc67f209}\label{mpmonitor_8h_a76b8e208340cf26070780aafdc67f209} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_CMD\_PARSE@{MPT\_MONITOR\_ERR\_CMD\_PARSE}}
+\index{MPT\_MONITOR\_ERR\_CMD\_PARSE@{MPT\_MONITOR\_ERR\_CMD\_PARSE}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_CMD\_PARSE}{MPT\_MONITOR\_ERR\_CMD\_PARSE}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CMD\+\_\+\+PARSE~-\/18}
+
+\Hypertarget{mpmonitor_8h_a81b6c2f485e543d336bc4b74e94ceb06}\label{mpmonitor_8h_a81b6c2f485e543d336bc4b74e94ceb06} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_COMMAND@{MPT\_MONITOR\_ERR\_COMMAND}}
+\index{MPT\_MONITOR\_ERR\_COMMAND@{MPT\_MONITOR\_ERR\_COMMAND}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_COMMAND}{MPT\_MONITOR\_ERR\_COMMAND}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+COMMAND~-\/19}
+
+\Hypertarget{mpmonitor_8h_abf92df12825674b958924ad1e2b9a356}\label{mpmonitor_8h_abf92df12825674b958924ad1e2b9a356} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_CONDVAR@{MPT\_MONITOR\_ERR\_CONDVAR}}
+\index{MPT\_MONITOR\_ERR\_CONDVAR@{MPT\_MONITOR\_ERR\_CONDVAR}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_CONDVAR}{MPT\_MONITOR\_ERR\_CONDVAR}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CONDVAR~-\/22}
+
+\Hypertarget{mpmonitor_8h_ac0fc026729b96b251a85c1db1578fcac}\label{mpmonitor_8h_ac0fc026729b96b251a85c1db1578fcac} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_CREATE\_SOCKETS@{MPT\_MONITOR\_ERR\_CREATE\_SOCKETS}}
+\index{MPT\_MONITOR\_ERR\_CREATE\_SOCKETS@{MPT\_MONITOR\_ERR\_CREATE\_SOCKETS}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_CREATE\_SOCKETS}{MPT\_MONITOR\_ERR\_CREATE\_SOCKETS}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CREATE\+\_\+\+SOCKETS~-\/28}
+
+\Hypertarget{mpmonitor_8h_af2c7a98deb1bd8fcce9f18c6b7bdcfc7}\label{mpmonitor_8h_af2c7a98deb1bd8fcce9f18c6b7bdcfc7} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_CRITSECTION@{MPT\_MONITOR\_ERR\_CRITSECTION}}
+\index{MPT\_MONITOR\_ERR\_CRITSECTION@{MPT\_MONITOR\_ERR\_CRITSECTION}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_CRITSECTION}{MPT\_MONITOR\_ERR\_CRITSECTION}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+CRITSECTION~-\/23}
+
+\Hypertarget{mpmonitor_8h_a68a5db26cd15010f27a0cca6bd592b92}\label{mpmonitor_8h_a68a5db26cd15010f27a0cca6bd592b92} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_GATHER@{MPT\_MONITOR\_ERR\_GATHER}}
+\index{MPT\_MONITOR\_ERR\_GATHER@{MPT\_MONITOR\_ERR\_GATHER}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_GATHER}{MPT\_MONITOR\_ERR\_GATHER}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+GATHER~-\/29}
+
+\Hypertarget{mpmonitor_8h_afdc5b7442acfd756e521a3d10ae96526}\label{mpmonitor_8h_afdc5b7442acfd756e521a3d10ae96526} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_GETPEERNAME@{MPT\_MONITOR\_ERR\_GETPEERNAME}}
+\index{MPT\_MONITOR\_ERR\_GETPEERNAME@{MPT\_MONITOR\_ERR\_GETPEERNAME}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_GETPEERNAME}{MPT\_MONITOR\_ERR\_GETPEERNAME}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+GETPEERNAME~-\/26}
+
+\Hypertarget{mpmonitor_8h_a7e00005b2bfc21cc1103c286bfc05ece}\label{mpmonitor_8h_a7e00005b2bfc21cc1103c286bfc05ece} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_HOSTENT@{MPT\_MONITOR\_ERR\_HOSTENT}}
+\index{MPT\_MONITOR\_ERR\_HOSTENT@{MPT\_MONITOR\_ERR\_HOSTENT}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_HOSTENT}{MPT\_MONITOR\_ERR\_HOSTENT}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+HOSTENT~-\/20}
+
+\Hypertarget{mpmonitor_8h_abea684faa3da071f4592014f43f68d48}\label{mpmonitor_8h_abea684faa3da071f4592014f43f68d48} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_INTERNAL@{MPT\_MONITOR\_ERR\_INTERNAL}}
+\index{MPT\_MONITOR\_ERR\_INTERNAL@{MPT\_MONITOR\_ERR\_INTERNAL}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_INTERNAL}{MPT\_MONITOR\_ERR\_INTERNAL}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+INTERNAL~-\/34}
+
+\Hypertarget{mpmonitor_8h_ad2bddcc8e1f7fdf5709408f6ca9d87fd}\label{mpmonitor_8h_ad2bddcc8e1f7fdf5709408f6ca9d87fd} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_INTERRUPT@{MPT\_MONITOR\_ERR\_INTERRUPT}}
+\index{MPT\_MONITOR\_ERR\_INTERRUPT@{MPT\_MONITOR\_ERR\_INTERRUPT}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_INTERRUPT}{MPT\_MONITOR\_ERR\_INTERRUPT}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+INTERRUPT~-\/24}
+
+\Hypertarget{mpmonitor_8h_a2abddfb5cb1f5d0bb39a3fbcf508125b}\label{mpmonitor_8h_a2abddfb5cb1f5d0bb39a3fbcf508125b} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_LOOKUP@{MPT\_MONITOR\_ERR\_LOOKUP}}
+\index{MPT\_MONITOR\_ERR\_LOOKUP@{MPT\_MONITOR\_ERR\_LOOKUP}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_LOOKUP}{MPT\_MONITOR\_ERR\_LOOKUP}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+LOOKUP~-\/1}
+
+\Hypertarget{mpmonitor_8h_ad47c1b9257283dc895be563d3151f476}\label{mpmonitor_8h_ad47c1b9257283dc895be563d3151f476} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_MPI@{MPT\_MONITOR\_ERR\_MPI}}
+\index{MPT\_MONITOR\_ERR\_MPI@{MPT\_MONITOR\_ERR\_MPI}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_MPI}{MPT\_MONITOR\_ERR\_MPI}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+MPI~-\/10}
+
+\Hypertarget{mpmonitor_8h_a5c5b8895b37f564e640c44fdb90f50c3}\label{mpmonitor_8h_a5c5b8895b37f564e640c44fdb90f50c3} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_MUTEX@{MPT\_MONITOR\_ERR\_MUTEX}}
+\index{MPT\_MONITOR\_ERR\_MUTEX@{MPT\_MONITOR\_ERR\_MUTEX}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_MUTEX}{MPT\_MONITOR\_ERR\_MUTEX}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+MUTEX~-\/3}
+
+\Hypertarget{mpmonitor_8h_af6cb1db7d39ddb9621ee97faa62031a7}\label{mpmonitor_8h_af6cb1db7d39ddb9621ee97faa62031a7} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_NOMEM@{MPT\_MONITOR\_ERR\_NOMEM}}
+\index{MPT\_MONITOR\_ERR\_NOMEM@{MPT\_MONITOR\_ERR\_NOMEM}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_NOMEM}{MPT\_MONITOR\_ERR\_NOMEM}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+NOMEM~-\/9}
+
+\Hypertarget{mpmonitor_8h_a61835e6eaac53d720c3e96d9ef258a81}\label{mpmonitor_8h_a61835e6eaac53d720c3e96d9ef258a81} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_NULL@{MPT\_MONITOR\_ERR\_NULL}}
+\index{MPT\_MONITOR\_ERR\_NULL@{MPT\_MONITOR\_ERR\_NULL}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_NULL}{MPT\_MONITOR\_ERR\_NULL}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+NULL~-\/7}
+
+\Hypertarget{mpmonitor_8h_ad710b9c69e2fcbb6805e5b915fbf851b}\label{mpmonitor_8h_ad710b9c69e2fcbb6805e5b915fbf851b} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_SIGNAL@{MPT\_MONITOR\_ERR\_SIGNAL}}
+\index{MPT\_MONITOR\_ERR\_SIGNAL@{MPT\_MONITOR\_ERR\_SIGNAL}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_SIGNAL}{MPT\_MONITOR\_ERR\_SIGNAL}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SIGNAL~-\/27}
+
+\Hypertarget{mpmonitor_8h_a951a631217a38473d9450ba19d1d2dce}\label{mpmonitor_8h_a951a631217a38473d9450ba19d1d2dce} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_SOCK\_ACCEPT@{MPT\_MONITOR\_ERR\_SOCK\_ACCEPT}}
+\index{MPT\_MONITOR\_ERR\_SOCK\_ACCEPT@{MPT\_MONITOR\_ERR\_SOCK\_ACCEPT}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_SOCK\_ACCEPT}{MPT\_MONITOR\_ERR\_SOCK\_ACCEPT}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+ACCEPT~-\/12}
+
+\Hypertarget{mpmonitor_8h_a64c7347a37c197e03a335c5523c64b0d}\label{mpmonitor_8h_a64c7347a37c197e03a335c5523c64b0d} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_SOCK\_CLEANUP@{MPT\_MONITOR\_ERR\_SOCK\_CLEANUP}}
+\index{MPT\_MONITOR\_ERR\_SOCK\_CLEANUP@{MPT\_MONITOR\_ERR\_SOCK\_CLEANUP}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_SOCK\_CLEANUP}{MPT\_MONITOR\_ERR\_SOCK\_CLEANUP}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+CLEANUP~-\/6}
+
+\Hypertarget{mpmonitor_8h_a52c4b87d154fb98baeb223d01a273ffa}\label{mpmonitor_8h_a52c4b87d154fb98baeb223d01a273ffa} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_SOCK\_CLOSE@{MPT\_MONITOR\_ERR\_SOCK\_CLOSE}}
+\index{MPT\_MONITOR\_ERR\_SOCK\_CLOSE@{MPT\_MONITOR\_ERR\_SOCK\_CLOSE}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_SOCK\_CLOSE}{MPT\_MONITOR\_ERR\_SOCK\_CLOSE}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+CLOSE~-\/14}
+
+\Hypertarget{mpmonitor_8h_a83b04b108d86462dd04448621e345eae}\label{mpmonitor_8h_a83b04b108d86462dd04448621e345eae} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_SOCK\_CONNECT@{MPT\_MONITOR\_ERR\_SOCK\_CONNECT}}
+\index{MPT\_MONITOR\_ERR\_SOCK\_CONNECT@{MPT\_MONITOR\_ERR\_SOCK\_CONNECT}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_SOCK\_CONNECT}{MPT\_MONITOR\_ERR\_SOCK\_CONNECT}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+CONNECT~-\/13}
+
+\Hypertarget{mpmonitor_8h_a1feb299054318d0cdddfde2f559882b1}\label{mpmonitor_8h_a1feb299054318d0cdddfde2f559882b1} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_SOCK\_CREATE@{MPT\_MONITOR\_ERR\_SOCK\_CREATE}}
+\index{MPT\_MONITOR\_ERR\_SOCK\_CREATE@{MPT\_MONITOR\_ERR\_SOCK\_CREATE}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_SOCK\_CREATE}{MPT\_MONITOR\_ERR\_SOCK\_CREATE}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+CREATE~-\/11}
+
+\Hypertarget{mpmonitor_8h_a90e994770a1678c8a54bbcbc16c9da1e}\label{mpmonitor_8h_a90e994770a1678c8a54bbcbc16c9da1e} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_SOCK\_INITIALIZE@{MPT\_MONITOR\_ERR\_SOCK\_INITIALIZE}}
+\index{MPT\_MONITOR\_ERR\_SOCK\_INITIALIZE@{MPT\_MONITOR\_ERR\_SOCK\_INITIALIZE}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_SOCK\_INITIALIZE}{MPT\_MONITOR\_ERR\_SOCK\_INITIALIZE}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+INITIALIZE~-\/5}
+
+\Hypertarget{mpmonitor_8h_a2420f1899f287c215f542008fa8c6c23}\label{mpmonitor_8h_a2420f1899f287c215f542008fa8c6c23} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_SOCK\_RECV@{MPT\_MONITOR\_ERR\_SOCK\_RECV}}
+\index{MPT\_MONITOR\_ERR\_SOCK\_RECV@{MPT\_MONITOR\_ERR\_SOCK\_RECV}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_SOCK\_RECV}{MPT\_MONITOR\_ERR\_SOCK\_RECV}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+RECV~-\/17}
+
+\Hypertarget{mpmonitor_8h_a764077a5be751c60d0f92cfaa1ad5405}\label{mpmonitor_8h_a764077a5be751c60d0f92cfaa1ad5405} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_SOCK\_SEND@{MPT\_MONITOR\_ERR\_SOCK\_SEND}}
+\index{MPT\_MONITOR\_ERR\_SOCK\_SEND@{MPT\_MONITOR\_ERR\_SOCK\_SEND}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_SOCK\_SEND}{MPT\_MONITOR\_ERR\_SOCK\_SEND}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+SOCK\+\_\+\+SEND~-\/16}
+
+\Hypertarget{mpmonitor_8h_ab276b6e691ade69746da8c369652a7d7}\label{mpmonitor_8h_ab276b6e691ade69746da8c369652a7d7} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_STATE@{MPT\_MONITOR\_ERR\_STATE}}
+\index{MPT\_MONITOR\_ERR\_STATE@{MPT\_MONITOR\_ERR\_STATE}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_STATE}{MPT\_MONITOR\_ERR\_STATE}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+STATE~-\/8}
+
+\Hypertarget{mpmonitor_8h_a75b0327e5660af08073cc494412032e5}\label{mpmonitor_8h_a75b0327e5660af08073cc494412032e5} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_ERR\_THREAD@{MPT\_MONITOR\_ERR\_THREAD}}
+\index{MPT\_MONITOR\_ERR\_THREAD@{MPT\_MONITOR\_ERR\_THREAD}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_ERR\_THREAD}{MPT\_MONITOR\_ERR\_THREAD}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+ERR\+\_\+\+THREAD~-\/2}
+
+\Hypertarget{mpmonitor_8h_a2e706d310d54a8b489822648b124d59b}\label{mpmonitor_8h_a2e706d310d54a8b489822648b124d59b} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_KEEPALIVE\_DEFAULT@{MPT\_MONITOR\_KEEPALIVE\_DEFAULT}}
+\index{MPT\_MONITOR\_KEEPALIVE\_DEFAULT@{MPT\_MONITOR\_KEEPALIVE\_DEFAULT}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_KEEPALIVE\_DEFAULT}{MPT\_MONITOR\_KEEPALIVE\_DEFAULT}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+KEEPALIVE\+\_\+\+DEFAULT~10}
+
+\Hypertarget{mpmonitor_8h_af525fc6a75d401a9653c835f2a082d6a}\label{mpmonitor_8h_af525fc6a75d401a9653c835f2a082d6a} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_NULL@{MPT\_MONITOR\_NULL}}
+\index{MPT\_MONITOR\_NULL@{MPT\_MONITOR\_NULL}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_NULL}{MPT\_MONITOR\_NULL}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+NULL~-\/1}
+
+\Hypertarget{mpmonitor_8h_a92ded4e87c32daa923f2bb49ea25a63e}\label{mpmonitor_8h_a92ded4e87c32daa923f2bb49ea25a63e} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_SIGNAL\_NULL@{MPT\_MONITOR\_SIGNAL\_NULL}}
+\index{MPT\_MONITOR\_SIGNAL\_NULL@{MPT\_MONITOR\_SIGNAL\_NULL}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_SIGNAL\_NULL}{MPT\_MONITOR\_SIGNAL\_NULL}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+SIGNAL\+\_\+\+NULL~-\/1}
+
+\Hypertarget{mpmonitor_8h_a3eeb14c6b588b6feaa34bf236e2032b3}\label{mpmonitor_8h_a3eeb14c6b588b6feaa34bf236e2032b3} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_SOCK\_CLOSED@{MPT\_MONITOR\_SOCK\_CLOSED}}
+\index{MPT\_MONITOR\_SOCK\_CLOSED@{MPT\_MONITOR\_SOCK\_CLOSED}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_SOCK\_CLOSED}{MPT\_MONITOR\_SOCK\_CLOSED}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+SOCK\+\_\+\+CLOSED~-\/15}
+
+\Hypertarget{mpmonitor_8h_ad597c854e856562989f581f0fc69c7bb}\label{mpmonitor_8h_ad597c854e856562989f581f0fc69c7bb} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_SUCCESS@{MPT\_MONITOR\_SUCCESS}}
+\index{MPT\_MONITOR\_SUCCESS@{MPT\_MONITOR\_SUCCESS}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_SUCCESS}{MPT\_MONITOR\_SUCCESS}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+SUCCESS~0}
+
+\Hypertarget{mpmonitor_8h_af1482a07280996e824007bf4ae037477}\label{mpmonitor_8h_af1482a07280996e824007bf4ae037477} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_TOPO\_NULL@{MPT\_MONITOR\_TOPO\_NULL}}
+\index{MPT\_MONITOR\_TOPO\_NULL@{MPT\_MONITOR\_TOPO\_NULL}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MONITOR\_TOPO\_NULL}{MPT\_MONITOR\_TOPO\_NULL}}
+{\footnotesize\ttfamily \#define MPT\+\_\+\+MONITOR\+\_\+\+TOPO\+\_\+\+NULL~-\/25}
+
+\Hypertarget{mpmonitor_8h_aa045f6c3e51702a5c8fa6750d14f91af}\label{mpmonitor_8h_aa045f6c3e51702a5c8fa6750d14f91af} 
+\index{mpmonitor.h@{mpmonitor.h}!MPTJMPBUF@{MPTJMPBUF}}
+\index{MPTJMPBUF@{MPTJMPBUF}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPTJMPBUF}{MPTJMPBUF}}
+{\footnotesize\ttfamily \#define MPTJMPBUF~int\texorpdfstring{$\ast$}{*}}
+
+\Hypertarget{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}\label{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3} 
+\index{mpmonitor.h@{mpmonitor.h}!MUTEX\_T@{MUTEX\_T}}
+\index{MUTEX\_T@{MUTEX\_T}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MUTEX\_T}{MUTEX\_T}}
+{\footnotesize\ttfamily \#define MUTEX\+\_\+T~pthread\+\_\+mutex\+\_\+t}
+
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}\label{mpmonitor_8h_aff957bbb743603138b230da68475f9a3} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_callback@{MPT\_Monitor\_callback}}
+\index{MPT\_Monitor\_callback@{MPT\_Monitor\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_callback}{MPT\_Monitor\_callback}}
+{\footnotesize\ttfamily typedef int(\texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+callback) (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} id, int msg\+Len, char \texorpdfstring{$\ast$}{*}message)}
+
+\Hypertarget{mpmonitor_8h_a99a3012266eda253878d30952af55927}\label{mpmonitor_8h_a99a3012266eda253878d30952af55927} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_Exit\_Callback@{MPT\_Monitor\_Exit\_Callback}}
+\index{MPT\_Monitor\_Exit\_Callback@{MPT\_Monitor\_Exit\_Callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_Exit\_Callback}{MPT\_Monitor\_Exit\_Callback}}
+{\footnotesize\ttfamily typedef int(\texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+\+Exit\+\_\+\+Callback) (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} id)}
+
+\Hypertarget{mpmonitor_8h_a168129f98b986cc6da49d8e652e5f090}\label{mpmonitor_8h_a168129f98b986cc6da49d8e652e5f090} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_main\_thread\_interrupt\_fp@{MPT\_Monitor\_main\_thread\_interrupt\_fp}}
+\index{MPT\_Monitor\_main\_thread\_interrupt\_fp@{MPT\_Monitor\_main\_thread\_interrupt\_fp}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_main\_thread\_interrupt\_fp}{MPT\_Monitor\_main\_thread\_interrupt\_fp}}
+{\footnotesize\ttfamily typedef int(\texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+main\+\_\+thread\+\_\+interrupt\+\_\+fp) (\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} id)}
+
+\Hypertarget{mpmonitor_8h_a1abd20db914aad839490789328494748}\label{mpmonitor_8h_a1abd20db914aad839490789328494748} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_Process\_Connection\_Info@{MPT\_Monitor\_Process\_Connection\_Info}}
+\index{MPT\_Monitor\_Process\_Connection\_Info@{MPT\_Monitor\_Process\_Connection\_Info}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_Process\_Connection\_Info}{MPT\_Monitor\_Process\_Connection\_Info}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structmpt__monitor__process__connection__info__t}{mpt\+\_\+monitor\+\_\+process\+\_\+connection\+\_\+info\+\_\+t}} \mbox{\hyperlink{mpmonitor_8h_a1abd20db914aad839490789328494748}{MPT\+\_\+\+Monitor\+\_\+\+Process\+\_\+\+Connection\+\_\+\+Info}}}
+
+\Hypertarget{mpmonitor_8h_af6349e7974fc46771eb42c165ea06a7a}\label{mpmonitor_8h_af6349e7974fc46771eb42c165ea06a7a} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_Remote\_Connector@{MPT\_Monitor\_Remote\_Connector}}
+\index{MPT\_Monitor\_Remote\_Connector@{MPT\_Monitor\_Remote\_Connector}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_Remote\_Connector}{MPT\_Monitor\_Remote\_Connector}}
+{\footnotesize\ttfamily typedef void(\texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+\+Remote\+\_\+\+Connector) (int listener\+Port, char \texorpdfstring{$\ast$}{*}address)}
+
+\Hypertarget{mpmonitor_8h_ae4e23760d6bd2d98ffd2e6303d61beb4}\label{mpmonitor_8h_ae4e23760d6bd2d98ffd2e6303d61beb4} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_Status\_Callback@{MPT\_Monitor\_Status\_Callback}}
+\index{MPT\_Monitor\_Status\_Callback@{MPT\_Monitor\_Status\_Callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_Status\_Callback}{MPT\_Monitor\_Status\_Callback}}
+{\footnotesize\ttfamily typedef int(\texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+\+Status\+\_\+\+Callback) (\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} command, int msg\+Len, char \texorpdfstring{$\ast$}{*}message)}
+
+\Hypertarget{mpmonitor_8h_a71c35373e871ad0152517982ebbc7b34}\label{mpmonitor_8h_a71c35373e871ad0152517982ebbc7b34} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_Topology\_Info@{MPT\_Monitor\_Topology\_Info}}
+\index{MPT\_Monitor\_Topology\_Info@{MPT\_Monitor\_Topology\_Info}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_Topology\_Info}{MPT\_Monitor\_Topology\_Info}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structmpt__monitor__connection__topology__info__t}{mpt\+\_\+monitor\+\_\+connection\+\_\+topology\+\_\+info\+\_\+t}} \mbox{\hyperlink{mpmonitor_8h_a71c35373e871ad0152517982ebbc7b34}{MPT\+\_\+\+Monitor\+\_\+\+Topology\+\_\+\+Info}}}
+
+\Hypertarget{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}\label{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_MonitorID@{MPT\_MonitorID}}
+\index{MPT\_MonitorID@{MPT\_MonitorID}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_MonitorID}{MPT\_MonitorID}}
+{\footnotesize\ttfamily typedef int \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}\label{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_callback\_type@{MPT\_Monitor\_callback\_type}}
+\index{MPT\_Monitor\_callback\_type@{MPT\_Monitor\_callback\_type}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_callback\_type}{MPT\_Monitor\_callback\_type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MPT\_MONITOR\_CALLBACK\_MIN@{MPT\_MONITOR\_CALLBACK\_MIN}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_CALLBACK\_MIN@{MPT\_MONITOR\_CALLBACK\_MIN}}}\Hypertarget{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24ca0e964199c78af2d94ae458be132196ae}\label{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24ca0e964199c78af2d94ae458be132196ae} 
+MPT\+\_\+\+MONITOR\+\_\+\+CALLBACK\+\_\+\+MIN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INTERNAL\_ERROR@{INTERNAL\_ERROR}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!INTERNAL\_ERROR@{INTERNAL\_ERROR}}}\Hypertarget{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa6160da3d147c897d800efe3a69c941e}\label{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa6160da3d147c897d800efe3a69c941e} 
+INTERNAL\+\_\+\+ERROR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MONITOR\_STATUS@{MONITOR\_STATUS}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!MONITOR\_STATUS@{MONITOR\_STATUS}}}\Hypertarget{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caadf2c0630d7e5d68d469575843b17e54}\label{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caadf2c0630d7e5d68d469575843b17e54} 
+MONITOR\+\_\+\+STATUS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RECREATE\_COMMS@{RECREATE\_COMMS}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!RECREATE\_COMMS@{RECREATE\_COMMS}}}\Hypertarget{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa2ccb134a0887021df0b51d2b48226c0}\label{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa2ccb134a0887021df0b51d2b48226c0} 
+RECREATE\+\_\+\+COMMS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MPT\_MONITOR\_CALLBACK\_MAX@{MPT\_MONITOR\_CALLBACK\_MAX}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_CALLBACK\_MAX@{MPT\_MONITOR\_CALLBACK\_MAX}}}\Hypertarget{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa63821ed533a9e8723fc728b87521bc1}\label{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa63821ed533a9e8723fc728b87521bc1} 
+MPT\+\_\+\+MONITOR\+\_\+\+CALLBACK\+\_\+\+MAX&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_command@{MPT\_Monitor\_command}}
+\index{MPT\_Monitor\_command@{MPT\_Monitor\_command}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_command}{MPT\_Monitor\_command}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MPT\_MONITOR\_COMMAND\_MIN@{MPT\_MONITOR\_COMMAND\_MIN}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_COMMAND\_MIN@{MPT\_MONITOR\_COMMAND\_MIN}}}\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea38a2ce91e55be8dfc0708170efa7577d}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea38a2ce91e55be8dfc0708170efa7577d} 
+MPT\+\_\+\+MONITOR\+\_\+\+COMMAND\+\_\+\+MIN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NORMAL@{NORMAL}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!NORMAL@{NORMAL}}}\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea50d1448013c6f17125caee18aa418af7}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea50d1448013c6f17125caee18aa418af7} 
+NORMAL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NORMAL\_EXITING@{NORMAL\_EXITING}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!NORMAL\_EXITING@{NORMAL\_EXITING}}}\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea3b5b9843649b0f629ecb6eabc837acc7}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea3b5b9843649b0f629ecb6eabc837acc7} 
+NORMAL\+\_\+\+EXITING&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CLEANUP\_EXITING@{CLEANUP\_EXITING}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!CLEANUP\_EXITING@{CLEANUP\_EXITING}}}\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eab688f39139474a306dfce8ebf0a93518}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eab688f39139474a306dfce8ebf0a93518} 
+CLEANUP\+\_\+\+EXITING&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INTERRUPT\_AND\_SYNC@{INTERRUPT\_AND\_SYNC}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!INTERRUPT\_AND\_SYNC@{INTERRUPT\_AND\_SYNC}}}\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea7bf859ff46184194a806496e5c41793c}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea7bf859ff46184194a806496e5c41793c} 
+INTERRUPT\+\_\+\+AND\+\_\+\+SYNC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RECREATE\_MONITOR\_THREAD@{RECREATE\_MONITOR\_THREAD}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!RECREATE\_MONITOR\_THREAD@{RECREATE\_MONITOR\_THREAD}}}\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea6e30b387abd047d0d88e0eb9ee894f46}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea6e30b387abd047d0d88e0eb9ee894f46} 
+RECREATE\+\_\+\+MONITOR\+\_\+\+THREAD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MONITOR\_TIMED\_OUT@{MONITOR\_TIMED\_OUT}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!MONITOR\_TIMED\_OUT@{MONITOR\_TIMED\_OUT}}}\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea5309de8b5eca46346e05eb35ecb9b80c}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea5309de8b5eca46346e05eb35ecb9b80c} 
+MONITOR\+\_\+\+TIMED\+\_\+\+OUT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BARRIER@{BARRIER}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!BARRIER@{BARRIER}}}\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eaef10b8804992b6a16960332346c21493}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eaef10b8804992b6a16960332346c21493} 
+BARRIER&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MPT\_MONITOR\_COMMAND\_MAX@{MPT\_MONITOR\_COMMAND\_MAX}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!MPT\_MONITOR\_COMMAND\_MAX@{MPT\_MONITOR\_COMMAND\_MAX}}}\Hypertarget{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eaf3b2fee54f403246ea2cd747b55db31e}\label{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eaf3b2fee54f403246ea2cd747b55db31e} 
+MPT\+\_\+\+MONITOR\+\_\+\+COMMAND\+\_\+\+MAX&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1}\label{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_Connection\_Topotype@{MPT\_Monitor\_Connection\_Topotype}}
+\index{MPT\_Monitor\_Connection\_Topotype@{MPT\_Monitor\_Connection\_Topotype}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_Connection\_Topotype}{MPT\_Monitor\_Connection\_Topotype}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1}{MPT\+\_\+\+Monitor\+\_\+\+Connection\+\_\+\+Topotype}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MPT\_CART@{MPT\_CART}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!MPT\_CART@{MPT\_CART}}}\Hypertarget{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a792a408687b0d4e5ccca7bee6aed7541}\label{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a792a408687b0d4e5ccca7bee6aed7541} 
+MPT\+\_\+\+CART&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MPT\_TREE@{MPT\_TREE}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!MPT\_TREE@{MPT\_TREE}}}\Hypertarget{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a6007ce8ca871aebc2a0fe6e934547c30}\label{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a6007ce8ca871aebc2a0fe6e934547c30} 
+MPT\+\_\+\+TREE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MPT\_GRAPH@{MPT\_GRAPH}!mpmonitor.h@{mpmonitor.h}}\index{mpmonitor.h@{mpmonitor.h}!MPT\_GRAPH@{MPT\_GRAPH}}}\Hypertarget{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a7c65ca5371d112ffacfa6a6b2846ee3a}\label{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a7c65ca5371d112ffacfa6a6b2846ee3a} 
+MPT\+\_\+\+GRAPH&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{mpmonitor_8h_a71e04c6f4986ae06722af85fdf8a01f3}\label{mpmonitor_8h_a71e04c6f4986ae06722af85fdf8a01f3} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Create\_Wait\_Sock@{MPT\_Create\_Wait\_Sock}}
+\index{MPT\_Create\_Wait\_Sock@{MPT\_Create\_Wait\_Sock}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Create\_Wait\_Sock()}{MPT\_Create\_Wait\_Sock()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Create\+\_\+\+Wait\+\_\+\+Sock (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{int}]{allnodes }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_aaf99f107ae31146c4ed9a53dd1b927dc}\label{mpmonitor_8h_aaf99f107ae31146c4ed9a53dd1b927dc} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Destroy\_Wait\_Sock@{MPT\_Destroy\_Wait\_Sock}}
+\index{MPT\_Destroy\_Wait\_Sock@{MPT\_Destroy\_Wait\_Sock}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Destroy\_Wait\_Sock()}{MPT\_Destroy\_Wait\_Sock()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Destroy\+\_\+\+Wait\+\_\+\+Sock (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a16ddead8e12c5f970557ecbc796c6b4d}\label{mpmonitor_8h_a16ddead8e12c5f970557ecbc796c6b4d} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_monitor\_add\_process\_to\_cleanup\_file@{MPT\_monitor\_add\_process\_to\_cleanup\_file}}
+\index{MPT\_monitor\_add\_process\_to\_cleanup\_file@{MPT\_monitor\_add\_process\_to\_cleanup\_file}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_monitor\_add\_process\_to\_cleanup\_file()}{MPT\_monitor\_add\_process\_to\_cleanup\_file()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+monitor\+\_\+add\+\_\+process\+\_\+to\+\_\+cleanup\+\_\+file (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{host,  }\item[{int}]{pid }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_ae143f115176fc03461dbcafd56099920}\label{mpmonitor_8h_ae143f115176fc03461dbcafd56099920} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_callback\_type\_stringify@{MPT\_Monitor\_callback\_type\_stringify}}
+\index{MPT\_Monitor\_callback\_type\_stringify@{MPT\_Monitor\_callback\_type\_stringify}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_callback\_type\_stringify()}{MPT\_Monitor\_callback\_type\_stringify()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type\+\_\+stringify (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}}}]{callback\+Type }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a471c58e703f910e9d6f934899d4872dc}\label{mpmonitor_8h_a471c58e703f910e9d6f934899d4872dc} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_create\_mutex@{MPT\_Monitor\_create\_mutex}}
+\index{MPT\_Monitor\_create\_mutex@{MPT\_Monitor\_create\_mutex}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_create\_mutex()}{MPT\_Monitor\_create\_mutex()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+create\+\_\+mutex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\+\_\+T}} \texorpdfstring{$\ast$}{*}}]{mutex }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_af1aae024ed6d60da0b074dcaed9cbc58}\label{mpmonitor_8h_af1aae024ed6d60da0b074dcaed9cbc58} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_destroy\_mutex@{MPT\_Monitor\_destroy\_mutex}}
+\index{MPT\_Monitor\_destroy\_mutex@{MPT\_Monitor\_destroy\_mutex}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_destroy\_mutex()}{MPT\_Monitor\_destroy\_mutex()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+destroy\+\_\+mutex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\+\_\+T}} \texorpdfstring{$\ast$}{*}}]{mutex }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_afd2272e23c5a331ae5a1e2c7246a52c1}\label{mpmonitor_8h_afd2272e23c5a331ae5a1e2c7246a52c1} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_get\_callback@{MPT\_Monitor\_get\_callback}}
+\index{MPT\_Monitor\_get\_callback@{MPT\_Monitor\_get\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_get\_callback()}{MPT\_Monitor\_get\_callback()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+get\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}}}]{callback\+Type,  }\item[{\mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\+\_\+\+Monitor\+\_\+callback}} \texorpdfstring{$\ast$}{*}}]{callback }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a511acc7f94467bfe7a32008d2c746739}\label{mpmonitor_8h_a511acc7f94467bfe7a32008d2c746739} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_invoke\_callback@{MPT\_Monitor\_invoke\_callback}}
+\index{MPT\_Monitor\_invoke\_callback@{MPT\_Monitor\_invoke\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_invoke\_callback()}{MPT\_Monitor\_invoke\_callback()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+invoke\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}}}]{callback\+Type,  }\item[{int}]{msg\+Len,  }\item[{char \texorpdfstring{$\ast$}{*}}]{message }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a5df2d6ed47b3b02c377b144e94f5b392}\label{mpmonitor_8h_a5df2d6ed47b3b02c377b144e94f5b392} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_register\_callbacks@{MPT\_Monitor\_register\_callbacks}}
+\index{MPT\_Monitor\_register\_callbacks@{MPT\_Monitor\_register\_callbacks}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_register\_callbacks()}{MPT\_Monitor\_register\_callbacks()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+register\+\_\+callbacks (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{id,  }\item[{unsigned int}]{ncallbacks,  }\item[{\mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}} \texorpdfstring{$\ast$}{*}}]{callback\+Types,  }\item[{\mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\+\_\+\+Monitor\+\_\+callback}} \texorpdfstring{$\ast$}{*}}]{callbacks }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a4603635480f85b2761f904e25e5656c9}\label{mpmonitor_8h_a4603635480f85b2761f904e25e5656c9} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_register\_exit\_callback@{MPT\_Monitor\_register\_exit\_callback}}
+\index{MPT\_Monitor\_register\_exit\_callback@{MPT\_Monitor\_register\_exit\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_register\_exit\_callback()}{MPT\_Monitor\_register\_exit\_callback()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+register\+\_\+exit\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_a99a3012266eda253878d30952af55927}{MPT\+\_\+\+Monitor\+\_\+\+Exit\+\_\+\+Callback}}}]{callback }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a354702502edce709b7964e5a57b5a78b}\label{mpmonitor_8h_a354702502edce709b7964e5a57b5a78b} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_register\_repair\_comm\_callback@{MPT\_Monitor\_register\_repair\_comm\_callback}}
+\index{MPT\_Monitor\_register\_repair\_comm\_callback@{MPT\_Monitor\_register\_repair\_comm\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_register\_repair\_comm\_callback()}{MPT\_Monitor\_register\_repair\_comm\_callback()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+register\+\_\+repair\+\_\+comm\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\+\_\+\+Monitor\+\_\+callback}} \texorpdfstring{$\ast$}{*}}]{callback }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a219127c2959ffc273f0eaad5c152aeb2}\label{mpmonitor_8h_a219127c2959ffc273f0eaad5c152aeb2} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_register\_status\_callback@{MPT\_Monitor\_register\_status\_callback}}
+\index{MPT\_Monitor\_register\_status\_callback@{MPT\_Monitor\_register\_status\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_register\_status\_callback()}{MPT\_Monitor\_register\_status\_callback()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+register\+\_\+status\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_ae4e23760d6bd2d98ffd2e6303d61beb4}{MPT\+\_\+\+Monitor\+\_\+\+Status\+\_\+\+Callback}}}]{callback }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_abf9e578169150a9517b42b6ef4bb732e}\label{mpmonitor_8h_abf9e578169150a9517b42b6ef4bb732e} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_signal\_command\_propagation@{MPT\_Monitor\_signal\_command\_propagation}}
+\index{MPT\_Monitor\_signal\_command\_propagation@{MPT\_Monitor\_signal\_command\_propagation}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_signal\_command\_propagation()}{MPT\_Monitor\_signal\_command\_propagation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+signal\+\_\+command\+\_\+propagation (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{unsigned char}]{command\+Propagation\+Complete }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_af3a758d18498bb24b019855fdf5d3611}\label{mpmonitor_8h_af3a758d18498bb24b019855fdf5d3611} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_start\_mutex@{MPT\_Monitor\_start\_mutex}}
+\index{MPT\_Monitor\_start\_mutex@{MPT\_Monitor\_start\_mutex}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_start\_mutex()}{MPT\_Monitor\_start\_mutex()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+start\+\_\+mutex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\+\_\+T}} \texorpdfstring{$\ast$}{*}}]{mutex }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_aaf1d12e1c195f91b1fd373f2d9870fdb}\label{mpmonitor_8h_aaf1d12e1c195f91b1fd373f2d9870fdb} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_stop\_mutex@{MPT\_Monitor\_stop\_mutex}}
+\index{MPT\_Monitor\_stop\_mutex@{MPT\_Monitor\_stop\_mutex}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_stop\_mutex()}{MPT\_Monitor\_stop\_mutex()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+stop\+\_\+mutex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\+\_\+T}} \texorpdfstring{$\ast$}{*}}]{mutex }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a82c3e48c0d25ad8a789352ec11758a07}\label{mpmonitor_8h_a82c3e48c0d25ad8a789352ec11758a07} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_asyncsafe\_print\_error@{MPT\_Monitor\_system\_asyncsafe\_print\_error}}
+\index{MPT\_Monitor\_system\_asyncsafe\_print\_error@{MPT\_Monitor\_system\_asyncsafe\_print\_error}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_asyncsafe\_print\_error()}{MPT\_Monitor\_system\_asyncsafe\_print\_error()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+asyncsafe\+\_\+print\+\_\+error (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{int}]{signal,  }\item[{int}]{error\+Msg\+Len,  }\item[{char \texorpdfstring{$\ast$}{*}}]{error\+Message }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a61e70fafd2f8e0b7df6be008022fa0cd}\label{mpmonitor_8h_a61e70fafd2f8e0b7df6be008022fa0cd} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_backtrace\_file@{MPT\_Monitor\_system\_backtrace\_file}}
+\index{MPT\_Monitor\_system\_backtrace\_file@{MPT\_Monitor\_system\_backtrace\_file}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_backtrace\_file()}{MPT\_Monitor\_system\_backtrace\_file()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} FILE \texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+system\+\_\+backtrace\+\_\+file (\begin{DoxyParamCaption}\item[{int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a055d14bf0e7e14e30636e650e43c7773}\label{mpmonitor_8h_a055d14bf0e7e14e30636e650e43c7773} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_barrier@{MPT\_Monitor\_system\_barrier}}
+\index{MPT\_Monitor\_system\_barrier@{MPT\_Monitor\_system\_barrier}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_barrier()}{MPT\_Monitor\_system\_barrier()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+barrier (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a7ea15a634acd2a759a10035aeebff70d}\label{mpmonitor_8h_a7ea15a634acd2a759a10035aeebff70d} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_bcast@{MPT\_Monitor\_system\_bcast}}
+\index{MPT\_Monitor\_system\_bcast@{MPT\_Monitor\_system\_bcast}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_bcast()}{MPT\_Monitor\_system\_bcast()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+bcast (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{int}]{root,  }\item[{int}]{nflags,  }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{flags }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a9cebdfb61d345ea369700fb06a6998d0}\label{mpmonitor_8h_a9cebdfb61d345ea369700fb06a6998d0} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_cleanup\_exiting@{MPT\_Monitor\_system\_cleanup\_exiting}}
+\index{MPT\_Monitor\_system\_cleanup\_exiting@{MPT\_Monitor\_system\_cleanup\_exiting}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_cleanup\_exiting()}{MPT\_Monitor\_system\_cleanup\_exiting()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} unsigned char MPT\+\_\+\+Monitor\+\_\+system\+\_\+cleanup\+\_\+exiting (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}}}]{command }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_ad5678dc96dbcaea2e6f78ac61db7910a}\label{mpmonitor_8h_ad5678dc96dbcaea2e6f78ac61db7910a} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_command\_stringify@{MPT\_Monitor\_system\_command\_stringify}}
+\index{MPT\_Monitor\_system\_command\_stringify@{MPT\_Monitor\_system\_command\_stringify}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_command\_stringify()}{MPT\_Monitor\_system\_command\_stringify()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} char \texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+system\+\_\+command\+\_\+stringify (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}}}]{command }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_ab6d0080e42a388f306d73b714cdc4fdb}\label{mpmonitor_8h_ab6d0080e42a388f306d73b714cdc4fdb} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_connect@{MPT\_Monitor\_system\_connect}}
+\index{MPT\_Monitor\_system\_connect@{MPT\_Monitor\_system\_connect}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_connect()}{MPT\_Monitor\_system\_connect()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+connect (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} \texorpdfstring{$\ast$}{*}}]{mpt\+Monitor\+ID,  }\item[{int}]{controller\+ID,  }\item[{int}]{connecting\+Process\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_af6349e7974fc46771eb42c165ea06a7a}{MPT\+\_\+\+Monitor\+\_\+\+Remote\+\_\+\+Connector}}}]{mpt\+Remote\+Connector,  }\item[{\mbox{\hyperlink{mpmonitor_8h_a1abd20db914aad839490789328494748}{MPT\+\_\+\+Monitor\+\_\+\+Process\+\_\+\+Connection\+\_\+\+Info}} \texorpdfstring{$\ast$}{*}}]{host\+Info }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a6a90af976b47a1600ba3fe96a084966e}\label{mpmonitor_8h_a6a90af976b47a1600ba3fe96a084966e} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_controller@{MPT\_Monitor\_system\_controller}}
+\index{MPT\_Monitor\_system\_controller@{MPT\_Monitor\_system\_controller}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_controller()}{MPT\_Monitor\_system\_controller()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+controller (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a555c8f4f775a2b9b450a69c841e58713}\label{mpmonitor_8h_a555c8f4f775a2b9b450a69c841e58713} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_create@{MPT\_Monitor\_system\_create}}
+\index{MPT\_Monitor\_system\_create@{MPT\_Monitor\_system\_create}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_create()}{MPT\_Monitor\_system\_create()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+create (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}} \texorpdfstring{$\ast$}{*}}]{mpt\+Monitor\+ID,  }\item[{long}]{duration,  }\item[{int}]{keepalive\+Interval,  }\item[{int}]{verbosity,  }\item[{void \texorpdfstring{$\ast$}{*}}]{mpi\+Comm }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a15a45be17a74ca9c05d1996fd08b181e}\label{mpmonitor_8h_a15a45be17a74ca9c05d1996fd08b181e} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_destroy@{MPT\_Monitor\_system\_destroy}}
+\index{MPT\_Monitor\_system\_destroy@{MPT\_Monitor\_system\_destroy}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_destroy()}{MPT\_Monitor\_system\_destroy()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+destroy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a7858fade1d694451683a13514cd423c2}\label{mpmonitor_8h_a7858fade1d694451683a13514cd423c2} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_error\_recovery@{MPT\_Monitor\_system\_error\_recovery}}
+\index{MPT\_Monitor\_system\_error\_recovery@{MPT\_Monitor\_system\_error\_recovery}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_error\_recovery()}{MPT\_Monitor\_system\_error\_recovery()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+error\+\_\+recovery (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID,  }\item[{unsigned char}]{signal\+Handler,  }\item[{unsigned char}]{error\+Function }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a01dde51805b6b816ed0c31d6a188b6cc}\label{mpmonitor_8h_a01dde51805b6b816ed0c31d6a188b6cc} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_fatal\_signal\_received@{MPT\_Monitor\_system\_fatal\_signal\_received}}
+\index{MPT\_Monitor\_system\_fatal\_signal\_received@{MPT\_Monitor\_system\_fatal\_signal\_received}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_fatal\_signal\_received()}{MPT\_Monitor\_system\_fatal\_signal\_received()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+fatal\+\_\+signal\+\_\+received (\begin{DoxyParamCaption}\item[{int}]{signum,  }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{is\+Fatal\+Or\+Not }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a15d63f0d0b9df8a6ef9e70edd9cff107}\label{mpmonitor_8h_a15d63f0d0b9df8a6ef9e70edd9cff107} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_gather@{MPT\_Monitor\_system\_gather}}
+\index{MPT\_Monitor\_system\_gather@{MPT\_Monitor\_system\_gather}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_gather()}{MPT\_Monitor\_system\_gather()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+gather (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{int}]{root,  }\item[{int}]{nflags,  }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{i\+Flag,  }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{r\+Flag }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_ae77eb8955c0a26e73908355b69ce55d5}\label{mpmonitor_8h_ae77eb8955c0a26e73908355b69ce55d5} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_get\_async\_signal\_safe\_flag@{MPT\_Monitor\_system\_get\_async\_signal\_safe\_flag}}
+\index{MPT\_Monitor\_system\_get\_async\_signal\_safe\_flag@{MPT\_Monitor\_system\_get\_async\_signal\_safe\_flag}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_get\_async\_signal\_safe\_flag()}{MPT\_Monitor\_system\_get\_async\_signal\_safe\_flag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+async\+\_\+signal\+\_\+safe\+\_\+flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID,  }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{use\+Async\+Signal\+Unsafe\+Functions }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_af9bfff078fccc4e266d1a9e77c5d0af1}\label{mpmonitor_8h_af9bfff078fccc4e266d1a9e77c5d0af1} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_get\_communicator@{MPT\_Monitor\_system\_get\_communicator}}
+\index{MPT\_Monitor\_system\_get\_communicator@{MPT\_Monitor\_system\_get\_communicator}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_get\_communicator()}{MPT\_Monitor\_system\_get\_communicator()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} void \texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+communicator (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a0db866d50f35bbbd54099e6a7c8fbd96}\label{mpmonitor_8h_a0db866d50f35bbbd54099e6a7c8fbd96} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_get\_current@{MPT\_Monitor\_system\_get\_current}}
+\index{MPT\_Monitor\_system\_get\_current@{MPT\_Monitor\_system\_get\_current}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_get\_current()}{MPT\_Monitor\_system\_get\_current()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+current (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a231eb1b5acaaefd278fe32ca0b77d4eb}\label{mpmonitor_8h_a231eb1b5acaaefd278fe32ca0b77d4eb} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_get\_listener\_info@{MPT\_Monitor\_system\_get\_listener\_info}}
+\index{MPT\_Monitor\_system\_get\_listener\_info@{MPT\_Monitor\_system\_get\_listener\_info}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_get\_listener\_info()}{MPT\_Monitor\_system\_get\_listener\_info()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+listener\+\_\+info (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{hostname,  }\item[{int \texorpdfstring{$\ast$}{*}}]{monitor\+Server\+Thread\+Port }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a79b443bcab08a822bafea044db4d7b6b}\label{mpmonitor_8h_a79b443bcab08a822bafea044db4d7b6b} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_get\_main\_interrupt\_flag@{MPT\_Monitor\_system\_get\_main\_interrupt\_flag}}
+\index{MPT\_Monitor\_system\_get\_main\_interrupt\_flag@{MPT\_Monitor\_system\_get\_main\_interrupt\_flag}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_get\_main\_interrupt\_flag()}{MPT\_Monitor\_system\_get\_main\_interrupt\_flag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+main\+\_\+interrupt\+\_\+flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{main\+Thread\+Interrupted }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a5cad46cf24a930605d874c599647c04d}\label{mpmonitor_8h_a5cad46cf24a930605d874c599647c04d} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_get\_verbosity@{MPT\_Monitor\_system\_get\_verbosity}}
+\index{MPT\_Monitor\_system\_get\_verbosity@{MPT\_Monitor\_system\_get\_verbosity}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_get\_verbosity()}{MPT\_Monitor\_system\_get\_verbosity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+get\+\_\+verbosity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a2836b9901504d10980bd8d66ce923d98}\label{mpmonitor_8h_a2836b9901504d10980bd8d66ce923d98} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_inject\_command@{MPT\_Monitor\_system\_inject\_command}}
+\index{MPT\_Monitor\_system\_inject\_command@{MPT\_Monitor\_system\_inject\_command}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_inject\_command()}{MPT\_Monitor\_system\_inject\_command()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+inject\+\_\+command (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}}}]{command }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a859360020c782ccd7031f5a9e24fd37b}\label{mpmonitor_8h_a859360020c782ccd7031f5a9e24fd37b} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_is\_alive@{MPT\_Monitor\_system\_is\_alive}}
+\index{MPT\_Monitor\_system\_is\_alive@{MPT\_Monitor\_system\_is\_alive}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_is\_alive()}{MPT\_Monitor\_system\_is\_alive()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} unsigned char MPT\+\_\+\+Monitor\+\_\+system\+\_\+is\+\_\+alive (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_ae013c290c66575584c3c6e305b01d384}\label{mpmonitor_8h_ae013c290c66575584c3c6e305b01d384} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_is\_exiting@{MPT\_Monitor\_system\_is\_exiting}}
+\index{MPT\_Monitor\_system\_is\_exiting@{MPT\_Monitor\_system\_is\_exiting}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_is\_exiting()}{MPT\_Monitor\_system\_is\_exiting()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} unsigned char MPT\+\_\+\+Monitor\+\_\+system\+\_\+is\+\_\+exiting (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a6e13922e4e814dc14942f0952db2a940}\label{mpmonitor_8h_a6e13922e4e814dc14942f0952db2a940} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_is\_fatal\_signal@{MPT\_Monitor\_system\_is\_fatal\_signal}}
+\index{MPT\_Monitor\_system\_is\_fatal\_signal@{MPT\_Monitor\_system\_is\_fatal\_signal}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_is\_fatal\_signal()}{MPT\_Monitor\_system\_is\_fatal\_signal()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+is\+\_\+fatal\+\_\+signal (\begin{DoxyParamCaption}\item[{int}]{signum,  }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{is\+Fatal\+Or\+Not }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a2964a05b1d61dc23df34f8e80e0c48b2}\label{mpmonitor_8h_a2964a05b1d61dc23df34f8e80e0c48b2} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_lifetime@{MPT\_Monitor\_system\_lifetime}}
+\index{MPT\_Monitor\_system\_lifetime@{MPT\_Monitor\_system\_lifetime}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_lifetime()}{MPT\_Monitor\_system\_lifetime()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} double MPT\+\_\+\+Monitor\+\_\+system\+\_\+lifetime (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a8e80a37b954e33f0a82d6fb680de0eae}\label{mpmonitor_8h_a8e80a37b954e33f0a82d6fb680de0eae} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_longjmp@{MPT\_Monitor\_system\_longjmp}}
+\index{MPT\_Monitor\_system\_longjmp@{MPT\_Monitor\_system\_longjmp}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_longjmp()}{MPT\_Monitor\_system\_longjmp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+longjmp (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_ab9e3471e8725382e8e1e5644d1b4ff0b}\label{mpmonitor_8h_ab9e3471e8725382e8e1e5644d1b4ff0b} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_myid@{MPT\_Monitor\_system\_myid}}
+\index{MPT\_Monitor\_system\_myid@{MPT\_Monitor\_system\_myid}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_myid()}{MPT\_Monitor\_system\_myid()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+myid (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a90323726827a7b9f3e1f5df3afed3d7c}\label{mpmonitor_8h_a90323726827a7b9f3e1f5df3afed3d7c} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_normal\_exiting@{MPT\_Monitor\_system\_normal\_exiting}}
+\index{MPT\_Monitor\_system\_normal\_exiting@{MPT\_Monitor\_system\_normal\_exiting}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_normal\_exiting()}{MPT\_Monitor\_system\_normal\_exiting()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} unsigned char MPT\+\_\+\+Monitor\+\_\+system\+\_\+normal\+\_\+exiting (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}}}]{command }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a2c5bcdd72acbbb7c38681e6b3cb6e73c}\label{mpmonitor_8h_a2c5bcdd72acbbb7c38681e6b3cb6e73c} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_open\_btrace\_file@{MPT\_Monitor\_system\_open\_btrace\_file}}
+\index{MPT\_Monitor\_system\_open\_btrace\_file@{MPT\_Monitor\_system\_open\_btrace\_file}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_open\_btrace\_file()}{MPT\_Monitor\_system\_open\_btrace\_file()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} FILE \texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+system\+\_\+open\+\_\+btrace\+\_\+file (\begin{DoxyParamCaption}\item[{int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a10f14559300c7a689de84bc201653c41}\label{mpmonitor_8h_a10f14559300c7a689de84bc201653c41} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_print\_backtrace\_data@{MPT\_Monitor\_system\_print\_backtrace\_data}}
+\index{MPT\_Monitor\_system\_print\_backtrace\_data@{MPT\_Monitor\_system\_print\_backtrace\_data}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_print\_backtrace\_data()}{MPT\_Monitor\_system\_print\_backtrace\_data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+print\+\_\+backtrace\+\_\+data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID,  }\item[{FILE \texorpdfstring{$\ast$}{*}}]{fp,  }\item[{unsigned char}]{print\+Support\+Message }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_afeca63a5e82eb472d2fbaf3e9d8e0dd8}\label{mpmonitor_8h_afeca63a5e82eb472d2fbaf3e9d8e0dd8} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_query\_command@{MPT\_Monitor\_system\_query\_command}}
+\index{MPT\_Monitor\_system\_query\_command@{MPT\_Monitor\_system\_query\_command}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_query\_command()}{MPT\_Monitor\_system\_query\_command()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}} MPT\+\_\+\+Monitor\+\_\+system\+\_\+query\+\_\+command (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_ad9064ed8544c692fffbcc78a55e916b0}\label{mpmonitor_8h_ad9064ed8544c692fffbcc78a55e916b0} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_register\_main\_thread\_interrupt\_function@{MPT\_Monitor\_system\_register\_main\_thread\_interrupt\_function}}
+\index{MPT\_Monitor\_system\_register\_main\_thread\_interrupt\_function@{MPT\_Monitor\_system\_register\_main\_thread\_interrupt\_function}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_register\_main\_thread\_interrupt\_function()}{MPT\_Monitor\_system\_register\_main\_thread\_interrupt\_function()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+register\+\_\+main\+\_\+thread\+\_\+interrupt\+\_\+function (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_a168129f98b986cc6da49d8e652e5f090}{MPT\+\_\+\+Monitor\+\_\+main\+\_\+thread\+\_\+interrupt\+\_\+fp}}}]{main\+Thread\+Interrupt }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a5a25ba53b4cd1a03048dc809cebfdf31}\label{mpmonitor_8h_a5a25ba53b4cd1a03048dc809cebfdf31} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_repair\_communicator@{MPT\_Monitor\_system\_repair\_communicator}}
+\index{MPT\_Monitor\_system\_repair\_communicator@{MPT\_Monitor\_system\_repair\_communicator}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_repair\_communicator()}{MPT\_Monitor\_system\_repair\_communicator()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+repair\+\_\+communicator (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a35e6edf51b5e922e8d898658c1601ef5}\label{mpmonitor_8h_a35e6edf51b5e922e8d898658c1601ef5} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_set\_async\_signal\_safe\_flag@{MPT\_Monitor\_system\_set\_async\_signal\_safe\_flag}}
+\index{MPT\_Monitor\_system\_set\_async\_signal\_safe\_flag@{MPT\_Monitor\_system\_set\_async\_signal\_safe\_flag}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_set\_async\_signal\_safe\_flag()}{MPT\_Monitor\_system\_set\_async\_signal\_safe\_flag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+async\+\_\+signal\+\_\+safe\+\_\+flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID,  }\item[{unsigned char}]{use\+Async\+Signal\+Unsafe\+Functions }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a211881af19bbd27fe9d7d427b406984a}\label{mpmonitor_8h_a211881af19bbd27fe9d7d427b406984a} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_set\_backtrace\_data@{MPT\_Monitor\_system\_set\_backtrace\_data}}
+\index{MPT\_Monitor\_system\_set\_backtrace\_data@{MPT\_Monitor\_system\_set\_backtrace\_data}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_set\_backtrace\_data()}{MPT\_Monitor\_system\_set\_backtrace\_data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+backtrace\+\_\+data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID,  }\item[{int}]{signum,  }\item[{size\+\_\+t}]{size,  }\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{strings }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_aa4c2afa3de8fe4b8b86b9c7d8667b732}\label{mpmonitor_8h_aa4c2afa3de8fe4b8b86b9c7d8667b732} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_set\_error\_function\_flag@{MPT\_Monitor\_system\_set\_error\_function\_flag}}
+\index{MPT\_Monitor\_system\_set\_error\_function\_flag@{MPT\_Monitor\_system\_set\_error\_function\_flag}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_set\_error\_function\_flag()}{MPT\_Monitor\_system\_set\_error\_function\_flag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+error\+\_\+function\+\_\+flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{unsigned char}]{error\+Function\+Flag }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a7eb4810647f88c96ab74a1094e7b4d89}\label{mpmonitor_8h_a7eb4810647f88c96ab74a1094e7b4d89} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_set\_main\_interrupt\_flag@{MPT\_Monitor\_system\_set\_main\_interrupt\_flag}}
+\index{MPT\_Monitor\_system\_set\_main\_interrupt\_flag@{MPT\_Monitor\_system\_set\_main\_interrupt\_flag}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_set\_main\_interrupt\_flag()}{MPT\_Monitor\_system\_set\_main\_interrupt\_flag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+main\+\_\+interrupt\+\_\+flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{unsigned char}]{main\+Thread\+Interrupted }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a4e8d72750f86c69e7d6642f03a4b8701}\label{mpmonitor_8h_a4e8d72750f86c69e7d6642f03a4b8701} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_set\_signal\_handler\_flag@{MPT\_Monitor\_system\_set\_signal\_handler\_flag}}
+\index{MPT\_Monitor\_system\_set\_signal\_handler\_flag@{MPT\_Monitor\_system\_set\_signal\_handler\_flag}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_set\_signal\_handler\_flag()}{MPT\_Monitor\_system\_set\_signal\_handler\_flag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+signal\+\_\+handler\+\_\+flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{unsigned char}]{signal\+Handler\+Flag }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a8f574d16f98442f81d05a9cd9bff3950}\label{mpmonitor_8h_a8f574d16f98442f81d05a9cd9bff3950} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_set\_verbosity@{MPT\_Monitor\_system\_set\_verbosity}}
+\index{MPT\_Monitor\_system\_set\_verbosity@{MPT\_Monitor\_system\_set\_verbosity}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_set\_verbosity()}{MPT\_Monitor\_system\_set\_verbosity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+set\+\_\+verbosity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{int}]{verbosity }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_ad92e29899b43fc2265e422afcdcc2437}\label{mpmonitor_8h_ad92e29899b43fc2265e422afcdcc2437} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_setjmp@{MPT\_Monitor\_system\_setjmp}}
+\index{MPT\_Monitor\_system\_setjmp@{MPT\_Monitor\_system\_setjmp}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_setjmp()}{MPT\_Monitor\_system\_setjmp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+setjmp (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_aa045f6c3e51702a5c8fa6750d14f91af}{MPTJMPBUF}} \texorpdfstring{$\ast$}{*}}]{setjmpenv,  }\item[{int}]{setjmpval }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a87aae61c3d331be1eb03984dee13cfd0}\label{mpmonitor_8h_a87aae61c3d331be1eb03984dee13cfd0} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_setup\_error\_recovery@{MPT\_Monitor\_system\_setup\_error\_recovery}}
+\index{MPT\_Monitor\_system\_setup\_error\_recovery@{MPT\_Monitor\_system\_setup\_error\_recovery}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_setup\_error\_recovery()}{MPT\_Monitor\_system\_setup\_error\_recovery()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+setup\+\_\+error\+\_\+recovery (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_aa045f6c3e51702a5c8fa6750d14f91af}{MPTJMPBUF}} \texorpdfstring{$\ast$}{*}}]{setjmpenv,  }\item[{int}]{setjmpval }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a09ad848a30a3fc3765ad533f2b46fdf7}\label{mpmonitor_8h_a09ad848a30a3fc3765ad533f2b46fdf7} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_signal\_description@{MPT\_Monitor\_system\_signal\_description}}
+\index{MPT\_Monitor\_system\_signal\_description@{MPT\_Monitor\_system\_signal\_description}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_signal\_description()}{MPT\_Monitor\_system\_signal\_description()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+system\+\_\+signal\+\_\+description (\begin{DoxyParamCaption}\item[{int}]{signum }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_adfa9cef6632a32315522f77d8be3371d}\label{mpmonitor_8h_adfa9cef6632a32315522f77d8be3371d} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_signal\_stringify@{MPT\_Monitor\_system\_signal\_stringify}}
+\index{MPT\_Monitor\_system\_signal\_stringify@{MPT\_Monitor\_system\_signal\_stringify}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_signal\_stringify()}{MPT\_Monitor\_system\_signal\_stringify()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*} MPT\+\_\+\+Monitor\+\_\+system\+\_\+signal\+\_\+stringify (\begin{DoxyParamCaption}\item[{int}]{signum }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a543b95482915522b64d50ad6bb8bf4a7}\label{mpmonitor_8h_a543b95482915522b64d50ad6bb8bf4a7} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_sleep@{MPT\_Monitor\_system\_sleep}}
+\index{MPT\_Monitor\_system\_sleep@{MPT\_Monitor\_system\_sleep}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_sleep()}{MPT\_Monitor\_system\_sleep()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} void MPT\+\_\+\+Monitor\+\_\+system\+\_\+sleep (\begin{DoxyParamCaption}\item[{unsigned int}]{milliseconds }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a7806c91d575269eabf34b1316e548ca4}\label{mpmonitor_8h_a7806c91d575269eabf34b1316e548ca4} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_sock\_read@{MPT\_Monitor\_system\_sock\_read}}
+\index{MPT\_Monitor\_system\_sock\_read@{MPT\_Monitor\_system\_sock\_read}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_sock\_read()}{MPT\_Monitor\_system\_sock\_read()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+sock\+\_\+read (\begin{DoxyParamCaption}\item[{int}]{,  }\item[{char \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_aa99e1d26d41b2f0cc5a1128f4fe3217a}\label{mpmonitor_8h_aa99e1d26d41b2f0cc5a1128f4fe3217a} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_start@{MPT\_Monitor\_system\_start}}
+\index{MPT\_Monitor\_system\_start@{MPT\_Monitor\_system\_start}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_start()}{MPT\_Monitor\_system\_start()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+start (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_a71c35373e871ad0152517982ebbc7b34}{MPT\+\_\+\+Monitor\+\_\+\+Topology\+\_\+\+Info}}}]{connection\+Topology,  }\item[{\mbox{\hyperlink{mpmonitor_8h_a1abd20db914aad839490789328494748}{MPT\+\_\+\+Monitor\+\_\+\+Process\+\_\+\+Connection\+\_\+\+Info}} \texorpdfstring{$\ast$}{*}}]{mpt\+Controller\+Info,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*}}]{proc\+Name }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a41092dd20826eedfc9093438e586ea78}\label{mpmonitor_8h_a41092dd20826eedfc9093438e586ea78} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_system\_stop@{MPT\_Monitor\_system\_stop}}
+\index{MPT\_Monitor\_system\_stop@{MPT\_Monitor\_system\_stop}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_system\_stop()}{MPT\_Monitor\_system\_stop()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+system\+\_\+stop (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_adaf9ced54dca91210dfad85ba14db93a}\label{mpmonitor_8h_adaf9ced54dca91210dfad85ba14db93a} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_unregister\_callback@{MPT\_Monitor\_unregister\_callback}}
+\index{MPT\_Monitor\_unregister\_callback@{MPT\_Monitor\_unregister\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_unregister\_callback()}{MPT\_Monitor\_unregister\_callback()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+unregister\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{id,  }\item[{\mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\+\_\+\+Monitor\+\_\+callback\+\_\+type}}}]{callback\+Type }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a84bf29fb5bce925de0d7e56c7bac6367}\label{mpmonitor_8h_a84bf29fb5bce925de0d7e56c7bac6367} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_unregister\_exit\_callback@{MPT\_Monitor\_unregister\_exit\_callback}}
+\index{MPT\_Monitor\_unregister\_exit\_callback@{MPT\_Monitor\_unregister\_exit\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_unregister\_exit\_callback()}{MPT\_Monitor\_unregister\_exit\_callback()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+unregister\+\_\+exit\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_ab08e352afbb6a1649fe3eae75ac80306}\label{mpmonitor_8h_ab08e352afbb6a1649fe3eae75ac80306} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_unregister\_repair\_comm\_callback@{MPT\_Monitor\_unregister\_repair\_comm\_callback}}
+\index{MPT\_Monitor\_unregister\_repair\_comm\_callback@{MPT\_Monitor\_unregister\_repair\_comm\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_unregister\_repair\_comm\_callback()}{MPT\_Monitor\_unregister\_repair\_comm\_callback()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+unregister\+\_\+repair\+\_\+comm\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_af6ce9aa9b13b47cb55115f73711de6b2}\label{mpmonitor_8h_af6ce9aa9b13b47cb55115f73711de6b2} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_unregister\_status\_callback@{MPT\_Monitor\_unregister\_status\_callback}}
+\index{MPT\_Monitor\_unregister\_status\_callback@{MPT\_Monitor\_unregister\_status\_callback}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_unregister\_status\_callback()}{MPT\_Monitor\_unregister\_status\_callback()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+unregister\+\_\+status\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_a9f5b2726a95042e3325b4451b750a490}\label{mpmonitor_8h_a9f5b2726a95042e3325b4451b750a490} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Monitor\_wait\_command\_propagation@{MPT\_Monitor\_wait\_command\_propagation}}
+\index{MPT\_Monitor\_wait\_command\_propagation@{MPT\_Monitor\_wait\_command\_propagation}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Monitor\_wait\_command\_propagation()}{MPT\_Monitor\_wait\_command\_propagation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Monitor\+\_\+wait\+\_\+command\+\_\+propagation (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\+\_\+\+Monitor\+ID}}}]{mpt\+Monitor\+ID,  }\item[{\mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\+\_\+\+Monitor\+\_\+command}}}]{command }\end{DoxyParamCaption})}
+
+\Hypertarget{mpmonitor_8h_aff4aaea1c72557c314487be5c0350055}\label{mpmonitor_8h_aff4aaea1c72557c314487be5c0350055} 
+\index{mpmonitor.h@{mpmonitor.h}!MPT\_Sock\_Wait@{MPT\_Sock\_Wait}}
+\index{MPT\_Sock\_Wait@{MPT\_Sock\_Wait}!mpmonitor.h@{mpmonitor.h}}
+\doxysubsubsection{\texorpdfstring{MPT\_Sock\_Wait()}{MPT\_Sock\_Wait()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\+\_\+\+EXPORT}} int MPT\+\_\+\+Sock\+\_\+\+Wait (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{int}]{,  }\item[{int}]{allnodes }\end{DoxyParamCaption})}
+

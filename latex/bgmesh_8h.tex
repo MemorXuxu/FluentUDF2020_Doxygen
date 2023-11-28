@@ -1,0 +1,828 @@
+\doxysection{fluent20.1.0/tgrid/src/bgmesh.h File Reference}
+\hypertarget{bgmesh_8h}{}\label{bgmesh_8h}\index{fluent20.1.0/tgrid/src/bgmesh.h@{fluent20.1.0/tgrid/src/bgmesh.h}}
+{\ttfamily \#include "{}environ.\+h"{}}\newline
+{\ttfamily \#include "{}entity.\+h"{}}\newline
+{\ttfamily \#include "{}tg\+\_\+geom.\+h"{}}\newline
+{\ttfamily \#include "{}kdtree.\+h"{}}\newline
+{\ttfamily \#include "{}meshsize.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structbg__mesh__struct}{bg\+\_\+mesh\+\_\+struct}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a7f9c0c76524a97a5639a9825df68e304}{BG\+\_\+\+BGMESH}}~1
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a99796c34f8e3c3678601d05e704bf827}{BG\+\_\+\+GEOM}}~2
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a050b81a3e763daa1fdc3cf26044dca2a}{BG\+\_\+\+BGTHREAD}}~3
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a0792453ea87092391bf38bdb725b3cc3}{BG\+\_\+\+BGMESH2}}~4
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a5fbfb0ebc46b8112acd7ef4f28608447}{BG\+\_\+\+GEODESIC}}~5
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_ac6fdfeb3c6a92a4b659488e86b64fc41}{CONSTANT\+\_\+\+SIZE}}~1
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_af25fc76637f015ee8f47ebb589985810}{VARIABLE\+\_\+\+SIZE}}~2
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a37860d98da64e1caef532c21c0754d48}{NO\+\_\+\+SIZE}}~3
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,  t)~(\&\mbox{\hyperlink{tgrid_2src_2entity_8h_a55904d6ae800de646ee3dab1d4ad0f28}{SURF\+\_\+\+SEED\+\_\+\+STRUCT}}(v))
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a8e0aa48a0695e75d8f5c2def5fc12fdb}{NODE\+\_\+\+SURFSEED}}(v,  t)~(\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a4d7c79b60c74822a839cb0d82b324e0e}{NODE\+\_\+\+SURFSEED\+\_\+P}}(v,  t)~\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t)
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a2d81484138bc074a4a9e023e3f59cfdf}{NODE\+\_\+\+FSEED}}(v,  t)~\mbox{\hyperlink{tg__geom_8h_a3bca1430e0936e77c8eef9db9680bb9d}{SURFSEED\+\_\+\+FSEED}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a9cef649042dd141e67af17bc94d165f5}{NODE\+\_\+\+FSEED\+\_\+P}}(v,  t)~(\&\mbox{\hyperlink{tg__geom_8h_a3bca1430e0936e77c8eef9db9680bb9d}{SURFSEED\+\_\+\+FSEED}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t)))
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_aaa27b7515f876c07ce8aa319173ede97}{NODE\+\_\+\+FSEED\+\_\+\+FACE}}(v,  t)~\mbox{\hyperlink{tg__geom_8h_a895bbe1fb3ad5c19bad9bdf8c0a21e10}{SURFSEED\+\_\+\+FACE}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a358ca43853c6ab729492fdf6cd2df1bc}{NODE\+\_\+\+FSEED\+\_\+\+ID}}(v,  t)~\mbox{\hyperlink{tg__geom_8h_ad6a5c24d1293ed7b3bbf20481ed9216a}{SURFSEED\+\_\+\+ID}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a8e245c196cff26a12dd1af46ac99ee17}{NODE\+\_\+\+SURF\+\_\+\+PARA}}(v,  t)~\mbox{\hyperlink{tg__geom_8h_a68838335dcde0880cc276d5f633a1135}{SURFSEED\+\_\+\+PARA}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_aa5de4b3327556ea1af185bb47e54e214}{NODE\+\_\+\+FSEED\+\_\+\+NULL}}(v,  t)
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a62b2457ee23ef6b8e24e75145e5f8491}{FSEED\+\_\+\+NULL}}(s)
+\item 
+\#define \mbox{\hyperlink{bgmesh_8h_a1c328c5ce5332853f843f293b547c212}{BGMESH\+\_\+\+INDEX}}(s)~s-\/$>$index
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structbg__mesh__struct}{bg\+\_\+mesh\+\_\+struct}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23}{Type\+\_\+\+Next\+\_\+\+Face}} \{ \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a5d27fed76ee196334afc6d8e04cb8a14}{BOUNDARY\+\_\+\+REACHED}} = -\/1
+, \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a51b25c32bfdda412a034f1ce2fc280d0}{LOOP\+\_\+\+CREATION}} = -\/3
+, \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a7b94d7709bc8a7f91c17cfd94906af9b}{FACE\+\_\+\+FOUND}} = 1
+, \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a20b1e466b8ad257681194161dd2c0060}{NO\+\_\+\+FACE}} = 2
+ \}
+\item 
+enum \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432}{Type\+\_\+\+Iplane\+\_\+\+Face\+\_\+\+Intersect}} \{ \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432a6c6841215ab1db2aadd8b515b0a72c07}{NODE\+\_\+\+INTERSECTION}} = 0
+, \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432a52b32f3d819738e090c34ea66c64c3f4}{EDGE\+\_\+\+INTERSECTION}} = -\/1
+, \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432afa320e5ace4e167f62461ec1675802c6}{CLEAR\+\_\+\+INTERSECTION}} = 1
+, \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432aec0b7fa7ca75d03bed7590a7bff17cd0}{UNDEFINED\+\_\+\+INTERSECTION}} = -\/2
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a6dd1f10743101b0b018ff26fbb069cae}{\+\_\+\+TG\+\_\+\+Get\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+List}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{kd__tree_8h_a26f2af34bc1cda6502e71e382d765a64}{Kd\+Tree}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a6ff08ccf0901fadf062ef0e83b17ee2a}{\+\_\+\+TG\+\_\+\+Get\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+Tree}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a8c4fb55e06db20154ea252348493ad1e}{\+\_\+\+TG\+\_\+\+Clear\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+List}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a8f340a8747e42b17b799962919634904}{\+\_\+\+TG\+\_\+\+Populate\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+List}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a77f47a7297ef98710bdbe6e7847de889}{\+\_\+\+TG\+\_\+\+Init\+\_\+\+Surf\+\_\+\+As\+\_\+\+Face\+\_\+\+Thread}} (\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}tf)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a35ffdfec63cebe670e659fc1f258a50a}{\+\_\+\+TG\+\_\+\+Init\+\_\+\+Surf\+\_\+\+As\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_ac532a372a32cb0ba62b1881c84077f22}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_ac3e984f2ac3ba87dd2e70d6ba65c9fb5}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Bg\+Mesh\+\_\+\+Manifold\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a7f32ba4fd2b6f374dd5a4e0da5d98b8c}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Geom\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a22b0c9291a953fb05d6fadf242196c08}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Prism\+\_\+\+Cap\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_ab6014d930e3aaf6eba6432452b5e6559}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Geodesic\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a4da9a92f326c4dabcced042fd86a4d84}{\+\_\+\+TG\+\_\+\+Define\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_acfe40c4acd3af3a8820852493347ffe9}{\+\_\+\+TG\+\_\+\+Delete\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_afc1eb9f43f10e72f6484ddbf7be0bb77}{\+\_\+\+TG\+\_\+\+Clear\+\_\+\+All\+\_\+\+Bg\+Mesh}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_ae5505183685cccd7b973b8607081265d}{\+\_\+\+TG\+\_\+\+Add\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+Features}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a3a526bd5f662e9a9b659a5f78b31e67c}{\+\_\+\+TG\+\_\+\+Gen\+\_\+\+Angle\+\_\+\+Features\+\_\+\+In\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a3768b932a2217b127af293d9904007b8}{\+\_\+\+TG\+\_\+\+Gen\+\_\+\+Boundary\+\_\+\+Edges\+\_\+\+In\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a5c967c740f70ea22c3e0b760379df4be}{\+\_\+\+TG\+\_\+\+Construct\+\_\+\+Bg\+Mesh\+\_\+\+Features}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_aa7bd7845facc5d817a8647f020018b19}{\+\_\+\+TG\+\_\+\+Gen\+\_\+\+Feature\+\_\+\+Edges\+\_\+\+In\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a7132abcffd0126c81a9828ecb5a17c09}{\+\_\+\+TG\+\_\+\+Gen\+\_\+\+Edges\+\_\+\+From\+\_\+\+Seed}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}, char \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_ac3ba722568421290b2feec36342698bb}{\+\_\+\+TG\+\_\+\+Get\+\_\+\+Current\+\_\+\+Bg\+Mesh}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_aa95f90a52608638eaea7f665b1b47422}{\+\_\+\+TG\+\_\+\+Get\+\_\+\+Bg\+Mesh\+\_\+\+Of\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a5394bf05a3346107682e5e87d0fc0b43}{\+\_\+\+TG\+\_\+\+Get\+\_\+\+Bg\+Mesh\+\_\+\+Domain}} (\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a231a77b466828b9a8adc51b6a009e62c}{\+\_\+\+TG\+\_\+\+Get\+\_\+\+Bg\+Mesh\+\_\+\+Tree}} (\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \mbox{\hyperlink{bgmesh_8h_a6a07b2126b48de6cf698273f8cd5acdb}{\+\_\+\+TG\+\_\+\+Get\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+Size}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a88d6cede049bb9d3e5ea4204e232588d}{\+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Allocate\+\_\+\+Search\+\_\+\+Arrays}} (int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a84e25b80a9f2661bc56242461d2a40ab}{\+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Free\+\_\+\+Search\+\_\+\+Arrays}} (int \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_aa63ae6d42465d1d72a406c6fad0cbe72}{\+\_\+\+TG\+\_\+\+Bg\+\_\+\+Node\+\_\+\+Normal}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, void \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a483875aec9400de4193de091e8774186}{\+\_\+\+TG\+\_\+\+Bg\+\_\+\+Face\+\_\+\+Normal}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, void \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_ae456789fda77f4a1998732c484700760}{\+\_\+\+TG\+\_\+\+Bg\+\_\+\+Face\+\_\+\+Normal\+\_\+\+At\+\_\+\+Closest\+\_\+\+Point}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, void \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a1e08cd9cc41bcea4f0dc8e4b5fefb7f8}{\+\_\+\+TG\+\_\+\+Bg\+\_\+\+Host\+\_\+\+Normal}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, void \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a73ada984633ecda3b64b88fcac87c6b1}{\+\_\+\+TG\+\_\+\+Bg\+\_\+\+BBox}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a25d2e7daea72e9f07230a5cf5905994a}{\+\_\+\+TG\+\_\+\+Bg\+\_\+\+Closest\+\_\+\+Point}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, void \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a24c30d6e689d05758bb8da177bea8d2b}{\+\_\+\+TG\+\_\+\+Bg\+\_\+\+Local\+\_\+\+Closest\+\_\+\+Point}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, void \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_aeca761ede9a4db26cb5c790da8f7bf46}{\+\_\+\+TG\+\_\+\+Bg\+\_\+\+Closest\+\_\+\+Point\+\_\+\+Inside\+\_\+\+Face}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, void \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, void \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{bgmesh_8h_acbe46fff9620f16797b6c7325a49a899}{\+\_\+\+TG\+\_\+\+Geom\+\_\+\+Domain}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a031650b5257875bd1ab5810fa0d27dd6}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Geometry\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_aea142696f9e0f35090fa51dccd71ef02}{\+\_\+\+TG\+\_\+\+Add\+\_\+\+Geometry\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a58696b8f577faacda92f1aad5f74cef4}{\+\_\+\+TG\+\_\+\+Delete\+\_\+\+Geometry\+\_\+\+Bg\+Mesh}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_af5eadfe22271a8aea1cb5ca84f1239e0}{\+\_\+\+TG\+\_\+\+Reset\+\_\+\+Node\+\_\+\+Surf\+Seed}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_ae9ceab2793914770ea7599c8bbbd8149}{\+\_\+\+TG\+\_\+\+Insert\+\_\+\+Edge\+\_\+\+Thread\+\_\+\+In\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a559b755c209b24a6f8b16bfed0d59379}{\+\_\+\+TG\+\_\+\+Remove\+\_\+\+Edge\+\_\+\+Thread\+\_\+\+From\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_ad5402bf71f72bd3703a24e5d90fb7ef1}{\+\_\+\+TG\+\_\+\+Check\+\_\+\+Swap\+\_\+\+Edges\+\_\+\+In\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a1267bb209cccb9e7808338398908a4c6}{\+\_\+\+TG\+\_\+\+Search\+\_\+\+Kd\+Tree\+\_\+\+Faces}} (\mbox{\hyperlink{kd__tree_8h_a26f2af34bc1cda6502e71e382d765a64}{Kd\+Tree}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_aaba644730368b214f333a88bd8c034c4}{\+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Faces}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_af3746c9b1c0972c8bbfcf645f02e9b9b}{\+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Faces\+\_\+\+By\+\_\+\+Thread\+\_\+\+Flags}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, unsigned int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a30d4db1b2890e87f8aaefab404ce5fd0}{\+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Faces\+\_\+\+With\+\_\+\+BBox}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a06335ca0fd773823bae0dbf9f5597647}{\+\_\+\+TG\+\_\+\+Search\+\_\+\+Kd\+Tree\+\_\+\+Nodes}} (\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a0032cc20455159016efd5adb9a979bf0}{\+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Entities}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a01873c8e23a2e20cd433e0e7fc0a83ff}{\+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Tree\+\_\+\+Entities}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_ab994019fb8ddc4d7e57cb54511eb405b}{\+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Search\+\_\+\+Targets}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}pos, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} range, \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}l\+\_\+target\+\_\+faces, \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}l\+\_\+target\+\_\+edges, int num\+\_\+expansion)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_a007522d597ca7f15f076f615b6d1dd70}{\+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Search\+\_\+\+Edges\+\_\+\+Safe}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} pos\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} range)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{bgmesh_8h_aa573750b9f60a65cdce4017cb6717b5f}{\+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Search\+\_\+\+Faces\+\_\+\+Safe}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} pos\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} range)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \mbox{\hyperlink{bgmesh_8h_a171401c33d74bd0189eb0161f473f1f4}{\+\_\+\+TG\+\_\+\+Project\+\_\+\+Pos\+\_\+\+To\+\_\+\+Bg\+Mesh}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}pos, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} range, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} rel\+\_\+tol, int num\+\_\+iteration, \mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}ftarget, \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}l\+\_\+target\+\_\+faces, \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}l\+\_\+target\+\_\+edges)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \mbox{\hyperlink{bgmesh_8h_a007da1fb5ff539628f0b4dd35182cf49}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Surface\+\_\+\+Triangle}} (\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{tg__geom_8h_a3f6700169aff58a7ad799f39ce4d61a0}{Surf\+Seed}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \mbox{\hyperlink{bgmesh_8h_a566807ed43a68ac02ada1d4f8aa4108e}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Surface\+\_\+\+Point}} (\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{tg__geom_8h_a3f6700169aff58a7ad799f39ce4d61a0}{Surf\+Seed}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_ac4dde7e579ea359aa252d6563fadb067}{\+\_\+\+TG\+\_\+\+Init\+\_\+\+Bg\+Mesh\+\_\+\+Size}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a8c3007ed4da77750b215f72e09042d49}{\+\_\+\+TG\+\_\+\+Smooth\+\_\+\+Bg\+Mesh\+\_\+\+Size}} (int)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a9639f104971888062b6f628edd72b87e}{\+\_\+\+TG\+\_\+\+Compute\+\_\+\+Bg\+Mesh\+\_\+\+Size}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_ab79d07b9a4609b8807273a2c4c8be153}{\+\_\+\+TG\+\_\+\+Update\+\_\+\+Bg\+Mesh\+\_\+\+Size}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a156e2435967e3cb18ec080a78bbd4096}{\+\_\+\+TG\+\_\+\+Set\+\_\+\+Bg\+Mesh\+\_\+\+Size}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a826cabf640fd4c8ab4e9e66e99cf2ef8}{\+\_\+\+TG\+\_\+\+Compute\+\_\+\+Bg\+Mesh\+\_\+\+Size\+\_\+\+Based\+\_\+\+On\+\_\+\+Radius}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a81759c347a7aab248c167bf2bcd897c1}{\+\_\+\+TG\+\_\+\+Compute\+\_\+\+Bg\+Mesh\+\_\+\+Size\+\_\+\+Based\+\_\+\+On\+\_\+\+Curvature}} (void)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a7a5b74190885163622e462e0ea7f69f2}{\+\_\+\+TG\+\_\+\+Compute\+\_\+\+Bg\+Mesh\+\_\+\+Size\+\_\+\+Based\+\_\+\+On\+\_\+\+Proximity}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{bgmesh_8h_a16b3959aeffa3bea950ef1adf820acf9}{\+\_\+\+TG\+\_\+\+Get\+\_\+\+Average\+\_\+\+Radius\+\_\+\+On\+\_\+\+Face\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{bgmesh_8h_afd8458fb64d0662fb547bbaf83730102}{\+\_\+\+TG\+\_\+\+Compute\+\_\+\+Curvature\+\_\+\+Size}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a706e7550329c0ad8823275d943c1126d}{\+\_\+\+TG\+\_\+\+Compute\+\_\+\+Face\+\_\+\+Node\+\_\+\+Curvature\+\_\+\+Sizes}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}f, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} fmin, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} fmax, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} threshold\+\_\+angle, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}node\+\_\+sizes)
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \mbox{\hyperlink{bgmesh_8h_ab899400a765439ecf768b48ffdebfe93}{\+\_\+\+TG\+\_\+\+Create\+\_\+\+Surface\+\_\+\+Triangle\+\_\+\+Target}} (\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{tg__geom_8h_a3f6700169aff58a7ad799f39ce4d61a0}{Surf\+Seed}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a91de4f245385f1cd3248f84746e654a6}{\+\_\+\+TG\+\_\+\+Recover\+\_\+\+Surface}} (int method, \mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}fp, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} uvp\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} p\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \mbox{\hyperlink{bgmesh_8h_a42e83179ee14d3d035e06221e62c9a61}{\+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Print\+\_\+\+Statistics}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{bgmesh_8h_a7f9c0c76524a97a5639a9825df68e304}\label{bgmesh_8h_a7f9c0c76524a97a5639a9825df68e304} 
+\index{bgmesh.h@{bgmesh.h}!BG\_BGMESH@{BG\_BGMESH}}
+\index{BG\_BGMESH@{BG\_BGMESH}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{BG\_BGMESH}{BG\_BGMESH}}
+{\footnotesize\ttfamily \#define BG\+\_\+\+BGMESH~1}
+
+\Hypertarget{bgmesh_8h_a0792453ea87092391bf38bdb725b3cc3}\label{bgmesh_8h_a0792453ea87092391bf38bdb725b3cc3} 
+\index{bgmesh.h@{bgmesh.h}!BG\_BGMESH2@{BG\_BGMESH2}}
+\index{BG\_BGMESH2@{BG\_BGMESH2}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{BG\_BGMESH2}{BG\_BGMESH2}}
+{\footnotesize\ttfamily \#define BG\+\_\+\+BGMESH2~4}
+
+\Hypertarget{bgmesh_8h_a050b81a3e763daa1fdc3cf26044dca2a}\label{bgmesh_8h_a050b81a3e763daa1fdc3cf26044dca2a} 
+\index{bgmesh.h@{bgmesh.h}!BG\_BGTHREAD@{BG\_BGTHREAD}}
+\index{BG\_BGTHREAD@{BG\_BGTHREAD}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{BG\_BGTHREAD}{BG\_BGTHREAD}}
+{\footnotesize\ttfamily \#define BG\+\_\+\+BGTHREAD~3}
+
+\Hypertarget{bgmesh_8h_a5fbfb0ebc46b8112acd7ef4f28608447}\label{bgmesh_8h_a5fbfb0ebc46b8112acd7ef4f28608447} 
+\index{bgmesh.h@{bgmesh.h}!BG\_GEODESIC@{BG\_GEODESIC}}
+\index{BG\_GEODESIC@{BG\_GEODESIC}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{BG\_GEODESIC}{BG\_GEODESIC}}
+{\footnotesize\ttfamily \#define BG\+\_\+\+GEODESIC~5}
+
+\Hypertarget{bgmesh_8h_a99796c34f8e3c3678601d05e704bf827}\label{bgmesh_8h_a99796c34f8e3c3678601d05e704bf827} 
+\index{bgmesh.h@{bgmesh.h}!BG\_GEOM@{BG\_GEOM}}
+\index{BG\_GEOM@{BG\_GEOM}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{BG\_GEOM}{BG\_GEOM}}
+{\footnotesize\ttfamily \#define BG\+\_\+\+GEOM~2}
+
+\Hypertarget{bgmesh_8h_a1c328c5ce5332853f843f293b547c212}\label{bgmesh_8h_a1c328c5ce5332853f843f293b547c212} 
+\index{bgmesh.h@{bgmesh.h}!BGMESH\_INDEX@{BGMESH\_INDEX}}
+\index{BGMESH\_INDEX@{BGMESH\_INDEX}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{BGMESH\_INDEX}{BGMESH\_INDEX}}
+{\footnotesize\ttfamily \#define BGMESH\+\_\+\+INDEX(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})~s-\/$>$index}
+
+\Hypertarget{bgmesh_8h_ac6fdfeb3c6a92a4b659488e86b64fc41}\label{bgmesh_8h_ac6fdfeb3c6a92a4b659488e86b64fc41} 
+\index{bgmesh.h@{bgmesh.h}!CONSTANT\_SIZE@{CONSTANT\_SIZE}}
+\index{CONSTANT\_SIZE@{CONSTANT\_SIZE}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{CONSTANT\_SIZE}{CONSTANT\_SIZE}}
+{\footnotesize\ttfamily \#define CONSTANT\+\_\+\+SIZE~1}
+
+\Hypertarget{bgmesh_8h_a62b2457ee23ef6b8e24e75145e5f8491}\label{bgmesh_8h_a62b2457ee23ef6b8e24e75145e5f8491} 
+\index{bgmesh.h@{bgmesh.h}!FSEED\_NULL@{FSEED\_NULL}}
+\index{FSEED\_NULL@{FSEED\_NULL}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{FSEED\_NULL}{FSEED\_NULL}}
+{\footnotesize\ttfamily \#define FSEED\+\_\+\+NULL(\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ ((\mbox{\hyperlink{tg__geom_8h_a895bbe1fb3ad5c19bad9bdf8c0a21e10}{SURFSEED\_FACE}}(s)\ ==\ \mbox{\hyperlink{tg__geom_8h_a14a1683733ca78283be567c3e4660df4}{FACESEED\_FACE}}(\mbox{\hyperlink{tg__geom_8h_ab7008409217a982d89030e2a9d7c797b}{\_TG\_Face\_Seed\_Null}}))\ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \&\&\ (\mbox{\hyperlink{tg__geom_8h_ad6a5c24d1293ed7b3bbf20481ed9216a}{SURFSEED\_ID}}(s)\ ==\ \mbox{\hyperlink{tg__geom_8h_a458a33c7e48eefe7b4d912748d6864a7}{FACESEED\_ID}}(\mbox{\hyperlink{tg__geom_8h_ab7008409217a982d89030e2a9d7c797b}{\_TG\_Face\_Seed\_Null}})))}
+
+\end{DoxyCode}
+\Hypertarget{bgmesh_8h_a37860d98da64e1caef532c21c0754d48}\label{bgmesh_8h_a37860d98da64e1caef532c21c0754d48} 
+\index{bgmesh.h@{bgmesh.h}!NO\_SIZE@{NO\_SIZE}}
+\index{NO\_SIZE@{NO\_SIZE}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{NO\_SIZE}{NO\_SIZE}}
+{\footnotesize\ttfamily \#define NO\+\_\+\+SIZE~3}
+
+\Hypertarget{bgmesh_8h_a2d81484138bc074a4a9e023e3f59cfdf}\label{bgmesh_8h_a2d81484138bc074a4a9e023e3f59cfdf} 
+\index{bgmesh.h@{bgmesh.h}!NODE\_FSEED@{NODE\_FSEED}}
+\index{NODE\_FSEED@{NODE\_FSEED}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{NODE\_FSEED}{NODE\_FSEED}}
+{\footnotesize\ttfamily \#define NODE\+\_\+\+FSEED(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{tg__geom_8h_a3bca1430e0936e77c8eef9db9680bb9d}{SURFSEED\+\_\+\+FSEED}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))}
+
+\Hypertarget{bgmesh_8h_aaa27b7515f876c07ce8aa319173ede97}\label{bgmesh_8h_aaa27b7515f876c07ce8aa319173ede97} 
+\index{bgmesh.h@{bgmesh.h}!NODE\_FSEED\_FACE@{NODE\_FSEED\_FACE}}
+\index{NODE\_FSEED\_FACE@{NODE\_FSEED\_FACE}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{NODE\_FSEED\_FACE}{NODE\_FSEED\_FACE}}
+{\footnotesize\ttfamily \#define NODE\+\_\+\+FSEED\+\_\+\+FACE(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{tg__geom_8h_a895bbe1fb3ad5c19bad9bdf8c0a21e10}{SURFSEED\+\_\+\+FACE}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))}
+
+\Hypertarget{bgmesh_8h_a358ca43853c6ab729492fdf6cd2df1bc}\label{bgmesh_8h_a358ca43853c6ab729492fdf6cd2df1bc} 
+\index{bgmesh.h@{bgmesh.h}!NODE\_FSEED\_ID@{NODE\_FSEED\_ID}}
+\index{NODE\_FSEED\_ID@{NODE\_FSEED\_ID}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{NODE\_FSEED\_ID}{NODE\_FSEED\_ID}}
+{\footnotesize\ttfamily \#define NODE\+\_\+\+FSEED\+\_\+\+ID(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{tg__geom_8h_ad6a5c24d1293ed7b3bbf20481ed9216a}{SURFSEED\+\_\+\+ID}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))}
+
+\Hypertarget{bgmesh_8h_aa5de4b3327556ea1af185bb47e54e214}\label{bgmesh_8h_aa5de4b3327556ea1af185bb47e54e214} 
+\index{bgmesh.h@{bgmesh.h}!NODE\_FSEED\_NULL@{NODE\_FSEED\_NULL}}
+\index{NODE\_FSEED\_NULL@{NODE\_FSEED\_NULL}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{NODE\_FSEED\_NULL}{NODE\_FSEED\_NULL}}
+{\footnotesize\ttfamily \#define NODE\+\_\+\+FSEED\+\_\+\+NULL(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{t }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ ((\mbox{\hyperlink{bgmesh_8h_aaa27b7515f876c07ce8aa319173ede97}{NODE\_FSEED\_FACE}}(v,t)\ ==\ \mbox{\hyperlink{tg__geom_8h_a14a1683733ca78283be567c3e4660df4}{FACESEED\_FACE}}(\mbox{\hyperlink{tg__geom_8h_ab7008409217a982d89030e2a9d7c797b}{\_TG\_Face\_Seed\_Null}}))\ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \&\&\ (\mbox{\hyperlink{bgmesh_8h_a358ca43853c6ab729492fdf6cd2df1bc}{NODE\_FSEED\_ID}}(v,t)\ ==\ \mbox{\hyperlink{tg__geom_8h_a458a33c7e48eefe7b4d912748d6864a7}{FACESEED\_ID}}(\mbox{\hyperlink{tg__geom_8h_ab7008409217a982d89030e2a9d7c797b}{\_TG\_Face\_Seed\_Null}})))}
+
+\end{DoxyCode}
+\Hypertarget{bgmesh_8h_a9cef649042dd141e67af17bc94d165f5}\label{bgmesh_8h_a9cef649042dd141e67af17bc94d165f5} 
+\index{bgmesh.h@{bgmesh.h}!NODE\_FSEED\_P@{NODE\_FSEED\_P}}
+\index{NODE\_FSEED\_P@{NODE\_FSEED\_P}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{NODE\_FSEED\_P}{NODE\_FSEED\_P}}
+{\footnotesize\ttfamily \#define NODE\+\_\+\+FSEED\+\_\+P(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{t }\end{DoxyParamCaption})~(\&\mbox{\hyperlink{tg__geom_8h_a3bca1430e0936e77c8eef9db9680bb9d}{SURFSEED\+\_\+\+FSEED}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t)))}
+
+\Hypertarget{bgmesh_8h_a8e245c196cff26a12dd1af46ac99ee17}\label{bgmesh_8h_a8e245c196cff26a12dd1af46ac99ee17} 
+\index{bgmesh.h@{bgmesh.h}!NODE\_SURF\_PARA@{NODE\_SURF\_PARA}}
+\index{NODE\_SURF\_PARA@{NODE\_SURF\_PARA}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{NODE\_SURF\_PARA}{NODE\_SURF\_PARA}}
+{\footnotesize\ttfamily \#define NODE\+\_\+\+SURF\+\_\+\+PARA(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{tg__geom_8h_a68838335dcde0880cc276d5f633a1135}{SURFSEED\+\_\+\+PARA}}(\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))}
+
+\Hypertarget{bgmesh_8h_a8e0aa48a0695e75d8f5c2def5fc12fdb}\label{bgmesh_8h_a8e0aa48a0695e75d8f5c2def5fc12fdb} 
+\index{bgmesh.h@{bgmesh.h}!NODE\_SURFSEED@{NODE\_SURFSEED}}
+\index{NODE\_SURFSEED@{NODE\_SURFSEED}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{NODE\_SURFSEED}{NODE\_SURFSEED}}
+{\footnotesize\ttfamily \#define NODE\+\_\+\+SURFSEED(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{t }\end{DoxyParamCaption})~(\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t))}
+
+\Hypertarget{bgmesh_8h_a4d7c79b60c74822a839cb0d82b324e0e}\label{bgmesh_8h_a4d7c79b60c74822a839cb0d82b324e0e} 
+\index{bgmesh.h@{bgmesh.h}!NODE\_SURFSEED\_P@{NODE\_SURFSEED\_P}}
+\index{NODE\_SURFSEED\_P@{NODE\_SURFSEED\_P}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{NODE\_SURFSEED\_P}{NODE\_SURFSEED\_P}}
+{\footnotesize\ttfamily \#define NODE\+\_\+\+SURFSEED\+\_\+P(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}{SV\+\_\+\+FS\+\_\+\+STORAGE}}(v,t)}
+
+\Hypertarget{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6}\label{bgmesh_8h_a96dd9eec922e1bc0b9b70f3183baf3d6} 
+\index{bgmesh.h@{bgmesh.h}!SV\_FS\_STORAGE@{SV\_FS\_STORAGE}}
+\index{SV\_FS\_STORAGE@{SV\_FS\_STORAGE}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{SV\_FS\_STORAGE}{SV\_FS\_STORAGE}}
+{\footnotesize\ttfamily \#define SV\+\_\+\+FS\+\_\+\+STORAGE(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{t }\end{DoxyParamCaption})~(\&\mbox{\hyperlink{tgrid_2src_2entity_8h_a55904d6ae800de646ee3dab1d4ad0f28}{SURF\+\_\+\+SEED\+\_\+\+STRUCT}}(v))}
+
+\Hypertarget{bgmesh_8h_af25fc76637f015ee8f47ebb589985810}\label{bgmesh_8h_af25fc76637f015ee8f47ebb589985810} 
+\index{bgmesh.h@{bgmesh.h}!VARIABLE\_SIZE@{VARIABLE\_SIZE}}
+\index{VARIABLE\_SIZE@{VARIABLE\_SIZE}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{VARIABLE\_SIZE}{VARIABLE\_SIZE}}
+{\footnotesize\ttfamily \#define VARIABLE\+\_\+\+SIZE~2}
+
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}\label{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696} 
+\index{bgmesh.h@{bgmesh.h}!BgMesh@{BgMesh}}
+\index{BgMesh@{BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{BgMesh}{BgMesh}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structbg__mesh__struct}{bg\+\_\+mesh\+\_\+struct}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432}\label{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432} 
+\index{bgmesh.h@{bgmesh.h}!Type\_Iplane\_Face\_Intersect@{Type\_Iplane\_Face\_Intersect}}
+\index{Type\_Iplane\_Face\_Intersect@{Type\_Iplane\_Face\_Intersect}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{Type\_Iplane\_Face\_Intersect}{Type\_Iplane\_Face\_Intersect}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432}{Type\+\_\+\+Iplane\+\_\+\+Face\+\_\+\+Intersect}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NODE\_INTERSECTION@{NODE\_INTERSECTION}!bgmesh.h@{bgmesh.h}}\index{bgmesh.h@{bgmesh.h}!NODE\_INTERSECTION@{NODE\_INTERSECTION}}}\Hypertarget{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432a6c6841215ab1db2aadd8b515b0a72c07}\label{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432a6c6841215ab1db2aadd8b515b0a72c07} 
+NODE\+\_\+\+INTERSECTION&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EDGE\_INTERSECTION@{EDGE\_INTERSECTION}!bgmesh.h@{bgmesh.h}}\index{bgmesh.h@{bgmesh.h}!EDGE\_INTERSECTION@{EDGE\_INTERSECTION}}}\Hypertarget{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432a52b32f3d819738e090c34ea66c64c3f4}\label{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432a52b32f3d819738e090c34ea66c64c3f4} 
+EDGE\+\_\+\+INTERSECTION&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CLEAR\_INTERSECTION@{CLEAR\_INTERSECTION}!bgmesh.h@{bgmesh.h}}\index{bgmesh.h@{bgmesh.h}!CLEAR\_INTERSECTION@{CLEAR\_INTERSECTION}}}\Hypertarget{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432afa320e5ace4e167f62461ec1675802c6}\label{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432afa320e5ace4e167f62461ec1675802c6} 
+CLEAR\+\_\+\+INTERSECTION&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UNDEFINED\_INTERSECTION@{UNDEFINED\_INTERSECTION}!bgmesh.h@{bgmesh.h}}\index{bgmesh.h@{bgmesh.h}!UNDEFINED\_INTERSECTION@{UNDEFINED\_INTERSECTION}}}\Hypertarget{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432aec0b7fa7ca75d03bed7590a7bff17cd0}\label{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432aec0b7fa7ca75d03bed7590a7bff17cd0} 
+UNDEFINED\+\_\+\+INTERSECTION&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23}\label{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23} 
+\index{bgmesh.h@{bgmesh.h}!Type\_Next\_Face@{Type\_Next\_Face}}
+\index{Type\_Next\_Face@{Type\_Next\_Face}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{Type\_Next\_Face}{Type\_Next\_Face}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23}{Type\+\_\+\+Next\+\_\+\+Face}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BOUNDARY\_REACHED@{BOUNDARY\_REACHED}!bgmesh.h@{bgmesh.h}}\index{bgmesh.h@{bgmesh.h}!BOUNDARY\_REACHED@{BOUNDARY\_REACHED}}}\Hypertarget{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a5d27fed76ee196334afc6d8e04cb8a14}\label{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a5d27fed76ee196334afc6d8e04cb8a14} 
+BOUNDARY\+\_\+\+REACHED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LOOP\_CREATION@{LOOP\_CREATION}!bgmesh.h@{bgmesh.h}}\index{bgmesh.h@{bgmesh.h}!LOOP\_CREATION@{LOOP\_CREATION}}}\Hypertarget{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a51b25c32bfdda412a034f1ce2fc280d0}\label{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a51b25c32bfdda412a034f1ce2fc280d0} 
+LOOP\+\_\+\+CREATION&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FACE\_FOUND@{FACE\_FOUND}!bgmesh.h@{bgmesh.h}}\index{bgmesh.h@{bgmesh.h}!FACE\_FOUND@{FACE\_FOUND}}}\Hypertarget{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a7b94d7709bc8a7f91c17cfd94906af9b}\label{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a7b94d7709bc8a7f91c17cfd94906af9b} 
+FACE\+\_\+\+FOUND&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NO\_FACE@{NO\_FACE}!bgmesh.h@{bgmesh.h}}\index{bgmesh.h@{bgmesh.h}!NO\_FACE@{NO\_FACE}}}\Hypertarget{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a20b1e466b8ad257681194161dd2c0060}\label{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a20b1e466b8ad257681194161dd2c0060} 
+NO\+\_\+\+FACE&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{bgmesh_8h_ae5505183685cccd7b973b8607081265d}\label{bgmesh_8h_ae5505183685cccd7b973b8607081265d} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Add\_Geom\_BgMesh\_Features@{\_TG\_Add\_Geom\_BgMesh\_Features}}
+\index{\_TG\_Add\_Geom\_BgMesh\_Features@{\_TG\_Add\_Geom\_BgMesh\_Features}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Add\_Geom\_BgMesh\_Features()}{\_TG\_Add\_Geom\_BgMesh\_Features()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Add\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+Features (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_aea142696f9e0f35090fa51dccd71ef02}\label{bgmesh_8h_aea142696f9e0f35090fa51dccd71ef02} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Add\_Geometry\_BgMesh@{\_TG\_Add\_Geometry\_BgMesh}}
+\index{\_TG\_Add\_Geometry\_BgMesh@{\_TG\_Add\_Geometry\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Add\_Geometry\_BgMesh()}{\_TG\_Add\_Geometry\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Add\+\_\+\+Geometry\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a73ada984633ecda3b64b88fcac87c6b1}\label{bgmesh_8h_a73ada984633ecda3b64b88fcac87c6b1} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Bg\_BBox@{\_TG\_Bg\_BBox}}
+\index{\_TG\_Bg\_BBox@{\_TG\_Bg\_BBox}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Bg\_BBox()}{\_TG\_Bg\_BBox()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+\_\+\+BBox (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a25d2e7daea72e9f07230a5cf5905994a}\label{bgmesh_8h_a25d2e7daea72e9f07230a5cf5905994a} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Bg\_Closest\_Point@{\_TG\_Bg\_Closest\_Point}}
+\index{\_TG\_Bg\_Closest\_Point@{\_TG\_Bg\_Closest\_Point}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Bg\_Closest\_Point()}{\_TG\_Bg\_Closest\_Point()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+\_\+\+Closest\+\_\+\+Point (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_aeca761ede9a4db26cb5c790da8f7bf46}\label{bgmesh_8h_aeca761ede9a4db26cb5c790da8f7bf46} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Bg\_Closest\_Point\_Inside\_Face@{\_TG\_Bg\_Closest\_Point\_Inside\_Face}}
+\index{\_TG\_Bg\_Closest\_Point\_Inside\_Face@{\_TG\_Bg\_Closest\_Point\_Inside\_Face}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Bg\_Closest\_Point\_Inside\_Face()}{\_TG\_Bg\_Closest\_Point\_Inside\_Face()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+\_\+\+Closest\+\_\+\+Point\+\_\+\+Inside\+\_\+\+Face (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a483875aec9400de4193de091e8774186}\label{bgmesh_8h_a483875aec9400de4193de091e8774186} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Bg\_Face\_Normal@{\_TG\_Bg\_Face\_Normal}}
+\index{\_TG\_Bg\_Face\_Normal@{\_TG\_Bg\_Face\_Normal}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Bg\_Face\_Normal()}{\_TG\_Bg\_Face\_Normal()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+\_\+\+Face\+\_\+\+Normal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ae456789fda77f4a1998732c484700760}\label{bgmesh_8h_ae456789fda77f4a1998732c484700760} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Bg\_Face\_Normal\_At\_Closest\_Point@{\_TG\_Bg\_Face\_Normal\_At\_Closest\_Point}}
+\index{\_TG\_Bg\_Face\_Normal\_At\_Closest\_Point@{\_TG\_Bg\_Face\_Normal\_At\_Closest\_Point}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Bg\_Face\_Normal\_At\_Closest\_Point()}{\_TG\_Bg\_Face\_Normal\_At\_Closest\_Point()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+\_\+\+Face\+\_\+\+Normal\+\_\+\+At\+\_\+\+Closest\+\_\+\+Point (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a1e08cd9cc41bcea4f0dc8e4b5fefb7f8}\label{bgmesh_8h_a1e08cd9cc41bcea4f0dc8e4b5fefb7f8} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Bg\_Host\_Normal@{\_TG\_Bg\_Host\_Normal}}
+\index{\_TG\_Bg\_Host\_Normal@{\_TG\_Bg\_Host\_Normal}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Bg\_Host\_Normal()}{\_TG\_Bg\_Host\_Normal()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+\_\+\+Host\+\_\+\+Normal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a24c30d6e689d05758bb8da177bea8d2b}\label{bgmesh_8h_a24c30d6e689d05758bb8da177bea8d2b} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Bg\_Local\_Closest\_Point@{\_TG\_Bg\_Local\_Closest\_Point}}
+\index{\_TG\_Bg\_Local\_Closest\_Point@{\_TG\_Bg\_Local\_Closest\_Point}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Bg\_Local\_Closest\_Point()}{\_TG\_Bg\_Local\_Closest\_Point()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+\_\+\+Local\+\_\+\+Closest\+\_\+\+Point (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_aa63ae6d42465d1d72a406c6fad0cbe72}\label{bgmesh_8h_aa63ae6d42465d1d72a406c6fad0cbe72} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Bg\_Node\_Normal@{\_TG\_Bg\_Node\_Normal}}
+\index{\_TG\_Bg\_Node\_Normal@{\_TG\_Bg\_Node\_Normal}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Bg\_Node\_Normal()}{\_TG\_Bg\_Node\_Normal()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+\_\+\+Node\+\_\+\+Normal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a88d6cede049bb9d3e5ea4204e232588d}\label{bgmesh_8h_a88d6cede049bb9d3e5ea4204e232588d} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_BgMesh\_Allocate\_Search\_Arrays@{\_TG\_BgMesh\_Allocate\_Search\_Arrays}}
+\index{\_TG\_BgMesh\_Allocate\_Search\_Arrays@{\_TG\_BgMesh\_Allocate\_Search\_Arrays}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_BgMesh\_Allocate\_Search\_Arrays()}{\_TG\_BgMesh\_Allocate\_Search\_Arrays()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Allocate\+\_\+\+Search\+\_\+\+Arrays (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a84e25b80a9f2661bc56242461d2a40ab}\label{bgmesh_8h_a84e25b80a9f2661bc56242461d2a40ab} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_BgMesh\_Free\_Search\_Arrays@{\_TG\_BgMesh\_Free\_Search\_Arrays}}
+\index{\_TG\_BgMesh\_Free\_Search\_Arrays@{\_TG\_BgMesh\_Free\_Search\_Arrays}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_BgMesh\_Free\_Search\_Arrays()}{\_TG\_BgMesh\_Free\_Search\_Arrays()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Free\+\_\+\+Search\+\_\+\+Arrays (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a42e83179ee14d3d035e06221e62c9a61}\label{bgmesh_8h_a42e83179ee14d3d035e06221e62c9a61} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_BgMesh\_Print\_Statistics@{\_TG\_BgMesh\_Print\_Statistics}}
+\index{\_TG\_BgMesh\_Print\_Statistics@{\_TG\_BgMesh\_Print\_Statistics}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_BgMesh\_Print\_Statistics()}{\_TG\_BgMesh\_Print\_Statistics()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Print\+\_\+\+Statistics (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a007522d597ca7f15f076f615b6d1dd70}\label{bgmesh_8h_a007522d597ca7f15f076f615b6d1dd70} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_BgMesh\_Search\_Edges\_Safe@{\_TG\_BgMesh\_Search\_Edges\_Safe}}
+\index{\_TG\_BgMesh\_Search\_Edges\_Safe@{\_TG\_BgMesh\_Search\_Edges\_Safe}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_BgMesh\_Search\_Edges\_Safe()}{\_TG\_BgMesh\_Search\_Edges\_Safe()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Search\+\_\+\+Edges\+\_\+\+Safe (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{pos\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{range }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_aa573750b9f60a65cdce4017cb6717b5f}\label{bgmesh_8h_aa573750b9f60a65cdce4017cb6717b5f} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_BgMesh\_Search\_Faces\_Safe@{\_TG\_BgMesh\_Search\_Faces\_Safe}}
+\index{\_TG\_BgMesh\_Search\_Faces\_Safe@{\_TG\_BgMesh\_Search\_Faces\_Safe}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_BgMesh\_Search\_Faces\_Safe()}{\_TG\_BgMesh\_Search\_Faces\_Safe()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Search\+\_\+\+Faces\+\_\+\+Safe (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{pos\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{range }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ab994019fb8ddc4d7e57cb54511eb405b}\label{bgmesh_8h_ab994019fb8ddc4d7e57cb54511eb405b} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_BgMesh\_Search\_Targets@{\_TG\_BgMesh\_Search\_Targets}}
+\index{\_TG\_BgMesh\_Search\_Targets@{\_TG\_BgMesh\_Search\_Targets}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_BgMesh\_Search\_Targets()}{\_TG\_BgMesh\_Search\_Targets()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Bg\+Mesh\+\_\+\+Search\+\_\+\+Targets (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{pos,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{range,  }\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{l\+\_\+target\+\_\+faces,  }\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{l\+\_\+target\+\_\+edges,  }\item[{int}]{num\+\_\+expansion }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ad5402bf71f72bd3703a24e5d90fb7ef1}\label{bgmesh_8h_ad5402bf71f72bd3703a24e5d90fb7ef1} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Check\_Swap\_Edges\_In\_BgMesh@{\_TG\_Check\_Swap\_Edges\_In\_BgMesh}}
+\index{\_TG\_Check\_Swap\_Edges\_In\_BgMesh@{\_TG\_Check\_Swap\_Edges\_In\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Check\_Swap\_Edges\_In\_BgMesh()}{\_TG\_Check\_Swap\_Edges\_In\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Check\+\_\+\+Swap\+\_\+\+Edges\+\_\+\+In\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_afc1eb9f43f10e72f6484ddbf7be0bb77}\label{bgmesh_8h_afc1eb9f43f10e72f6484ddbf7be0bb77} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Clear\_All\_BgMesh@{\_TG\_Clear\_All\_BgMesh}}
+\index{\_TG\_Clear\_All\_BgMesh@{\_TG\_Clear\_All\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Clear\_All\_BgMesh()}{\_TG\_Clear\_All\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Clear\+\_\+\+All\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a8c4fb55e06db20154ea252348493ad1e}\label{bgmesh_8h_a8c4fb55e06db20154ea252348493ad1e} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Clear\_Geom\_BgMesh\_List@{\_TG\_Clear\_Geom\_BgMesh\_List}}
+\index{\_TG\_Clear\_Geom\_BgMesh\_List@{\_TG\_Clear\_Geom\_BgMesh\_List}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Clear\_Geom\_BgMesh\_List()}{\_TG\_Clear\_Geom\_BgMesh\_List()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Clear\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+List (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a9639f104971888062b6f628edd72b87e}\label{bgmesh_8h_a9639f104971888062b6f628edd72b87e} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Compute\_BgMesh\_Size@{\_TG\_Compute\_BgMesh\_Size}}
+\index{\_TG\_Compute\_BgMesh\_Size@{\_TG\_Compute\_BgMesh\_Size}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Compute\_BgMesh\_Size()}{\_TG\_Compute\_BgMesh\_Size()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Compute\+\_\+\+Bg\+Mesh\+\_\+\+Size (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a81759c347a7aab248c167bf2bcd897c1}\label{bgmesh_8h_a81759c347a7aab248c167bf2bcd897c1} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Curvature@{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Curvature}}
+\index{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Curvature@{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Curvature}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Curvature()}{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Curvature()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Compute\+\_\+\+Bg\+Mesh\+\_\+\+Size\+\_\+\+Based\+\_\+\+On\+\_\+\+Curvature (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a7a5b74190885163622e462e0ea7f69f2}\label{bgmesh_8h_a7a5b74190885163622e462e0ea7f69f2} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Proximity@{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Proximity}}
+\index{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Proximity@{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Proximity}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Proximity()}{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Proximity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Compute\+\_\+\+Bg\+Mesh\+\_\+\+Size\+\_\+\+Based\+\_\+\+On\+\_\+\+Proximity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a826cabf640fd4c8ab4e9e66e99cf2ef8}\label{bgmesh_8h_a826cabf640fd4c8ab4e9e66e99cf2ef8} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Radius@{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Radius}}
+\index{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Radius@{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Radius}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Radius()}{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Radius()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Compute\+\_\+\+Bg\+Mesh\+\_\+\+Size\+\_\+\+Based\+\_\+\+On\+\_\+\+Radius (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_afd8458fb64d0662fb547bbaf83730102}\label{bgmesh_8h_afd8458fb64d0662fb547bbaf83730102} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Compute\_Curvature\_Size@{\_TG\_Compute\_Curvature\_Size}}
+\index{\_TG\_Compute\_Curvature\_Size@{\_TG\_Compute\_Curvature\_Size}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Compute\_Curvature\_Size()}{\_TG\_Compute\_Curvature\_Size()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \+\_\+\+TG\+\_\+\+Compute\+\_\+\+Curvature\+\_\+\+Size (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a706e7550329c0ad8823275d943c1126d}\label{bgmesh_8h_a706e7550329c0ad8823275d943c1126d} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Compute\_Face\_Node\_Curvature\_Sizes@{\_TG\_Compute\_Face\_Node\_Curvature\_Sizes}}
+\index{\_TG\_Compute\_Face\_Node\_Curvature\_Sizes@{\_TG\_Compute\_Face\_Node\_Curvature\_Sizes}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Compute\_Face\_Node\_Curvature\_Sizes()}{\_TG\_Compute\_Face\_Node\_Curvature\_Sizes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Compute\+\_\+\+Face\+\_\+\+Node\+\_\+\+Curvature\+\_\+\+Sizes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}}]{f,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{fmin,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{fmax,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{threshold\+\_\+angle,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{node\+\_\+sizes }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a5c967c740f70ea22c3e0b760379df4be}\label{bgmesh_8h_a5c967c740f70ea22c3e0b760379df4be} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Construct\_BgMesh\_Features@{\_TG\_Construct\_BgMesh\_Features}}
+\index{\_TG\_Construct\_BgMesh\_Features@{\_TG\_Construct\_BgMesh\_Features}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Construct\_BgMesh\_Features()}{\_TG\_Construct\_BgMesh\_Features()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Construct\+\_\+\+Bg\+Mesh\+\_\+\+Features (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{void \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ac532a372a32cb0ba62b1881c84077f22}\label{bgmesh_8h_ac532a372a32cb0ba62b1881c84077f22} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Create\_BgMesh@{\_TG\_Create\_BgMesh}}
+\index{\_TG\_Create\_BgMesh@{\_TG\_Create\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_BgMesh()}{\_TG\_Create\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Create\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ac3e984f2ac3ba87dd2e70d6ba65c9fb5}\label{bgmesh_8h_ac3e984f2ac3ba87dd2e70d6ba65c9fb5} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Create\_BgMesh\_Manifold\_Thread@{\_TG\_Create\_BgMesh\_Manifold\_Thread}}
+\index{\_TG\_Create\_BgMesh\_Manifold\_Thread@{\_TG\_Create\_BgMesh\_Manifold\_Thread}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_BgMesh\_Manifold\_Thread()}{\_TG\_Create\_BgMesh\_Manifold\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Create\+\_\+\+Bg\+Mesh\+\_\+\+Manifold\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ab6014d930e3aaf6eba6432452b5e6559}\label{bgmesh_8h_ab6014d930e3aaf6eba6432452b5e6559} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Create\_Geodesic\_BgMesh@{\_TG\_Create\_Geodesic\_BgMesh}}
+\index{\_TG\_Create\_Geodesic\_BgMesh@{\_TG\_Create\_Geodesic\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Geodesic\_BgMesh()}{\_TG\_Create\_Geodesic\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Create\+\_\+\+Geodesic\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a7f32ba4fd2b6f374dd5a4e0da5d98b8c}\label{bgmesh_8h_a7f32ba4fd2b6f374dd5a4e0da5d98b8c} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Create\_Geom\_BgMesh@{\_TG\_Create\_Geom\_BgMesh}}
+\index{\_TG\_Create\_Geom\_BgMesh@{\_TG\_Create\_Geom\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Geom\_BgMesh()}{\_TG\_Create\_Geom\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Create\+\_\+\+Geom\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a031650b5257875bd1ab5810fa0d27dd6}\label{bgmesh_8h_a031650b5257875bd1ab5810fa0d27dd6} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Create\_Geometry\_BgMesh@{\_TG\_Create\_Geometry\_BgMesh}}
+\index{\_TG\_Create\_Geometry\_BgMesh@{\_TG\_Create\_Geometry\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Geometry\_BgMesh()}{\_TG\_Create\_Geometry\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Create\+\_\+\+Geometry\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a22b0c9291a953fb05d6fadf242196c08}\label{bgmesh_8h_a22b0c9291a953fb05d6fadf242196c08} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Create\_Prism\_Cap\_BgMesh@{\_TG\_Create\_Prism\_Cap\_BgMesh}}
+\index{\_TG\_Create\_Prism\_Cap\_BgMesh@{\_TG\_Create\_Prism\_Cap\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Prism\_Cap\_BgMesh()}{\_TG\_Create\_Prism\_Cap\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Create\+\_\+\+Prism\+\_\+\+Cap\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a566807ed43a68ac02ada1d4f8aa4108e}\label{bgmesh_8h_a566807ed43a68ac02ada1d4f8aa4108e} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Create\_Surface\_Point@{\_TG\_Create\_Surface\_Point}}
+\index{\_TG\_Create\_Surface\_Point@{\_TG\_Create\_Surface\_Point}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Surface\_Point()}{\_TG\_Create\_Surface\_Point()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \+\_\+\+TG\+\_\+\+Create\+\_\+\+Surface\+\_\+\+Point (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{tg__geom_8h_a3f6700169aff58a7ad799f39ce4d61a0}{Surf\+Seed}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a007da1fb5ff539628f0b4dd35182cf49}\label{bgmesh_8h_a007da1fb5ff539628f0b4dd35182cf49} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Create\_Surface\_Triangle@{\_TG\_Create\_Surface\_Triangle}}
+\index{\_TG\_Create\_Surface\_Triangle@{\_TG\_Create\_Surface\_Triangle}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Surface\_Triangle()}{\_TG\_Create\_Surface\_Triangle()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \+\_\+\+TG\+\_\+\+Create\+\_\+\+Surface\+\_\+\+Triangle (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{tg__geom_8h_a3f6700169aff58a7ad799f39ce4d61a0}{Surf\+Seed}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ab899400a765439ecf768b48ffdebfe93}\label{bgmesh_8h_ab899400a765439ecf768b48ffdebfe93} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Create\_Surface\_Triangle\_Target@{\_TG\_Create\_Surface\_Triangle\_Target}}
+\index{\_TG\_Create\_Surface\_Triangle\_Target@{\_TG\_Create\_Surface\_Triangle\_Target}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Create\_Surface\_Triangle\_Target()}{\_TG\_Create\_Surface\_Triangle\_Target()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \+\_\+\+TG\+\_\+\+Create\+\_\+\+Surface\+\_\+\+Triangle\+\_\+\+Target (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{tg__geom_8h_a3f6700169aff58a7ad799f39ce4d61a0}{Surf\+Seed}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a4da9a92f326c4dabcced042fd86a4d84}\label{bgmesh_8h_a4da9a92f326c4dabcced042fd86a4d84} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Define\_BgMesh@{\_TG\_Define\_BgMesh}}
+\index{\_TG\_Define\_BgMesh@{\_TG\_Define\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Define\_BgMesh()}{\_TG\_Define\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Define\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_acfe40c4acd3af3a8820852493347ffe9}\label{bgmesh_8h_acfe40c4acd3af3a8820852493347ffe9} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Delete\_BgMesh@{\_TG\_Delete\_BgMesh}}
+\index{\_TG\_Delete\_BgMesh@{\_TG\_Delete\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Delete\_BgMesh()}{\_TG\_Delete\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Delete\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a58696b8f577faacda92f1aad5f74cef4}\label{bgmesh_8h_a58696b8f577faacda92f1aad5f74cef4} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Delete\_Geometry\_BgMesh@{\_TG\_Delete\_Geometry\_BgMesh}}
+\index{\_TG\_Delete\_Geometry\_BgMesh@{\_TG\_Delete\_Geometry\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Delete\_Geometry\_BgMesh()}{\_TG\_Delete\_Geometry\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Delete\+\_\+\+Geometry\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a3a526bd5f662e9a9b659a5f78b31e67c}\label{bgmesh_8h_a3a526bd5f662e9a9b659a5f78b31e67c} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Gen\_Angle\_Features\_In\_BgMesh@{\_TG\_Gen\_Angle\_Features\_In\_BgMesh}}
+\index{\_TG\_Gen\_Angle\_Features\_In\_BgMesh@{\_TG\_Gen\_Angle\_Features\_In\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Gen\_Angle\_Features\_In\_BgMesh()}{\_TG\_Gen\_Angle\_Features\_In\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Gen\+\_\+\+Angle\+\_\+\+Features\+\_\+\+In\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a3768b932a2217b127af293d9904007b8}\label{bgmesh_8h_a3768b932a2217b127af293d9904007b8} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Gen\_Boundary\_Edges\_In\_BgMesh@{\_TG\_Gen\_Boundary\_Edges\_In\_BgMesh}}
+\index{\_TG\_Gen\_Boundary\_Edges\_In\_BgMesh@{\_TG\_Gen\_Boundary\_Edges\_In\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Gen\_Boundary\_Edges\_In\_BgMesh()}{\_TG\_Gen\_Boundary\_Edges\_In\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Gen\+\_\+\+Boundary\+\_\+\+Edges\+\_\+\+In\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a7132abcffd0126c81a9828ecb5a17c09}\label{bgmesh_8h_a7132abcffd0126c81a9828ecb5a17c09} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Gen\_Edges\_From\_Seed@{\_TG\_Gen\_Edges\_From\_Seed}}
+\index{\_TG\_Gen\_Edges\_From\_Seed@{\_TG\_Gen\_Edges\_From\_Seed}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Gen\_Edges\_From\_Seed()}{\_TG\_Gen\_Edges\_From\_Seed()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Gen\+\_\+\+Edges\+\_\+\+From\+\_\+\+Seed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{char \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_aa7bd7845facc5d817a8647f020018b19}\label{bgmesh_8h_aa7bd7845facc5d817a8647f020018b19} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Gen\_Feature\_Edges\_In\_BgMesh@{\_TG\_Gen\_Feature\_Edges\_In\_BgMesh}}
+\index{\_TG\_Gen\_Feature\_Edges\_In\_BgMesh@{\_TG\_Gen\_Feature\_Edges\_In\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Gen\_Feature\_Edges\_In\_BgMesh()}{\_TG\_Gen\_Feature\_Edges\_In\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Gen\+\_\+\+Feature\+\_\+\+Edges\+\_\+\+In\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_acbe46fff9620f16797b6c7325a49a899}\label{bgmesh_8h_acbe46fff9620f16797b6c7325a49a899} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Geom\_Domain@{\_TG\_Geom\_Domain}}
+\index{\_TG\_Geom\_Domain@{\_TG\_Geom\_Domain}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Geom\_Domain()}{\_TG\_Geom\_Domain()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \+\_\+\+TG\+\_\+\+Geom\+\_\+\+Domain (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{domain }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a16b3959aeffa3bea950ef1adf820acf9}\label{bgmesh_8h_a16b3959aeffa3bea950ef1adf820acf9} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Get\_Average\_Radius\_On\_Face\_Thread@{\_TG\_Get\_Average\_Radius\_On\_Face\_Thread}}
+\index{\_TG\_Get\_Average\_Radius\_On\_Face\_Thread@{\_TG\_Get\_Average\_Radius\_On\_Face\_Thread}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Get\_Average\_Radius\_On\_Face\_Thread()}{\_TG\_Get\_Average\_Radius\_On\_Face\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \+\_\+\+TG\+\_\+\+Get\+\_\+\+Average\+\_\+\+Radius\+\_\+\+On\+\_\+\+Face\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a5394bf05a3346107682e5e87d0fc0b43}\label{bgmesh_8h_a5394bf05a3346107682e5e87d0fc0b43} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Get\_BgMesh\_Domain@{\_TG\_Get\_BgMesh\_Domain}}
+\index{\_TG\_Get\_BgMesh\_Domain@{\_TG\_Get\_BgMesh\_Domain}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Get\_BgMesh\_Domain()}{\_TG\_Get\_BgMesh\_Domain()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Get\+\_\+\+Bg\+Mesh\+\_\+\+Domain (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_aa95f90a52608638eaea7f665b1b47422}\label{bgmesh_8h_aa95f90a52608638eaea7f665b1b47422} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Get\_BgMesh\_Of\_Thread@{\_TG\_Get\_BgMesh\_Of\_Thread}}
+\index{\_TG\_Get\_BgMesh\_Of\_Thread@{\_TG\_Get\_BgMesh\_Of\_Thread}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Get\_BgMesh\_Of\_Thread()}{\_TG\_Get\_BgMesh\_Of\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Get\+\_\+\+Bg\+Mesh\+\_\+\+Of\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a231a77b466828b9a8adc51b6a009e62c}\label{bgmesh_8h_a231a77b466828b9a8adc51b6a009e62c} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Get\_BgMesh\_Tree@{\_TG\_Get\_BgMesh\_Tree}}
+\index{\_TG\_Get\_BgMesh\_Tree@{\_TG\_Get\_BgMesh\_Tree}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Get\_BgMesh\_Tree()}{\_TG\_Get\_BgMesh\_Tree()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Get\+\_\+\+Bg\+Mesh\+\_\+\+Tree (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ac3ba722568421290b2feec36342698bb}\label{bgmesh_8h_ac3ba722568421290b2feec36342698bb} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Get\_Current\_BgMesh@{\_TG\_Get\_Current\_BgMesh}}
+\index{\_TG\_Get\_Current\_BgMesh@{\_TG\_Get\_Current\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Get\_Current\_BgMesh()}{\_TG\_Get\_Current\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Get\+\_\+\+Current\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a6dd1f10743101b0b018ff26fbb069cae}\label{bgmesh_8h_a6dd1f10743101b0b018ff26fbb069cae} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Get\_Geom\_BgMesh\_List@{\_TG\_Get\_Geom\_BgMesh\_List}}
+\index{\_TG\_Get\_Geom\_BgMesh\_List@{\_TG\_Get\_Geom\_BgMesh\_List}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Get\_Geom\_BgMesh\_List()}{\_TG\_Get\_Geom\_BgMesh\_List()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Get\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+List (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a6a07b2126b48de6cf698273f8cd5acdb}\label{bgmesh_8h_a6a07b2126b48de6cf698273f8cd5acdb} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Get\_Geom\_BgMesh\_Size@{\_TG\_Get\_Geom\_BgMesh\_Size}}
+\index{\_TG\_Get\_Geom\_BgMesh\_Size@{\_TG\_Get\_Geom\_BgMesh\_Size}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Get\_Geom\_BgMesh\_Size()}{\_TG\_Get\_Geom\_BgMesh\_Size()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \+\_\+\+TG\+\_\+\+Get\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+Size (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a6ff08ccf0901fadf062ef0e83b17ee2a}\label{bgmesh_8h_a6ff08ccf0901fadf062ef0e83b17ee2a} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Get\_Geom\_BgMesh\_Tree@{\_TG\_Get\_Geom\_BgMesh\_Tree}}
+\index{\_TG\_Get\_Geom\_BgMesh\_Tree@{\_TG\_Get\_Geom\_BgMesh\_Tree}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Get\_Geom\_BgMesh\_Tree()}{\_TG\_Get\_Geom\_BgMesh\_Tree()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{kd__tree_8h_a26f2af34bc1cda6502e71e382d765a64}{Kd\+Tree}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Get\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+Tree (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ac4dde7e579ea359aa252d6563fadb067}\label{bgmesh_8h_ac4dde7e579ea359aa252d6563fadb067} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Init\_BgMesh\_Size@{\_TG\_Init\_BgMesh\_Size}}
+\index{\_TG\_Init\_BgMesh\_Size@{\_TG\_Init\_BgMesh\_Size}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Init\_BgMesh\_Size()}{\_TG\_Init\_BgMesh\_Size()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Init\+\_\+\+Bg\+Mesh\+\_\+\+Size (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a35ffdfec63cebe670e659fc1f258a50a}\label{bgmesh_8h_a35ffdfec63cebe670e659fc1f258a50a} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Init\_Surf\_As\_BgMesh@{\_TG\_Init\_Surf\_As\_BgMesh}}
+\index{\_TG\_Init\_Surf\_As\_BgMesh@{\_TG\_Init\_Surf\_As\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Init\_Surf\_As\_BgMesh()}{\_TG\_Init\_Surf\_As\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Init\+\_\+\+Surf\+\_\+\+As\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a77f47a7297ef98710bdbe6e7847de889}\label{bgmesh_8h_a77f47a7297ef98710bdbe6e7847de889} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Init\_Surf\_As\_Face\_Thread@{\_TG\_Init\_Surf\_As\_Face\_Thread}}
+\index{\_TG\_Init\_Surf\_As\_Face\_Thread@{\_TG\_Init\_Surf\_As\_Face\_Thread}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Init\_Surf\_As\_Face\_Thread()}{\_TG\_Init\_Surf\_As\_Face\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Init\+\_\+\+Surf\+\_\+\+As\+\_\+\+Face\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{tg__geom_8h_a667ec40d202bfa0d62ca18fb5b5f69a4}{Surf}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{tf }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ae9ceab2793914770ea7599c8bbbd8149}\label{bgmesh_8h_ae9ceab2793914770ea7599c8bbbd8149} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Insert\_Edge\_Thread\_In\_BgMesh@{\_TG\_Insert\_Edge\_Thread\_In\_BgMesh}}
+\index{\_TG\_Insert\_Edge\_Thread\_In\_BgMesh@{\_TG\_Insert\_Edge\_Thread\_In\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Insert\_Edge\_Thread\_In\_BgMesh()}{\_TG\_Insert\_Edge\_Thread\_In\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Insert\+\_\+\+Edge\+\_\+\+Thread\+\_\+\+In\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a8f340a8747e42b17b799962919634904}\label{bgmesh_8h_a8f340a8747e42b17b799962919634904} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Populate\_Geom\_BgMesh\_List@{\_TG\_Populate\_Geom\_BgMesh\_List}}
+\index{\_TG\_Populate\_Geom\_BgMesh\_List@{\_TG\_Populate\_Geom\_BgMesh\_List}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Populate\_Geom\_BgMesh\_List()}{\_TG\_Populate\_Geom\_BgMesh\_List()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Populate\+\_\+\+Geom\+\_\+\+Bg\+Mesh\+\_\+\+List (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a171401c33d74bd0189eb0161f473f1f4}\label{bgmesh_8h_a171401c33d74bd0189eb0161f473f1f4} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Project\_Pos\_To\_BgMesh@{\_TG\_Project\_Pos\_To\_BgMesh}}
+\index{\_TG\_Project\_Pos\_To\_BgMesh@{\_TG\_Project\_Pos\_To\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Project\_Pos\_To\_BgMesh()}{\_TG\_Project\_Pos\_To\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} int \+\_\+\+TG\+\_\+\+Project\+\_\+\+Pos\+\_\+\+To\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{pos,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{range,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{rel\+\_\+tol,  }\item[{int}]{num\+\_\+iteration,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{ftarget,  }\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{l\+\_\+target\+\_\+faces,  }\item[{\mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{l\+\_\+target\+\_\+edges }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a91de4f245385f1cd3248f84746e654a6}\label{bgmesh_8h_a91de4f245385f1cd3248f84746e654a6} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Recover\_Surface@{\_TG\_Recover\_Surface}}
+\index{\_TG\_Recover\_Surface@{\_TG\_Recover\_Surface}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Recover\_Surface()}{\_TG\_Recover\_Surface()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Recover\+\_\+\+Surface (\begin{DoxyParamCaption}\item[{int}]{method,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a46bbeae4604f12270ada5c90a5b6a798}{Face}} \texorpdfstring{$\ast$}{*}}]{fp,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{uvp\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{p\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a559b755c209b24a6f8b16bfed0d59379}\label{bgmesh_8h_a559b755c209b24a6f8b16bfed0d59379} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Remove\_Edge\_Thread\_From\_BgMesh@{\_TG\_Remove\_Edge\_Thread\_From\_BgMesh}}
+\index{\_TG\_Remove\_Edge\_Thread\_From\_BgMesh@{\_TG\_Remove\_Edge\_Thread\_From\_BgMesh}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Remove\_Edge\_Thread\_From\_BgMesh()}{\_TG\_Remove\_Edge\_Thread\_From\_BgMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Remove\+\_\+\+Edge\+\_\+\+Thread\+\_\+\+From\+\_\+\+Bg\+Mesh (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_af5eadfe22271a8aea1cb5ca84f1239e0}\label{bgmesh_8h_af5eadfe22271a8aea1cb5ca84f1239e0} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Reset\_Node\_SurfSeed@{\_TG\_Reset\_Node\_SurfSeed}}
+\index{\_TG\_Reset\_Node\_SurfSeed@{\_TG\_Reset\_Node\_SurfSeed}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Reset\_Node\_SurfSeed()}{\_TG\_Reset\_Node\_SurfSeed()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Reset\+\_\+\+Node\+\_\+\+Surf\+Seed (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a0032cc20455159016efd5adb9a979bf0}\label{bgmesh_8h_a0032cc20455159016efd5adb9a979bf0} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Search\_BgMesh\_Entities@{\_TG\_Search\_BgMesh\_Entities}}
+\index{\_TG\_Search\_BgMesh\_Entities@{\_TG\_Search\_BgMesh\_Entities}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Search\_BgMesh\_Entities()}{\_TG\_Search\_BgMesh\_Entities()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Entities (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_aaba644730368b214f333a88bd8c034c4}\label{bgmesh_8h_aaba644730368b214f333a88bd8c034c4} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Search\_BgMesh\_Faces@{\_TG\_Search\_BgMesh\_Faces}}
+\index{\_TG\_Search\_BgMesh\_Faces@{\_TG\_Search\_BgMesh\_Faces}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Search\_BgMesh\_Faces()}{\_TG\_Search\_BgMesh\_Faces()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Faces (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_af3746c9b1c0972c8bbfcf645f02e9b9b}\label{bgmesh_8h_af3746c9b1c0972c8bbfcf645f02e9b9b} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Search\_BgMesh\_Faces\_By\_Thread\_Flags@{\_TG\_Search\_BgMesh\_Faces\_By\_Thread\_Flags}}
+\index{\_TG\_Search\_BgMesh\_Faces\_By\_Thread\_Flags@{\_TG\_Search\_BgMesh\_Faces\_By\_Thread\_Flags}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Search\_BgMesh\_Faces\_By\_Thread\_Flags()}{\_TG\_Search\_BgMesh\_Faces\_By\_Thread\_Flags()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Faces\+\_\+\+By\+\_\+\+Thread\+\_\+\+Flags (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{unsigned int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a30d4db1b2890e87f8aaefab404ce5fd0}\label{bgmesh_8h_a30d4db1b2890e87f8aaefab404ce5fd0} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Search\_BgMesh\_Faces\_With\_BBox@{\_TG\_Search\_BgMesh\_Faces\_With\_BBox}}
+\index{\_TG\_Search\_BgMesh\_Faces\_With\_BBox@{\_TG\_Search\_BgMesh\_Faces\_With\_BBox}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Search\_BgMesh\_Faces\_With\_BBox()}{\_TG\_Search\_BgMesh\_Faces\_With\_BBox()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Faces\+\_\+\+With\+\_\+\+BBox (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a01873c8e23a2e20cd433e0e7fc0a83ff}\label{bgmesh_8h_a01873c8e23a2e20cd433e0e7fc0a83ff} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Search\_BgMesh\_Tree\_Entities@{\_TG\_Search\_BgMesh\_Tree\_Entities}}
+\index{\_TG\_Search\_BgMesh\_Tree\_Entities@{\_TG\_Search\_BgMesh\_Tree\_Entities}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Search\_BgMesh\_Tree\_Entities()}{\_TG\_Search\_BgMesh\_Tree\_Entities()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Search\+\_\+\+Bg\+Mesh\+\_\+\+Tree\+\_\+\+Entities (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a1267bb209cccb9e7808338398908a4c6}\label{bgmesh_8h_a1267bb209cccb9e7808338398908a4c6} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Search\_KdTree\_Faces@{\_TG\_Search\_KdTree\_Faces}}
+\index{\_TG\_Search\_KdTree\_Faces@{\_TG\_Search\_KdTree\_Faces}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Search\_KdTree\_Faces()}{\_TG\_Search\_KdTree\_Faces()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Search\+\_\+\+Kd\+Tree\+\_\+\+Faces (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{kd__tree_8h_a26f2af34bc1cda6502e71e382d765a64}{Kd\+Tree}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a06335ca0fd773823bae0dbf9f5597647}\label{bgmesh_8h_a06335ca0fd773823bae0dbf9f5597647} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Search\_KdTree\_Nodes@{\_TG\_Search\_KdTree\_Nodes}}
+\index{\_TG\_Search\_KdTree\_Nodes@{\_TG\_Search\_KdTree\_Nodes}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Search\_KdTree\_Nodes()}{\_TG\_Search\_KdTree\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} \mbox{\hyperlink{tg__list_8h_a5d54704a928de0e0ce98305832300ad7}{List}} \texorpdfstring{$\ast$}{*} \+\_\+\+TG\+\_\+\+Search\+\_\+\+Kd\+Tree\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bgmesh_8h_aabf2e3091d2e6c947226a26e1d89e696}{Bg\+Mesh}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a156e2435967e3cb18ec080a78bbd4096}\label{bgmesh_8h_a156e2435967e3cb18ec080a78bbd4096} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Set\_BgMesh\_Size@{\_TG\_Set\_BgMesh\_Size}}
+\index{\_TG\_Set\_BgMesh\_Size@{\_TG\_Set\_BgMesh\_Size}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Set\_BgMesh\_Size()}{\_TG\_Set\_BgMesh\_Size()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Set\+\_\+\+Bg\+Mesh\+\_\+\+Size (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_a8c3007ed4da77750b215f72e09042d49}\label{bgmesh_8h_a8c3007ed4da77750b215f72e09042d49} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Smooth\_BgMesh\_Size@{\_TG\_Smooth\_BgMesh\_Size}}
+\index{\_TG\_Smooth\_BgMesh\_Size@{\_TG\_Smooth\_BgMesh\_Size}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Smooth\_BgMesh\_Size()}{\_TG\_Smooth\_BgMesh\_Size()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Smooth\+\_\+\+Bg\+Mesh\+\_\+\+Size (\begin{DoxyParamCaption}\item[{int}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{bgmesh_8h_ab79d07b9a4609b8807273a2c4c8be153}\label{bgmesh_8h_ab79d07b9a4609b8807273a2c4c8be153} 
+\index{bgmesh.h@{bgmesh.h}!\_TG\_Update\_BgMesh\_Size@{\_TG\_Update\_BgMesh\_Size}}
+\index{\_TG\_Update\_BgMesh\_Size@{\_TG\_Update\_BgMesh\_Size}!bgmesh.h@{bgmesh.h}}
+\doxysubsubsection{\texorpdfstring{\_TG\_Update\_BgMesh\_Size()}{\_TG\_Update\_BgMesh\_Size()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\+\_\+\+EXPORT}} void \+\_\+\+TG\+\_\+\+Update\+\_\+\+Bg\+Mesh\+\_\+\+Size (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+

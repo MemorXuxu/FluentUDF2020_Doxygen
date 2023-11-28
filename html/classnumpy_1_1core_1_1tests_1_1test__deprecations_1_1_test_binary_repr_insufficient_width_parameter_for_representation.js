@@ -1,0 +1,6 @@
+var classnumpy_1_1core_1_1tests_1_1test__deprecations_1_1_test_binary_repr_insufficient_width_parameter_for_representation =
+[
+    [ "test_insufficient_width_negative", "classnumpy_1_1core_1_1tests_1_1test__deprecations_1_1_test_binary_repr_insufficient_width_parameter_for_representation.html#ace233e86661b305e5c766d6de9a7a432", null ],
+    [ "test_insufficient_width_positive", "classnumpy_1_1core_1_1tests_1_1test__deprecations_1_1_test_binary_repr_insufficient_width_parameter_for_representation.html#aff3524ce2a4a4b555b2cb464b8f707b7", null ],
+    [ "message", "classnumpy_1_1core_1_1tests_1_1test__deprecations_1_1_test_binary_repr_insufficient_width_parameter_for_representation.html#ab8140947611504abcb64a4c277effcf5", null ]
+];

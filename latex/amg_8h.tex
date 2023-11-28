@@ -1,0 +1,879 @@
+\doxysection{fluent20.1.0/src/amg/amg.h File Reference}
+\hypertarget{amg_8h}{}\label{amg_8h}\index{fluent20.1.0/src/amg/amg.h@{fluent20.1.0/src/amg/amg.h}}
+{\ttfamily \#include "{}dll.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcoeff__mem__t__}{coeff\+\_\+mem\+\_\+t\+\_\+}}
+\item 
+struct \mbox{\hyperlink{struct_matrix}{Matrix}}
+\item 
+struct \mbox{\hyperlink{struct_table}{Table}}
+\item 
+struct \mbox{\hyperlink{struct_system}{System}}
+\item 
+struct \mbox{\hyperlink{structamg__store__t__}{amg\+\_\+store\+\_\+t\+\_\+}}
+\item 
+struct \mbox{\hyperlink{struct_level}{Level}}
+\item 
+struct \mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}}
+\item 
+struct \mbox{\hyperlink{struct_a_m_g___methods}{AMG\+\_\+\+Methods}}
+\item 
+struct \mbox{\hyperlink{structamg__mem__head__t__}{amg\+\_\+mem\+\_\+head\+\_\+t\+\_\+}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{amg_8h_a72706957be37594f74221ae1ebf9baf5}{NULL\+\_\+\+INDEX}}~-\/1
+\item 
+\#define \mbox{\hyperlink{amg_8h_a06f7c5597b809632b52bc5df02a44f81}{CHILD\+\_\+\+NONE}}~0
+\item 
+\#define \mbox{\hyperlink{amg_8h_a407f56b3c03266175baa049614121aef}{MAX\+\_\+\+N\+\_\+\+SETS}}~10
+\item 
+\#define \mbox{\hyperlink{amg_8h_a29685c7a407b3fb81f30e52339b84c3f}{MAX\+\_\+\+SIM\+\_\+\+EQ}}~81   /\texorpdfstring{$\ast$}{*} 1 + 4\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{materials_8h_a3462e5221d1b5cb21828c854fcfac556}{MAX\+\_\+\+PHASES}} for nphase full coupled MP \texorpdfstring{$\ast$}{*}/
+\item 
+\#define \mbox{\hyperlink{amg_8h_a733e6914161c2550e6c3dd9d8a5b8419}{MAX\+\_\+\+OVERLAP}}~2
+\item 
+\#define \mbox{\hyperlink{amg_8h_aef0cf9250dbaca0f4236415cf6b24a1f}{AMG\+\_\+\+SMALL}}~1.e-\/10
+\item 
+\#define \mbox{\hyperlink{amg_8h_a49909b7b9320d17c1f909cb4607c3565}{USE\+\_\+\+ILU}}~1
+\item 
+\#define \mbox{\hyperlink{amg_8h_a28f4fd7794a45d85aa202c5c50c9205a}{AMG\+\_\+\+CHUNKED\+\_\+\+MEMORY}}~1
+\item 
+\#define \mbox{\hyperlink{amg_8h_ad03082a69062c2da2a44bb2f9f92fc7d}{SYSTEM\+\_\+\+NAME\+\_\+\+LEN}}~128
+\item 
+\#define \mbox{\hyperlink{amg_8h_add784659439a8dd6b1423406171414d3}{MAX\+\_\+\+LEVELS}}~50
+\item 
+\#define \mbox{\hyperlink{amg_8h_a0b1c3ffef239223fe508215b2a7b3c1f}{Resize\+\_\+\+Vector}}(v,  allocated\+\_\+size,  required\+\_\+size)
+\item 
+\#define \mbox{\hyperlink{amg_8h_abd6010317ac12285b7e7db42150be6e9}{Resize\+\_\+\+Vector\+\_\+\+Chunk}}(v,  allocated\+\_\+size,  required\+\_\+size,  A,  cont)
+\item 
+\#define \mbox{\hyperlink{amg_8h_a7cc3fd43cfa49e55842a240babe28bf6}{AMG\+\_\+\+CHUNKED\+\_\+\+MEMORY\+\_\+E}}~1
+\item 
+\#define \mbox{\hyperlink{amg_8h_aacc3860eeb81e6c1800c8fade5282113}{A\+\_\+\+VALUEP}}(B,  i)~((B).valuep\mbox{[}i\mbox{]})
+\item 
+\#define \mbox{\hyperlink{amg_8h_aa9016137b38967549d7eae24e3c59d3a}{A\+\_\+\+DP}}(B,  i)~((B).dp\mbox{[}i\mbox{]})
+\item 
+\#define \mbox{\hyperlink{amg_8h_ac3277ce24ca2a980159e5e1a855d733c}{A\+\_\+\+EP}}(\mbox{\hyperlink{src_2mesh_2entity_8h_a894cfd8084c23f47ad6f1070839fe40a}{\+\_\+\+E\+\_\+}},  i,  SQRn\+\_\+ceqn)
+\item 
+\#define \mbox{\hyperlink{amg_8h_a477aab0e97471894c21fbeea9645ce47}{ZERO\+\_\+\+A\+\_\+\+VALUEP}}(B,  i)
+\item 
+\#define \mbox{\hyperlink{amg_8h_abf0647df912364ffb42ac05ef0eba871}{ZERO\+\_\+\+A\+\_\+\+DP}}(B,  i)
+\item 
+\#define \mbox{\hyperlink{amg_8h_af93948d8be8667039792aaba5193840d}{get\+\_\+amg\+\_\+local\+\_\+buf}}(required\+\_\+size)~  (amg\+\_\+local\+\_\+buf = \mbox{\hyperlink{amg_8h_a9ed35919d62076e502bd7ee3258e612d}{Resize\+\_\+\+Vector\+\_\+\+AMG}}(\&amg\+\_\+local\+\_\+buf, \&amg\+\_\+local\+\_\+buf\+\_\+size, (required\+\_\+size), 1, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+))
+\item 
+\#define \mbox{\hyperlink{amg_8h_a218835053cc6825bf09c7d14bf3eb957}{free\+\_\+amg\+\_\+local\+\_\+buf}}(p)
+\item 
+\#define \mbox{\hyperlink{amg_8h_a73238e32fde0512c71c2552bb6b1bafe}{AMG\+\_\+\+MALLOC}}(x)~\mbox{\hyperlink{arrays_8h_aefa9ae27fce905e889045c063a3e7270}{offset\+\_\+malloc}}((x), \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{amg_8h_a9f08612723c7eb5d2489974bdf6bee3e}{AMG\+\_\+\+REALLOC}}(x,  y)~\mbox{\hyperlink{arrays_8h_a7575b01b75699e94f3f1c5b55345045d}{offset\+\_\+realloc}}((x), (y),\+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{amg_8h_a27a54b1b5bf3e136eb0ed44a3b6f534e}{AMG\+\_\+\+CALLOC}}(x,  y)~\mbox{\hyperlink{arrays_8h_af75ecef42dc18062eb44096c07de9a18}{offset\+\_\+calloc}}((x), (y),\+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{amg_8h_a3b7f5eb1fccd244a5d38c222e681577f}{AMG\+\_\+\+FREE}}(x)~\mbox{\hyperlink{arrays_8h_a5e72e9ad6aa88bc13f38402d13d13c35}{offset\+\_\+free}}((x), \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structcoeff__mem__t__}{coeff\+\_\+mem\+\_\+t\+\_\+}} \mbox{\hyperlink{amg_8h_a96addb84bdaaf1d4d85aa908a6da0518}{coeff\+\_\+mem\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{struct_matrix}{Matrix}} \mbox{\hyperlink{amg_8h_a9570374e3dbc873595100dae1e584459}{Matrix}}
+\item 
+typedef struct \mbox{\hyperlink{struct_table}{Table}} \mbox{\hyperlink{amg_8h_aaa5713bb2ecdf81c430009179b806232}{Table}}
+\item 
+typedef struct \mbox{\hyperlink{struct_system}{System}} \mbox{\hyperlink{amg_8h_ababfb172494f68b9d1cc84e298b1dd8d}{System}}
+\item 
+typedef struct \mbox{\hyperlink{structamg__store__t__}{amg\+\_\+store\+\_\+t\+\_\+}} \mbox{\hyperlink{amg_8h_a03fd4410f2e1c2cee1472be825cfcd62}{amg\+\_\+store\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{struct_level}{Level}} \mbox{\hyperlink{amg_8h_afa7cb00ec26d37d1ba8a7e0b6f32c63f}{Level}}
+\item 
+typedef enum \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4}{amg\+\_\+grouping\+\_\+method\+\_\+e}} \mbox{\hyperlink{amg_8h_ada36b21fe251dc72cc81999055ae0a8e}{AMG\+\_\+\+Grouping\+\_\+\+Method}}
+\item 
+typedef struct \mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \mbox{\hyperlink{amg_8h_a7f14a5e08ebb354e0006eba271e48361}{AMG\+\_\+\+Controls}}
+\item 
+typedef struct \mbox{\hyperlink{struct_a_m_g___methods}{AMG\+\_\+\+Methods}} \mbox{\hyperlink{amg_8h_aee034abb15386e1bcb886a32721df681}{AMG\+\_\+\+Methods}}
+\item 
+typedef struct \mbox{\hyperlink{structamg__mem__head__t__}{amg\+\_\+mem\+\_\+head\+\_\+t\+\_\+}} \mbox{\hyperlink{amg_8h_ae31ff4f61f728134fa16e75e6cd3f338}{amg\+\_\+mem\+\_\+head\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bf}{amg\+\_\+store\+\_\+enum\+\_\+t}} \{ \newline
+\mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa78a2b2424b30bd7dfafed2e5732cc156}{AMG\+\_\+\+STORE\+\_\+X}} = 0
+, \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfaae1533361018c5b353c5de6aaa17b191}{AMG\+\_\+\+STORE\+\_\+Y}}
+, \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa973dfe646333ecd8f33ce886e78efe28}{AMG\+\_\+\+STORE\+\_\+T}}
+, \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa2524a726c12a73d8ab608f41d8c68eb6}{AMG\+\_\+\+STORE\+\_\+B}}
+, \newline
+\mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa1e7ac12481faf2048742e180e4c0301b}{AMG\+\_\+\+STORE\+\_\+D}}
+, \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa01e6d138ef2fd3a868199b5598f5bcce}{AMG\+\_\+\+STORE\+\_\+E}}
+, \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfad0e63925b242fa2853b2191f37945a64}{AMG\+\_\+\+STORE\+\_\+\+VALUE}}
+, \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa2944a1c828ef5768431ba91d8afda6fd}{AMG\+\_\+\+STORE\+\_\+\+COL}}
+, \newline
+\mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa71685b0c6de9d39381973fdc6c2dfb88}{AMG\+\_\+\+STORE\+\_\+\+ROW}}
+, \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfaa6d2308df1a34d35ffa090f9c1837bd8}{AMG\+\_\+\+STORE\+\_\+\+CHILD}}
+, \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa6928c8dbc96c18a905fb1276fc7f4e03}{AMG\+\_\+\+STORE\+\_\+\+MAPU}}
+, \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa0624a97a7b0e3553479b24633b5a4322}{AMG\+\_\+\+STORE\+\_\+\+MAPD}}
+, \newline
+\mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa1363fd2fbe57e81c6ee9fcfe99858aa0}{AMG\+\_\+\+STORE\+\_\+\+MAX}}
+ \}
+\item 
+enum \mbox{\hyperlink{amg_8h_ac0658dc6037e69253e72380ac19cba91}{AMG\+\_\+\+Solver\+\_\+\+Mode}} \{ \mbox{\hyperlink{amg_8h_ac0658dc6037e69253e72380ac19cba91a2f926e13088145fda502ba61ae51ac48}{FLUENT\+\_\+\+SOLVER\+\_\+\+FVM}} = 0
+, \mbox{\hyperlink{amg_8h_ac0658dc6037e69253e72380ac19cba91a42cd3879adca42245c911a28e537edd5}{FLUENT\+\_\+\+SOLVER\+\_\+\+FEA}} = 1
+ \}
+\item 
+enum \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08}{AMG\+\_\+\+Cycle\+\_\+\+Type}} \{ \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a0bfd475eb3b3a62c1326dc92d4e57f1a}{FLEXIBLE\+\_\+\+CYCLE}} = 0
+, \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a3f9d0f8f4400b01209d16d6bd07058cb}{V\+\_\+\+CYCLE}} = 1
+, \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08ab878166192f3bbb3df22735b2c6dafc1}{W\+\_\+\+CYCLE}} = 2
+, \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a6ce16ab03eaaecb71458081ce0147fa0}{F\+\_\+\+CYCLE}} = 3
+ \}
+\item 
+enum \mbox{\hyperlink{amg_8h_a98c8bf66eeb69488144d3e79c0354a9d}{AMG\+\_\+\+Smoother\+\_\+\+Type}} \{ \mbox{\hyperlink{amg_8h_a98c8bf66eeb69488144d3e79c0354a9da6d8e6be2f4b7d0331d9b9ed87712023b}{SMOOTHER\+\_\+\+JACOBI}}
+, \mbox{\hyperlink{amg_8h_a98c8bf66eeb69488144d3e79c0354a9daea1f0d0d7903136085dc7910b4d9395f}{SMOOTHER\+\_\+\+GAUSS\+\_\+\+SEIDEL}}
+, \mbox{\hyperlink{amg_8h_a98c8bf66eeb69488144d3e79c0354a9da2d84cf3308d5fe6771f64ebf3e9bce26}{SMOOTHER\+\_\+\+ILU}}
+ \}
+\item 
+enum \mbox{\hyperlink{amg_8h_a08a6c0525ecf918e4662615e5cadb100}{AMG\+\_\+\+Method}} \{ \mbox{\hyperlink{amg_8h_a08a6c0525ecf918e4662615e5cadb100ac804d6575c6a49b244b99bebe720f4b0}{METHOD\+\_\+\+AGGREGATIVE}}
+, \mbox{\hyperlink{amg_8h_a08a6c0525ecf918e4662615e5cadb100ad1fd1a98d2950a6c229b2242f4ef7b1e}{METHOD\+\_\+\+SELECTIVE}}
+ \}
+\item 
+enum \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512e}{AMG\+\_\+\+Solve\+\_\+\+Status}} \{ \newline
+\mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea9f1d180b9c87b8b01446ff020cf82eea}{SOLVE\+\_\+\+STATUS\+\_\+\+NORMAL}}
+, \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512eaf28e30f026cd353d47df308cad8a98c4}{SOLVE\+\_\+\+STATUS\+\_\+\+GLOBAL}}
+, \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512eab8f0d1be8df7a35d390fcf99948980b8}{SOLVE\+\_\+\+STATUS\+\_\+\+HYBRID}}
+, \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512eac341e661bbb2d8eeb0a23f317aaac185}{SOLVE\+\_\+\+STATUS\+\_\+\+HYBRID\+\_\+\+GLOBAL}}
+, \newline
+\mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea93eb8273406f9478931912206628441c}{SOLVE\+\_\+\+STATUS\+\_\+\+GROUP}}
+, \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea12a09716a03e94f8f2719421d6bd6c69}{SOLVE\+\_\+\+STATUS\+\_\+\+FINAL}}
+ \}
+\item 
+enum \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4}{amg\+\_\+grouping\+\_\+method\+\_\+e}} \{ \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a5c7cc93c1f5f63d2e468529392ba85ca}{AMG\+\_\+\+GROUPING\+\_\+\+TRADITIONAL}} = 0
+, \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a682a971a2d3bfd793ca4677bc702b283}{AMG\+\_\+\+GROUPING\+\_\+\+LARGE\+\_\+\+GROUP\+\_\+\+SIZE}}
+, \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4ad608bc9a8c4fe541ddef03afe90968ff}{AMG\+\_\+\+GROUPING\+\_\+\+GREEDY}}
+, \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a9264159c41c81d7a449b6ac71934d24e}{AMG\+\_\+\+GROUPING\+\_\+\+GREEDY\+\_\+\+FLUX}}
+ \}
+\item 
+enum \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210}{AMG\+\_\+\+Stabilization}} \{ \newline
+\mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210a8a57163e163f13a0cf0d27f2b5f3b33b}{STABILIZATION\+\_\+\+NONE}}
+, \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210abee7d165413de7e0251273555a2ce8aa}{STABILIZATION\+\_\+\+BCGSTAB}}
+, \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210a3721592df2489ba875a8365cac7b353b}{STABILIZATION\+\_\+\+RPM}}
+, \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210accca409ea886e2e198ba104ae1ba6f81}{STABILIZATION\+\_\+\+CG}}
+, \newline
+\mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210a3a0d12585eb9776065b842a5ece697f0}{STABILIZATION\+\_\+\+GMRES}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_aee211349a23cf17d71eac3f0028cadbe}{Setup\+\_\+\+Equation\+\_\+\+Grouping}} (\mbox{\hyperlink{amg_8h_ada36b21fe251dc72cc81999055ae0a8e}{AMG\+\_\+\+Grouping\+\_\+\+Method}}, \mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_a660e9825668968c35b54a9e05363c9b5}{AMG\+\_\+\+Get\+\_\+\+Residual}} (\mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}A, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}x, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}b, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} residual\mbox{[}$\,$\mbox{]}, int n\+\_\+ceqn)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_a8725817ed8f21d37975843df674f8bae}{AMG\+\_\+\+Get\+\_\+\+Residualg}} (\mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}A, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}x, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}b, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} residual\mbox{[}$\,$\mbox{]}, int n\+\_\+ceqn)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int \mbox{\hyperlink{amg_8h_aa2a4779e434efdfb0f62de39c078b71e}{Smoother\+\_\+\+Solve}} (\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} controls, \mbox{\hyperlink{struct_level}{Level}} \mbox{\hyperlink{amgif_8h_af6bd0e439b30d98604ba7649b71bd404}{fine}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} residual0\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int \mbox{\hyperlink{amg_8h_aa963c3ce11585d6b02037319b8a3dfa1}{AMG\+\_\+\+Solve}} (\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} controls, \mbox{\hyperlink{struct_level}{Level}} \mbox{\hyperlink{amgif_8h_af6bd0e439b30d98604ba7649b71bd404}{fine}}, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} residual0\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int \mbox{\hyperlink{amg_8h_a296fa84b6a806350c1ccffd5dc093ccd}{SAMG\+\_\+solve}} (\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*}amgC, \mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}f, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} residual0\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{amg_8h_a977a252e2dac27680aeeb4f4609d34c9}{Make\+\_\+\+All\+\_\+\+Coarse\+\_\+\+Levels}} (\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} controls, \mbox{\hyperlink{struct_level}{Level}} \mbox{\hyperlink{amgif_8h_af6bd0e439b30d98604ba7649b71bd404}{fine}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_a70d2add4c7eab5f903ad5591c625d39e}{Fixed\+\_\+\+Cycle}} (\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\+\_\+\+RESTRICT}} level, int m, int cycle\+\_\+type, int invoke\+\_\+globle\+\_\+solve, int invoke\+\_\+exchange)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int \mbox{\hyperlink{amg_8h_a002536665241b9f60aae570342c87a1f}{Equation\+\_\+\+Coarse\+\_\+\+Level\+\_\+\+Index}} (int id, int n)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{amg_8h_a9ed35919d62076e502bd7ee3258e612d}{Resize\+\_\+\+Vector\+\_\+\+AMG}} (void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}v, size\+\_\+t \texorpdfstring{$\ast$}{*}allocated\+\_\+size, size\+\_\+t required\+\_\+size, int resize, char \texorpdfstring{$\ast$}{*}file, int line)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{amg_8h_a6b8a76fb134176559f9a7969969c5f59}{Resize\+\_\+\+Vector\+\_\+\+Chunk\+\_\+\+AMG}} (void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}v, size\+\_\+t \texorpdfstring{$\ast$}{*}allocated\+\_\+size, size\+\_\+t required\+\_\+size, \mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}A, int cont, int resize, char \texorpdfstring{$\ast$}{*}file, int line)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_a262916fae2cfd4da529b928970af5905}{Free\+\_\+\+Chunk\+\_\+\+Memory\+\_\+\+AMG}} (\mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}A)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int \mbox{\hyperlink{amg_8h_a4aa443a6b97c4d0b97472f551363fcf0}{Malloc\+\_\+\+Additional\+\_\+\+Smoother\+\_\+\+Memory}} (\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_aad737f78927e483d218ffd20ae86bf9c}{Allocate\+\_\+\+Level\+\_\+\+Array}} (\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{amg_8h_a96d83e5dfa76ef50065991fae464d396}{free\+Levels}} (\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}f)
+\item 
+void \mbox{\hyperlink{amg_8h_a0e3ae5aad31d9cc9acd14c7a8c550af3}{destroy\+\_\+coarse\+\_\+levels}} (\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} regroup)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_ab474bf861878b53a87e92c517393d2f8}{Desctroy\+\_\+\+All\+\_\+\+Coarse\+\_\+\+Levels}} (int sys\+\_\+id)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_a9ccd2abf8849783451d961ea142b32a3}{Init\+\_\+\+AMG\+\_\+\+Status}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_a0444fd1ec6676bda6d2339c407b34028}{Disable\+\_\+\+Laplace\+\_\+\+Coarsening\+\_\+\+Regrouping}} (int sys\+\_\+id)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int \mbox{\hyperlink{amg_8h_a8bf8d618d5de09af9ed10bc5464db2df}{Make\+\_\+\+DO\+\_\+\+Coarse\+\_\+\+Level}} (\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\+\_\+\+RESTRICT}} level, int m)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int \mbox{\hyperlink{amg_8h_a84546360264779ee7bd0addb5530dd43}{make\+\_\+coarse\+\_\+level\+\_\+wrapper}} (\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}, int, \mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{amg_8h_aee34e037c3b4cbcd24287b72237a6c6e}{Get\+\_\+\+AMG\+\_\+\+Level\+\_\+\+Array}} (void)
+\item 
+int \mbox{\hyperlink{amg_8h_a34006360bddc42edfc18ca8b3ad50ec1}{is\+\_\+nan}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} f)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_a606e2bc9ec6db19710c94b0d896ac65c}{Fill\+\_\+\+Neighbor\+\_\+\+Map}} (\mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}A)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_aa6048fc2fdea59af10efbc8d4f7eb40a}{Get\+\_\+\+User\+\_\+\+Defined\+\_\+\+Smoother}} (char \texorpdfstring{$\ast$}{*}info)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{amg_8h_a01ce4c0887400b59d2630aadce359153}{Get\+\_\+\+User\+\_\+\+Defined\+\_\+\+Linear\+\_\+\+Solver}} (int sys\+\_\+id, char \texorpdfstring{$\ast$}{*}info)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{amg_8h_a8b48eb572e208ce40094d9655ab4646c}{size\+\_\+of\+\_\+amg\+\_\+mem\+\_\+head}}
+\item 
+amg\+\_\+laplace\+\_\+t \mbox{\hyperlink{amg_8h_affe1fc1c6b3cec9d4ec7b2e12e021d5a}{amg\+\_\+laplace}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{amg_8h_aa9016137b38967549d7eae24e3c59d3a}\label{amg_8h_aa9016137b38967549d7eae24e3c59d3a} 
+\index{amg.h@{amg.h}!A\_DP@{A\_DP}}
+\index{A\_DP@{A\_DP}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{A\_DP}{A\_DP}}
+{\footnotesize\ttfamily \#define A\+\_\+\+DP(\begin{DoxyParamCaption}\item[{}]{B,  }\item[{}]{i }\end{DoxyParamCaption})~((B).dp\mbox{[}i\mbox{]})}
+
+\Hypertarget{amg_8h_ac3277ce24ca2a980159e5e1a855d733c}\label{amg_8h_ac3277ce24ca2a980159e5e1a855d733c} 
+\index{amg.h@{amg.h}!A\_EP@{A\_EP}}
+\index{A\_EP@{A\_EP}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{A\_EP}{A\_EP}}
+{\footnotesize\ttfamily \#define A\+\_\+\+EP(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{src_2mesh_2entity_8h_a894cfd8084c23f47ad6f1070839fe40a}{\+\_\+\+E\+\_\+}},  }\item[{}]{i,  }\item[{}]{SQRn\+\_\+ceqn }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ ((((\mbox{\hyperlink{structamg__mem__head__t__}{amg\_mem\_head\_t}}\ *)\ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{char}\ *)(\mbox{\hyperlink{src_2mesh_2entity_8h_a894cfd8084c23f47ad6f1070839fe40a}{\_E\_}})-\/\mbox{\hyperlink{amg_8h_a8b48eb572e208ce40094d9655ab4646c}{size\_of\_amg\_mem\_head}}))-\/>p)[i])}
+
+\end{DoxyCode}
+\Hypertarget{amg_8h_aacc3860eeb81e6c1800c8fade5282113}\label{amg_8h_aacc3860eeb81e6c1800c8fade5282113} 
+\index{amg.h@{amg.h}!A\_VALUEP@{A\_VALUEP}}
+\index{A\_VALUEP@{A\_VALUEP}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{A\_VALUEP}{A\_VALUEP}}
+{\footnotesize\ttfamily \#define A\+\_\+\+VALUEP(\begin{DoxyParamCaption}\item[{}]{B,  }\item[{}]{i }\end{DoxyParamCaption})~((B).valuep\mbox{[}i\mbox{]})}
+
+\Hypertarget{amg_8h_a27a54b1b5bf3e136eb0ed44a3b6f534e}\label{amg_8h_a27a54b1b5bf3e136eb0ed44a3b6f534e} 
+\index{amg.h@{amg.h}!AMG\_CALLOC@{AMG\_CALLOC}}
+\index{AMG\_CALLOC@{AMG\_CALLOC}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_CALLOC}{AMG\_CALLOC}}
+{\footnotesize\ttfamily \#define AMG\+\_\+\+CALLOC(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~\mbox{\hyperlink{arrays_8h_af75ecef42dc18062eb44096c07de9a18}{offset\+\_\+calloc}}((x), (y),\+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)}
+
+\Hypertarget{amg_8h_a28f4fd7794a45d85aa202c5c50c9205a}\label{amg_8h_a28f4fd7794a45d85aa202c5c50c9205a} 
+\index{amg.h@{amg.h}!AMG\_CHUNKED\_MEMORY@{AMG\_CHUNKED\_MEMORY}}
+\index{AMG\_CHUNKED\_MEMORY@{AMG\_CHUNKED\_MEMORY}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_CHUNKED\_MEMORY}{AMG\_CHUNKED\_MEMORY}}
+{\footnotesize\ttfamily \#define AMG\+\_\+\+CHUNKED\+\_\+\+MEMORY~1}
+
+\Hypertarget{amg_8h_a7cc3fd43cfa49e55842a240babe28bf6}\label{amg_8h_a7cc3fd43cfa49e55842a240babe28bf6} 
+\index{amg.h@{amg.h}!AMG\_CHUNKED\_MEMORY\_E@{AMG\_CHUNKED\_MEMORY\_E}}
+\index{AMG\_CHUNKED\_MEMORY\_E@{AMG\_CHUNKED\_MEMORY\_E}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_CHUNKED\_MEMORY\_E}{AMG\_CHUNKED\_MEMORY\_E}}
+{\footnotesize\ttfamily \#define AMG\+\_\+\+CHUNKED\+\_\+\+MEMORY\+\_\+E~1}
+
+\Hypertarget{amg_8h_a3b7f5eb1fccd244a5d38c222e681577f}\label{amg_8h_a3b7f5eb1fccd244a5d38c222e681577f} 
+\index{amg.h@{amg.h}!AMG\_FREE@{AMG\_FREE}}
+\index{AMG\_FREE@{AMG\_FREE}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_FREE}{AMG\_FREE}}
+{\footnotesize\ttfamily \#define AMG\+\_\+\+FREE(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\mbox{\hyperlink{arrays_8h_a5e72e9ad6aa88bc13f38402d13d13c35}{offset\+\_\+free}}((x), \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)}
+
+\Hypertarget{amg_8h_a73238e32fde0512c71c2552bb6b1bafe}\label{amg_8h_a73238e32fde0512c71c2552bb6b1bafe} 
+\index{amg.h@{amg.h}!AMG\_MALLOC@{AMG\_MALLOC}}
+\index{AMG\_MALLOC@{AMG\_MALLOC}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_MALLOC}{AMG\_MALLOC}}
+{\footnotesize\ttfamily \#define AMG\+\_\+\+MALLOC(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\mbox{\hyperlink{arrays_8h_aefa9ae27fce905e889045c063a3e7270}{offset\+\_\+malloc}}((x), \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)}
+
+\Hypertarget{amg_8h_a9f08612723c7eb5d2489974bdf6bee3e}\label{amg_8h_a9f08612723c7eb5d2489974bdf6bee3e} 
+\index{amg.h@{amg.h}!AMG\_REALLOC@{AMG\_REALLOC}}
+\index{AMG\_REALLOC@{AMG\_REALLOC}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_REALLOC}{AMG\_REALLOC}}
+{\footnotesize\ttfamily \#define AMG\+\_\+\+REALLOC(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~\mbox{\hyperlink{arrays_8h_a7575b01b75699e94f3f1c5b55345045d}{offset\+\_\+realloc}}((x), (y),\+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+)}
+
+\Hypertarget{amg_8h_aef0cf9250dbaca0f4236415cf6b24a1f}\label{amg_8h_aef0cf9250dbaca0f4236415cf6b24a1f} 
+\index{amg.h@{amg.h}!AMG\_SMALL@{AMG\_SMALL}}
+\index{AMG\_SMALL@{AMG\_SMALL}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_SMALL}{AMG\_SMALL}}
+{\footnotesize\ttfamily \#define AMG\+\_\+\+SMALL~1.e-\/10}
+
+\Hypertarget{amg_8h_a06f7c5597b809632b52bc5df02a44f81}\label{amg_8h_a06f7c5597b809632b52bc5df02a44f81} 
+\index{amg.h@{amg.h}!CHILD\_NONE@{CHILD\_NONE}}
+\index{CHILD\_NONE@{CHILD\_NONE}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{CHILD\_NONE}{CHILD\_NONE}}
+{\footnotesize\ttfamily \#define CHILD\+\_\+\+NONE~0}
+
+\Hypertarget{amg_8h_a218835053cc6825bf09c7d14bf3eb957}\label{amg_8h_a218835053cc6825bf09c7d14bf3eb957} 
+\index{amg.h@{amg.h}!free\_amg\_local\_buf@{free\_amg\_local\_buf}}
+\index{free\_amg\_local\_buf@{free\_amg\_local\_buf}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{free\_amg\_local\_buf}{free\_amg\_local\_buf}}
+{\footnotesize\ttfamily \#define free\+\_\+amg\+\_\+local\+\_\+buf(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_af93948d8be8667039792aaba5193840d}\label{amg_8h_af93948d8be8667039792aaba5193840d} 
+\index{amg.h@{amg.h}!get\_amg\_local\_buf@{get\_amg\_local\_buf}}
+\index{get\_amg\_local\_buf@{get\_amg\_local\_buf}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{get\_amg\_local\_buf}{get\_amg\_local\_buf}}
+{\footnotesize\ttfamily \#define get\+\_\+amg\+\_\+local\+\_\+buf(\begin{DoxyParamCaption}\item[{}]{required\+\_\+size }\end{DoxyParamCaption})~  (amg\+\_\+local\+\_\+buf = \mbox{\hyperlink{amg_8h_a9ed35919d62076e502bd7ee3258e612d}{Resize\+\_\+\+Vector\+\_\+\+AMG}}(\&amg\+\_\+local\+\_\+buf, \&amg\+\_\+local\+\_\+buf\+\_\+size, (required\+\_\+size), 1, \+\_\+\+\_\+\+FILE\+\_\+\+\_\+, \+\_\+\+\_\+\+LINE\+\_\+\+\_\+))}
+
+\Hypertarget{amg_8h_add784659439a8dd6b1423406171414d3}\label{amg_8h_add784659439a8dd6b1423406171414d3} 
+\index{amg.h@{amg.h}!MAX\_LEVELS@{MAX\_LEVELS}}
+\index{MAX\_LEVELS@{MAX\_LEVELS}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_LEVELS}{MAX\_LEVELS}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+LEVELS~50}
+
+\Hypertarget{amg_8h_a407f56b3c03266175baa049614121aef}\label{amg_8h_a407f56b3c03266175baa049614121aef} 
+\index{amg.h@{amg.h}!MAX\_N\_SETS@{MAX\_N\_SETS}}
+\index{MAX\_N\_SETS@{MAX\_N\_SETS}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_N\_SETS}{MAX\_N\_SETS}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+N\+\_\+\+SETS~10}
+
+\Hypertarget{amg_8h_a733e6914161c2550e6c3dd9d8a5b8419}\label{amg_8h_a733e6914161c2550e6c3dd9d8a5b8419} 
+\index{amg.h@{amg.h}!MAX\_OVERLAP@{MAX\_OVERLAP}}
+\index{MAX\_OVERLAP@{MAX\_OVERLAP}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_OVERLAP}{MAX\_OVERLAP}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+OVERLAP~2}
+
+\Hypertarget{amg_8h_a29685c7a407b3fb81f30e52339b84c3f}\label{amg_8h_a29685c7a407b3fb81f30e52339b84c3f} 
+\index{amg.h@{amg.h}!MAX\_SIM\_EQ@{MAX\_SIM\_EQ}}
+\index{MAX\_SIM\_EQ@{MAX\_SIM\_EQ}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_SIM\_EQ}{MAX\_SIM\_EQ}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+SIM\+\_\+\+EQ~81   /\texorpdfstring{$\ast$}{*} 1 + 4\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{materials_8h_a3462e5221d1b5cb21828c854fcfac556}{MAX\+\_\+\+PHASES}} for nphase full coupled MP \texorpdfstring{$\ast$}{*}/}
+
+\Hypertarget{amg_8h_a72706957be37594f74221ae1ebf9baf5}\label{amg_8h_a72706957be37594f74221ae1ebf9baf5} 
+\index{amg.h@{amg.h}!NULL\_INDEX@{NULL\_INDEX}}
+\index{NULL\_INDEX@{NULL\_INDEX}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{NULL\_INDEX}{NULL\_INDEX}}
+{\footnotesize\ttfamily \#define NULL\+\_\+\+INDEX~-\/1}
+
+\Hypertarget{amg_8h_a0b1c3ffef239223fe508215b2a7b3c1f}\label{amg_8h_a0b1c3ffef239223fe508215b2a7b3c1f} 
+\index{amg.h@{amg.h}!Resize\_Vector@{Resize\_Vector}}
+\index{Resize\_Vector@{Resize\_Vector}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Resize\_Vector}{Resize\_Vector}}
+{\footnotesize\ttfamily \#define Resize\+\_\+\+Vector(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{allocated\+\_\+size,  }\item[{}]{required\+\_\+size }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{amg_8h_a9ed35919d62076e502bd7ee3258e612d}{Resize\_Vector\_AMG}}((\textcolor{keywordtype}{void}\ **)(\&(v)),\ (allocated\_size),\ (required\_size),\ 1,\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \_\_FILE\_\_,\ \_\_LINE\_\_)}
+
+\end{DoxyCode}
+\Hypertarget{amg_8h_abd6010317ac12285b7e7db42150be6e9}\label{amg_8h_abd6010317ac12285b7e7db42150be6e9} 
+\index{amg.h@{amg.h}!Resize\_Vector\_Chunk@{Resize\_Vector\_Chunk}}
+\index{Resize\_Vector\_Chunk@{Resize\_Vector\_Chunk}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Resize\_Vector\_Chunk}{Resize\_Vector\_Chunk}}
+{\footnotesize\ttfamily \#define Resize\+\_\+\+Vector\+\_\+\+Chunk(\begin{DoxyParamCaption}\item[{}]{v,  }\item[{}]{allocated\+\_\+size,  }\item[{}]{required\+\_\+size,  }\item[{}]{A,  }\item[{}]{cont }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{amg_8h_a6b8a76fb134176559f9a7969969c5f59}{Resize\_Vector\_Chunk\_AMG}}((\textcolor{keywordtype}{void}\ **)(\&(v)),\ (allocated\_size),\ (required\_size),\ \&(A),\ cont,\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ 1,\ \_\_FILE\_\_,\ \_\_LINE\_\_)}
+
+\end{DoxyCode}
+\Hypertarget{amg_8h_ad03082a69062c2da2a44bb2f9f92fc7d}\label{amg_8h_ad03082a69062c2da2a44bb2f9f92fc7d} 
+\index{amg.h@{amg.h}!SYSTEM\_NAME\_LEN@{SYSTEM\_NAME\_LEN}}
+\index{SYSTEM\_NAME\_LEN@{SYSTEM\_NAME\_LEN}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{SYSTEM\_NAME\_LEN}{SYSTEM\_NAME\_LEN}}
+{\footnotesize\ttfamily \#define SYSTEM\+\_\+\+NAME\+\_\+\+LEN~128}
+
+\Hypertarget{amg_8h_a49909b7b9320d17c1f909cb4607c3565}\label{amg_8h_a49909b7b9320d17c1f909cb4607c3565} 
+\index{amg.h@{amg.h}!USE\_ILU@{USE\_ILU}}
+\index{USE\_ILU@{USE\_ILU}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{USE\_ILU}{USE\_ILU}}
+{\footnotesize\ttfamily \#define USE\+\_\+\+ILU~1}
+
+\Hypertarget{amg_8h_abf0647df912364ffb42ac05ef0eba871}\label{amg_8h_abf0647df912364ffb42ac05ef0eba871} 
+\index{amg.h@{amg.h}!ZERO\_A\_DP@{ZERO\_A\_DP}}
+\index{ZERO\_A\_DP@{ZERO\_A\_DP}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{ZERO\_A\_DP}{ZERO\_A\_DP}}
+{\footnotesize\ttfamily \#define ZERO\+\_\+\+A\+\_\+\+DP(\begin{DoxyParamCaption}\item[{}]{B,  }\item[{}]{i }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(1\ ==\ (B).n\_ceqn)\ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ *(\mbox{\hyperlink{amg_8h_aa9016137b38967549d7eae24e3c59d3a}{A\_DP}}((B),i))\ =\ 0.0;\ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{else}\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\ \mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \_r\ =\ \mbox{\hyperlink{amg_8h_aa9016137b38967549d7eae24e3c59d3a}{A\_DP}}((B),i);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \textcolor{keywordtype}{int}\ \_n\ =\ \mbox{\hyperlink{sundials__math_8h_aa6604d165d6a0e3fef3654e08d69cdf9}{SQR}}((B).n\_ceqn);\ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \textcolor{keywordtype}{int}\ \_i;\ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ for(\_i=0;\_i<\_n;\_i++)\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \_r[\_i]\ =\ 0.0;\ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}}
+
+\end{DoxyCode}
+\Hypertarget{amg_8h_a477aab0e97471894c21fbeea9645ce47}\label{amg_8h_a477aab0e97471894c21fbeea9645ce47} 
+\index{amg.h@{amg.h}!ZERO\_A\_VALUEP@{ZERO\_A\_VALUEP}}
+\index{ZERO\_A\_VALUEP@{ZERO\_A\_VALUEP}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{ZERO\_A\_VALUEP}{ZERO\_A\_VALUEP}}
+{\footnotesize\ttfamily \#define ZERO\+\_\+\+A\+\_\+\+VALUEP(\begin{DoxyParamCaption}\item[{}]{B,  }\item[{}]{i }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(1\ ==\ (B).n\_ceqn)\ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ *(\mbox{\hyperlink{amg_8h_aacc3860eeb81e6c1800c8fade5282113}{A\_VALUEP}}((B),i))\ =\ 0.0;\ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{else}\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\ \mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ \_r\ =\ \mbox{\hyperlink{amg_8h_aacc3860eeb81e6c1800c8fade5282113}{A\_VALUEP}}((B),i);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \textcolor{keywordtype}{int}\ \_n\ =\ \mbox{\hyperlink{sundials__math_8h_aa6604d165d6a0e3fef3654e08d69cdf9}{SQR}}((B).n\_ceqn);\ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \textcolor{keywordtype}{int}\ \_i;\ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ for(\_i=0;\_i<\_n;\_i++)\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \_r[\_i]\ =\ 0.0;\ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{amg_8h_a7f14a5e08ebb354e0006eba271e48361}\label{amg_8h_a7f14a5e08ebb354e0006eba271e48361} 
+\index{amg.h@{amg.h}!AMG\_Controls@{AMG\_Controls}}
+\index{AMG\_Controls@{AMG\_Controls}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Controls}{AMG\_Controls}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}}}
+
+\Hypertarget{amg_8h_ada36b21fe251dc72cc81999055ae0a8e}\label{amg_8h_ada36b21fe251dc72cc81999055ae0a8e} 
+\index{amg.h@{amg.h}!AMG\_Grouping\_Method@{AMG\_Grouping\_Method}}
+\index{AMG\_Grouping\_Method@{AMG\_Grouping\_Method}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Grouping\_Method}{AMG\_Grouping\_Method}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4}{amg\+\_\+grouping\+\_\+method\+\_\+e}} \mbox{\hyperlink{amg_8h_ada36b21fe251dc72cc81999055ae0a8e}{AMG\+\_\+\+Grouping\+\_\+\+Method}}}
+
+\Hypertarget{amg_8h_ae31ff4f61f728134fa16e75e6cd3f338}\label{amg_8h_ae31ff4f61f728134fa16e75e6cd3f338} 
+\index{amg.h@{amg.h}!amg\_mem\_head\_t@{amg\_mem\_head\_t}}
+\index{amg\_mem\_head\_t@{amg\_mem\_head\_t}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{amg\_mem\_head\_t}{amg\_mem\_head\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structamg__mem__head__t__}{amg\+\_\+mem\+\_\+head\+\_\+t\+\_\+}} \mbox{\hyperlink{amg_8h_ae31ff4f61f728134fa16e75e6cd3f338}{amg\+\_\+mem\+\_\+head\+\_\+t}}}
+
+\Hypertarget{amg_8h_aee034abb15386e1bcb886a32721df681}\label{amg_8h_aee034abb15386e1bcb886a32721df681} 
+\index{amg.h@{amg.h}!AMG\_Methods@{AMG\_Methods}}
+\index{AMG\_Methods@{AMG\_Methods}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Methods}{AMG\_Methods}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_a_m_g___methods}{AMG\+\_\+\+Methods}} \mbox{\hyperlink{struct_a_m_g___methods}{AMG\+\_\+\+Methods}}}
+
+\Hypertarget{amg_8h_a03fd4410f2e1c2cee1472be825cfcd62}\label{amg_8h_a03fd4410f2e1c2cee1472be825cfcd62} 
+\index{amg.h@{amg.h}!amg\_store\_t@{amg\_store\_t}}
+\index{amg\_store\_t@{amg\_store\_t}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{amg\_store\_t}{amg\_store\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structamg__store__t__}{amg\+\_\+store\+\_\+t\+\_\+}} \mbox{\hyperlink{amg_8h_a03fd4410f2e1c2cee1472be825cfcd62}{amg\+\_\+store\+\_\+t}}}
+
+\Hypertarget{amg_8h_a96addb84bdaaf1d4d85aa908a6da0518}\label{amg_8h_a96addb84bdaaf1d4d85aa908a6da0518} 
+\index{amg.h@{amg.h}!coeff\_mem\_t@{coeff\_mem\_t}}
+\index{coeff\_mem\_t@{coeff\_mem\_t}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{coeff\_mem\_t}{coeff\_mem\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structcoeff__mem__t__}{coeff\+\_\+mem\+\_\+t\+\_\+}} \mbox{\hyperlink{amg_8h_a96addb84bdaaf1d4d85aa908a6da0518}{coeff\+\_\+mem\+\_\+t}}}
+
+\Hypertarget{amg_8h_afa7cb00ec26d37d1ba8a7e0b6f32c63f}\label{amg_8h_afa7cb00ec26d37d1ba8a7e0b6f32c63f} 
+\index{amg.h@{amg.h}!Level@{Level}}
+\index{Level@{Level}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Level}{Level}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_level}{Level}} \mbox{\hyperlink{struct_level}{Level}}}
+
+\Hypertarget{amg_8h_a9570374e3dbc873595100dae1e584459}\label{amg_8h_a9570374e3dbc873595100dae1e584459} 
+\index{amg.h@{amg.h}!Matrix@{Matrix}}
+\index{Matrix@{Matrix}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Matrix}{Matrix}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_matrix}{Matrix}} \mbox{\hyperlink{struct_matrix}{Matrix}}}
+
+\Hypertarget{amg_8h_ababfb172494f68b9d1cc84e298b1dd8d}\label{amg_8h_ababfb172494f68b9d1cc84e298b1dd8d} 
+\index{amg.h@{amg.h}!System@{System}}
+\index{System@{System}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{System}{System}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_system}{System}} \mbox{\hyperlink{struct_system}{System}}}
+
+\Hypertarget{amg_8h_aaa5713bb2ecdf81c430009179b806232}\label{amg_8h_aaa5713bb2ecdf81c430009179b806232} 
+\index{amg.h@{amg.h}!Table@{Table}}
+\index{Table@{Table}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Table}{Table}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_table}{Table}} \mbox{\hyperlink{struct_table}{Table}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08}\label{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08} 
+\index{amg.h@{amg.h}!AMG\_Cycle\_Type@{AMG\_Cycle\_Type}}
+\index{AMG\_Cycle\_Type@{AMG\_Cycle\_Type}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Cycle\_Type}{AMG\_Cycle\_Type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08}{AMG\+\_\+\+Cycle\+\_\+\+Type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FLEXIBLE\_CYCLE@{FLEXIBLE\_CYCLE}!amg.h@{amg.h}}\index{amg.h@{amg.h}!FLEXIBLE\_CYCLE@{FLEXIBLE\_CYCLE}}}\Hypertarget{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a0bfd475eb3b3a62c1326dc92d4e57f1a}\label{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a0bfd475eb3b3a62c1326dc92d4e57f1a} 
+FLEXIBLE\+\_\+\+CYCLE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{V\_CYCLE@{V\_CYCLE}!amg.h@{amg.h}}\index{amg.h@{amg.h}!V\_CYCLE@{V\_CYCLE}}}\Hypertarget{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a3f9d0f8f4400b01209d16d6bd07058cb}\label{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a3f9d0f8f4400b01209d16d6bd07058cb} 
+V\+\_\+\+CYCLE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{W\_CYCLE@{W\_CYCLE}!amg.h@{amg.h}}\index{amg.h@{amg.h}!W\_CYCLE@{W\_CYCLE}}}\Hypertarget{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08ab878166192f3bbb3df22735b2c6dafc1}\label{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08ab878166192f3bbb3df22735b2c6dafc1} 
+W\+\_\+\+CYCLE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{F\_CYCLE@{F\_CYCLE}!amg.h@{amg.h}}\index{amg.h@{amg.h}!F\_CYCLE@{F\_CYCLE}}}\Hypertarget{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a6ce16ab03eaaecb71458081ce0147fa0}\label{amg_8h_a7b2b3448ff217e23fd3cab726d95eb08a6ce16ab03eaaecb71458081ce0147fa0} 
+F\+\_\+\+CYCLE&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4}\label{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4} 
+\index{amg.h@{amg.h}!amg\_grouping\_method\_e@{amg\_grouping\_method\_e}}
+\index{amg\_grouping\_method\_e@{amg\_grouping\_method\_e}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{amg\_grouping\_method\_e}{amg\_grouping\_method\_e}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4}{amg\+\_\+grouping\+\_\+method\+\_\+e}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_GROUPING\_TRADITIONAL@{AMG\_GROUPING\_TRADITIONAL}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_GROUPING\_TRADITIONAL@{AMG\_GROUPING\_TRADITIONAL}}}\Hypertarget{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a5c7cc93c1f5f63d2e468529392ba85ca}\label{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a5c7cc93c1f5f63d2e468529392ba85ca} 
+AMG\+\_\+\+GROUPING\+\_\+\+TRADITIONAL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_GROUPING\_LARGE\_GROUP\_SIZE@{AMG\_GROUPING\_LARGE\_GROUP\_SIZE}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_GROUPING\_LARGE\_GROUP\_SIZE@{AMG\_GROUPING\_LARGE\_GROUP\_SIZE}}}\Hypertarget{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a682a971a2d3bfd793ca4677bc702b283}\label{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a682a971a2d3bfd793ca4677bc702b283} 
+AMG\+\_\+\+GROUPING\+\_\+\+LARGE\+\_\+\+GROUP\+\_\+\+SIZE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_GROUPING\_GREEDY@{AMG\_GROUPING\_GREEDY}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_GROUPING\_GREEDY@{AMG\_GROUPING\_GREEDY}}}\Hypertarget{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4ad608bc9a8c4fe541ddef03afe90968ff}\label{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4ad608bc9a8c4fe541ddef03afe90968ff} 
+AMG\+\_\+\+GROUPING\+\_\+\+GREEDY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_GROUPING\_GREEDY\_FLUX@{AMG\_GROUPING\_GREEDY\_FLUX}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_GROUPING\_GREEDY\_FLUX@{AMG\_GROUPING\_GREEDY\_FLUX}}}\Hypertarget{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a9264159c41c81d7a449b6ac71934d24e}\label{amg_8h_a7c7721cdf4ce4abdf78516d52b031bb4a9264159c41c81d7a449b6ac71934d24e} 
+AMG\+\_\+\+GROUPING\+\_\+\+GREEDY\+\_\+\+FLUX&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{amg_8h_a08a6c0525ecf918e4662615e5cadb100}\label{amg_8h_a08a6c0525ecf918e4662615e5cadb100} 
+\index{amg.h@{amg.h}!AMG\_Method@{AMG\_Method}}
+\index{AMG\_Method@{AMG\_Method}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Method}{AMG\_Method}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{amg_8h_a08a6c0525ecf918e4662615e5cadb100}{AMG\+\_\+\+Method}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{METHOD\_AGGREGATIVE@{METHOD\_AGGREGATIVE}!amg.h@{amg.h}}\index{amg.h@{amg.h}!METHOD\_AGGREGATIVE@{METHOD\_AGGREGATIVE}}}\Hypertarget{amg_8h_a08a6c0525ecf918e4662615e5cadb100ac804d6575c6a49b244b99bebe720f4b0}\label{amg_8h_a08a6c0525ecf918e4662615e5cadb100ac804d6575c6a49b244b99bebe720f4b0} 
+METHOD\+\_\+\+AGGREGATIVE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{METHOD\_SELECTIVE@{METHOD\_SELECTIVE}!amg.h@{amg.h}}\index{amg.h@{amg.h}!METHOD\_SELECTIVE@{METHOD\_SELECTIVE}}}\Hypertarget{amg_8h_a08a6c0525ecf918e4662615e5cadb100ad1fd1a98d2950a6c229b2242f4ef7b1e}\label{amg_8h_a08a6c0525ecf918e4662615e5cadb100ad1fd1a98d2950a6c229b2242f4ef7b1e} 
+METHOD\+\_\+\+SELECTIVE&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{amg_8h_a98c8bf66eeb69488144d3e79c0354a9d}\label{amg_8h_a98c8bf66eeb69488144d3e79c0354a9d} 
+\index{amg.h@{amg.h}!AMG\_Smoother\_Type@{AMG\_Smoother\_Type}}
+\index{AMG\_Smoother\_Type@{AMG\_Smoother\_Type}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Smoother\_Type}{AMG\_Smoother\_Type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{amg_8h_a98c8bf66eeb69488144d3e79c0354a9d}{AMG\+\_\+\+Smoother\+\_\+\+Type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SMOOTHER\_JACOBI@{SMOOTHER\_JACOBI}!amg.h@{amg.h}}\index{amg.h@{amg.h}!SMOOTHER\_JACOBI@{SMOOTHER\_JACOBI}}}\Hypertarget{amg_8h_a98c8bf66eeb69488144d3e79c0354a9da6d8e6be2f4b7d0331d9b9ed87712023b}\label{amg_8h_a98c8bf66eeb69488144d3e79c0354a9da6d8e6be2f4b7d0331d9b9ed87712023b} 
+SMOOTHER\+\_\+\+JACOBI&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SMOOTHER\_GAUSS\_SEIDEL@{SMOOTHER\_GAUSS\_SEIDEL}!amg.h@{amg.h}}\index{amg.h@{amg.h}!SMOOTHER\_GAUSS\_SEIDEL@{SMOOTHER\_GAUSS\_SEIDEL}}}\Hypertarget{amg_8h_a98c8bf66eeb69488144d3e79c0354a9daea1f0d0d7903136085dc7910b4d9395f}\label{amg_8h_a98c8bf66eeb69488144d3e79c0354a9daea1f0d0d7903136085dc7910b4d9395f} 
+SMOOTHER\+\_\+\+GAUSS\+\_\+\+SEIDEL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SMOOTHER\_ILU@{SMOOTHER\_ILU}!amg.h@{amg.h}}\index{amg.h@{amg.h}!SMOOTHER\_ILU@{SMOOTHER\_ILU}}}\Hypertarget{amg_8h_a98c8bf66eeb69488144d3e79c0354a9da2d84cf3308d5fe6771f64ebf3e9bce26}\label{amg_8h_a98c8bf66eeb69488144d3e79c0354a9da2d84cf3308d5fe6771f64ebf3e9bce26} 
+SMOOTHER\+\_\+\+ILU&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{amg_8h_a7a3c07d929c3654ba46352e61d1b512e}\label{amg_8h_a7a3c07d929c3654ba46352e61d1b512e} 
+\index{amg.h@{amg.h}!AMG\_Solve\_Status@{AMG\_Solve\_Status}}
+\index{AMG\_Solve\_Status@{AMG\_Solve\_Status}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Solve\_Status}{AMG\_Solve\_Status}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{amg_8h_a7a3c07d929c3654ba46352e61d1b512e}{AMG\+\_\+\+Solve\+\_\+\+Status}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SOLVE\_STATUS\_NORMAL@{SOLVE\_STATUS\_NORMAL}!amg.h@{amg.h}}\index{amg.h@{amg.h}!SOLVE\_STATUS\_NORMAL@{SOLVE\_STATUS\_NORMAL}}}\Hypertarget{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea9f1d180b9c87b8b01446ff020cf82eea}\label{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea9f1d180b9c87b8b01446ff020cf82eea} 
+SOLVE\+\_\+\+STATUS\+\_\+\+NORMAL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SOLVE\_STATUS\_GLOBAL@{SOLVE\_STATUS\_GLOBAL}!amg.h@{amg.h}}\index{amg.h@{amg.h}!SOLVE\_STATUS\_GLOBAL@{SOLVE\_STATUS\_GLOBAL}}}\Hypertarget{amg_8h_a7a3c07d929c3654ba46352e61d1b512eaf28e30f026cd353d47df308cad8a98c4}\label{amg_8h_a7a3c07d929c3654ba46352e61d1b512eaf28e30f026cd353d47df308cad8a98c4} 
+SOLVE\+\_\+\+STATUS\+\_\+\+GLOBAL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SOLVE\_STATUS\_HYBRID@{SOLVE\_STATUS\_HYBRID}!amg.h@{amg.h}}\index{amg.h@{amg.h}!SOLVE\_STATUS\_HYBRID@{SOLVE\_STATUS\_HYBRID}}}\Hypertarget{amg_8h_a7a3c07d929c3654ba46352e61d1b512eab8f0d1be8df7a35d390fcf99948980b8}\label{amg_8h_a7a3c07d929c3654ba46352e61d1b512eab8f0d1be8df7a35d390fcf99948980b8} 
+SOLVE\+\_\+\+STATUS\+\_\+\+HYBRID&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SOLVE\_STATUS\_HYBRID\_GLOBAL@{SOLVE\_STATUS\_HYBRID\_GLOBAL}!amg.h@{amg.h}}\index{amg.h@{amg.h}!SOLVE\_STATUS\_HYBRID\_GLOBAL@{SOLVE\_STATUS\_HYBRID\_GLOBAL}}}\Hypertarget{amg_8h_a7a3c07d929c3654ba46352e61d1b512eac341e661bbb2d8eeb0a23f317aaac185}\label{amg_8h_a7a3c07d929c3654ba46352e61d1b512eac341e661bbb2d8eeb0a23f317aaac185} 
+SOLVE\+\_\+\+STATUS\+\_\+\+HYBRID\+\_\+\+GLOBAL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SOLVE\_STATUS\_GROUP@{SOLVE\_STATUS\_GROUP}!amg.h@{amg.h}}\index{amg.h@{amg.h}!SOLVE\_STATUS\_GROUP@{SOLVE\_STATUS\_GROUP}}}\Hypertarget{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea93eb8273406f9478931912206628441c}\label{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea93eb8273406f9478931912206628441c} 
+SOLVE\+\_\+\+STATUS\+\_\+\+GROUP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SOLVE\_STATUS\_FINAL@{SOLVE\_STATUS\_FINAL}!amg.h@{amg.h}}\index{amg.h@{amg.h}!SOLVE\_STATUS\_FINAL@{SOLVE\_STATUS\_FINAL}}}\Hypertarget{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea12a09716a03e94f8f2719421d6bd6c69}\label{amg_8h_a7a3c07d929c3654ba46352e61d1b512ea12a09716a03e94f8f2719421d6bd6c69} 
+SOLVE\+\_\+\+STATUS\+\_\+\+FINAL&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{amg_8h_ac0658dc6037e69253e72380ac19cba91}\label{amg_8h_ac0658dc6037e69253e72380ac19cba91} 
+\index{amg.h@{amg.h}!AMG\_Solver\_Mode@{AMG\_Solver\_Mode}}
+\index{AMG\_Solver\_Mode@{AMG\_Solver\_Mode}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Solver\_Mode}{AMG\_Solver\_Mode}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{amg_8h_ac0658dc6037e69253e72380ac19cba91}{AMG\+\_\+\+Solver\+\_\+\+Mode}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FLUENT\_SOLVER\_FVM@{FLUENT\_SOLVER\_FVM}!amg.h@{amg.h}}\index{amg.h@{amg.h}!FLUENT\_SOLVER\_FVM@{FLUENT\_SOLVER\_FVM}}}\Hypertarget{amg_8h_ac0658dc6037e69253e72380ac19cba91a2f926e13088145fda502ba61ae51ac48}\label{amg_8h_ac0658dc6037e69253e72380ac19cba91a2f926e13088145fda502ba61ae51ac48} 
+FLUENT\+\_\+\+SOLVER\+\_\+\+FVM&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FLUENT\_SOLVER\_FEA@{FLUENT\_SOLVER\_FEA}!amg.h@{amg.h}}\index{amg.h@{amg.h}!FLUENT\_SOLVER\_FEA@{FLUENT\_SOLVER\_FEA}}}\Hypertarget{amg_8h_ac0658dc6037e69253e72380ac19cba91a42cd3879adca42245c911a28e537edd5}\label{amg_8h_ac0658dc6037e69253e72380ac19cba91a42cd3879adca42245c911a28e537edd5} 
+FLUENT\+\_\+\+SOLVER\+\_\+\+FEA&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{amg_8h_af9cb050ff2f881264a6b6d238ca79210}\label{amg_8h_af9cb050ff2f881264a6b6d238ca79210} 
+\index{amg.h@{amg.h}!AMG\_Stabilization@{AMG\_Stabilization}}
+\index{AMG\_Stabilization@{AMG\_Stabilization}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Stabilization}{AMG\_Stabilization}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{amg_8h_af9cb050ff2f881264a6b6d238ca79210}{AMG\+\_\+\+Stabilization}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STABILIZATION\_NONE@{STABILIZATION\_NONE}!amg.h@{amg.h}}\index{amg.h@{amg.h}!STABILIZATION\_NONE@{STABILIZATION\_NONE}}}\Hypertarget{amg_8h_af9cb050ff2f881264a6b6d238ca79210a8a57163e163f13a0cf0d27f2b5f3b33b}\label{amg_8h_af9cb050ff2f881264a6b6d238ca79210a8a57163e163f13a0cf0d27f2b5f3b33b} 
+STABILIZATION\+\_\+\+NONE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STABILIZATION\_BCGSTAB@{STABILIZATION\_BCGSTAB}!amg.h@{amg.h}}\index{amg.h@{amg.h}!STABILIZATION\_BCGSTAB@{STABILIZATION\_BCGSTAB}}}\Hypertarget{amg_8h_af9cb050ff2f881264a6b6d238ca79210abee7d165413de7e0251273555a2ce8aa}\label{amg_8h_af9cb050ff2f881264a6b6d238ca79210abee7d165413de7e0251273555a2ce8aa} 
+STABILIZATION\+\_\+\+BCGSTAB&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STABILIZATION\_RPM@{STABILIZATION\_RPM}!amg.h@{amg.h}}\index{amg.h@{amg.h}!STABILIZATION\_RPM@{STABILIZATION\_RPM}}}\Hypertarget{amg_8h_af9cb050ff2f881264a6b6d238ca79210a3721592df2489ba875a8365cac7b353b}\label{amg_8h_af9cb050ff2f881264a6b6d238ca79210a3721592df2489ba875a8365cac7b353b} 
+STABILIZATION\+\_\+\+RPM&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STABILIZATION\_CG@{STABILIZATION\_CG}!amg.h@{amg.h}}\index{amg.h@{amg.h}!STABILIZATION\_CG@{STABILIZATION\_CG}}}\Hypertarget{amg_8h_af9cb050ff2f881264a6b6d238ca79210accca409ea886e2e198ba104ae1ba6f81}\label{amg_8h_af9cb050ff2f881264a6b6d238ca79210accca409ea886e2e198ba104ae1ba6f81} 
+STABILIZATION\+\_\+\+CG&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STABILIZATION\_GMRES@{STABILIZATION\_GMRES}!amg.h@{amg.h}}\index{amg.h@{amg.h}!STABILIZATION\_GMRES@{STABILIZATION\_GMRES}}}\Hypertarget{amg_8h_af9cb050ff2f881264a6b6d238ca79210a3a0d12585eb9776065b842a5ece697f0}\label{amg_8h_af9cb050ff2f881264a6b6d238ca79210a3a0d12585eb9776065b842a5ece697f0} 
+STABILIZATION\+\_\+\+GMRES&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bf}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bf} 
+\index{amg.h@{amg.h}!amg\_store\_enum\_t@{amg\_store\_enum\_t}}
+\index{amg\_store\_enum\_t@{amg\_store\_enum\_t}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{amg\_store\_enum\_t}{amg\_store\_enum\_t}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{amg_8h_a5bcdac9da381a9e29231e8b2782676bf}{amg\+\_\+store\+\_\+enum\+\_\+t}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_X@{AMG\_STORE\_X}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_X@{AMG\_STORE\_X}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa78a2b2424b30bd7dfafed2e5732cc156}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa78a2b2424b30bd7dfafed2e5732cc156} 
+AMG\+\_\+\+STORE\+\_\+X&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_Y@{AMG\_STORE\_Y}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_Y@{AMG\_STORE\_Y}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfaae1533361018c5b353c5de6aaa17b191}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfaae1533361018c5b353c5de6aaa17b191} 
+AMG\+\_\+\+STORE\+\_\+Y&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_T@{AMG\_STORE\_T}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_T@{AMG\_STORE\_T}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa973dfe646333ecd8f33ce886e78efe28}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa973dfe646333ecd8f33ce886e78efe28} 
+AMG\+\_\+\+STORE\+\_\+T&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_B@{AMG\_STORE\_B}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_B@{AMG\_STORE\_B}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa2524a726c12a73d8ab608f41d8c68eb6}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa2524a726c12a73d8ab608f41d8c68eb6} 
+AMG\+\_\+\+STORE\+\_\+B&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_D@{AMG\_STORE\_D}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_D@{AMG\_STORE\_D}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa1e7ac12481faf2048742e180e4c0301b}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa1e7ac12481faf2048742e180e4c0301b} 
+AMG\+\_\+\+STORE\+\_\+D&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_E@{AMG\_STORE\_E}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_E@{AMG\_STORE\_E}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa01e6d138ef2fd3a868199b5598f5bcce}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa01e6d138ef2fd3a868199b5598f5bcce} 
+AMG\+\_\+\+STORE\+\_\+E&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_VALUE@{AMG\_STORE\_VALUE}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_VALUE@{AMG\_STORE\_VALUE}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfad0e63925b242fa2853b2191f37945a64}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfad0e63925b242fa2853b2191f37945a64} 
+AMG\+\_\+\+STORE\+\_\+\+VALUE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_COL@{AMG\_STORE\_COL}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_COL@{AMG\_STORE\_COL}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa2944a1c828ef5768431ba91d8afda6fd}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa2944a1c828ef5768431ba91d8afda6fd} 
+AMG\+\_\+\+STORE\+\_\+\+COL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_ROW@{AMG\_STORE\_ROW}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_ROW@{AMG\_STORE\_ROW}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa71685b0c6de9d39381973fdc6c2dfb88}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa71685b0c6de9d39381973fdc6c2dfb88} 
+AMG\+\_\+\+STORE\+\_\+\+ROW&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_CHILD@{AMG\_STORE\_CHILD}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_CHILD@{AMG\_STORE\_CHILD}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfaa6d2308df1a34d35ffa090f9c1837bd8}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfaa6d2308df1a34d35ffa090f9c1837bd8} 
+AMG\+\_\+\+STORE\+\_\+\+CHILD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_MAPU@{AMG\_STORE\_MAPU}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_MAPU@{AMG\_STORE\_MAPU}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa6928c8dbc96c18a905fb1276fc7f4e03}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa6928c8dbc96c18a905fb1276fc7f4e03} 
+AMG\+\_\+\+STORE\+\_\+\+MAPU&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_MAPD@{AMG\_STORE\_MAPD}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_MAPD@{AMG\_STORE\_MAPD}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa0624a97a7b0e3553479b24633b5a4322}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa0624a97a7b0e3553479b24633b5a4322} 
+AMG\+\_\+\+STORE\+\_\+\+MAPD&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AMG\_STORE\_MAX@{AMG\_STORE\_MAX}!amg.h@{amg.h}}\index{amg.h@{amg.h}!AMG\_STORE\_MAX@{AMG\_STORE\_MAX}}}\Hypertarget{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa1363fd2fbe57e81c6ee9fcfe99858aa0}\label{amg_8h_a5bcdac9da381a9e29231e8b2782676bfa1363fd2fbe57e81c6ee9fcfe99858aa0} 
+AMG\+\_\+\+STORE\+\_\+\+MAX&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{amg_8h_aad737f78927e483d218ffd20ae86bf9c}\label{amg_8h_aad737f78927e483d218ffd20ae86bf9c} 
+\index{amg.h@{amg.h}!Allocate\_Level\_Array@{Allocate\_Level\_Array}}
+\index{Allocate\_Level\_Array@{Allocate\_Level\_Array}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Allocate\_Level\_Array()}{Allocate\_Level\_Array()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Allocate\+\_\+\+Level\+\_\+\+Array (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a660e9825668968c35b54a9e05363c9b5}\label{amg_8h_a660e9825668968c35b54a9e05363c9b5} 
+\index{amg.h@{amg.h}!AMG\_Get\_Residual@{AMG\_Get\_Residual}}
+\index{AMG\_Get\_Residual@{AMG\_Get\_Residual}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Get\_Residual()}{AMG\_Get\_Residual()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void AMG\+\_\+\+Get\+\_\+\+Residual (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}}]{A,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{x,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{b,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{residual\mbox{[}$\,$\mbox{]},  }\item[{int}]{n\+\_\+ceqn }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a8725817ed8f21d37975843df674f8bae}\label{amg_8h_a8725817ed8f21d37975843df674f8bae} 
+\index{amg.h@{amg.h}!AMG\_Get\_Residualg@{AMG\_Get\_Residualg}}
+\index{AMG\_Get\_Residualg@{AMG\_Get\_Residualg}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Get\_Residualg()}{AMG\_Get\_Residualg()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void AMG\+\_\+\+Get\+\_\+\+Residualg (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}}]{A,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{x,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{b,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{residual\mbox{[}$\,$\mbox{]},  }\item[{int}]{n\+\_\+ceqn }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_aa963c3ce11585d6b02037319b8a3dfa1}\label{amg_8h_aa963c3ce11585d6b02037319b8a3dfa1} 
+\index{amg.h@{amg.h}!AMG\_Solve@{AMG\_Solve}}
+\index{AMG\_Solve@{AMG\_Solve}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{AMG\_Solve()}{AMG\_Solve()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int AMG\+\_\+\+Solve (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}}}]{controls,  }\item[{\mbox{\hyperlink{struct_level}{Level}}}]{fine,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{residual0\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_ab474bf861878b53a87e92c517393d2f8}\label{amg_8h_ab474bf861878b53a87e92c517393d2f8} 
+\index{amg.h@{amg.h}!Desctroy\_All\_Coarse\_Levels@{Desctroy\_All\_Coarse\_Levels}}
+\index{Desctroy\_All\_Coarse\_Levels@{Desctroy\_All\_Coarse\_Levels}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Desctroy\_All\_Coarse\_Levels()}{Desctroy\_All\_Coarse\_Levels()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Desctroy\+\_\+\+All\+\_\+\+Coarse\+\_\+\+Levels (\begin{DoxyParamCaption}\item[{int}]{sys\+\_\+id }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a0e3ae5aad31d9cc9acd14c7a8c550af3}\label{amg_8h_a0e3ae5aad31d9cc9acd14c7a8c550af3} 
+\index{amg.h@{amg.h}!destroy\_coarse\_levels@{destroy\_coarse\_levels}}
+\index{destroy\_coarse\_levels@{destroy\_coarse\_levels}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{destroy\_coarse\_levels()}{destroy\_coarse\_levels()}}
+{\footnotesize\ttfamily void destroy\+\_\+coarse\+\_\+levels (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{regroup }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a0444fd1ec6676bda6d2339c407b34028}\label{amg_8h_a0444fd1ec6676bda6d2339c407b34028} 
+\index{amg.h@{amg.h}!Disable\_Laplace\_Coarsening\_Regrouping@{Disable\_Laplace\_Coarsening\_Regrouping}}
+\index{Disable\_Laplace\_Coarsening\_Regrouping@{Disable\_Laplace\_Coarsening\_Regrouping}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Disable\_Laplace\_Coarsening\_Regrouping()}{Disable\_Laplace\_Coarsening\_Regrouping()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Disable\+\_\+\+Laplace\+\_\+\+Coarsening\+\_\+\+Regrouping (\begin{DoxyParamCaption}\item[{int}]{sys\+\_\+id }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a002536665241b9f60aae570342c87a1f}\label{amg_8h_a002536665241b9f60aae570342c87a1f} 
+\index{amg.h@{amg.h}!Equation\_Coarse\_Level\_Index@{Equation\_Coarse\_Level\_Index}}
+\index{Equation\_Coarse\_Level\_Index@{Equation\_Coarse\_Level\_Index}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Equation\_Coarse\_Level\_Index()}{Equation\_Coarse\_Level\_Index()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int Equation\+\_\+\+Coarse\+\_\+\+Level\+\_\+\+Index (\begin{DoxyParamCaption}\item[{int}]{id,  }\item[{int}]{n }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a606e2bc9ec6db19710c94b0d896ac65c}\label{amg_8h_a606e2bc9ec6db19710c94b0d896ac65c} 
+\index{amg.h@{amg.h}!Fill\_Neighbor\_Map@{Fill\_Neighbor\_Map}}
+\index{Fill\_Neighbor\_Map@{Fill\_Neighbor\_Map}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Fill\_Neighbor\_Map()}{Fill\_Neighbor\_Map()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Fill\+\_\+\+Neighbor\+\_\+\+Map (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}}]{A }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a70d2add4c7eab5f903ad5591c625d39e}\label{amg_8h_a70d2add4c7eab5f903ad5591c625d39e} 
+\index{amg.h@{amg.h}!Fixed\_Cycle@{Fixed\_Cycle}}
+\index{Fixed\_Cycle@{Fixed\_Cycle}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Fixed\_Cycle()}{Fixed\_Cycle()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Fixed\+\_\+\+Cycle (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\+\_\+\+RESTRICT}}}]{level,  }\item[{int}]{m,  }\item[{int}]{cycle\+\_\+type,  }\item[{int}]{invoke\+\_\+globle\+\_\+solve,  }\item[{int}]{invoke\+\_\+exchange }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a262916fae2cfd4da529b928970af5905}\label{amg_8h_a262916fae2cfd4da529b928970af5905} 
+\index{amg.h@{amg.h}!Free\_Chunk\_Memory\_AMG@{Free\_Chunk\_Memory\_AMG}}
+\index{Free\_Chunk\_Memory\_AMG@{Free\_Chunk\_Memory\_AMG}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Free\_Chunk\_Memory\_AMG()}{Free\_Chunk\_Memory\_AMG()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Free\+\_\+\+Chunk\+\_\+\+Memory\+\_\+\+AMG (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}}]{A }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a96d83e5dfa76ef50065991fae464d396}\label{amg_8h_a96d83e5dfa76ef50065991fae464d396} 
+\index{amg.h@{amg.h}!freeLevels@{freeLevels}}
+\index{freeLevels@{freeLevels}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{freeLevels()}{freeLevels()}}
+{\footnotesize\ttfamily void free\+Levels (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}}]{f }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_aee34e037c3b4cbcd24287b72237a6c6e}\label{amg_8h_aee34e037c3b4cbcd24287b72237a6c6e} 
+\index{amg.h@{amg.h}!Get\_AMG\_Level\_Array@{Get\_AMG\_Level\_Array}}
+\index{Get\_AMG\_Level\_Array@{Get\_AMG\_Level\_Array}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Get\_AMG\_Level\_Array()}{Get\_AMG\_Level\_Array()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*} Get\+\_\+\+AMG\+\_\+\+Level\+\_\+\+Array (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a01ce4c0887400b59d2630aadce359153}\label{amg_8h_a01ce4c0887400b59d2630aadce359153} 
+\index{amg.h@{amg.h}!Get\_User\_Defined\_Linear\_Solver@{Get\_User\_Defined\_Linear\_Solver}}
+\index{Get\_User\_Defined\_Linear\_Solver@{Get\_User\_Defined\_Linear\_Solver}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Get\_User\_Defined\_Linear\_Solver()}{Get\_User\_Defined\_Linear\_Solver()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Get\+\_\+\+User\+\_\+\+Defined\+\_\+\+Linear\+\_\+\+Solver (\begin{DoxyParamCaption}\item[{int}]{sys\+\_\+id,  }\item[{char \texorpdfstring{$\ast$}{*}}]{info }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_aa6048fc2fdea59af10efbc8d4f7eb40a}\label{amg_8h_aa6048fc2fdea59af10efbc8d4f7eb40a} 
+\index{amg.h@{amg.h}!Get\_User\_Defined\_Smoother@{Get\_User\_Defined\_Smoother}}
+\index{Get\_User\_Defined\_Smoother@{Get\_User\_Defined\_Smoother}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Get\_User\_Defined\_Smoother()}{Get\_User\_Defined\_Smoother()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Get\+\_\+\+User\+\_\+\+Defined\+\_\+\+Smoother (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{info }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a9ccd2abf8849783451d961ea142b32a3}\label{amg_8h_a9ccd2abf8849783451d961ea142b32a3} 
+\index{amg.h@{amg.h}!Init\_AMG\_Status@{Init\_AMG\_Status}}
+\index{Init\_AMG\_Status@{Init\_AMG\_Status}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Init\_AMG\_Status()}{Init\_AMG\_Status()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Init\+\_\+\+AMG\+\_\+\+Status (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a34006360bddc42edfc18ca8b3ad50ec1}\label{amg_8h_a34006360bddc42edfc18ca8b3ad50ec1} 
+\index{amg.h@{amg.h}!is\_nan@{is\_nan}}
+\index{is\_nan@{is\_nan}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{is\_nan()}{is\_nan()}}
+{\footnotesize\ttfamily int is\+\_\+nan (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{amg_8h_a977a252e2dac27680aeeb4f4609d34c9}\label{amg_8h_a977a252e2dac27680aeeb4f4609d34c9} 
+\index{amg.h@{amg.h}!Make\_All\_Coarse\_Levels@{Make\_All\_Coarse\_Levels}}
+\index{Make\_All\_Coarse\_Levels@{Make\_All\_Coarse\_Levels}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Make\_All\_Coarse\_Levels()}{Make\_All\_Coarse\_Levels()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*} Make\+\_\+\+All\+\_\+\+Coarse\+\_\+\+Levels (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}}}]{controls,  }\item[{\mbox{\hyperlink{struct_level}{Level}}}]{fine }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a84546360264779ee7bd0addb5530dd43}\label{amg_8h_a84546360264779ee7bd0addb5530dd43} 
+\index{amg.h@{amg.h}!make\_coarse\_level\_wrapper@{make\_coarse\_level\_wrapper}}
+\index{make\_coarse\_level\_wrapper@{make\_coarse\_level\_wrapper}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{make\_coarse\_level\_wrapper()}{make\_coarse\_level\_wrapper()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int make\+\_\+coarse\+\_\+level\+\_\+wrapper (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{int}]{,  }\item[{\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a8bf8d618d5de09af9ed10bc5464db2df}\label{amg_8h_a8bf8d618d5de09af9ed10bc5464db2df} 
+\index{amg.h@{amg.h}!Make\_DO\_Coarse\_Level@{Make\_DO\_Coarse\_Level}}
+\index{Make\_DO\_Coarse\_Level@{Make\_DO\_Coarse\_Level}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Make\_DO\_Coarse\_Level()}{Make\_DO\_Coarse\_Level()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int Make\+\_\+\+DO\+\_\+\+Coarse\+\_\+\+Level (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\+\_\+\+RESTRICT}}}]{level,  }\item[{int}]{m }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a4aa443a6b97c4d0b97472f551363fcf0}\label{amg_8h_a4aa443a6b97c4d0b97472f551363fcf0} 
+\index{amg.h@{amg.h}!Malloc\_Additional\_Smoother\_Memory@{Malloc\_Additional\_Smoother\_Memory}}
+\index{Malloc\_Additional\_Smoother\_Memory@{Malloc\_Additional\_Smoother\_Memory}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Malloc\_Additional\_Smoother\_Memory()}{Malloc\_Additional\_Smoother\_Memory()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int Malloc\+\_\+\+Additional\+\_\+\+Smoother\+\_\+\+Memory (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*}}]{,  }\item[{\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a9ed35919d62076e502bd7ee3258e612d}\label{amg_8h_a9ed35919d62076e502bd7ee3258e612d} 
+\index{amg.h@{amg.h}!Resize\_Vector\_AMG@{Resize\_Vector\_AMG}}
+\index{Resize\_Vector\_AMG@{Resize\_Vector\_AMG}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Resize\_Vector\_AMG()}{Resize\_Vector\_AMG()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \texorpdfstring{$\ast$}{*} Resize\+\_\+\+Vector\+\_\+\+AMG (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{v,  }\item[{size\+\_\+t \texorpdfstring{$\ast$}{*}}]{allocated\+\_\+size,  }\item[{size\+\_\+t}]{required\+\_\+size,  }\item[{int}]{resize,  }\item[{char \texorpdfstring{$\ast$}{*}}]{file,  }\item[{int}]{line }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a6b8a76fb134176559f9a7969969c5f59}\label{amg_8h_a6b8a76fb134176559f9a7969969c5f59} 
+\index{amg.h@{amg.h}!Resize\_Vector\_Chunk\_AMG@{Resize\_Vector\_Chunk\_AMG}}
+\index{Resize\_Vector\_Chunk\_AMG@{Resize\_Vector\_Chunk\_AMG}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Resize\_Vector\_Chunk\_AMG()}{Resize\_Vector\_Chunk\_AMG()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \texorpdfstring{$\ast$}{*} Resize\+\_\+\+Vector\+\_\+\+Chunk\+\_\+\+AMG (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{v,  }\item[{size\+\_\+t \texorpdfstring{$\ast$}{*}}]{allocated\+\_\+size,  }\item[{size\+\_\+t}]{required\+\_\+size,  }\item[{\mbox{\hyperlink{struct_matrix}{Matrix}} \texorpdfstring{$\ast$}{*}}]{A,  }\item[{int}]{cont,  }\item[{int}]{resize,  }\item[{char \texorpdfstring{$\ast$}{*}}]{file,  }\item[{int}]{line }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_a296fa84b6a806350c1ccffd5dc093ccd}\label{amg_8h_a296fa84b6a806350c1ccffd5dc093ccd} 
+\index{amg.h@{amg.h}!SAMG\_solve@{SAMG\_solve}}
+\index{SAMG\_solve@{SAMG\_solve}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{SAMG\_solve()}{SAMG\_solve()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int SAMG\+\_\+solve (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*}}]{amgC,  }\item[{\mbox{\hyperlink{struct_level}{Level}} \texorpdfstring{$\ast$}{*}}]{f,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{residual0\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{amg_8h_aee211349a23cf17d71eac3f0028cadbe}\label{amg_8h_aee211349a23cf17d71eac3f0028cadbe} 
+\index{amg.h@{amg.h}!Setup\_Equation\_Grouping@{Setup\_Equation\_Grouping}}
+\index{Setup\_Equation\_Grouping@{Setup\_Equation\_Grouping}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Setup\_Equation\_Grouping()}{Setup\_Equation\_Grouping()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Setup\+\_\+\+Equation\+\_\+\+Grouping (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{amg_8h_ada36b21fe251dc72cc81999055ae0a8e}{AMG\+\_\+\+Grouping\+\_\+\+Method}}}]{,  }\item[{\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}} \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{amg_8h_aa2a4779e434efdfb0f62de39c078b71e}\label{amg_8h_aa2a4779e434efdfb0f62de39c078b71e} 
+\index{amg.h@{amg.h}!Smoother\_Solve@{Smoother\_Solve}}
+\index{Smoother\_Solve@{Smoother\_Solve}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{Smoother\_Solve()}{Smoother\_Solve()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} int Smoother\+\_\+\+Solve (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a_m_g___controls}{AMG\+\_\+\+Controls}}}]{controls,  }\item[{\mbox{\hyperlink{struct_level}{Level}}}]{fine,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{residual0\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{amg_8h_affe1fc1c6b3cec9d4ec7b2e12e021d5a}\label{amg_8h_affe1fc1c6b3cec9d4ec7b2e12e021d5a} 
+\index{amg.h@{amg.h}!amg\_laplace@{amg\_laplace}}
+\index{amg\_laplace@{amg\_laplace}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{amg\_laplace}{amg\_laplace}}
+{\footnotesize\ttfamily amg\+\_\+laplace\+\_\+t amg\+\_\+laplace\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{amg_8h_a8b48eb572e208ce40094d9655ab4646c}\label{amg_8h_a8b48eb572e208ce40094d9655ab4646c} 
+\index{amg.h@{amg.h}!size\_of\_amg\_mem\_head@{size\_of\_amg\_mem\_head}}
+\index{size\_of\_amg\_mem\_head@{size\_of\_amg\_mem\_head}!amg.h@{amg.h}}
+\doxysubsubsection{\texorpdfstring{size\_of\_amg\_mem\_head}{size\_of\_amg\_mem\_head}}
+{\footnotesize\ttfamily int size\+\_\+of\+\_\+amg\+\_\+mem\+\_\+head\hspace{0.3cm}{\ttfamily [extern]}}
+

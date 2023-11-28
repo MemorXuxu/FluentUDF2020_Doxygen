@@ -1,0 +1,596 @@
+\doxysection{fluent20.1.0/realgas/src/realgas\+\_\+fcns.c File Reference}
+\hypertarget{realgas__fcns_8c}{}\label{realgas__fcns_8c}\index{fluent20.1.0/realgas/src/realgas\_fcns.c@{fluent20.1.0/realgas/src/realgas\_fcns.c}}
+{\ttfamily \#include "{}udf.\+h"{}}\newline
+{\ttfamily \#include "{}stdio.\+h"{}}\newline
+{\ttfamily \#include "{}ctype.\+h"{}}\newline
+{\ttfamily \#include "{}stdarg.\+h"{}}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_af40a2bacdc5560851c86affdca8b90c2}{fluent\+\_\+fflush}}(\+\_\+stderr)
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_aaa4f91d7db545ea6a3b720457678d8e1}{fluent\+\_\+fprintf}}(\+\_\+stderr,  \+\_\+format, ...)~  users\+Message((\+\_\+format), \#\#\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+);
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_aa28347f6049a9ed3b19d6f660428b9fb}{LIQUID}}~1
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_a89cbb3ae69748ebd2b130f50af27713d}{VAPOR}}~2
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_a0dd0df99b6376eef45ff68801e4e2b79}{NCMAX}}~20
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_a4853f6c25c8394fd57c4d99f61d5cd89}{NAME\+\_\+\+LEN}}~80
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_ae815c06aa86da35b1d79c60ff1ccc109}{NAME\+\_\+\+SHORT\+\_\+\+LEN}}~12
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_a8a61ae6dfb91b51a3aeee86762361be1}{HERR\+\_\+\+LEN}}~254
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_abbc3e93adae7fd37a1c03b5bc1f86a2d}{Ru}}~\mbox{\hyperlink{materials_8h_aa46ef2c295eba1af6cb63da0ce0b1de2}{UNIVERSAL\+\_\+\+GAS\+\_\+\+CONSTANT}} /\texorpdfstring{$\ast$}{*} J/Kmol/K \texorpdfstring{$\ast$}{*}/
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_a4811944251a5ab69f84d4cd809017593}{REFPROP\+\_\+\+ERROR\+\_\+\+DENSITY\+\_\+\+ITERATION\+\_\+\+LIQUID}}~202
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_af5ff0a622491d97a4ef90fa17ed2611a}{REFPROP\+\_\+\+ERROR\+\_\+\+DENSITY\+\_\+\+ITERATION\+\_\+\+VAPOR}}~203
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_ab3f4460a8dd74863d260d44a07a47001}{NIST\+\_\+\+FLASH}}~1
+\item 
+\#define \mbox{\hyperlink{realgas__fcns_8c_a6b17a1d9c080624fef7dd28e74e513cf}{Molar\+Frac\+\_\+\+Tol}}~0.\+001
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_affd5bd97011f81fc3427a52a6440f36b}{setup\+\_\+}} (int \texorpdfstring{$\ast$}{*}nc, char(\texorpdfstring{$\ast$}{*}r)\mbox{[}\mbox{\hyperlink{realgas__fcns_8c_a8a61ae6dfb91b51a3aeee86762361be1}{HERR\+\_\+\+LEN}}+1\mbox{]}, char \texorpdfstring{$\ast$}{*}hfmix, char \texorpdfstring{$\ast$}{*}hrf, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a7113531ed5c275e7ebcf2fc8e241faf7}{name\+\_\+}} (int \texorpdfstring{$\ast$}{*}ip, char \texorpdfstring{$\ast$}{*}hname, char \texorpdfstring{$\ast$}{*}hn80, char \texorpdfstring{$\ast$}{*}hcas)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_aa479dc632af5a7fa9aebe24a8b0395e1}{tprho\+\_\+}} (double \texorpdfstring{$\ast$}{*}T, double \texorpdfstring{$\ast$}{*}p, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, int \texorpdfstring{$\ast$}{*}phase, int \texorpdfstring{$\ast$}{*}guess, double \texorpdfstring{$\ast$}{*}r, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a58bb880c8a514af83fc81c2252e1d45f}{trnprp\+\_\+}} (double \texorpdfstring{$\ast$}{*}T, double \texorpdfstring{$\ast$}{*}r, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}mu, double \texorpdfstring{$\ast$}{*}ktc, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_ac1556a2b55884eafa8578165be84910e}{wmol\+\_\+}} (double \texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_ab9d14e566c0dcaa4998497a7c5d2f957}{info\+\_\+}} (int \texorpdfstring{$\ast$}{*}ip, double \texorpdfstring{$\ast$}{*}wm, double \texorpdfstring{$\ast$}{*}ttp, double \texorpdfstring{$\ast$}{*}tnbp, double \texorpdfstring{$\ast$}{*}Tcrit, double \texorpdfstring{$\ast$}{*}pcrit, double \texorpdfstring{$\ast$}{*}Dcrit, double \texorpdfstring{$\ast$}{*}Zc, double \texorpdfstring{$\ast$}{*}acf, double \texorpdfstring{$\ast$}{*}dip, double \texorpdfstring{$\ast$}{*}Rgas)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_aa9d944e4d3fd97a8d1ca06871b3bb58d}{energy\+\_\+}} (double \texorpdfstring{$\ast$}{*}T, double \texorpdfstring{$\ast$}{*}r, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}e)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_ad20518e495d99691231b66df1a47e72a}{enthal\+\_\+}} (double \texorpdfstring{$\ast$}{*}T, double \texorpdfstring{$\ast$}{*}r, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}h)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a52b6658ce0539a566d9480496c4ce3f9}{entro\+\_\+}} (double \texorpdfstring{$\ast$}{*}T, double \texorpdfstring{$\ast$}{*}r, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}s)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_aa846d6bc4f51ebbbd3114a77e3b70bc2}{cvcp\+\_\+}} (double \texorpdfstring{$\ast$}{*}T, double \texorpdfstring{$\ast$}{*}r, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}cv, double \texorpdfstring{$\ast$}{*}cp)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a1fd547fcd82befaa777e9f4031fbafc0}{therm\+\_\+}} (double \texorpdfstring{$\ast$}{*}T, double \texorpdfstring{$\ast$}{*}r, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}p, double \texorpdfstring{$\ast$}{*}e, double \texorpdfstring{$\ast$}{*}h, double \texorpdfstring{$\ast$}{*}s, double \texorpdfstring{$\ast$}{*}cv, double \texorpdfstring{$\ast$}{*}cp, double \texorpdfstring{$\ast$}{*}a, double \texorpdfstring{$\ast$}{*}jt)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a9ad6308c768bb9bca5efffe3a3dab8ef}{dddt\+\_\+}} (double \texorpdfstring{$\ast$}{*}T, double \texorpdfstring{$\ast$}{*}r, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}rho\+\_\+t)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_ac37f15e4bfd32bf6d415243e7717913c}{dddp\+\_\+}} (double \texorpdfstring{$\ast$}{*}T, double \texorpdfstring{$\ast$}{*}r, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}rho\+\_\+p)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a23d43a54ef2a5acd25e848d451bc792c}{limits\+\_\+}} (char \texorpdfstring{$\ast$}{*}htype, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}tmin, double \texorpdfstring{$\ast$}{*}tmax, double \texorpdfstring{$\ast$}{*}dmax, double \texorpdfstring{$\ast$}{*}pmax)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a8fe062a31146dff997adff068c36551e}{getmod\+\_\+}} (int \texorpdfstring{$\ast$}{*}ip, char \texorpdfstring{$\ast$}{*}htype, char \texorpdfstring{$\ast$}{*}hcode, char \texorpdfstring{$\ast$}{*}hcite)
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_ae3953290c1fe87be7869c151ae20244b}{tpflsh\+\_\+}} (double \texorpdfstring{$\ast$}{*}t, double \texorpdfstring{$\ast$}{*}p, double \texorpdfstring{$\ast$}{*}z, double \texorpdfstring{$\ast$}{*}d, double \texorpdfstring{$\ast$}{*}dl, double \texorpdfstring{$\ast$}{*}dv, double \texorpdfstring{$\ast$}{*}x, double \texorpdfstring{$\ast$}{*}y, double \texorpdfstring{$\ast$}{*}q, double \texorpdfstring{$\ast$}{*}e, double \texorpdfstring{$\ast$}{*}h, double \texorpdfstring{$\ast$}{*}s, double \texorpdfstring{$\ast$}{*}cv, double \texorpdfstring{$\ast$}{*}cp, double \texorpdfstring{$\ast$}{*}w, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a4c3982a50ddd37cfac878c59ecb70aa7}{satt\+\_\+}} (double \texorpdfstring{$\ast$}{*}t, double \texorpdfstring{$\ast$}{*}x, int \texorpdfstring{$\ast$}{*}kph, double \texorpdfstring{$\ast$}{*}p, double \texorpdfstring{$\ast$}{*}rhol, double \texorpdfstring{$\ast$}{*}rhov, double \texorpdfstring{$\ast$}{*}xliq, double \texorpdfstring{$\ast$}{*}xvap, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a6422172d1ec3c61ad32c4109979b1bcf}{satp\+\_\+}} (double \texorpdfstring{$\ast$}{*}p, double \texorpdfstring{$\ast$}{*}x, int \texorpdfstring{$\ast$}{*}kph, double \texorpdfstring{$\ast$}{*}t, double \texorpdfstring{$\ast$}{*}rhol, double \texorpdfstring{$\ast$}{*}rhov, double \texorpdfstring{$\ast$}{*}xliq, double \texorpdfstring{$\ast$}{*}xvap, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_aa4fbe852f0feedb096dc760e4d603a69}{satspln\+\_\+}} (double \texorpdfstring{$\ast$}{*}z, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a63aa84f862b51b46f3f0a30e50888310}{critp\+\_\+}} (double \texorpdfstring{$\ast$}{*}x, double \texorpdfstring{$\ast$}{*}tc, double \texorpdfstring{$\ast$}{*}pc, double \texorpdfstring{$\ast$}{*}Dc, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_ac8664734b18d5539c80e61a8a6ef99a5}{maxt\+\_\+}} (double \texorpdfstring{$\ast$}{*}x, double \texorpdfstring{$\ast$}{*}tm, double \texorpdfstring{$\ast$}{*}pm, double \texorpdfstring{$\ast$}{*}Dm, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a8d72cd4596051ed824d80054e6a7df4e}{maxp\+\_\+}} (double \texorpdfstring{$\ast$}{*}x, double \texorpdfstring{$\ast$}{*}tm, double \texorpdfstring{$\ast$}{*}pm, double \texorpdfstring{$\ast$}{*}Dm, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_aa52b206e4d063e090bb135ea167f2612}{satgv\+\_\+}} (double \texorpdfstring{$\ast$}{*}t, double \texorpdfstring{$\ast$}{*}p, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}vf, double \texorpdfstring{$\ast$}{*}b, int \texorpdfstring{$\ast$}{*}ipv, int \texorpdfstring{$\ast$}{*}ityp, int \texorpdfstring{$\ast$}{*}isp, double \texorpdfstring{$\ast$}{*}rhox, double \texorpdfstring{$\ast$}{*}rhoy, double \texorpdfstring{$\ast$}{*}x, double \texorpdfstring{$\ast$}{*}y, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_aa3f953fe056facbb4418ca568d3dfc00}{vapspndl\+\_\+}} (double \texorpdfstring{$\ast$}{*}t, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}rhov, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a028df981849ea38704e982afd166b794}{liqspndl\+\_\+}} (double \texorpdfstring{$\ast$}{*}t, double \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}}, double \texorpdfstring{$\ast$}{*}rhov, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}}, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a98096c480356448fea7ce189da301822}{mole\+\_\+fraction}} (double y\mbox{[}$\,$\mbox{]}, double x\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_aa37f364f60c94dd1526177c6ed5a5b4c}{mass\+\_\+fraction}} (double y\mbox{[}$\,$\mbox{]}, double x\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_aa8a7d9a1f96cb7323d64a369a8d066b0}{REFPROP\+\_\+set\+\_\+error\+\_\+handling}} (\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} silent)
+\begin{DoxyCompactList}\small\item\em Sets whether to abort on REFPROP errors. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{realgas__fcns_8c_a346ea4b06644843339838f519ccdceee}{REFPROP\+\_\+get\+\_\+last\+\_\+error}} (void)
+\begin{DoxyCompactList}\small\item\em Returns last REFPROP error code and resets the flag. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{realgas__fcns_8c_ac9a0dc7c3537739d7b9db5ffc4c27281}{REFPROP\+\_\+get\+\_\+non\+\_\+fatal\+\_\+error\+\_\+count}} (void)
+\begin{DoxyCompactList}\small\item\em Returns the number of failures for density iteration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a61f73a6a448d9916eeba6322056184f2}{REFPROP\+\_\+error}} (int err, char \texorpdfstring{$\ast$}{*}f, char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{dbgmsg_8h_a98858dd5dea59756cfe716f0168de035}{msg}})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_ad3e6b5be66be42c3dd5291269f03548c}{REFPROP\+\_\+\+Setup}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} vapor\+\_\+phase, char \texorpdfstring{$\ast$}{*}rgas\+\_\+datafile, int(\texorpdfstring{$\ast$}{*}message\+\_\+fn)(\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*},...), void(\texorpdfstring{$\ast$}{*}error\+\_\+fn)(\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*},...))
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_aba3a176fd68495e0ebd4c99d33770603}{REFPROP\+\_\+mw}} (double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_ae9cd120ab40550021797e155d512daab}{REFPROP\+\_\+density}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} vapor\+\_\+phase, double Temp, double press, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_a14051b066686d7bf3171c5a6c57a982e}{REFPROP\+\_\+total\+\_\+enthalpy}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]}, double hi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_a68ec19fcc5b498d02376dee0ad7ab9f1}{REFPROP\+\_\+enthalpy}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_ab06e96ab22b0a4ed560c5c9c25ef1b58}{REFPROP\+\_\+entropy}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_a716e8b9bd277057b2b5c768af4bd474a}{REFPROP\+\_\+specific\+\_\+heat}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_a6574a13e1f2e45b9f6b823031a7807dd}{REFPROP\+\_\+speed\+\_\+of\+\_\+sound}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_a1afd0f959c85ff06d457ae01190fad28}{REFPROP\+\_\+viscosity}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_af37f5a3b0d074f149f8efe69fff02d7d}{REFPROP\+\_\+thermal\+\_\+conductivity}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_a3c42203cfda9b31662f2adf31312d0d3}{REFPROP\+\_\+rho\+\_\+t}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_afc9eddc9246118a7009d526cf74d04c0}{REFPROP\+\_\+rho\+\_\+p}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_a04aa38266bcf8a6d2a6ec1516380a674}{REFPROP\+\_\+enthalpy\+\_\+t}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_a4f9861cea4dd6275a794ec75e54c5edf}{REFPROP\+\_\+enthalpy\+\_\+p}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, double Temp, double density, double pressure, double yi\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a16dc702bca3871b418444b0eed5f8ae5}{REFPROP\+\_\+flash}} (double t0, double p0, double z\mbox{[}$\,$\mbox{]}, double z0\mbox{[}$\,$\mbox{]}, double xliq\mbox{[}$\,$\mbox{]}, double xvap\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_aa8b0ad6502c9491a1fad027352098de5}{REFPROP\+\_\+sat}} (double tp0, double z\mbox{[}$\,$\mbox{]}, int index0, double z0\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{realgas__fcns_8c_a0e4ea4c866f3856c2d379387d1aff328}{REFPROP\+\_\+mass\+\_\+mole\+\_\+fractions}} (int index, double y\mbox{[}$\,$\mbox{]}, double x\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}{ierr}} = 0
+\item 
+char \mbox{\hyperlink{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}{herr}} \mbox{[}\mbox{\hyperlink{realgas__fcns_8c_a8a61ae6dfb91b51a3aeee86762361be1}{HERR\+\_\+\+LEN}}+1\mbox{]} = \{0\}
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}{xi}} \mbox{[}\mbox{\hyperlink{realgas__fcns_8c_a0dd0df99b6376eef45ff68801e4e2b79}{NCMAX}}\mbox{]} = \{1.\+0\}
+\item 
+double \mbox{\hyperlink{realgas__fcns_8c_a58cceaaaf5ceaf7d4c510ac4a8def241}{mw}}
+\item 
+\mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\+\_\+\+EXPORT}} \mbox{\hyperlink{real__gas_8h_a410b533b19bcdaff2324f74937e676cd}{RGAS\+\_\+\+Functions}} \mbox{\hyperlink{realgas__fcns_8c_a1bbbff3e479e78fa1b6cba27c01cf060}{Real\+Gas\+Function\+List}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{realgas__fcns_8c_af40a2bacdc5560851c86affdca8b90c2}\label{realgas__fcns_8c_af40a2bacdc5560851c86affdca8b90c2} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!fluent\_fflush@{fluent\_fflush}}
+\index{fluent\_fflush@{fluent\_fflush}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{fluent\_fflush}{fluent\_fflush}}
+{\footnotesize\ttfamily \#define fluent\+\_\+fflush(\begin{DoxyParamCaption}\item[{}]{\+\_\+stderr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aaa4f91d7db545ea6a3b720457678d8e1}\label{realgas__fcns_8c_aaa4f91d7db545ea6a3b720457678d8e1} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!fluent\_fprintf@{fluent\_fprintf}}
+\index{fluent\_fprintf@{fluent\_fprintf}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{fluent\_fprintf}{fluent\_fprintf}}
+{\footnotesize\ttfamily \#define fluent\+\_\+fprintf(\begin{DoxyParamCaption}\item[{}]{\+\_\+stderr,  }\item[{}]{\+\_\+format,  }\item[{}]{... }\end{DoxyParamCaption})~  users\+Message((\+\_\+format), \#\#\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+);}
+
+\Hypertarget{realgas__fcns_8c_a8a61ae6dfb91b51a3aeee86762361be1}\label{realgas__fcns_8c_a8a61ae6dfb91b51a3aeee86762361be1} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!HERR\_LEN@{HERR\_LEN}}
+\index{HERR\_LEN@{HERR\_LEN}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{HERR\_LEN}{HERR\_LEN}}
+{\footnotesize\ttfamily \#define HERR\+\_\+\+LEN~254}
+
+\Hypertarget{realgas__fcns_8c_aa28347f6049a9ed3b19d6f660428b9fb}\label{realgas__fcns_8c_aa28347f6049a9ed3b19d6f660428b9fb} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!LIQUID@{LIQUID}}
+\index{LIQUID@{LIQUID}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{LIQUID}{LIQUID}}
+{\footnotesize\ttfamily \#define LIQUID~1}
+
+\Hypertarget{realgas__fcns_8c_a6b17a1d9c080624fef7dd28e74e513cf}\label{realgas__fcns_8c_a6b17a1d9c080624fef7dd28e74e513cf} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!MolarFrac\_Tol@{MolarFrac\_Tol}}
+\index{MolarFrac\_Tol@{MolarFrac\_Tol}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{MolarFrac\_Tol}{MolarFrac\_Tol}}
+{\footnotesize\ttfamily \#define Molar\+Frac\+\_\+\+Tol~0.\+001}
+
+\Hypertarget{realgas__fcns_8c_a4853f6c25c8394fd57c4d99f61d5cd89}\label{realgas__fcns_8c_a4853f6c25c8394fd57c4d99f61d5cd89} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!NAME\_LEN@{NAME\_LEN}}
+\index{NAME\_LEN@{NAME\_LEN}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_LEN}{NAME\_LEN}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+LEN~80}
+
+\Hypertarget{realgas__fcns_8c_ae815c06aa86da35b1d79c60ff1ccc109}\label{realgas__fcns_8c_ae815c06aa86da35b1d79c60ff1ccc109} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!NAME\_SHORT\_LEN@{NAME\_SHORT\_LEN}}
+\index{NAME\_SHORT\_LEN@{NAME\_SHORT\_LEN}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_SHORT\_LEN}{NAME\_SHORT\_LEN}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+SHORT\+\_\+\+LEN~12}
+
+\Hypertarget{realgas__fcns_8c_a0dd0df99b6376eef45ff68801e4e2b79}\label{realgas__fcns_8c_a0dd0df99b6376eef45ff68801e4e2b79} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!NCMAX@{NCMAX}}
+\index{NCMAX@{NCMAX}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{NCMAX}{NCMAX}}
+{\footnotesize\ttfamily \#define NCMAX~20}
+
+\Hypertarget{realgas__fcns_8c_ab3f4460a8dd74863d260d44a07a47001}\label{realgas__fcns_8c_ab3f4460a8dd74863d260d44a07a47001} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!NIST\_FLASH@{NIST\_FLASH}}
+\index{NIST\_FLASH@{NIST\_FLASH}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{NIST\_FLASH}{NIST\_FLASH}}
+{\footnotesize\ttfamily \#define NIST\+\_\+\+FLASH~1}
+
+\Hypertarget{realgas__fcns_8c_a4811944251a5ab69f84d4cd809017593}\label{realgas__fcns_8c_a4811944251a5ab69f84d4cd809017593} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_ERROR\_DENSITY\_ITERATION\_LIQUID@{REFPROP\_ERROR\_DENSITY\_ITERATION\_LIQUID}}
+\index{REFPROP\_ERROR\_DENSITY\_ITERATION\_LIQUID@{REFPROP\_ERROR\_DENSITY\_ITERATION\_LIQUID}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_ERROR\_DENSITY\_ITERATION\_LIQUID}{REFPROP\_ERROR\_DENSITY\_ITERATION\_LIQUID}}
+{\footnotesize\ttfamily \#define REFPROP\+\_\+\+ERROR\+\_\+\+DENSITY\+\_\+\+ITERATION\+\_\+\+LIQUID~202}
+
+\Hypertarget{realgas__fcns_8c_af5ff0a622491d97a4ef90fa17ed2611a}\label{realgas__fcns_8c_af5ff0a622491d97a4ef90fa17ed2611a} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_ERROR\_DENSITY\_ITERATION\_VAPOR@{REFPROP\_ERROR\_DENSITY\_ITERATION\_VAPOR}}
+\index{REFPROP\_ERROR\_DENSITY\_ITERATION\_VAPOR@{REFPROP\_ERROR\_DENSITY\_ITERATION\_VAPOR}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_ERROR\_DENSITY\_ITERATION\_VAPOR}{REFPROP\_ERROR\_DENSITY\_ITERATION\_VAPOR}}
+{\footnotesize\ttfamily \#define REFPROP\+\_\+\+ERROR\+\_\+\+DENSITY\+\_\+\+ITERATION\+\_\+\+VAPOR~203}
+
+\Hypertarget{realgas__fcns_8c_abbc3e93adae7fd37a1c03b5bc1f86a2d}\label{realgas__fcns_8c_abbc3e93adae7fd37a1c03b5bc1f86a2d} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!Ru@{Ru}}
+\index{Ru@{Ru}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{Ru}{Ru}}
+{\footnotesize\ttfamily \#define Ru~\mbox{\hyperlink{materials_8h_aa46ef2c295eba1af6cb63da0ce0b1de2}{UNIVERSAL\+\_\+\+GAS\+\_\+\+CONSTANT}} /\texorpdfstring{$\ast$}{*} J/Kmol/K \texorpdfstring{$\ast$}{*}/}
+
+\Hypertarget{realgas__fcns_8c_a89cbb3ae69748ebd2b130f50af27713d}\label{realgas__fcns_8c_a89cbb3ae69748ebd2b130f50af27713d} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!VAPOR@{VAPOR}}
+\index{VAPOR@{VAPOR}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{VAPOR}{VAPOR}}
+{\footnotesize\ttfamily \#define VAPOR~2}
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{realgas__fcns_8c_a63aa84f862b51b46f3f0a30e50888310}\label{realgas__fcns_8c_a63aa84f862b51b46f3f0a30e50888310} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!critp\_@{critp\_}}
+\index{critp\_@{critp\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{critp\_()}{critp\_()}}
+{\footnotesize\ttfamily void critp\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{x,  }\item[{double \texorpdfstring{$\ast$}{*}}]{tc,  }\item[{double \texorpdfstring{$\ast$}{*}}]{pc,  }\item[{double \texorpdfstring{$\ast$}{*}}]{Dc,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aa846d6bc4f51ebbbd3114a77e3b70bc2}\label{realgas__fcns_8c_aa846d6bc4f51ebbbd3114a77e3b70bc2} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!cvcp\_@{cvcp\_}}
+\index{cvcp\_@{cvcp\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{cvcp\_()}{cvcp\_()}}
+{\footnotesize\ttfamily void cvcp\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{T,  }\item[{double \texorpdfstring{$\ast$}{*}}]{r,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{cv,  }\item[{double \texorpdfstring{$\ast$}{*}}]{cp }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_ac37f15e4bfd32bf6d415243e7717913c}\label{realgas__fcns_8c_ac37f15e4bfd32bf6d415243e7717913c} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!dddp\_@{dddp\_}}
+\index{dddp\_@{dddp\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{dddp\_()}{dddp\_()}}
+{\footnotesize\ttfamily void dddp\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{T,  }\item[{double \texorpdfstring{$\ast$}{*}}]{r,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rho\+\_\+p }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a9ad6308c768bb9bca5efffe3a3dab8ef}\label{realgas__fcns_8c_a9ad6308c768bb9bca5efffe3a3dab8ef} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!dddt\_@{dddt\_}}
+\index{dddt\_@{dddt\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{dddt\_()}{dddt\_()}}
+{\footnotesize\ttfamily void dddt\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{T,  }\item[{double \texorpdfstring{$\ast$}{*}}]{r,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rho\+\_\+t }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aa9d944e4d3fd97a8d1ca06871b3bb58d}\label{realgas__fcns_8c_aa9d944e4d3fd97a8d1ca06871b3bb58d} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!energy\_@{energy\_}}
+\index{energy\_@{energy\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{energy\_()}{energy\_()}}
+{\footnotesize\ttfamily void energy\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{T,  }\item[{double \texorpdfstring{$\ast$}{*}}]{r,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{e }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_ad20518e495d99691231b66df1a47e72a}\label{realgas__fcns_8c_ad20518e495d99691231b66df1a47e72a} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!enthal\_@{enthal\_}}
+\index{enthal\_@{enthal\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{enthal\_()}{enthal\_()}}
+{\footnotesize\ttfamily void enthal\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{T,  }\item[{double \texorpdfstring{$\ast$}{*}}]{r,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{h }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a52b6658ce0539a566d9480496c4ce3f9}\label{realgas__fcns_8c_a52b6658ce0539a566d9480496c4ce3f9} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!entro\_@{entro\_}}
+\index{entro\_@{entro\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{entro\_()}{entro\_()}}
+{\footnotesize\ttfamily void entro\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{T,  }\item[{double \texorpdfstring{$\ast$}{*}}]{r,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{s }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a8fe062a31146dff997adff068c36551e}\label{realgas__fcns_8c_a8fe062a31146dff997adff068c36551e} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!getmod\_@{getmod\_}}
+\index{getmod\_@{getmod\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{getmod\_()}{getmod\_()}}
+{\footnotesize\ttfamily void getmod\+\_\+ (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{ip,  }\item[{char \texorpdfstring{$\ast$}{*}}]{htype,  }\item[{char \texorpdfstring{$\ast$}{*}}]{hcode,  }\item[{char \texorpdfstring{$\ast$}{*}}]{hcite }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_ab9d14e566c0dcaa4998497a7c5d2f957}\label{realgas__fcns_8c_ab9d14e566c0dcaa4998497a7c5d2f957} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!info\_@{info\_}}
+\index{info\_@{info\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{info\_()}{info\_()}}
+{\footnotesize\ttfamily void info\+\_\+ (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{ip,  }\item[{double \texorpdfstring{$\ast$}{*}}]{wm,  }\item[{double \texorpdfstring{$\ast$}{*}}]{ttp,  }\item[{double \texorpdfstring{$\ast$}{*}}]{tnbp,  }\item[{double \texorpdfstring{$\ast$}{*}}]{Tcrit,  }\item[{double \texorpdfstring{$\ast$}{*}}]{pcrit,  }\item[{double \texorpdfstring{$\ast$}{*}}]{Dcrit,  }\item[{double \texorpdfstring{$\ast$}{*}}]{Zc,  }\item[{double \texorpdfstring{$\ast$}{*}}]{acf,  }\item[{double \texorpdfstring{$\ast$}{*}}]{dip,  }\item[{double \texorpdfstring{$\ast$}{*}}]{Rgas }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a23d43a54ef2a5acd25e848d451bc792c}\label{realgas__fcns_8c_a23d43a54ef2a5acd25e848d451bc792c} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!limits\_@{limits\_}}
+\index{limits\_@{limits\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{limits\_()}{limits\_()}}
+{\footnotesize\ttfamily void limits\+\_\+ (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{htype,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{tmin,  }\item[{double \texorpdfstring{$\ast$}{*}}]{tmax,  }\item[{double \texorpdfstring{$\ast$}{*}}]{dmax,  }\item[{double \texorpdfstring{$\ast$}{*}}]{pmax }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a028df981849ea38704e982afd166b794}\label{realgas__fcns_8c_a028df981849ea38704e982afd166b794} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!liqspndl\_@{liqspndl\_}}
+\index{liqspndl\_@{liqspndl\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{liqspndl\_()}{liqspndl\_()}}
+{\footnotesize\ttfamily void liqspndl\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rhov,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aa37f364f60c94dd1526177c6ed5a5b4c}\label{realgas__fcns_8c_aa37f364f60c94dd1526177c6ed5a5b4c} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!mass\_fraction@{mass\_fraction}}
+\index{mass\_fraction@{mass\_fraction}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{mass\_fraction()}{mass\_fraction()}}
+{\footnotesize\ttfamily void mass\+\_\+fraction (\begin{DoxyParamCaption}\item[{double}]{y\mbox{[}$\,$\mbox{]},  }\item[{double}]{x\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a8d72cd4596051ed824d80054e6a7df4e}\label{realgas__fcns_8c_a8d72cd4596051ed824d80054e6a7df4e} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!maxp\_@{maxp\_}}
+\index{maxp\_@{maxp\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{maxp\_()}{maxp\_()}}
+{\footnotesize\ttfamily void maxp\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{x,  }\item[{double \texorpdfstring{$\ast$}{*}}]{tm,  }\item[{double \texorpdfstring{$\ast$}{*}}]{pm,  }\item[{double \texorpdfstring{$\ast$}{*}}]{Dm,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_ac8664734b18d5539c80e61a8a6ef99a5}\label{realgas__fcns_8c_ac8664734b18d5539c80e61a8a6ef99a5} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!maxt\_@{maxt\_}}
+\index{maxt\_@{maxt\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{maxt\_()}{maxt\_()}}
+{\footnotesize\ttfamily void maxt\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{x,  }\item[{double \texorpdfstring{$\ast$}{*}}]{tm,  }\item[{double \texorpdfstring{$\ast$}{*}}]{pm,  }\item[{double \texorpdfstring{$\ast$}{*}}]{Dm,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a98096c480356448fea7ce189da301822}\label{realgas__fcns_8c_a98096c480356448fea7ce189da301822} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!mole\_fraction@{mole\_fraction}}
+\index{mole\_fraction@{mole\_fraction}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{mole\_fraction()}{mole\_fraction()}}
+{\footnotesize\ttfamily void mole\+\_\+fraction (\begin{DoxyParamCaption}\item[{double}]{y\mbox{[}$\,$\mbox{]},  }\item[{double}]{x\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a7113531ed5c275e7ebcf2fc8e241faf7}\label{realgas__fcns_8c_a7113531ed5c275e7ebcf2fc8e241faf7} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!name\_@{name\_}}
+\index{name\_@{name\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{name\_()}{name\_()}}
+{\footnotesize\ttfamily void name\+\_\+ (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{ip,  }\item[{char \texorpdfstring{$\ast$}{*}}]{hname,  }\item[{char \texorpdfstring{$\ast$}{*}}]{hn80,  }\item[{char \texorpdfstring{$\ast$}{*}}]{hcas }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_ae9cd120ab40550021797e155d512daab}\label{realgas__fcns_8c_ae9cd120ab40550021797e155d512daab} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_density@{REFPROP\_density}}
+\index{REFPROP\_density@{REFPROP\_density}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_density()}{REFPROP\_density()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+density (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{vapor\+\_\+phase,  }\item[{double}]{Temp,  }\item[{double}]{press,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a68ec19fcc5b498d02376dee0ad7ab9f1}\label{realgas__fcns_8c_a68ec19fcc5b498d02376dee0ad7ab9f1} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_enthalpy@{REFPROP\_enthalpy}}
+\index{REFPROP\_enthalpy@{REFPROP\_enthalpy}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_enthalpy()}{REFPROP\_enthalpy()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+enthalpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a4f9861cea4dd6275a794ec75e54c5edf}\label{realgas__fcns_8c_a4f9861cea4dd6275a794ec75e54c5edf} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_enthalpy\_p@{REFPROP\_enthalpy\_p}}
+\index{REFPROP\_enthalpy\_p@{REFPROP\_enthalpy\_p}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_enthalpy\_p()}{REFPROP\_enthalpy\_p()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+enthalpy\+\_\+p (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a04aa38266bcf8a6d2a6ec1516380a674}\label{realgas__fcns_8c_a04aa38266bcf8a6d2a6ec1516380a674} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_enthalpy\_t@{REFPROP\_enthalpy\_t}}
+\index{REFPROP\_enthalpy\_t@{REFPROP\_enthalpy\_t}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_enthalpy\_t()}{REFPROP\_enthalpy\_t()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+enthalpy\+\_\+t (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_ab06e96ab22b0a4ed560c5c9c25ef1b58}\label{realgas__fcns_8c_ab06e96ab22b0a4ed560c5c9c25ef1b58} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_entropy@{REFPROP\_entropy}}
+\index{REFPROP\_entropy@{REFPROP\_entropy}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_entropy()}{REFPROP\_entropy()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+entropy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a61f73a6a448d9916eeba6322056184f2}\label{realgas__fcns_8c_a61f73a6a448d9916eeba6322056184f2} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_error@{REFPROP\_error}}
+\index{REFPROP\_error@{REFPROP\_error}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_error()}{REFPROP\_error()}}
+{\footnotesize\ttfamily void REFPROP\+\_\+error (\begin{DoxyParamCaption}\item[{int}]{err,  }\item[{char \texorpdfstring{$\ast$}{*}}]{f,  }\item[{char \texorpdfstring{$\ast$}{*}}]{msg }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a16dc702bca3871b418444b0eed5f8ae5}\label{realgas__fcns_8c_a16dc702bca3871b418444b0eed5f8ae5} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_flash@{REFPROP\_flash}}
+\index{REFPROP\_flash@{REFPROP\_flash}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_flash()}{REFPROP\_flash()}}
+{\footnotesize\ttfamily void REFPROP\+\_\+flash (\begin{DoxyParamCaption}\item[{double}]{t0,  }\item[{double}]{p0,  }\item[{double}]{z\mbox{[}$\,$\mbox{]},  }\item[{double}]{z0\mbox{[}$\,$\mbox{]},  }\item[{double}]{xliq\mbox{[}$\,$\mbox{]},  }\item[{double}]{xvap\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a346ea4b06644843339838f519ccdceee}\label{realgas__fcns_8c_a346ea4b06644843339838f519ccdceee} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_get\_last\_error@{REFPROP\_get\_last\_error}}
+\index{REFPROP\_get\_last\_error@{REFPROP\_get\_last\_error}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_get\_last\_error()}{REFPROP\_get\_last\_error()}}
+{\footnotesize\ttfamily int REFPROP\+\_\+get\+\_\+last\+\_\+error (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Returns last REFPROP error code and resets the flag. 
+
+This function is for error checking in silent error handling. Obviously not relevant in default (non-\/silent) error handling mode. \Hypertarget{realgas__fcns_8c_ac9a0dc7c3537739d7b9db5ffc4c27281}\label{realgas__fcns_8c_ac9a0dc7c3537739d7b9db5ffc4c27281} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_get\_non\_fatal\_error\_count@{REFPROP\_get\_non\_fatal\_error\_count}}
+\index{REFPROP\_get\_non\_fatal\_error\_count@{REFPROP\_get\_non\_fatal\_error\_count}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_get\_non\_fatal\_error\_count()}{REFPROP\_get\_non\_fatal\_error\_count()}}
+{\footnotesize\ttfamily int REFPROP\+\_\+get\+\_\+non\+\_\+fatal\+\_\+error\+\_\+count (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Returns the number of failures for density iteration. 
+
+\Hypertarget{realgas__fcns_8c_a0e4ea4c866f3856c2d379387d1aff328}\label{realgas__fcns_8c_a0e4ea4c866f3856c2d379387d1aff328} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_mass\_mole\_fractions@{REFPROP\_mass\_mole\_fractions}}
+\index{REFPROP\_mass\_mole\_fractions@{REFPROP\_mass\_mole\_fractions}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_mass\_mole\_fractions()}{REFPROP\_mass\_mole\_fractions()}}
+{\footnotesize\ttfamily void REFPROP\+\_\+mass\+\_\+mole\+\_\+fractions (\begin{DoxyParamCaption}\item[{int}]{index,  }\item[{double}]{y\mbox{[}$\,$\mbox{]},  }\item[{double}]{x\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aba3a176fd68495e0ebd4c99d33770603}\label{realgas__fcns_8c_aba3a176fd68495e0ebd4c99d33770603} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_mw@{REFPROP\_mw}}
+\index{REFPROP\_mw@{REFPROP\_mw}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_mw()}{REFPROP\_mw()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+mw (\begin{DoxyParamCaption}\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_afc9eddc9246118a7009d526cf74d04c0}\label{realgas__fcns_8c_afc9eddc9246118a7009d526cf74d04c0} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_rho\_p@{REFPROP\_rho\_p}}
+\index{REFPROP\_rho\_p@{REFPROP\_rho\_p}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_rho\_p()}{REFPROP\_rho\_p()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+rho\+\_\+p (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a3c42203cfda9b31662f2adf31312d0d3}\label{realgas__fcns_8c_a3c42203cfda9b31662f2adf31312d0d3} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_rho\_t@{REFPROP\_rho\_t}}
+\index{REFPROP\_rho\_t@{REFPROP\_rho\_t}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_rho\_t()}{REFPROP\_rho\_t()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+rho\+\_\+t (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aa8b0ad6502c9491a1fad027352098de5}\label{realgas__fcns_8c_aa8b0ad6502c9491a1fad027352098de5} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_sat@{REFPROP\_sat}}
+\index{REFPROP\_sat@{REFPROP\_sat}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_sat()}{REFPROP\_sat()}}
+{\footnotesize\ttfamily void REFPROP\+\_\+sat (\begin{DoxyParamCaption}\item[{double}]{tp0,  }\item[{double}]{z\mbox{[}$\,$\mbox{]},  }\item[{int}]{index0,  }\item[{double}]{z0\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aa8a7d9a1f96cb7323d64a369a8d066b0}\label{realgas__fcns_8c_aa8a7d9a1f96cb7323d64a369a8d066b0} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_set\_error\_handling@{REFPROP\_set\_error\_handling}}
+\index{REFPROP\_set\_error\_handling@{REFPROP\_set\_error\_handling}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_set\_error\_handling()}{REFPROP\_set\_error\_handling()}}
+{\footnotesize\ttfamily void REFPROP\+\_\+set\+\_\+error\+\_\+handling (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{silent }\end{DoxyParamCaption})}
+
+
+
+Sets whether to abort on REFPROP errors. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em silent} & TRUE\+: silent, relying on caller to query for errors FALSE\+: throw Fluent error \\
+\hline
+\end{DoxyParams}
+\Hypertarget{realgas__fcns_8c_ad3e6b5be66be42c3dd5291269f03548c}\label{realgas__fcns_8c_ad3e6b5be66be42c3dd5291269f03548c} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_Setup@{REFPROP\_Setup}}
+\index{REFPROP\_Setup@{REFPROP\_Setup}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_Setup()}{REFPROP\_Setup()}}
+{\footnotesize\ttfamily void REFPROP\+\_\+\+Setup (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{domain,  }\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{vapor\+\_\+phase,  }\item[{char \texorpdfstring{$\ast$}{*}}]{rgas\+\_\+datafile,  }\item[{int(\texorpdfstring{$\ast$}{*})(\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*},...)}]{message\+\_\+fn,  }\item[{void(\texorpdfstring{$\ast$}{*})(\mbox{\hyperlink{proto_8h_a2c212835823e3c54a8ab6d95c652660e}{const}} char \texorpdfstring{$\ast$}{*},...)}]{error\+\_\+fn }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a716e8b9bd277057b2b5c768af4bd474a}\label{realgas__fcns_8c_a716e8b9bd277057b2b5c768af4bd474a} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_specific\_heat@{REFPROP\_specific\_heat}}
+\index{REFPROP\_specific\_heat@{REFPROP\_specific\_heat}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_specific\_heat()}{REFPROP\_specific\_heat()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+specific\+\_\+heat (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a6574a13e1f2e45b9f6b823031a7807dd}\label{realgas__fcns_8c_a6574a13e1f2e45b9f6b823031a7807dd} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_speed\_of\_sound@{REFPROP\_speed\_of\_sound}}
+\index{REFPROP\_speed\_of\_sound@{REFPROP\_speed\_of\_sound}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_speed\_of\_sound()}{REFPROP\_speed\_of\_sound()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+speed\+\_\+of\+\_\+sound (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_af37f5a3b0d074f149f8efe69fff02d7d}\label{realgas__fcns_8c_af37f5a3b0d074f149f8efe69fff02d7d} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_thermal\_conductivity@{REFPROP\_thermal\_conductivity}}
+\index{REFPROP\_thermal\_conductivity@{REFPROP\_thermal\_conductivity}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_thermal\_conductivity()}{REFPROP\_thermal\_conductivity()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+thermal\+\_\+conductivity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a14051b066686d7bf3171c5a6c57a982e}\label{realgas__fcns_8c_a14051b066686d7bf3171c5a6c57a982e} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_total\_enthalpy@{REFPROP\_total\_enthalpy}}
+\index{REFPROP\_total\_enthalpy@{REFPROP\_total\_enthalpy}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_total\_enthalpy()}{REFPROP\_total\_enthalpy()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+total\+\_\+enthalpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]},  }\item[{double}]{hi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a1afd0f959c85ff06d457ae01190fad28}\label{realgas__fcns_8c_a1afd0f959c85ff06d457ae01190fad28} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!REFPROP\_viscosity@{REFPROP\_viscosity}}
+\index{REFPROP\_viscosity@{REFPROP\_viscosity}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{REFPROP\_viscosity()}{REFPROP\_viscosity()}}
+{\footnotesize\ttfamily double REFPROP\+\_\+viscosity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double}]{Temp,  }\item[{double}]{density,  }\item[{double}]{pressure,  }\item[{double}]{yi\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aa52b206e4d063e090bb135ea167f2612}\label{realgas__fcns_8c_aa52b206e4d063e090bb135ea167f2612} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!satgv\_@{satgv\_}}
+\index{satgv\_@{satgv\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{satgv\_()}{satgv\_()}}
+{\footnotesize\ttfamily void satgv\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double \texorpdfstring{$\ast$}{*}}]{p,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{vf,  }\item[{double \texorpdfstring{$\ast$}{*}}]{b,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ipv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ityp,  }\item[{int \texorpdfstring{$\ast$}{*}}]{isp,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rhox,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rhoy,  }\item[{double \texorpdfstring{$\ast$}{*}}]{x,  }\item[{double \texorpdfstring{$\ast$}{*}}]{y,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a6422172d1ec3c61ad32c4109979b1bcf}\label{realgas__fcns_8c_a6422172d1ec3c61ad32c4109979b1bcf} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!satp\_@{satp\_}}
+\index{satp\_@{satp\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{satp\_()}{satp\_()}}
+{\footnotesize\ttfamily void satp\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{p,  }\item[{double \texorpdfstring{$\ast$}{*}}]{x,  }\item[{int \texorpdfstring{$\ast$}{*}}]{kph,  }\item[{double \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rhol,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rhov,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xliq,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xvap,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aa4fbe852f0feedb096dc760e4d603a69}\label{realgas__fcns_8c_aa4fbe852f0feedb096dc760e4d603a69} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!satspln\_@{satspln\_}}
+\index{satspln\_@{satspln\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{satspln\_()}{satspln\_()}}
+{\footnotesize\ttfamily void satspln\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{z,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a4c3982a50ddd37cfac878c59ecb70aa7}\label{realgas__fcns_8c_a4c3982a50ddd37cfac878c59ecb70aa7} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!satt\_@{satt\_}}
+\index{satt\_@{satt\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{satt\_()}{satt\_()}}
+{\footnotesize\ttfamily void satt\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double \texorpdfstring{$\ast$}{*}}]{x,  }\item[{int \texorpdfstring{$\ast$}{*}}]{kph,  }\item[{double \texorpdfstring{$\ast$}{*}}]{p,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rhol,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rhov,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xliq,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xvap,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_affd5bd97011f81fc3427a52a6440f36b}\label{realgas__fcns_8c_affd5bd97011f81fc3427a52a6440f36b} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!setup\_@{setup\_}}
+\index{setup\_@{setup\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{setup\_()}{setup\_()}}
+{\footnotesize\ttfamily void setup\+\_\+ (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{nc,  }\item[{char(\texorpdfstring{$\ast$}{*})}]{r\mbox{[}\+HERR\+\_\+\+LEN+1\mbox{]},  }\item[{char \texorpdfstring{$\ast$}{*}}]{hfmix,  }\item[{char \texorpdfstring{$\ast$}{*}}]{hrf,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a1fd547fcd82befaa777e9f4031fbafc0}\label{realgas__fcns_8c_a1fd547fcd82befaa777e9f4031fbafc0} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!therm\_@{therm\_}}
+\index{therm\_@{therm\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{therm\_()}{therm\_()}}
+{\footnotesize\ttfamily void therm\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{T,  }\item[{double \texorpdfstring{$\ast$}{*}}]{r,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{p,  }\item[{double \texorpdfstring{$\ast$}{*}}]{e,  }\item[{double \texorpdfstring{$\ast$}{*}}]{h,  }\item[{double \texorpdfstring{$\ast$}{*}}]{s,  }\item[{double \texorpdfstring{$\ast$}{*}}]{cv,  }\item[{double \texorpdfstring{$\ast$}{*}}]{cp,  }\item[{double \texorpdfstring{$\ast$}{*}}]{a,  }\item[{double \texorpdfstring{$\ast$}{*}}]{jt }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_ae3953290c1fe87be7869c151ae20244b}\label{realgas__fcns_8c_ae3953290c1fe87be7869c151ae20244b} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!tpflsh\_@{tpflsh\_}}
+\index{tpflsh\_@{tpflsh\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{tpflsh\_()}{tpflsh\_()}}
+{\footnotesize\ttfamily void tpflsh\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double \texorpdfstring{$\ast$}{*}}]{p,  }\item[{double \texorpdfstring{$\ast$}{*}}]{z,  }\item[{double \texorpdfstring{$\ast$}{*}}]{d,  }\item[{double \texorpdfstring{$\ast$}{*}}]{dl,  }\item[{double \texorpdfstring{$\ast$}{*}}]{dv,  }\item[{double \texorpdfstring{$\ast$}{*}}]{x,  }\item[{double \texorpdfstring{$\ast$}{*}}]{y,  }\item[{double \texorpdfstring{$\ast$}{*}}]{q,  }\item[{double \texorpdfstring{$\ast$}{*}}]{e,  }\item[{double \texorpdfstring{$\ast$}{*}}]{h,  }\item[{double \texorpdfstring{$\ast$}{*}}]{s,  }\item[{double \texorpdfstring{$\ast$}{*}}]{cv,  }\item[{double \texorpdfstring{$\ast$}{*}}]{cp,  }\item[{double \texorpdfstring{$\ast$}{*}}]{w,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aa479dc632af5a7fa9aebe24a8b0395e1}\label{realgas__fcns_8c_aa479dc632af5a7fa9aebe24a8b0395e1} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!tprho\_@{tprho\_}}
+\index{tprho\_@{tprho\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{tprho\_()}{tprho\_()}}
+{\footnotesize\ttfamily void tprho\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{T,  }\item[{double \texorpdfstring{$\ast$}{*}}]{p,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{int \texorpdfstring{$\ast$}{*}}]{phase,  }\item[{int \texorpdfstring{$\ast$}{*}}]{guess,  }\item[{double \texorpdfstring{$\ast$}{*}}]{r,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_a58bb880c8a514af83fc81c2252e1d45f}\label{realgas__fcns_8c_a58bb880c8a514af83fc81c2252e1d45f} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!trnprp\_@{trnprp\_}}
+\index{trnprp\_@{trnprp\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{trnprp\_()}{trnprp\_()}}
+{\footnotesize\ttfamily void trnprp\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{T,  }\item[{double \texorpdfstring{$\ast$}{*}}]{r,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{mu,  }\item[{double \texorpdfstring{$\ast$}{*}}]{ktc,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_aa3f953fe056facbb4418ca568d3dfc00}\label{realgas__fcns_8c_aa3f953fe056facbb4418ca568d3dfc00} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!vapspndl\_@{vapspndl\_}}
+\index{vapspndl\_@{vapspndl\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{vapspndl\_()}{vapspndl\_()}}
+{\footnotesize\ttfamily void vapspndl\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{t,  }\item[{double \texorpdfstring{$\ast$}{*}}]{xi,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rhov,  }\item[{int \texorpdfstring{$\ast$}{*}}]{ierr,  }\item[{char \texorpdfstring{$\ast$}{*}}]{herr }\end{DoxyParamCaption})}
+
+\Hypertarget{realgas__fcns_8c_ac1556a2b55884eafa8578165be84910e}\label{realgas__fcns_8c_ac1556a2b55884eafa8578165be84910e} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!wmol\_@{wmol\_}}
+\index{wmol\_@{wmol\_}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{wmol\_()}{wmol\_()}}
+{\footnotesize\ttfamily double wmol\+\_\+ (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802}\label{realgas__fcns_8c_a6bb824a1a001cfd80755bb6fa6569802} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!herr@{herr}}
+\index{herr@{herr}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{herr}{herr}}
+{\footnotesize\ttfamily char herr\mbox{[}\mbox{\hyperlink{realgas__fcns_8c_a8a61ae6dfb91b51a3aeee86762361be1}{HERR\+\_\+\+LEN}}+1\mbox{]} = \{0\}}
+
+\Hypertarget{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53}\label{realgas__fcns_8c_a523f28af91244fa40b3014900684eb53} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!ierr@{ierr}}
+\index{ierr@{ierr}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{ierr}{ierr}}
+{\footnotesize\ttfamily int ierr = 0}
+
+\Hypertarget{realgas__fcns_8c_a58cceaaaf5ceaf7d4c510ac4a8def241}\label{realgas__fcns_8c_a58cceaaaf5ceaf7d4c510ac4a8def241} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!mw@{mw}}
+\index{mw@{mw}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{mw}{mw}}
+{\footnotesize\ttfamily double mw}
+
+\Hypertarget{realgas__fcns_8c_a1bbbff3e479e78fa1b6cba27c01cf060}\label{realgas__fcns_8c_a1bbbff3e479e78fa1b6cba27c01cf060} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!RealGasFunctionList@{RealGasFunctionList}}
+\index{RealGasFunctionList@{RealGasFunctionList}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{RealGasFunctionList}{RealGasFunctionList}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_a76c0332efbda7707a8e58f891f5eb5c7}{UDF\+\_\+\+EXPORT}} \mbox{\hyperlink{real__gas_8h_a410b533b19bcdaff2324f74937e676cd}{RGAS\+\_\+\+Functions}} Real\+Gas\+Function\+List}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_ad3e6b5be66be42c3dd5291269f03548c}{REFPROP\_Setup}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_ae9cd120ab40550021797e155d512daab}{REFPROP\_density}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a68ec19fcc5b498d02376dee0ad7ab9f1}{REFPROP\_enthalpy}},\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_ab06e96ab22b0a4ed560c5c9c25ef1b58}{REFPROP\_entropy}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a716e8b9bd277057b2b5c768af4bd474a}{REFPROP\_specific\_heat}},\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_aba3a176fd68495e0ebd4c99d33770603}{REFPROP\_mw}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a6574a13e1f2e45b9f6b823031a7807dd}{REFPROP\_speed\_of\_sound}},\ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a1afd0f959c85ff06d457ae01190fad28}{REFPROP\_viscosity}},\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_af37f5a3b0d074f149f8efe69fff02d7d}{REFPROP\_thermal\_conductivity}},\ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a3c42203cfda9b31662f2adf31312d0d3}{REFPROP\_rho\_t}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_afc9eddc9246118a7009d526cf74d04c0}{REFPROP\_rho\_p}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a04aa38266bcf8a6d2a6ec1516380a674}{REFPROP\_enthalpy\_t}},\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a4f9861cea4dd6275a794ec75e54c5edf}{REFPROP\_enthalpy\_p}},\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a14051b066686d7bf3171c5a6c57a982e}{REFPROP\_total\_enthalpy}},\ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a16dc702bca3871b418444b0eed5f8ae5}{REFPROP\_flash}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_aa8b0ad6502c9491a1fad027352098de5}{REFPROP\_sat}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a0e4ea4c866f3856c2d379387d1aff328}{REFPROP\_mass\_mole\_fractions}},\ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_aa8a7d9a1f96cb7323d64a369a8d066b0}{REFPROP\_set\_error\_handling}},\ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_a346ea4b06644843339838f519ccdceee}{REFPROP\_get\_last\_error}},\ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \mbox{\hyperlink{realgas__fcns_8c_ac9a0dc7c3537739d7b9db5ffc4c27281}{REFPROP\_get\_non\_fatal\_error\_count}},\ }
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\Hypertarget{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7}\label{realgas__fcns_8c_aa9b61d99299912a280fc67ca6ee1a5c7} 
+\index{realgas\_fcns.c@{realgas\_fcns.c}!xi@{xi}}
+\index{xi@{xi}!realgas\_fcns.c@{realgas\_fcns.c}}
+\doxysubsubsection{\texorpdfstring{xi}{xi}}
+{\footnotesize\ttfamily double xi\mbox{[}\mbox{\hyperlink{realgas__fcns_8c_a0dd0df99b6376eef45ff68801e4e2b79}{NCMAX}}\mbox{]} = \{1.\+0\}}
+

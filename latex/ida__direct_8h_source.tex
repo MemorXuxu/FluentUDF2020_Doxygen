@@ -1,0 +1,306 @@
+\doxysection{ida\+\_\+direct.\+h}
+\hypertarget{ida__direct_8h_source}{}\label{ida__direct_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_direct.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_direct.h}}
+\mbox{\hyperlink{ida__direct_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.7\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2010/12/01\ 22:14:09\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer:\ Radu\ Serban\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2006,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ Common\ header\ file\ for\ the\ direct\ linear\ solvers\ in\ IDA.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#ifndef\ \_IDADLS\_H}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ \_IDADLS\_H}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__direct_8h}{sundials/sundials\_direct.h}}>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__nvector_8h}{sundials/sundials\_nvector.h}}>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ I\ D\ A\ D\ I\ R\ E\ C\ T\ \ \ \ \ C\ O\ N\ S\ T\ A\ N\ T\ S}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{/*\ }}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ IDADLS\ return\ values\ }}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ IDADLS\_SUCCESS\ \ \ \ \ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ IDADLS\_MEM\_NULL\ \ \ \ \ \ \ \ \ -\/1}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ IDADLS\_LMEM\_NULL\ \ \ \ \ \ \ \ -\/2}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ IDADLS\_ILL\_INPUT\ \ \ \ \ \ \ \ -\/3}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ IDADLS\_MEM\_FAIL\ \ \ \ \ \ \ \ \ -\/4}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{/*\ Additional\ last\_flag\ values\ */}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ IDADLS\_JACFUNC\_UNRECVR\ \ -\/5}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ IDADLS\_JACFUNC\_RECVR\ \ \ \ -\/6}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ F\ U\ N\ C\ T\ I\ O\ N\ \ \ T\ Y\ P\ E\ S}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ Types\ :\ IDADlsDenseJacFn}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ A\ dense\ Jacobian\ approximation\ function\ djac\ must\ be\ of\ type\ }}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ IDADlsDenseJacFn.}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ Its\ parameters\ are:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ N\ \ \ is\ the\ problem\ size,\ and\ length\ of\ all\ vector\ arguments.\ \ \ }}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *\ t\ \ \ is\ the\ current\ value\ of\ the\ independent\ variable\ t.\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *\ y\ \ \ is\ the\ current\ value\ of\ the\ dependent\ variable\ vector,\ \ \ \ \ }}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *\ \ \ \ \ namely\ the\ predicted\ value\ of\ y(t).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *\ yp\ \ is\ the\ current\ value\ of\ the\ derivative\ vector\ y',\ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ \ \ \ \ namely\ the\ predicted\ value\ of\ y'(t).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ f\ \ \ is\ the\ residual\ vector\ F(tt,yy,yp).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ *\ c\_j\ is\ the\ scalar\ in\ the\ system\ Jacobian,\ proportional\ to\ }}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *\ \ \ \ \ the\ inverse\ of\ the\ step\ size\ h.}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ user\_data\ is\ a\ pointer\ to\ user\ Jacobian\ data\ -\/\ the\ same\ as\ the\ \ \ \ }}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *\ \ \ \ \ user\_data\ parameter\ passed\ to\ IDASetRdata.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ Jac\ is\ the\ dense\ matrix\ (of\ type\ DlsMat)\ to\ be\ loaded\ by\ \ }}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *\ \ \ \ \ an\ IDADlsDenseJacFn\ routine\ with\ an\ approximation\ to\ the\ \ \ }}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ \ \ \ \ system\ Jacobian\ matrix\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ J\ =\ dF/dy'\ +\ gamma*dF/dy\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ \ \ \ \ at\ the\ given\ point\ (t,y,y'),\ where\ the\ ODE\ system\ is\ \ \ \ }}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ \ \ \ \ given\ by\ F(t,y,y')\ =\ 0.}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ \ \ \ \ Note\ that\ Jac\ is\ NOT\ preset\ to\ zero!}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ tmp1,\ tmp2,\ tmp3\ are\ pointers\ to\ memory\ allocated\ for\ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *\ \ \ \ \ N\_Vectors\ which\ can\ be\ used\ by\ an\ IDADlsDenseJacFn\ routine\ }}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ \ \ \ \ as\ temporary\ storage\ or\ work\ space.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ A\ IDADlsDenseJacFn\ should\ return\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ \ \ \ \ 0\ if\ successful,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ \ \ \ \ a\ positive\ int\ if\ a\ recoverable\ error\ occurred,\ or\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ \ \ \ \ a\ negative\ int\ if\ a\ nonrecoverable\ error\ occurred.\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *\ In\ the\ case\ of\ a\ recoverable\ error\ return,\ the\ integrator\ will\ }}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *\ attempt\ to\ recover\ by\ reducing\ the\ stepsize\ (which\ changes\ cj).}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ *\ NOTE:\ The\ following\ are\ two\ efficient\ ways\ to\ load\ a\ dense\ Jac:\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ *\ (1)\ (with\ macros\ -\/\ no\ explicit\ data\ structure\ references)\ \ \ \ \ \ }}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ *\ \ \ \ \ for\ (j=0;\ j\ <\ Neq;\ j++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ *\ \ \ \ \ \ \ col\_j\ =\ LAPACK\_DENSE\_COL(Jac,j);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *\ \ \ \ \ \ \ for\ (i=0;\ i\ <\ Neq;\ i++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ generate\ J\_ij\ =\ the\ (i,j)th\ Jacobian\ element\ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ col\_j[i]\ =\ J\_ij;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ (2)\ (without\ macros\ -\/\ explicit\ data\ structure\ references)\ \ \ \ \ \ }}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ \ \ \ \ for\ (j=0;\ j\ <\ Neq;\ j++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ \ \ \ \ \ \ col\_j\ =\ (Jac-\/>data)[j];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ \ \ \ \ \ \ for\ (i=0;\ i\ <\ Neq;\ i++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ generate\ J\_ij\ =\ the\ (i,j)th\ Jacobian\ element\ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ col\_j[i]\ =\ J\_ij;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ A\ third\ way,\ using\ the\ LAPACK\_DENSE\_ELEM(A,i,j)\ macro,\ is\ much\ less\ \ \ }}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *\ efficient\ in\ general.\ \ It\ is\ only\ appropriate\ for\ use\ in\ small\ }}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ problems\ in\ which\ efficiency\ of\ access\ is\ NOT\ a\ major\ concern.\ }}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ NOTE:\ If\ the\ user's\ Jacobian\ routine\ needs\ other\ quantities,\ \ \ }}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ \ \ \ \ they\ are\ accessible\ as\ follows:\ hcur\ (the\ current\ stepsize)}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ \ \ \ \ and\ ewt\ (the\ error\ weight\ vector)\ are\ accessible\ through\ \ \ }}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ \ \ \ \ IDAGetCurrentStep\ and\ IDAGetErrWeights,\ respectively\ }}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ \ \ \ \ (see\ ida.h).\ The\ unit\ roundoff\ is\ available\ as\ }}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ \ \ \ \ UNIT\_ROUNDOFF\ defined\ in\ sundials\_types.h.}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00134\ \ \ }
+\DoxyCodeLine{00135\ \ \ }
+\DoxyCodeLine{00136\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{ida__direct_8h_a13540bec959c42e46b66dff26e5b851f}{IDADlsDenseJacFn}})(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}},\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ t,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c\_j,}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ yp,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ r,\ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ Jac,\ \textcolor{keywordtype}{void}\ *user\_data,}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp1,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp2,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp3);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *\ Types\ :\ IDADlsBandJacFn}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ A\ banded\ Jacobian\ approximation\ function\ bjac\ must\ have\ the\ \ \ \ }}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *\ prototype\ given\ below.\ Its\ parameters\ are:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ Neq\ is\ the\ problem\ size,\ and\ length\ of\ all\ vector\ arguments.\ \ \ }}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *\ mupper\ is\ the\ upper\ bandwidth\ of\ the\ banded\ Jacobian\ matrix.\ \ \ }}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ *\ mlower\ is\ the\ lower\ bandwidth\ of\ the\ banded\ Jacobian\ matrix.\ \ \ }}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ *\ tt\ is\ the\ current\ value\ of\ the\ independent\ variable\ t.\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00155\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *\ yy\ is\ the\ current\ value\ of\ the\ dependent\ variable\ vector,\ \ \ \ \ }}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ \ \ \ namely\ the\ predicted\ value\ of\ y(t).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *\ yp\ is\ the\ current\ value\ of\ the\ derivative\ vector\ y',\ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ *\ \ \ \ namely\ the\ predicted\ value\ of\ y'(t).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ *\ rr\ is\ the\ residual\ vector\ F(tt,yy,yp).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ *\ c\_j\ is\ the\ scalar\ in\ the\ system\ Jacobian,\ proportional\ to\ 1/hh.}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ *\ user\_data\ \ is\ a\ pointer\ to\ user\ Jacobian\ data\ -\/\ the\ same\ as\ the\ \ \ \ }}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ *\ \ \ \ user\_data\ parameter\ passed\ to\ IDASetRdata.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ *\ Jac\ is\ the\ band\ matrix\ (of\ type\ BandMat)\ to\ be\ loaded\ by\ \ \ \ }}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ *\ \ \ \ \ an\ IDADlsBandJacFn\ routine\ with\ an\ approximation\ to\ the\ \ \ \ }}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ *\ \ \ \ \ system\ Jacobian\ matrix\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ J\ =\ dF/dy\ +\ cj*dF/dy'\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ *\ \ \ \ \ at\ the\ given\ point\ (t,y,y'),\ where\ the\ DAE\ system\ is\ \ \ \ }}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ *\ \ \ \ \ given\ by\ F(t,y,y')\ =\ 0.\ \ Jac\ is\ preset\ to\ zero,\ so\ only\ }}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ *\ \ \ \ \ the\ nonzero\ elements\ need\ to\ be\ loaded.\ \ See\ note\ below.}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ *\ tmp1,\ tmp2,\ tmp3\ are\ pointers\ to\ memory\ allocated\ for\ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ *\ \ \ \ \ N\_Vectors\ which\ can\ be\ used\ by\ an\ IDADlsBandJacFn\ routine\ \ }}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ *\ \ \ \ \ as\ temporary\ storage\ or\ work\ space.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ *\ An\ IDADlsBandJacFn\ function\ should\ return\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ *\ \ \ \ \ 0\ if\ successful,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ *\ \ \ \ \ a\ positive\ int\ if\ a\ recoverable\ error\ occurred,\ or\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ *\ \ \ \ \ a\ negative\ int\ if\ a\ nonrecoverable\ error\ occurred.\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ *\ In\ the\ case\ of\ a\ recoverable\ error\ return,\ the\ integrator\ will\ }}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ *\ attempt\ to\ recover\ by\ reducing\ the\ stepsize\ (which\ changes\ cj).}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ *\ NOTE:\ The\ following\ are\ two\ efficient\ ways\ to\ load\ Jac:}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ *\ (1)\ (with\ macros\ -\/\ no\ explicit\ data\ structure\ references)\ \ \ \ \ \ }}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ *\ \ \ \ for\ (j=0;\ j\ <\ Neq;\ j++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00194\ \textcolor{comment}{\ *\ \ \ \ \ \ \ col\_j\ =\ BAND\_COL(Jac,j);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00195\ \textcolor{comment}{\ *\ \ \ \ \ \ \ for\ (i=j-\/mupper;\ i\ <=\ j+mlower;\ i++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00196\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ generate\ J\_ij\ =\ the\ (i,j)th\ Jacobian\ element\ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00197\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ BAND\_COL\_ELEM(col\_j,i,j)\ =\ J\_ij;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ *\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *\ (2)\ (with\ BAND\_COL\ macro,\ but\ without\ BAND\_COL\_ELEM\ macro)\ \ \ \ \ }}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ *\ \ \ \ for\ (j=0;\ j\ <\ Neq;\ j++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ *\ \ \ \ \ \ \ col\_j\ =\ BAND\_COL(Jac,j);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ *\ \ \ \ \ \ \ for\ (k=-\/mupper;\ k\ <=\ mlower;\ k++)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ generate\ J\_ij\ =\ the\ (i,j)th\ Jacobian\ element,\ i=j+k\ \ \ \ }}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ col\_j[k]\ =\ J\_ij;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00207\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00208\ \textcolor{comment}{\ *\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *\ A\ third\ way,\ using\ the\ BAND\_ELEM(A,i,j)\ macro,\ is\ much\ less\ \ \ \ }}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *\ efficient\ in\ general.\ \ It\ is\ only\ appropriate\ for\ use\ in\ small\ }}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ *\ problems\ in\ which\ efficiency\ of\ access\ is\ NOT\ a\ major\ concern.\ }}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00214\ \textcolor{comment}{\ *\ NOTE:\ If\ the\ user's\ Jacobian\ routine\ needs\ other\ quantities,\ \ \ }}
+\DoxyCodeLine{00215\ \textcolor{comment}{\ *\ \ \ \ \ \ \ they\ are\ accessible\ as\ follows:\ hcur\ (the\ current\ stepsize)}}
+\DoxyCodeLine{00216\ \textcolor{comment}{\ *\ \ \ \ \ \ \ and\ ewt\ (the\ error\ weight\ vector)\ are\ accessible\ through\ \ \ }}
+\DoxyCodeLine{00217\ \textcolor{comment}{\ *\ \ \ \ \ \ \ IDAGetCurrentStep\ and\ IDAGetErrWeights,\ respectively\ (see\ \ }}
+\DoxyCodeLine{00218\ \textcolor{comment}{\ *\ \ \ \ \ \ \ ida.h).\ The\ unit\ roundoff\ is\ available\ as\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00219\ \textcolor{comment}{\ *\ \ \ \ \ \ \ UNIT\_ROUNDOFF\ defined\ in\ sundials\_types.h\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00221\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{ida__direct_8h_a77e09a5de30501e11d7f344ad8ec6f64}{IDADlsBandJacFn}})(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}},\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mupper,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mlower,}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ t,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c\_j,\ }
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ yp,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ r,}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ Jac,\ \textcolor{keywordtype}{void}\ *user\_data,}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp1,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp2,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp3);}
+\DoxyCodeLine{00229\ \ \ }
+\DoxyCodeLine{00230\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ E\ X\ P\ O\ R\ T\ E\ D\ \ \ \ F\ U\ N\ C\ T\ I\ O\ N\ S\ }}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ *\ Optional\ inputs\ to\ the\ IDADLS\ linear\ solver}}
+\DoxyCodeLine{00239\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00240\ \textcolor{comment}{\ *\ IDADlsSetDenseJacFn\ specifies\ the\ dense\ Jacobian\ approximation}}
+\DoxyCodeLine{00241\ \textcolor{comment}{\ *\ routine\ to\ be\ used\ for\ a\ direct\ dense\ linear\ solver.}}
+\DoxyCodeLine{00242\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00243\ \textcolor{comment}{\ *\ IDADlsSetBandJacFn\ specifies\ the\ band\ Jacobian\ approximation}}
+\DoxyCodeLine{00244\ \textcolor{comment}{\ *\ routine\ to\ be\ used\ for\ a\ direct\ band\ linear\ solver.}}
+\DoxyCodeLine{00245\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00246\ \textcolor{comment}{\ *\ By\ default,\ a\ difference\ quotient\ approximation,\ supplied\ with}}
+\DoxyCodeLine{00247\ \textcolor{comment}{\ *\ the\ solver\ is\ used.}}
+\DoxyCodeLine{00248\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00249\ \textcolor{comment}{\ *\ The\ return\ value\ is\ one\ of:}}
+\DoxyCodeLine{00250\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_SUCCESS\ \ \ if\ successful}}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_MEM\_NULL\ \ if\ the\ IDA\ memory\ was\ NULL}}
+\DoxyCodeLine{00252\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_LMEM\_NULL\ if\ the\ linear\ solver\ memory\ was\ NULL}}
+\DoxyCodeLine{00253\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00254\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__direct_8h_a3015f3447a223007158c8c1164aa67ba}{IDADlsSetDenseJacFn}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \mbox{\hyperlink{ida__direct_8h_a13540bec959c42e46b66dff26e5b851f}{IDADlsDenseJacFn}}\ jac);}
+\DoxyCodeLine{00257\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__direct_8h_ad2a4c7291219cb319083fcdda97f5f9f}{IDADlsSetBandJacFn}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \mbox{\hyperlink{ida__direct_8h_a77e09a5de30501e11d7f344ad8ec6f64}{IDADlsBandJacFn}}\ jac);}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00260\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00261\ \textcolor{comment}{\ *\ Optional\ outputs\ from\ the\ IDADLS\ linear\ solver}}
+\DoxyCodeLine{00262\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00263\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00264\ \textcolor{comment}{\ *\ IDADlsGetWorkSpace\ \ \ returns\ the\ real\ and\ integer\ workspace\ used}}
+\DoxyCodeLine{00265\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ by\ the\ direct\ linear\ solver.}}
+\DoxyCodeLine{00266\ \textcolor{comment}{\ *\ IDADlsGetNumJacEvals\ returns\ the\ number\ of\ calls\ made\ to\ the}}
+\DoxyCodeLine{00267\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ evaluation\ routine\ jac.}}
+\DoxyCodeLine{00268\ \textcolor{comment}{\ *\ IDADlsGetNumResEvals\ returns\ the\ number\ of\ calls\ to\ the\ user}}
+\DoxyCodeLine{00269\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\ routine\ due\ to\ finite\ difference\ Jacobian}}
+\DoxyCodeLine{00270\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ evaluation.}}
+\DoxyCodeLine{00271\ \textcolor{comment}{\ *\ IDADlsGetLastFlag\ \ \ \ returns\ the\ last\ error\ flag\ set\ by\ any\ of}}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ IDADLS\ interface\ functions.}}
+\DoxyCodeLine{00273\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00274\ \textcolor{comment}{\ *\ The\ return\ value\ of\ IDADlsGet*\ is\ one\ of:}}
+\DoxyCodeLine{00275\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_SUCCESS\ \ \ if\ successful}}
+\DoxyCodeLine{00276\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_MEM\_NULL\ \ if\ the\ IDA\ memory\ was\ NULL}}
+\DoxyCodeLine{00277\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_LMEM\_NULL\ if\ the\ linear\ solver\ memory\ was\ NULL}}
+\DoxyCodeLine{00278\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00279\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__direct_8h_a843734ae8f08012fd1128fb983af1321}{IDADlsGetWorkSpace}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *lenrwLS,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *leniwLS);}
+\DoxyCodeLine{00282\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__direct_8h_ab6ecbd3acdd0af482bc689bea5f170d5}{IDADlsGetNumJacEvals}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *njevals);}
+\DoxyCodeLine{00283\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__direct_8h_a6b7cfd33349e34cb9b5ea58e44ba84eb}{IDADlsGetNumResEvals}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *nfevalsLS);}
+\DoxyCodeLine{00284\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__direct_8h_afca8356da194547598119311d805d88f}{IDADlsGetLastFlag}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *flag);}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ *\ The\ following\ function\ returns\ the\ name\ of\ the\ constant\ }}
+\DoxyCodeLine{00289\ \textcolor{comment}{\ *\ associated\ with\ a\ IDADLS\ return\ flag}}
+\DoxyCodeLine{00290\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00291\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{ida__direct_8h_a472586d0b609b199f679b1452a093466}{IDADlsGetReturnFlagName}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ flag);}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00297\ \}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

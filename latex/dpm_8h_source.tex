@@ -1,0 +1,1073 @@
+\doxysection{dpm.\+h}
+\hypertarget{dpm_8h_source}{}\label{dpm_8h_source}\index{fluent20.1.0/src/dpm/dpm.h@{fluent20.1.0/src/dpm/dpm.h}}
+\mbox{\hyperlink{dpm_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_DPM\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_DPM\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{global_8h}{global.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{mem_8h}{mem.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{profile_8h}{profile.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{slide_8h}{slide.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cx_8h}{cx.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ DPM\_SMALL\ 1.0e-\/9}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ define\ DPM\_VELOCITY\_DIM\ ND\_ND}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#\ define\ DPM\_VELOCITY\_DIM\ (rp\_axi\_swirl\ ?\ 3\ :\ ND\_ND)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ define\ FLUID\_VELOCITY\_DIM\ ND\_ND}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#\ define\ FLUID\_VELOCITY\_DIM\ (sg\_swirl\ ?\ 3\ :\ ND\_ND)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ MAX\_REACT\_POST\ 20\ }\textcolor{comment}{/*\ always\ set\ less\ than\ MAX\_SPE\_EQNS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ MAX\_DPM\_MATERIAL\ 100}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{/*\ boundary\ conditions\ */}}
+\DoxyCodeLine{00039\ \textcolor{comment}{/*\ DEM\ ubecker\ \ Replace\ explicit\ macro\ definitions\ by\ enum\ defined\ below.}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00041\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_INTERIOR\ \ \ \ 1\ */}}
+\DoxyCodeLine{00042\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_REFLECT\ \ \ \ \ 2\ */}}
+\DoxyCodeLine{00043\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_TRAP\ \ \ \ \ \ \ \ 3\ */}}
+\DoxyCodeLine{00044\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_ESCAPE\ \ \ \ \ \ 4\ */}}
+\DoxyCodeLine{00045\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_SALTATE\ \ \ \ \ 5\ */}}
+\DoxyCodeLine{00046\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_PERIODIC\ \ \ \ 6\ */}}
+\DoxyCodeLine{00047\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_ABORT\ \ \ \ \ \ \ 7\ */}}
+\DoxyCodeLine{00048\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_SYMMETRY\ \ \ \ 8\ */}}
+\DoxyCodeLine{00049\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_SLIDING\ \ \ \ \ 9\ */}}
+\DoxyCodeLine{00050\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_WALL\_JET\ \ \ 10\ */}}
+\DoxyCodeLine{00051\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_UDF\ \ \ \ \ \ \ \ 11\ */}}
+\DoxyCodeLine{00052\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_PARALLEL\ \ \ 12\ */}}
+\DoxyCodeLine{00053\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_PARALLEL\_PERIODIC\ \ 13\ */}}
+\DoxyCodeLine{00054\ \textcolor{comment}{/*\ \#define\ DPM\_BC\_WALL\_FILM\ \ 14\ */}}
+\DoxyCodeLine{00055\ \textcolor{comment}{/*\ \#if\ RP\_WALL\_FILM\ \&\&\ RP\_3D\ */}}
+\DoxyCodeLine{00056\ \textcolor{comment}{/*\ \#\ \ define\ DPM\_BC\_WALL\_EFILM\ 15\ */}}
+\DoxyCodeLine{00057\ \textcolor{comment}{/*\ \#endif\ */}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{group__dpm_gaf7a190b680bdbf577ff4491df8e7113c}{dpm\_bc\_types}}}
+\DoxyCodeLine{00064\ \{}
+\DoxyCodeLine{00065\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113ca7e316d6f9930a71e42f45f78a37fbdfa}{DPM\_BC\_INTERIOR}}\ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00066\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113caa9e41f38f47df65acdfab39d172bb785}{DPM\_BC\_REFLECT}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ 2\ */}}
+\DoxyCodeLine{00067\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113cac9d4c73110fe593478d77f05bb7ada11}{DPM\_BC\_TRAP}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ 3\ */}}
+\DoxyCodeLine{00068\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113ca6c36a1166c83d725c6d1266e48c30f8f}{DPM\_BC\_ESCAPE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ 4\ */}}
+\DoxyCodeLine{00069\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113caa0cd7ed54241665021ea8931dba9ad28}{DPM\_BC\_SALTATE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ 5\ */}}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113caf13c33ab9d4c083e8c72c45374c2812d}{DPM\_BC\_PERIODIC}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ 6\ */}}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113cae84b8711e8be3255ca08c48a76a3ab41}{DPM\_BC\_ABORT}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ 7\ */}}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113ca9c7b5bc7589c2ba64c79c1afa1c0d4e9}{DPM\_BC\_SYMMETRY}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ 8\ */}}
+\DoxyCodeLine{00073\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113ca2fe4c350b842a1cad4a21b31b0a2e634}{DPM\_BC\_SLIDING}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ 9\ */}}
+\DoxyCodeLine{00074\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113cae28842f3ae35f5258bc384aa80cce907}{DPM\_BC\_WALL\_JET}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 10\ */}}
+\DoxyCodeLine{00075\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113ca171de0b45d843a1091725636f36e1944}{DPM\_BC\_UDF}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 11\ */}}
+\DoxyCodeLine{00076\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113caec67c58a096307ffa52a05816f0f3ffe}{DPM\_BC\_PARALLEL}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 12\ */}}
+\DoxyCodeLine{00077\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113ca24a019afdfa1c8e3af3e2e344a9881a8}{DPM\_BC\_PARALLEL\_PERIODIC}},\ \ \ \textcolor{comment}{/*\ 13\ */}}
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113cae3ee37c4c479b3297bcb52c0a5582244}{DPM\_BC\_WALL\_FILM}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 14\ */}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#if\ RP\_WALL\_FILM\ \&\&\ RP\_3D}}
+\DoxyCodeLine{00080\ \ \ DPM\_BC\_WALL\_EFILM,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 15\ */}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113caf446eed933fe841d8fb2d100e148c8d1}{DPM\_BC\_INTERIOR\_PARENT}},\ \ \ \ \ \textcolor{comment}{/*\ 16\ */}}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113ca9c315963472913a6a01ca6a77c9b7286}{DPM\_BC\_RELEASE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 17\ */}}
+\DoxyCodeLine{00084\ \ \ \mbox{\hyperlink{group__dpm_ggaf7a190b680bdbf577ff4491df8e7113caf6fea7ef5541838834c56a28628bc6c6}{DPM\_BC\_TYPES\_MAX}}\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ one\ more\ than\ true\ number\ of\ types\ */}}
+\DoxyCodeLine{00085\ \};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00088\ \{}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a911d87dcd5bbee9b86e02e143bf4fab8}{FILM\_NONE}}\ =\ -\/1,}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a3e8a3f798ab03caf0342e37d85fa9c82}{FILM\_STICK}},}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a824d3ef42c616006774380a312e56be7}{FILM\_REBOUND}},}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a61db2996f8162708ef8a8ae3ec962d56}{FILM\_SPREAD}},}
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a4920fdb8e11cd528f4d626b8badb2c63}{FILM\_SPLASH}},}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a3825149f924a8b8661d53a6cde536691}{FILM\_USER\_0}},}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48ac929e3123cc777e351ea40ac8ed10263}{FILM\_USER\_1}},}
+\DoxyCodeLine{00096\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48ac409c510a194e53f4ea9454108a412dd}{FILM\_USER\_2}},}
+\DoxyCodeLine{00097\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48aa79a652f80f5cee6e47533e2967d5ada}{FILM\_USER\_3}},}
+\DoxyCodeLine{00098\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48ab0a8672eb774848b96ce7088181176fc}{FILM\_USER\_4}},}
+\DoxyCodeLine{00099\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a0ae7c252b5c0977ccbc11e5fb90e3ff2}{FILM\_USER\_5}},}
+\DoxyCodeLine{00100\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a648606a516ca3f02f1309c895443464d}{FILM\_USER\_6}},}
+\DoxyCodeLine{00101\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a267a7aa3ed7f3459f8cb197624f1ba3d}{FILM\_USER\_7}},}
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48aa38b5c5e1b311550bd025aab97518522}{FILM\_USER\_8}},}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a283dacaeab45779b7de2ef276e13e002}{FILM\_USER\_9}},}
+\DoxyCodeLine{00104\ \ \ \mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a311cc8560394062f6303924338cd3f85}{MAX\_FILM\_REGIME}}}
+\DoxyCodeLine{00105\ \}\ \mbox{\hyperlink{group__dpm_gaf68ee55ae6a98b8547b01b2fe73e1d48}{Wall\_Film\_Regime}};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00108\ \{}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{group__dpm_gga0bdbe9dce30dcc16f655c219bd64fba8a1f5d87c703551b8c5446d7469cd62325}{IMPINGEMENT\_DEFAULT}}\ =\ 0,}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{group__dpm_gga0bdbe9dce30dcc16f655c219bd64fba8afd90e47b83b3f457528884c458e376f2}{IMPINGEMENT\_KUHNKE}},}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{group__dpm_gga0bdbe9dce30dcc16f655c219bd64fba8a3bd651d6fb07427a74fa3b0a9424df55}{IMPINGEMENT\_DEFAULT\_EWF}}}
+\DoxyCodeLine{00112\ \}\ \mbox{\hyperlink{group__dpm_ga0bdbe9dce30dcc16f655c219bd64fba8}{Wall\_Impingement\_Type}};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ MIN\_LOG\_EA\ -\/10\ }\textcolor{comment}{/*\ from\ Kuhnke\ plots\ 4.11\ and\ 4.6\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00117\ \{}
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{group__dpm_ggad1e7b26834e42346a2583526db0fcfd9afdf5a6ae9e505a779bbc594be74a94da}{EROSION\_GENERIC}}\ =\ 0,}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{group__dpm_ggad1e7b26834e42346a2583526db0fcfd9abce7b6559cde6dd8245c4f541b67e28d}{EROSION\_UDF}}\ =\ \mbox{\hyperlink{group__dpm_ggad1e7b26834e42346a2583526db0fcfd9afdf5a6ae9e505a779bbc594be74a94da}{EROSION\_GENERIC}},}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{group__dpm_ggad1e7b26834e42346a2583526db0fcfd9a4726e8642279a3c3bc0e9dc201cc1f24}{EROSION\_FINNIE}}\ =\ 1,}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{group__dpm_ggad1e7b26834e42346a2583526db0fcfd9a9d6ea7f4b4e96e9d4ecc904a7e20a78a}{EROSION\_MCLAURY}}\ =\ 2,}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{group__dpm_ggad1e7b26834e42346a2583526db0fcfd9abc7a1b04fef5d3b40e085db5641429b2}{EROSION\_OKA}}\ =\ 3,}
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{group__dpm_ggad1e7b26834e42346a2583526db0fcfd9af560276418c23ea121fbd6b8e6953e5d}{EROSION\_WALL\_SHEAR}}\ =\ 4,}
+\DoxyCodeLine{00124\ \ \ \mbox{\hyperlink{group__dpm_ggad1e7b26834e42346a2583526db0fcfd9ab685cfdb87f190c59bd45f12ea607e9d}{DPM\_MAX\_EROSION}}\ =\ 5}
+\DoxyCodeLine{00125\ \}\ \mbox{\hyperlink{group__dpm_gad1e7b26834e42346a2583526db0fcfd9}{Wall\_Erosion\_Models}};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00128\ \{}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{group__dpm_gga1c3f0cd7fa07d29edb2b699c6e7bfcd5a242ec3eb0f91f9e51cef32bd84930a17}{FOUR\_PAR\_LH}}\ =\ 0,}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{group__dpm_gga1c3f0cd7fa07d29edb2b699c6e7bfcd5abafbf158bd819b25c4819071a916e0d1}{THREE\_PAR\_LH}},}
+\DoxyCodeLine{00131\ \ \ \mbox{\hyperlink{group__dpm_gga1c3f0cd7fa07d29edb2b699c6e7bfcd5ad7e7f2b36f2bd0dba56800661cd66804}{ROSIN\_RAMMLER}},}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{group__dpm_gga1c3f0cd7fa07d29edb2b699c6e7bfcd5a42472611591399e9deba20bd204fd056}{LOGISTIC}},}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{group__dpm_gga1c3f0cd7fa07d29edb2b699c6e7bfcd5a2ee5189a88174109162db9c85e4a60e6}{WEIBULL}},}
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{group__dpm_gga1c3f0cd7fa07d29edb2b699c6e7bfcd5aa9d580934b1f9209ea85862e5d27b878}{NUKIYAMA\_TANASAWA}},}
+\DoxyCodeLine{00135\ \ \ \mbox{\hyperlink{group__dpm_gga1c3f0cd7fa07d29edb2b699c6e7bfcd5a0f1cb19f360c6a6dc5cbeff2049ba618}{MAX\_SPLASH\_DISTRIBUTIONS}}}
+\DoxyCodeLine{00136\ \}\ \mbox{\hyperlink{group__dpm_ga1c3f0cd7fa07d29edb2b699c6e7bfcd5}{Splashing\_Distribution\_Type}};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ SPLASH\_VEL(S,I)((S)-\/>vel[I])}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ SPLASH\_N(S,I)((S)-\/>npar[I])}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ SPLASH\_DIAM(S,I)((S)-\/>diam[I])}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{comment}{/*\ forward\ declaration\ <dpm\_types.h>}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ \ \ Some\ models\ use\ particle\ pointers\ without\ needing\ to\ know\ how\ the\ struct\ is\ defined.\ */}}
+\DoxyCodeLine{00144\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structparticle__struct}{particle\_struct}};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ C\_DPM\_VIS0(c,t)\ C\_STORAGE\_R(c,t,SV\_DPM\_VIS\_0)}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00156\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00157\ \{}
+\DoxyCodeLine{00158\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggad1346be31f144670211765fdcb75f5f7a44b9890f7a050b3f77a39477eff4eb89}{EULER\_IMPLICIT}}\ =\ 0,}
+\DoxyCodeLine{00159\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggad1346be31f144670211765fdcb75f5f7aa20332acac0a9b6e600a315eb8feb614}{EULER\_TRAPEZOIDAL}},}
+\DoxyCodeLine{00160\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggad1346be31f144670211765fdcb75f5f7a9b2a0c5ae1f9387b7c8e503c897b87fd}{EXPONENTIAL\_ANALYTIC}},}
+\DoxyCodeLine{00161\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggad1346be31f144670211765fdcb75f5f7a7617b41043648f20edd742896c7b293d}{RK\_EXPLICIT}},}
+\DoxyCodeLine{00162\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggad1346be31f144670211765fdcb75f5f7a1d8beea1758c9445684d23e2d2dfd2d7}{EULER\_SYMPLECTIC}},}
+\DoxyCodeLine{00163\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggad1346be31f144670211765fdcb75f5f7a3522ef82a730bbe6ef8d5d7b9bba72d0}{EXPONENTIAL\_ANALYTIC\_DIAG}},}
+\DoxyCodeLine{00164\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggad1346be31f144670211765fdcb75f5f7a39b8e0909f9401221c4c2fad0b10c90e}{MAX\_TRACKING\_SCHEME}}}
+\DoxyCodeLine{00165\ \}\ \mbox{\hyperlink{group__dpm__interface__global_gad1346be31f144670211765fdcb75f5f7}{Tracking\_Scheme\_Type}};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00168\ \{}
+\DoxyCodeLine{00169\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggaf05682450f12694abdbb47e2d91e405ba95031c62ea9c1e6ba0e00cc5db5382dc}{DPM\_COLLISION\_MESH\_BARE\_CFD}}\ =\ 0,}
+\DoxyCodeLine{00170\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggaf05682450f12694abdbb47e2d91e405ba7da3fe63ee43f386c226d8a6a387f243}{DPM\_COLLISION\_MESH\_CARTESIAN}},}
+\DoxyCodeLine{00171\ \ \ \mbox{\hyperlink{group__dpm__interface__global_ggaf05682450f12694abdbb47e2d91e405bacb49ac0044c5757910f19b10ea07866f}{DPM\_COLLISION\_MESH\_UNDEFINED}}}
+\DoxyCodeLine{00172\ \}\ \mbox{\hyperlink{group__dpm__interface__global_gaf05682450f12694abdbb47e2d91e405b}{DPM\_Collision\_Mesh\_Type}};}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#define\ INJECTION\_SPRAY\_SUITE\_DDRAG(I)\ (DPM\_DRAG\_SPRAY\_SUITE\ ==\ (I)-\/>drag\_law)}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ NUM\_SPRAY\_CONSTS\ 13}}
+\DoxyCodeLine{00177\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structspray__suite__struct}{spray\_suite\_struct}}}
+\DoxyCodeLine{00178\ \{}
+\DoxyCodeLine{00179\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga3f304c832c66882c1eb54d3fc1941174}{break\_up}};}
+\DoxyCodeLine{00180\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga93c430d7240306d241dc65d61d6d4270}{tab}};}
+\DoxyCodeLine{00181\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga2d1ef6f558e006b788656d7cd71f6339}{wave}};}
+\DoxyCodeLine{00182\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga40111f5ef07c7360cb00b2a67def5d9b}{ssd}};}
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad7c59d30ee7207572baafa8b845ac336}{madabhushi}};}
+\DoxyCodeLine{00184\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad04e7567e490364a96447de847981e27}{collide}};}
+\DoxyCodeLine{00185\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gae1aecb36e1e876536bd2d1812b160506}{coalescence}};}
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac9d82f585485b1c03b316a3b07728617}{ddrag}};}
+\DoxyCodeLine{00187\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga36a5e4fba285db76ee89147cdeb7a050}{khrt}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ Kelvin-\/Helmholtz-\/-\/Rayleigh-\/Taylor\ model\ (ASME\ 97-\/ICE-\/52)\ */}}
+\DoxyCodeLine{00188\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8db48c0e3263996318457586433a7500}{wave\_collide}};}
+\DoxyCodeLine{00189\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga4b9b769ef61ca58e51e80cb84d16681a}{wave\_mass\_cutoff\_adjust}};}
+\DoxyCodeLine{00190\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga1c49a94f72ca98224358701ee363184e}{wave\_rayleigh\_growth}};}
+\DoxyCodeLine{00191\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga54956bfc6dfe42d559f546d215f6f8bd}{tab\_evaluate\_double\_ddrag}};}
+\DoxyCodeLine{00192\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gadd08c244c136e8eb9c3a3230966418ad}{collision\_hybridparallelP}};}
+\DoxyCodeLine{00193\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga1728ae9842a322e16d9d5ef6a303a65f}{collision\_unidirectionalP}};}
+\DoxyCodeLine{00194\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaaa3ff35169f5f45ad956a798d72aea89}{collision\_hybpar\_everyield}};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaca8004b3b11834771a8612767c146f32}{collision\_mode}};}
+\DoxyCodeLine{00197\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gac59f717a8d9bc7cd6dbb22adca58be59}{collision\_model\_type}};}
+\DoxyCodeLine{00198\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gabcf7c5e12713cf03f687632c10860dd5}{collision\_event\_type}};}
+\DoxyCodeLine{00199\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gaf05682450f12694abdbb47e2d91e405b}{DPM\_Collision\_Mesh\_Type}}\ \mbox{\hyperlink{group__dpm__parallel_ga8bbda7a265f22d333fca02b341038819}{collision\_mesh\_type}};}
+\DoxyCodeLine{00200\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga75c43db7f193f9152548cb1780755270}{collision\_stencil\_size}};}
+\DoxyCodeLine{00201\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga498e57abbc1a7b6ae6ce8dbaa60dc55c}{n\_coeff\_restitution}};}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gad9ea1bc0568464744bb1c9ac40539bad}{coeff\_restitution}}[2];}
+\DoxyCodeLine{00204\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga0be021ccffeb58ec8ef2448b2cc99d89}{constant}}[\mbox{\hyperlink{group__dpm__interface__global_gaad055154845afa93e28f4e9efaed266e}{NUM\_SPRAY\_CONSTS}}];}
+\DoxyCodeLine{00205\ \ \ \textcolor{comment}{/*\ CK\ CD\ CB\ CF\ KENRG\ CV\ CONSTANT\_1\ B\_1\ B\_2\ Init\_TAB\_Amp\ */}}
+\DoxyCodeLine{00206\ \ \ \textcolor{comment}{/*\ KHRT-\/c-\/levich\ KHRT-\/c-\/tau\ KHRT-\/c-\/3\ */}}
+\DoxyCodeLine{00207\ \ \ \textcolor{comment}{/*\ Note\ that\ CONSTANT\_1\ has\ been\ removed\ from\ the\ gui/tui\ -\/\ not\ for\ users\ */}}
+\DoxyCodeLine{00208\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gab7217aee4a0bb555ef5af6eda207fca9}{wave\_mass\_cutoff}};}
+\DoxyCodeLine{00209\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga066ce2e683c3084202f0f5f14eadd974}{wave\_vnormal\_scaling\_factor}};}
+\DoxyCodeLine{00210\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga4c0151862a5721dd2f88088a1efc1438}{min\_time\_step}};\ \ \textcolor{comment}{/*\ lowest\ time\ step\ for\ NANBU\ collision\ model\ */}}
+\DoxyCodeLine{00211\ \ \ \textcolor{comment}{/*\ ssd\ spray\ model\ parameters\ */}}
+\DoxyCodeLine{00212\ \ \ \textcolor{comment}{/*\ real\ ssd\_we\_cr;\ \ \ \ \ -\/-\/\ now\ injection-\/specific\ */}}
+\DoxyCodeLine{00213\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga6d408acfb8723089fb5050aa1e17aff5}{ssd\_np\_max\_child}};}
+\DoxyCodeLine{00214\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga490b65cc5e32d96335dfde0ab05a077a}{ssd\_min\_diam}};}
+\DoxyCodeLine{00215\ \ \ \textcolor{comment}{/*\ real\ ssd\_np\_target;\ -\/-\/\ now\ injection-\/specific\ */}}
+\DoxyCodeLine{00216\ \ \ \textcolor{comment}{/*\ real\ ssd\_core\_bu;\ \ \ -\/-\/\ now\ injection-\/specific\ */}}
+\DoxyCodeLine{00217\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga5e511c58e0066064b5d5077d53e97876}{ssd\_x\_ratio}};}
+\DoxyCodeLine{00218\ \ \ \textcolor{comment}{/*\ real\ ssd\_x\_si;\ \ \ \ \ \ -\/-\/\ now\ injection-\/specific\ */}}
+\DoxyCodeLine{00219\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gabf909d13e494529eccf9ab5a514768be}{ssd\_nu\_t}};}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \textcolor{comment}{/*\ madabhushi\ spray\ model\ parameters\ */}}
+\DoxyCodeLine{00222\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga109c849ebdb1c64d7bb992e12f5ba6eb}{madabhushi\_np\_child}};}
+\DoxyCodeLine{00223\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gab988eed67c4ff677b48c8694b2c59dae}{madabhushi\_column\_breakup\_np\_child}};}
+\DoxyCodeLine{00224\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gafd27175b0e0687d52a334c6fac0016b9}{madabhushi\_smallest\_diameter}};}
+\DoxyCodeLine{00225\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga2f5c9b642fe128039e7e1f881f20e8d1}{madabhushi\_pe\_column\_breakup\_time}};}
+\DoxyCodeLine{00226\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga0d9aef56ac8aa33c56d31dd06c4aaecd}{madabhushi\_wave\_column\_breakup\_time}};}
+\DoxyCodeLine{00227\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga2abc0cf4bc0591f134636c7f49ffc372}{madabhushi\_vnormal\_scaling\_factor}};}
+\DoxyCodeLine{00228\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaf71075eefee82d5fe7cc2177364a0f6a}{madabhushi\_column\_breakup\_vnormal\_scaling\_factor}};}
+\DoxyCodeLine{00229\ \}\ \mbox{\hyperlink{group__dpm__interface__global_ga3b44452648dbb75956866216725da654}{spray\_suite\_t}};}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structimpingement__constant__struct}{impingement\_constant\_struct}}}
+\DoxyCodeLine{00232\ \{}
+\DoxyCodeLine{00233\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga66d52a0b4df611e55f9c73882450b895}{critical\_transition\_factor}};}
+\DoxyCodeLine{00234\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gab260d9ec66c3de83f87b606ff8ef0071}{E\_2\_crit}}[\mbox{\hyperlink{group__dpm_ggaf68ee55ae6a98b8547b01b2fe73e1d48a311cc8560394062f6303924338cd3f85}{MAX\_FILM\_REGIME}}];\ \textcolor{comment}{/*\ critical\ constants\ for\ impingement\ regimes\ definition\ */}}
+\DoxyCodeLine{00235\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gacf23f1d55122241dfed8683ff85f5031}{KTmin}};}
+\DoxyCodeLine{00236\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gad8ec92fe41f150903255c6a4aedaf84d}{KTmax}};}
+\DoxyCodeLine{00237\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga964c1aaac4ae3772409b5a6dd9f2129f}{cT}};}
+\DoxyCodeLine{00238\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gae91f1f2281a92e3dcfa52eb25cfbcf02}{We\_limit}};}
+\DoxyCodeLine{00239\ \}\ \mbox{\hyperlink{group__dpm__interface__global_ga5333efc1eed81abbba1be423573dc507}{impingement\_constant\_t}};}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structsplashing__distribution__struct}{splashing\_distribution\_struct}}}
+\DoxyCodeLine{00242\ \{}
+\DoxyCodeLine{00243\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{group__dpm__parallel_ga98d76b2828199b4b414dd37e3cab97b5}{vel}};}
+\DoxyCodeLine{00244\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{group__dpm__parallel_gae5012e3dd2227241f3955bbb94d2e8e6}{npar}};}
+\DoxyCodeLine{00245\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{group__dpm__parallel_gaa5daf1bac2728dcb02440d5ca5f18b4f}{diam}};}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \}\ \mbox{\hyperlink{group__dpm__interface__global_ga338339343cf5ba740c3aadb4f723ae72}{splashing\_distribution\_t}};}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__intrpl__nvar__def__s}{dpm\_intrpl\_nvar\_def\_s}}}
+\DoxyCodeLine{00250\ \{}
+\DoxyCodeLine{00251\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaccf3aec63bc20b3c99ab4881cb07c05b}{phase}};}
+\DoxyCodeLine{00252\ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ \mbox{\hyperlink{group__dpm__parallel_ga7ca23444da4ff71ef7e644ede4e50578}{svar}};}
+\DoxyCodeLine{00253\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gabd78866a8d4cb1ac45e040b63b05020e}{node\_sv\_offset}};}
+\DoxyCodeLine{00254\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga439227feff9d7f55384e8780cfc2eb82}{size}};}
+\DoxyCodeLine{00255\ \}\ \mbox{\hyperlink{group__dpm__interface__global_ga31aa59fbc1ecebb7122edb9aff8b0483}{dpm\_intrpl\_nvar\_def\_t}};}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00258\ \{}
+\DoxyCodeLine{00259\ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ \mbox{\hyperlink{group__dpm__parallel_ga5e1f1fe4e73f13510a920bb27ab54dfe}{node\_svar}};}
+\DoxyCodeLine{00260\ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ \mbox{\hyperlink{group__dpm__parallel_ga136d66710cbce0617d4486afd9f4ece9}{node\_m1\_svar}};}
+\DoxyCodeLine{00261\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga7d9dd33dd91f4de0b5e26cca416b6d2a}{n\_phases}};}
+\DoxyCodeLine{00262\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga197db64051d1e828d9e93402d51213a4}{n\_nvars}};}
+\DoxyCodeLine{00263\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gadc2f392f31523ae096cc4349911394d1}{total\_nvars\_size}};}
+\DoxyCodeLine{00264\ \ \ \textcolor{keywordtype}{int}\ *svar[\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40a49406abf90e19823a8a1e3468147b9b6}{SV\_MAX}}];}
+\DoxyCodeLine{00265\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ used\_svar[\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40a49406abf90e19823a8a1e3468147b9b6}{SV\_MAX}}];}
+\DoxyCodeLine{00266\ \ \ \mbox{\hyperlink{structdpm__intrpl__nvar__def__s}{dpm\_intrpl\_nvar\_def\_t}}\ *\mbox{\hyperlink{group__dpm__parallel_ga86994547e7f42c30bcefe12cb06e8a2b}{nvar}};}
+\DoxyCodeLine{00267\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga02b7b56fe2ce07bf5895009c20dd9f7a}{velocity\_average}};}
+\DoxyCodeLine{00268\ \}\ \mbox{\hyperlink{structdpm__intrpl__nvars__t}{dpm\_intrpl\_nvars\_t}};}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__parameters__struct}{dpm\_parameters\_struct}}}
+\DoxyCodeLine{00271\ \{}
+\DoxyCodeLine{00272\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga882b06735978988f6a10c27f17cb726a}{warn\_in\_test}};\ \ \ \textcolor{comment}{/*\ whether\ to\ issue\ some\ diagnostic\ messages..\ */}}
+\DoxyCodeLine{00273\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga153c0c736dc1c32bb6c7bebd5d5f058f}{radiation\_p}};}
+\DoxyCodeLine{00274\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga2c262bf1770f8eb96045ffa5607ad49e}{use\_len\_scale}};}
+\DoxyCodeLine{00275\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga1c3086589cdb0ee71734fca929bb80e0}{len\_scale}};}
+\DoxyCodeLine{00276\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga2685f747b42e997a43b745baabadb28a}{len\_factor}};}
+\DoxyCodeLine{00277\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga17023f6c7342f685a6142ec4a6334c62}{len\_factor\_receptor}};}
+\DoxyCodeLine{00278\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga116aef95381445a950272034d8499148}{max\_steps}};}
+\DoxyCodeLine{00279\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga3bb9403c65fbd80aa63f663096502c45}{correlation\_func}};\ \textcolor{comment}{/*\ correlation\ function\ for\ DPM\ cloud\ model*/}}
+\DoxyCodeLine{00280\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8a5296ee13752921c3b9ca428d20f57d}{ensemble\_average}};\ \textcolor{comment}{/*\ do\ ensemble-\/average\ for\ DPM\ cloud\ model*/}}
+\DoxyCodeLine{00281\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga2a10f2e3cd4e3907b74ab6376847b844}{n\_user\_reals}};}
+\DoxyCodeLine{00282\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga973b349c0b87f1fedfbc8011a6c99623}{unsteady\_tracking}};}
+\DoxyCodeLine{00283\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad92330151e3918b4b4a3f745979dbd26}{reallocate\_unsteady\_coupled}};}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaf1d4f29e7f0a2828126f4ea8335d7f17}{time}};}
+\DoxyCodeLine{00286\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga67f8925df564281fea875e346c0d18ec}{particle\_time\_step}};}
+\DoxyCodeLine{00287\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga5873848f9003055866bb6647374432ce}{time\_step}};}
+\DoxyCodeLine{00288\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga83d457cea903da7b06a02e53057f366f}{last\_time\_step}};}
+\DoxyCodeLine{00289\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaa466a9e5655ebf803562f478b80f0876}{unsteady\_accum\_time}};\ \ \ \ \textcolor{comment}{/*\ unsteady\_accum\_time\ +\ tp\_accumulated\_time\ =\ time\ since\ last\ flow\ solver\ timestep\ */}}
+\DoxyCodeLine{00290\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga74edb3d1dcabfb3f5c81419f659d06ac}{end\_of\_prev\_time\_step}};\ \ \textcolor{comment}{/*\ time\ @end\ of\ prev\ time\ step\ -\/\ needed\ for\ unsteady\ injection\ file\ to\ avoid\ round-\/off\ error\ issues\ */}}
+\DoxyCodeLine{00291\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga5f02db9671f15bcd94ae02150ebf99fa}{n\_time\_steps}};}
+\DoxyCodeLine{00292\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaf217b46ff85e51dd934895b206018560}{create\_with\_particle\_time\_step}};}
+\DoxyCodeLine{00293\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaec6a14c111b7e18dd783bfe3d096d777}{fluid\_flow\_time\_stepping}};}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gabc780438cd31de3eb76d4848147667f0}{thermophoretic\_force}};}
+\DoxyCodeLine{00296\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaa498b388d24ddf6e33e8f45173ebd30f}{pressure\_force\_explicit}};}
+\DoxyCodeLine{00297\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaa4dd7516a8ec4bb2b161880f18f8a34e}{pressure\_force}};}
+\DoxyCodeLine{00298\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad3a9559921b1135cd0beaf3f298eff6d}{virtual\_mass}};}
+\DoxyCodeLine{00299\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga8faa853033b9c297bcf771d2a2a07a63}{virtual\_mass\_factor}};}
+\DoxyCodeLine{00300\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga90d72bcfb020852c27f293caafaa5cb2}{drag\_law}};\ \ \ \textcolor{comment}{/*\ will\ be\ set\ if\ uniform\ across\ all\ injections.\ */}}
+\DoxyCodeLine{00301\ \ \ \textcolor{comment}{/*\ real\ shape\_factor;\ \ \ -\/-\/\ now\ injection-\/specific}}
+\DoxyCodeLine{00302\ \textcolor{comment}{\ \ \ *\ cxboolean\ brownian\_motion;}}
+\DoxyCodeLine{00303\ \textcolor{comment}{\ \ \ *\ real\ cunningham\_correction;}}
+\DoxyCodeLine{00304\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00305\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad434c68e1da40f6379445acf513b7ea3}{saffman\_lift}};}
+\DoxyCodeLine{00306\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga21172b8e9223e9adc9a74128f13d72b8}{binary}};}
+\DoxyCodeLine{00307\ \ \ FILE\ *\mbox{\hyperlink{group__dpm__parallel_gaa065f30aa9f5f9a42132c82c787ee70b}{fp}};}
+\DoxyCodeLine{00308\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga14ecabd77dc88a1d4757b12231e7b86c}{track\_in\_absolute}};}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{00310\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ coupled\_update;\ \textcolor{comment}{/*\ not\ used\ anymore\ */}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00312\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga585c7420fb155aee17473a5f3ab6aa4c}{coupled\_update\_droplet}};}
+\DoxyCodeLine{00313\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga576d0734435283fd53314a5842bddf11}{coupled\_update\_combusting}};}
+\DoxyCodeLine{00314\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga59aae2672944680904fbf15eb7b71659}{Tmin}},\ \mbox{\hyperlink{group__dpm__parallel_ga48710dad1a9f84f4f4b6f4b215767e19}{Tmax}};}
+\DoxyCodeLine{00315\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gad1346be31f144670211765fdcb75f5f7}{Tracking\_Scheme\_Type}}\ \mbox{\hyperlink{group__dpm__parallel_ga232e1fa4b0251c68a701ff9ba5bbdad2}{tracking\_scheme}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ actual\ tracking\ scheme\ */}}
+\DoxyCodeLine{00316\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gad1346be31f144670211765fdcb75f5f7}{Tracking\_Scheme\_Type}}\ \mbox{\hyperlink{group__dpm__parallel_gad5b0ab455860f1ae011bb1d6d30edf54}{tracking\_scheme\_low}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ tracking\_scheme\ for\ large\ steps\ and\ low\ accuracy\ */}}
+\DoxyCodeLine{00317\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gad1346be31f144670211765fdcb75f5f7}{Tracking\_Scheme\_Type}}\ \mbox{\hyperlink{group__dpm__parallel_ga8c0223340102c3360ddaec62148db157}{tracking\_scheme\_high}};\ \ \ \ \ \ \textcolor{comment}{/*\ tracking\ scheme\ for\ small\ steps\ and\ high\ accuracy\ */}}
+\DoxyCodeLine{00318\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gad1346be31f144670211765fdcb75f5f7}{Tracking\_Scheme\_Type}}\ \mbox{\hyperlink{group__dpm__parallel_ga6186178c6dbcde928522bd0419c0e0f1}{film\_tracking\_scheme}};\ \ \ \ \ \ \textcolor{comment}{/*\ tracking\ scheme\ for\ film\ particles\ */}}
+\DoxyCodeLine{00319\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga18f7120b76ba0f437b5ed59a66ea7976}{step\_size\_control}};}
+\DoxyCodeLine{00320\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga368d10527f1f34ac8175f0503758b140}{massless\_second\_order}};}
+\DoxyCodeLine{00321\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gad1346be31f144670211765fdcb75f5f7}{Tracking\_Scheme\_Type}}\ \mbox{\hyperlink{group__dpm__parallel_gae912b38eac21b92a16a37e313eee7c48}{massless\_scheme}};}
+\DoxyCodeLine{00322\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gab5c78db99413395ae24a609a34e48d9c}{track\_spawned\_particles}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ consider\ spawned\ particles\ during\ the\ same\ tracking\ step\ */}}
+\DoxyCodeLine{00323\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gace0f8127faa1d757f4f5afc3862a4d78}{update\_position\_before\_spawning\_children}};\ \ \textcolor{comment}{/*\ flag\ to\ recover\ pre-\/R20.1\ behavior\ */}}
+\DoxyCodeLine{00324\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gafbfb13940dd1a080fe999ebbf7c4f414}{spawned\_particle\_relocate\_method}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ method\ to\ use\ when\ moving\ spawned\ particles\ off\ a\ wall\ */}}
+\DoxyCodeLine{00325\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga7c2e5acae4b0cfce23ffdf3cdfedfb79}{display\_steps}};}
+\DoxyCodeLine{00326\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gae5dfe0ae599589852234d36478d089f3}{max\_step\_size\_refinements}};}
+\DoxyCodeLine{00327\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga3dc0591f3f45686a3e8e3ee621b6243e}{tracking\_scheme\_selection}};}
+\DoxyCodeLine{00328\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaefa7e6c2bb7ec9572fba74781d5088e2}{limit\_min\_time\_step}};}
+\DoxyCodeLine{00329\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga2bba3c4b2feb25fa5d798101120eeea5}{injections\_have\_positive\_flowrate}};}
+\DoxyCodeLine{00330\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga1904cb5d2200092404432cce4feee0ca}{max\_error}};}
+\DoxyCodeLine{00331\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gab05f043bcb1390dab2ad5fc45fd7ca9b}{multicomponent\_tolerance}};}
+\DoxyCodeLine{00332\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga3e3123a10897544d1a81ecca736b312b}{multicomponent\_max\_nsteps}};}
+\DoxyCodeLine{00333\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gad919894d6d89a2dd9cb0b6b0c9b429d5}{multicomponent\_max\_nred}};}
+\DoxyCodeLine{00334\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga285b60993038bc7a7c9f6527f08c8d8c}{cells\_to\_cross}};\ \ \textcolor{comment}{/*\ maximum\ number\ of\ cells\ to\ be\ crossed\ per\ step\ */}}
+\DoxyCodeLine{00335\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga66ddd8b747a97cbe7f3fa538227e27ac}{lowest\_diam}};}
+\DoxyCodeLine{00336\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga53c54f240f01d2564781b0176b80ed39}{lowest\_film\_diam}};}
+\DoxyCodeLine{00337\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gadfa677d399e33673cf06a5d931ef0321}{leidenfrost\_dt}};}
+\DoxyCodeLine{00338\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gae4260d0afcc7e6e26a335384d02828fa}{lowest\_volume}};}
+\DoxyCodeLine{00339\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gae0bb16a752ac2df07e35f7b4ca054248}{minimum\_vapor\_fraction}};}
+\DoxyCodeLine{00340\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga451eeb490c7bab1f628b9b7b72ee8604}{mut\_to\_mul}};}
+\DoxyCodeLine{00341\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga198cccefaa3787ede82c48f8048c466f}{eddy\_cross\_time\_factor}};}
+\DoxyCodeLine{00342\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad65e2ab7c6be5edfc82d5eaebe9d76ea}{sbes\_treatment\_pre192}};}
+\DoxyCodeLine{00343\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga25f71963e117c4fd42650719b50fd558}{dynamic\_les\_treatment\_pre192}};}
+\DoxyCodeLine{00344\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga527149b10ff1bf5f01a27cfc7fe963c5}{consistent\_tke\_ted\_clipping}};}
+\DoxyCodeLine{00345\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaf62dbe3625eee1c84935f4d773fab4cd}{rkvaporization}};}
+\DoxyCodeLine{00346\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5a5971819ae948bee01574592019c159}{rkmulticomponent}};}
+\DoxyCodeLine{00347\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gace245c495f0bc18f91b33f9c8b439e0b}{fractional\_change\_factor\_mass}};}
+\DoxyCodeLine{00348\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga9eedeb8f6642ba36c16840c249fde2e3}{fractional\_change\_factor\_heat}};}
+\DoxyCodeLine{00349\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga199ed6b70965ef144ba3b84e26ee816d}{limiting\_time\_algorithm}};}
+\DoxyCodeLine{00350\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga5de7cbd37f9c53c2947266466be289e5}{surface\_composition\_assumption}};}
+\DoxyCodeLine{00351\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga25a0d9fd817f9fec8b3a596520cf12bf}{absolute\_pressure}};}
+\DoxyCodeLine{00352\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaabd67f6621ac6c73160df812eae026fd}{latent\_heat\_at\_boiling}};}
+\DoxyCodeLine{00353\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gab4615958c7c9a642e05b9aab14488b53}{boiling\_pressure\_depend}};}
+\DoxyCodeLine{00354\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaf8f7f6d64c75167bb0700f02b8fec75b}{latent\_heat\_temperature\_depend}};}
+\DoxyCodeLine{00355\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga244ced6c5c95c147245712d4d817818b}{allow\_condensation}};}
+\DoxyCodeLine{00356\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga52a4d64df150ef2a608fff892a031c02}{allow\_supercritical\_pressure}};}
+\DoxyCodeLine{00357\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaba0ccd77812caccca631b74dc19eaba6}{mc\_boiling\_formulation}};}
+\DoxyCodeLine{00358\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gadccbe28750a95901868838897c39df2d}{allow\_mc\_boiling\_failure}};}
+\DoxyCodeLine{00359\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga30b76bac227648efb4fe9107392a5c84}{variable\_pr\_number\_in\_boiling}};}
+\DoxyCodeLine{00360\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga369c12512130efdd667ad55a2cf9c146}{check\_leidenfrost\_on\_faces}};}
+\DoxyCodeLine{00361\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac1acea8b1defa117b3aeb9c07b89fdcb}{apply\_leidenfrost}};}
+\DoxyCodeLine{00362\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga50c693fa1e041dcca6d451c6766b8480}{check\_critical\_flux}};}
+\DoxyCodeLine{00363\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gabd594472642e769e2b873044507de92f}{high\_temperature\_correction}};}
+\DoxyCodeLine{00364\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaa34a6dc5acda25265a0b7b6e34b85bc2}{set\_law\_on\_first\_timestep}};}
+\DoxyCodeLine{00365\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gabb86ee6d1ced4ee3ef27d87f434684c9}{face\_intersection}};\ \textcolor{comment}{/*\ algorithm\ choice\ */}}
+\DoxyCodeLine{00366\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaf63fa8c812b8f0f84346a2e21ce23239}{pathline\_face\_intersection}};}
+\DoxyCodeLine{00367\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gab5dbea3efcea1b05ffdba14b2f88ff2e}{locate\_method}};\ \textcolor{comment}{/*\ as\ used\ in\ dpm+path.c:NextPos\ */}}
+\DoxyCodeLine{00368\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaadd2c124da94667292d3fddf4a0258c9}{particle\_relocation}};\ \ \ \textcolor{comment}{/*\ method\ used\ for\ migrant\ particles\ -\/-\/}}
+\DoxyCodeLine{00369\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ this\ also\ affects\ whether\ other\ code\ parts\ allow\ a\ film\ particle\ to\ be\ outside\ its\ cell,}}
+\DoxyCodeLine{00370\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ which\ can\ happen\ if\ the\ particle\ travels\ at\ a\ certain\ "{}cruise\ height"{}\ above\ the\ wall\ face.}}
+\DoxyCodeLine{00371\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00372\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaa9f2e3b49fbbe0d787e438412b7037d0}{acceleration\_to\_faces\_for\_rk}};\ \textcolor{comment}{/*\ consider\ acceleration\ terms\ during}}
+\DoxyCodeLine{00373\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ computation\ of\ face\ intersection\ for}}
+\DoxyCodeLine{00374\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ RK\_EXPLICIT\ and\ EXPONENTIAL\_ANALYTIC\ */}}
+\DoxyCodeLine{00375\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga9b00195b68d4a98b16355e5a642d9721}{particle\_repartition}};\ \ \ \textcolor{comment}{/*\ algorithm\ choice\ */}}
+\DoxyCodeLine{00376\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga2c4904c70c10d44249812275075f01a2}{debug\_output}};}
+\DoxyCodeLine{00377\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5a5a7fb057fff3320897aa8950232e99}{temperature\_limiter}};}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gab2af5fa27ba3d998509a52940a4a8741}{use\_single\_prec\_face\_points}};\ \ \textcolor{comment}{/*\ enables\ the\ legacy\ method\ (to\ be\ removed\ at\ some\ point\ in\ the\ future)\ */}}
+\DoxyCodeLine{00380\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac6336a0338646f4d7fb26fa051d6f948}{search\_before\_iteration}};}
+\DoxyCodeLine{00381\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5e1bbc7bd407207cedd2b29de4ce2f7c}{closest\_cell\_search}};}
+\DoxyCodeLine{00382\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga6ad2b4618133da41fd12aef5bcabd969}{closest\_face\_search}};}
+\DoxyCodeLine{00383\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaabd589a541dc91ffb300baf72031c11c}{disallow\_aborted\_particles}};}
+\DoxyCodeLine{00384\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga919e34b9945305bb460bde2ed43af9a8}{use\_face\_v\_with\_b\_injection}};}
+\DoxyCodeLine{00385\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga7d358c65c947eba1a073277a742ddc09}{pre\_write\_particle\_check}};}
+\DoxyCodeLine{00386\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga3aadadc4c610474cbb347f6e3f98371b}{pre\_write\_particle\_project}};}
+\DoxyCodeLine{00387\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga0519af2b1fcaceb7f4782d31e7f4cf47}{pre\_write\_particle\_project\_dem}};}
+\DoxyCodeLine{00388\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga275c422e3b1f85f275604c0d3e72edc2}{relocate\_init\_particles}};}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gabfad44b1c1dd4d4f0d818e01ac2ac3e7}{wall\_jet\_interact}};}
+\DoxyCodeLine{00391\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac16ee71007ed316f33ab70235e4c167b}{wall\_film\_active}};}
+\DoxyCodeLine{00392\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8f145faa1da75d50cc79534a8dbfc87c}{wall\_film\_expert}};}
+\DoxyCodeLine{00393\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad0553fcd6172800f5bdba268eb3137d0}{film\_node\_values}};}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga7af7f12f281c4fcfbd250d10f7395a2a}{film\_separation\_angle}};}
+\DoxyCodeLine{00396\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaf1d1345b68ae3e1f82ffbf28273169a2}{film\_separation\_height}};}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaa10c0584cf52ab0e36e96e73f9748df7}{stripping\_scheme}};}
+\DoxyCodeLine{00399\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga4cd265d2058cf6b346b57db88ae5fbc8}{stripping\_crit}};}
+\DoxyCodeLine{00400\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaa3120e9ccdcb0476d750a567f851dec3}{strip\_m\_const}};}
+\DoxyCodeLine{00401\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga30d11eedf3ea43e20bbe68c623492c28}{strip\_f\_const}};}
+\DoxyCodeLine{00402\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga5016af869441cfd39a49e2cef1ee0724}{strip\_beta}};}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga77abe44835bc48172c222604e4a158ff}{film\_visc\_interaction}};}
+\DoxyCodeLine{00405\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga98e76bbff5dd989745752b128ca4d90b}{film\_gas\_interaction}};}
+\DoxyCodeLine{00406\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaecee9e83eec519a4d4e620c178e8d4e3}{film\_mean\_interaction}};}
+\DoxyCodeLine{00407\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga21e9d786241ab448caf1790e68e1c3f0}{film\_p\_imp\_interaction}};}
+\DoxyCodeLine{00408\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga0c916635666d98853241d421b6acf362}{film\_m\_imp\_interaction}};}
+\DoxyCodeLine{00409\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga1214cb092de64eb57c9ef8e1e1369e86}{film\_min\_dsplash\_param}};}
+\DoxyCodeLine{00410\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gab16b4746e273e0f6106847a25136af37}{film\_splash\_angle}};}
+\DoxyCodeLine{00411\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga8d7ef568f4f2bf9ca0973478ba5a985b}{film\_splash\_angle\_slope}};}
+\DoxyCodeLine{00412\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaa32609508b51fb037eb3d6554a855f85}{max\_wallfilm\_dist}};}
+\DoxyCodeLine{00413\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8e99a2eedcbdcf9c7538b442636ed664}{wall\_film\_heat\_transfer}};}
+\DoxyCodeLine{00414\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gad65240756a52b7b33e58e59af32199f0}{limiting\_film\_height}};}
+\DoxyCodeLine{00415\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad25e890713d0fb0d404e6227b35c14a8}{film\_boiling\_rate}};}
+\DoxyCodeLine{00416\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gab02bf68717936db6caedc32f55f28f6c}{film\_formulation\_r15}};}
+\DoxyCodeLine{00417\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga4d1a368a3b907eef13010ac43eb180d2}{film\_intersection\_scheme}};}
+\DoxyCodeLine{00418\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga1efd6b50a535c8e539d8cffd78cbdf7a}{use\_previous\_film\_height}};}
+\DoxyCodeLine{00419\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga1ecf7253d4028a4e815d1a2d8dffa348}{underrelax\_film\_height}};}
+\DoxyCodeLine{00420\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gae6075a8fae0a7b0a937ad03ad6d354ee}{use\_average\_film\_height}};}
+\DoxyCodeLine{00421\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac3a61047a362b3a26e3b8f55686f565d}{smooth\_film\_height}};}
+\DoxyCodeLine{00422\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga65054d4ebd03c1577e77413e99dbd422}{scale\_by\_residence\_time}};}
+\DoxyCodeLine{00423\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga1fa061e1358abbca0cc5f54fd1f4606d}{enable\_spotty\_film\_corrections}};}
+\DoxyCodeLine{00424\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga6273bf1cf6fa5bbabb1d01f19234f594}{thermolysis\_limit}};}
+\DoxyCodeLine{00425\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaccae8c6cf7f0aa8dce3b0c1136f6462f}{film\_breakup\_particles}};}
+\DoxyCodeLine{00426\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga29a54598024db883d38037a972522270}{film\_interpolate\_mesh}};}
+\DoxyCodeLine{00427\ \ \ \mbox{\hyperlink{structimpingement__constant__struct}{impingement\_constant\_t}}\ \mbox{\hyperlink{group__dpm__parallel_gada2539f5cca9accd7ba5bf630b29f98f}{impingement\_constant}};}
+\DoxyCodeLine{00428\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaa6987a47d7d7825a52fe877268d000f2}{contact\_time\_factor}};}
+\DoxyCodeLine{00429\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaee85c3d80f3f78aa883f012d0a5eeb24}{vle\_limit}};}
+\DoxyCodeLine{00430\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga1d95ed9ce907fcad8934b9983d774444}{ft\_limiter}};}
+\DoxyCodeLine{00431\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaf3aacf90e38b382ba2773fcc2dbdfbb7}{orourke\_splash\_fraction\_tail}};}
+\DoxyCodeLine{00432\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gae5be5124c10fc4220d9d7b19645b15b3}{orourke\_splash\_fraction}};}
+\DoxyCodeLine{00433\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga636b7f383842fe77ee141b6f74ffadda}{splash\_pdf\_tail\_limiting}};}
+\DoxyCodeLine{00434\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaf7133f483b4487d2d3260e685cb4f010}{splash\_size\_limit\_low}};}
+\DoxyCodeLine{00435\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga1e3027f9049baad3294c97372682cbb4}{splash\_size\_limit\_high}};}
+\DoxyCodeLine{00436\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gac6cf2988593b872dd6e3e7b3cb6ce114}{splash\_vel\_limit\_n}};}
+\DoxyCodeLine{00437\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga45c3f6f2be1b4d6f45c98a9c08e320f0}{splash\_vel\_limit\_a}};}
+\DoxyCodeLine{00438\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac6d218de474ef0a29bb55b4682eafcb8}{limit\_splash\_film\_height}};}
+\DoxyCodeLine{00439\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga23b3cf6c630af07a3c0ca992680bcc88}{limit\_kuhnke\_init\_film\_height}};}
+\DoxyCodeLine{00440\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaa435405b370f76507efb499d23627a04}{static\_film\_condensation}};}
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00442\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaf1122d59f39a125da4c53750d73d37df}{scr\_urea\_depo\_risk\_unst\_stat}};}
+\DoxyCodeLine{00443\ }
+\DoxyCodeLine{00444\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga76147555b1f181e575564c568352803c}{stagger\_temporally}};}
+\DoxyCodeLine{00445\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gabb86adfeb779a05b4993589978338f15}{stagger\_factor}};}
+\DoxyCodeLine{00446\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gadccf05bbc9896ac9e4c421c00b716078}{stagger\_radius\_std\_inj}};}
+\DoxyCodeLine{00447\ \ \ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{group__dpm__parallel_ga13ac49415fe85fbdd5cea5ec8b1102c7}{stagger\_spatial\_n\_tries}};}
+\DoxyCodeLine{00448\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaac00609f2aaeaa147177bfacda22d5c0}{solid\_cone\_uniform\_mass\_distribution}};}
+\DoxyCodeLine{00449\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gae04ea9f11fffe067d625b4e2b75fcf1a}{atomizer\_uniform\_mass\_distribution}};}
+\DoxyCodeLine{00450\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga1692cf898f8269e0829c751f7f62e07a}{atomizer\_downstream\_closest\_cell\_epsilon}};}
+\DoxyCodeLine{00451\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga4df9451dc2b9874e7eb9a79ae5996250}{atomizer\_downstream\_iterations}};}
+\DoxyCodeLine{00452\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5430017d9f0e46b117d4573de9740fce}{atomizer\_downstream\_try\_locate}};}
+\DoxyCodeLine{00453\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gadd6913c9796f9a77cccf393a77c6745d}{pressure\_swirl\_atomizer\_swirl\_direction}};}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ \mbox{\hyperlink{structspray__suite__struct}{spray\_suite\_t}}\ \mbox{\hyperlink{group__dpm__parallel_gac86b0a523683d1d208bc2f1ad4212733}{spray\_suite}};}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga315544d949e6101ce3ef0d36208fec3f}{levich\_breakup\_model}};}
+\DoxyCodeLine{00458\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gab45859eff2514c08838d407d192ed949}{levich\_breakup\_type}};}
+\DoxyCodeLine{00459\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaa860ff5f932865cf2ffce114085729c8}{levich\_breakup\_const}};}
+\DoxyCodeLine{00460\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac328fa7d3090e2d9328f29725138c815}{all\_p\_in\_liquid\_core}};}
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga5d878d2ef0f8724fea8ba3b4d06a28af}{n\_scalars}};}
+\DoxyCodeLine{00463\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga7d5247097f86f179be07b5396c34a71c}{n\_cbk}};\ \textcolor{comment}{/*CBK\ model\ integration\ constants*/}}
+\DoxyCodeLine{00464\ }
+\DoxyCodeLine{00465\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga7d198dd3f44d23288395527f06d0d73c}{implicit\_momentum\_coupling}};}
+\DoxyCodeLine{00466\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga9b7842422d09ea64f3195fb94a7d4c9c}{old\_implicit\_momentum\_coupling}};}
+\DoxyCodeLine{00467\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga048e94940de5cca732e371e5cab20722}{sources\_every\_flow\_iteration}};}
+\DoxyCodeLine{00468\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga2bdb85c93fafbe6b7bad76e4d73e969c}{linearized\_source\_terms}};}
+\DoxyCodeLine{00469\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gace213bb0e02d20fa12ef9c1825b854f3}{const\_linearized\_source}};}
+\DoxyCodeLine{00470\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gab9b5fcbd58ee6618be60e940e1508289}{source\_linearization\_limit}};\ \textcolor{comment}{/*\ disable\ limiter,\ if\ set\ to\ zero,\ otherwise\ relative\ to\ flow\ */}}
+\DoxyCodeLine{00471\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga3f9c4287e2dc4ff502b0522234f586fc}{dpm\_linearize\_mixture\_fraction\_source\_terms}};}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga1a03ab193f7e4c12cd3fd59633511da2}{barycentric\_interpolation}};\ \ \ \ \ \textcolor{comment}{/*\ use\ barycentric\ coordinate\ interpolation\ (BCI)\ */}}
+\DoxyCodeLine{00474\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5e51243529852ed98ea44c92e084db9f}{flow\_gradient\_interpolation}};\ \ \ \textcolor{comment}{/*\ interpolate\ flow\ solution\ gradients\ to\ the\ particle\ position\ */}}
+\DoxyCodeLine{00475\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gacea5b59efa9df23f0257c050048b6962}{velocity\_interpolation}};}
+\DoxyCodeLine{00476\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga495910f843494639f8c135047cff0b6d}{univ\_grad\_based\_interpolation}};}
+\DoxyCodeLine{00477\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5b49ec159e5c4dff6e1bab2aab10458e}{temperature\_interpolation}};}
+\DoxyCodeLine{00478\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gabf25a8e00dd1e9f33d1f4d6fcbb61d65}{variable\_interpolate\_in\_time}};\ \ \textcolor{comment}{/*\ transient\ variable\ interpolation\ */}}
+\DoxyCodeLine{00479\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaccdc9c22f10d7f7cfeea395711dec92d}{mesh\_interpolate\_in\_time}};\ \ \ \ \ \ \textcolor{comment}{/*\ transient\ mesh\ interpolation\ */}}
+\DoxyCodeLine{00480\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gadea08724a4d6063ba0dd66122b1338b4}{interpolate\_nodes}};}
+\DoxyCodeLine{00481\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \mbox{\hyperlink{group__dpm__parallel_gada30c337d8c83d94217aa9cf35a7cdc4}{interpolate\_kernel}};}
+\DoxyCodeLine{00482\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \mbox{\hyperlink{group__dpm__parallel_ga34348c54b4015dd9bf6f134a3f44758b}{interpolate\_stencil}};}
+\DoxyCodeLine{00483\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ \ \mbox{\hyperlink{group__dpm__parallel_gab59ab6e2f251d89238e2baca9d9aaded}{interpolate\_gauss}};}
+\DoxyCodeLine{00484\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8885e512ea19c47fb4094eb6c6295af1}{interpolate\_p}};}
+\DoxyCodeLine{00485\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac186a73ea1b568878eb8ab4be5ba7d6d}{interpolate\_vel}};}
+\DoxyCodeLine{00486\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga998d54d91fd561e3e4060a643c933d05}{interpolate\_temp}};}
+\DoxyCodeLine{00487\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga913e6618998c8859c2449de868b8c40e}{interpolate\_turb}};}
+\DoxyCodeLine{00488\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga20254a7bc9dc4a256d782be2b773efce}{interpolate\_granular}};}
+\DoxyCodeLine{00489\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga3ad7b7a21a1533640f13a28013144611}{interpolate\_memory\_initialized}};}
+\DoxyCodeLine{00490\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga000b8d542333a4e06feec054bd37a0bd}{have\_nodal\_m1\_variables}};}
+\DoxyCodeLine{00491\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5658da99e77a6a1e527b298ad51d4e35}{use\_averaged\_nodal\_velocity}};}
+\DoxyCodeLine{00492\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga947e92128408cce3ef523893673be313}{interpolate\_all\_vars\_from\_nodes}};}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \ \ \textcolor{comment}{/*\ global\ nodal\ interpolation\ setup\ for\ dpm\ particles\ and\ pathlines\ */}}
+\DoxyCodeLine{00495\ \ \ \mbox{\hyperlink{structdpm__intrpl__nvars__t}{dpm\_intrpl\_nvars\_t}}\ \ \ \ \ \ \mbox{\hyperlink{group__dpm__parallel_ga12ea9d3ab9a407843f5cd9f0d239865a}{dpm\_intrpl\_nvars}};}
+\DoxyCodeLine{00496\ \ \ \mbox{\hyperlink{structdpm__intrpl__nvars__t}{dpm\_intrpl\_nvars\_t}}\ \mbox{\hyperlink{group__dpm__parallel_ga7b4bf19392987c421ead13dd917cfabc}{pathline\_intrpl\_nvars}};}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00498\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \mbox{\hyperlink{group__dpm__parallel_ga062b65341a8f8b4d9355a1bfd18b1097}{nci\_node\_correction\_algorithm}};}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gab44e10132b0e709ce183146df206d622}{velocity\_wall\_interpolation}};}
+\DoxyCodeLine{00501\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga4a2b9763a1952ad9afd2418c6e26727a}{sources\_implicit}};}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00504\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gabd60a92b747149c8c9e961f69f4af389}{eulerian\_source\_term\_coupling}};}
+\DoxyCodeLine{00505\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga2e45fa572184f7f239beb66e768fc2ff}{consider\_discrete\_phase\_vof}};}
+\DoxyCodeLine{00506\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5fbc55bf84c4abf81f915a8251b1400d}{relocate\_unsteady\_particles\_for\_mdm}};\ \ \textcolor{comment}{/*\ DE21583\ */}}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00509\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga276cb25f33a5249f11a9712985264790}{avg\_nodes}};}
+\DoxyCodeLine{00510\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaffb5d1fc455bd5aaca7252c730ab4bae}{avg\_kernel}};}
+\DoxyCodeLine{00511\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga1281eefe870cbdba57898088adf9cf7b}{avg\_sources}};\ \ \ \textcolor{comment}{/*\ node\ based\ averages\ of\ source\ terms\ */}}
+\DoxyCodeLine{00512\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8ab8278c224041a92d820f103535c984}{avg\_ddpm\_vars}};\ \textcolor{comment}{/*\ node\ based\ averages\ of\ DDPM\ variables\ */}}
+\DoxyCodeLine{00513\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga66b86d00969a81c0712860cb64905f50}{avg\_each\_step}};\ \textcolor{comment}{/*\ do\ averaging\ after\ each\ integration\ step\ */}}
+\DoxyCodeLine{00514\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga7aeb4f8f1ce917e99030fd285b692230}{avg\_gauss}};}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8de06ace7ff08b8e1893c6f16f0f5196}{short\_wave\_airblast}};}
+\DoxyCodeLine{00517\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gae32f8c69dcb18526620d02a78595ecb3}{atomizer\_spread\_param}};}
+\DoxyCodeLine{00518\ }
+\DoxyCodeLine{00519\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga1ca179dc1376e4a7a4b73f668bbcb026}{momentum\_ap\_coeff\_multiplier}};\ \ \ \textcolor{comment}{/*\ dpm\ source\ term\ ap\ coeff\ multiplier\ */}}
+\DoxyCodeLine{00520\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga8dffb101f3b5004b6b7d8bf72add5979}{energy\_ap\_coeff\_multiplier}};}
+\DoxyCodeLine{00521\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga71b8dccfe9b72a209ad378006b74b5c0}{species\_ap\_coeff\_multiplier}};}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga2a446cc57ef740639cd6e907079a4ce4}{dpm\_linear\_source\_term\_change}};}
+\DoxyCodeLine{00524\ }
+\DoxyCodeLine{00525\ \ \ \textcolor{comment}{/*\ pdf\ transport\ */}}
+\DoxyCodeLine{00526\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaa5488ce6cfc178d9737090c9fbb88e0a}{number\_control}};}
+\DoxyCodeLine{00527\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gab6c8ba28c3fd2ffa94e1bed53fed94bd}{position\_correction}};}
+\DoxyCodeLine{00528\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac5e059d59a59367f98e128d42bf90b8e}{local\_time\_step}};}
+\DoxyCodeLine{00529\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gadafe2815835661338d37f49891fa138c}{mixing\_model}};}
+\DoxyCodeLine{00530\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaf821ca30f83d738c4995d3ddf594d145}{num\_pdf\_steps}};}
+\DoxyCodeLine{00531\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga26db70419cf368885a3f2a4d3720dd8d}{num\_fv\_steps}};}
+\DoxyCodeLine{00532\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga63d99d18bfe117e40ba3a2cda2f8d146}{i\_ta}};}
+\DoxyCodeLine{00533\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaa8a7819675779eace78b8ecda6e57a95}{micro\_mixing}};}
+\DoxyCodeLine{00534\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gab7eafe52ba941ad087b4666236468033}{n\_ta}},\ \mbox{\hyperlink{group__dpm__parallel_ga1cb7adfe181434d767e29e9111af2cf3}{inc\_ta}};}
+\DoxyCodeLine{00535\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga76c6e3e71db3f70a3abcc33bca0bcaa1}{num\_part\_per\_cell}};}
+\DoxyCodeLine{00536\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaa89b40f8ba2e5f10466a7ecd44788cce}{ppc\_consts}}[4];}
+\DoxyCodeLine{00537\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga82886602516a6c2549b5041d47d066af}{C\_phi}};}
+\DoxyCodeLine{00538\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gafd9ae3c11cc1014c39f19e3e3ed5230b}{pdft\_cfl}};}
+\DoxyCodeLine{00539\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga9d621289b231e0da707a8bc40b14e901}{pdft\_fourier}};}
+\DoxyCodeLine{00540\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga5f39064dbdeafe8394cef3d72fe5ac4f}{pdft\_freq}};}
+\DoxyCodeLine{00541\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga005650bba229394018e3c8f90aea6129}{pdft\_time\_step}};}
+\DoxyCodeLine{00542\ }
+\DoxyCodeLine{00543\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga28a41af117fed9cc98ff91e09bc9599b}{par\_dpm}},\ \mbox{\hyperlink{group__dpm__parallel_gaa64c840f024ee372dbfd080b95453e44}{par\_mig}};}
+\DoxyCodeLine{00544\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gafdcf8dfe0205a148ceab36bbff433392}{homogeneous\_net}};}
+\DoxyCodeLine{00545\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga72395e438c1eea32c4e90e2d2ac58fc8}{cell\_face\_weighting}};}
+\DoxyCodeLine{00546\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga1c959e9ead8edc6642aa258aae1c01f8}{injections\_defined}};}
+\DoxyCodeLine{00547\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gae33acfefe18c36158256bd6f72b5175f}{particles\_in\_domain}};}
+\DoxyCodeLine{00548\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga2123af89986124e1e7ccbb14e8be7580}{source\_non\_zero}};}
+\DoxyCodeLine{00549\ }
+\DoxyCodeLine{00550\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga96fbab54f51d6827ef0afdbd19d9d038}{random\_tab\_diam}};}
+\DoxyCodeLine{00551\ \ \ \textcolor{comment}{/*\ int\ number\_tab\_diameters;\ \ \ -\/-\/\ now\ injection-\/specific\ */}}
+\DoxyCodeLine{00552\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga63e5ab3a0f114792306e6703e5cc7e5a}{lower\_tab\_diam\_ratio}};}
+\DoxyCodeLine{00553\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaa1401a4e5b20efb29582d8ad04e30238}{tab\_spread\_param}};}
+\DoxyCodeLine{00554\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaa329a9206512c2be539738330749d0db}{tracking\_order\_randomizations}};}
+\DoxyCodeLine{00555\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaba3d28745813ebccd06a707d1cf0dd0b}{random\_uniform}};}
+\DoxyCodeLine{00556\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaf63281d5d617de74fe41d2dae43eebe9}{uniform\_random}};}
+\DoxyCodeLine{00557\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga18bffc8dbf1bd98899736d01bcf6ae6e}{random\_gauss}};}
+\DoxyCodeLine{00558\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaad86b78f4bd350541496050b68608f50}{gauss\_random}};}
+\DoxyCodeLine{00559\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga9fc40ad96d8b075ccc485eee8323f476}{cp\_correction}};}
+\DoxyCodeLine{00560\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga38b2c8dbc5756b1a150a096709d5bb0b}{multicomponent\_boiling}};}
+\DoxyCodeLine{00561\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaeabcdbbf044e5b44e96bd786c111eae8}{density\_multispecies}};}
+\DoxyCodeLine{00562\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaff33783130bee72dcd1c1b2c3262a682}{dpm\_vof}};}
+\DoxyCodeLine{00563\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga7aeb881f5da7fb27c3747530c9900210}{fill\_sources\_per\_material}};}
+\DoxyCodeLine{00564\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga61239679d4033a706b2aaeeeac068e71}{dpm\_vof\_scheme\_type}};}
+\DoxyCodeLine{00565\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaf3d879259ea3f3917c40adb470911a52}{dpm\_vof\_velocity\_correction}};}
+\DoxyCodeLine{00566\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga86ac7857b21bb42ede4191442e7373b6}{dpm\_vof\_gran\_temp\_lower\_limit}};}
+\DoxyCodeLine{00567\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga293fb8a0fc4fccd756db141d984eb5a8}{n\_dpm\_domains}};}
+\DoxyCodeLine{00568\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga822d0a401a134ec3e62fdf32a8b385ea}{dpm\_vof\_show\_internal\_variables}};}
+\DoxyCodeLine{00569\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga35fa89347f6108d353d961106beae0b3}{dpm\_vof\_euler\_check\_neighbour\_vof}};}
+\DoxyCodeLine{00570\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga599e2996ef1bc6ae10053e6c4c272391}{dpm\_vof\_euler\_allow\_parallel\_hybrid}};}
+\DoxyCodeLine{00571\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaa5b7c55c0648b3c752d4b3c0a834d35e}{reset\_partition\_weights}};}
+\DoxyCodeLine{00572\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac3cc995ef1a40063d03a799795fc7272}{display\_free\_particles}};}
+\DoxyCodeLine{00573\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga94b3655b9fc54beb158334ec371393e5}{display\_wallfilm\_particles}};}
+\DoxyCodeLine{00574\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga1bdcfae3209cbd96db35a2ae356fa15e}{verbosity}};}
+\DoxyCodeLine{00575\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga0357f6c6d10fa851291f2e9d4cd7081f}{is\_pathline}};\ \ \textcolor{comment}{/*\ we\ are\ doing\ the\ pathline\ plot\ */}}
+\DoxyCodeLine{00576\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga82c30f6483c4a08932a95ab9283e9476}{polyhedron\_tet\_division\_level}};\ \textcolor{comment}{/*\ 0\ =\ no\ division,\ 1\ =\ based\ on\ faces,\ 2\ =\ based\ on\ nodes\ */}}
+\DoxyCodeLine{00577\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gadebb05a603f2a2b82005a8cc58bb6500}{n\_time}};\ \textcolor{comment}{/*\ number\ of\ the\ current\ flow\ time\ step\ */}}
+\DoxyCodeLine{00578\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga85bfddf8e91c85c7024e46288bff1e0e}{n\_dpm\_time}};\ \textcolor{comment}{/*\ number\ of\ the\ current\ dpm\ time\ step\ (rpvar\ 'dpm/time-\/step)\ */}}
+\DoxyCodeLine{00579\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga6d3cee5383dc7f78b92a5f24bba377b9}{sub\_cycling\_no\_update}};\ \textcolor{comment}{/*\ indicates\ status\ during\ sub\ cycling\ within\ a\ time\ step\ */}}
+\DoxyCodeLine{00580\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gacf4c2cb6a2861a583ee929fb43fc4948}{parallel\_hybrid}};\ \textcolor{comment}{/*\ switch\ for\ parallel\ hybrid\ model\ */}}
+\DoxyCodeLine{00581\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga011682d80bb02c09bbf912cb00060ab6}{dem\_hybrid}};\ \textcolor{comment}{/*\ switch\ for\ dem\ hybrid\ model\ */}}
+\DoxyCodeLine{00582\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gad25d9b96cabc730b0e86bac959104800}{dem\_part\_method}};\ \textcolor{comment}{/*\ switch\ for\ dem\ part\ method,\ 0-\/1d,\ 1-\/metis\ */}}
+\DoxyCodeLine{00583\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gae44785f3bce888550946fc1236b503b3}{parallel\_imbalance\_tolerant}};\ \textcolor{comment}{/*\ the\ allowable\ group\ size\ deviation\ */}}
+\DoxyCodeLine{00584\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gad42525c1827ee25945c8aa7236256b3d}{parallel\_group\_size\_minimum}};\ \textcolor{comment}{/*\ the\ minimum\ allowable\ group\ size\ */}}
+\DoxyCodeLine{00585\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga2b954f586a7847eea5c90d902745db1b}{parallel\_nthreads}};\ \textcolor{comment}{/*\ the\ number\ of\ threads\ */}}
+\DoxyCodeLine{00586\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga86f4914e5feb64a7b2de22e9f92e60ee}{parallel\_lb\_method}};\ \textcolor{comment}{/*\ the\ type\ of\ load\ balance\ method\ */}}
+\DoxyCodeLine{00587\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga7064d5e4bf4a7f7dc801d695a33afcf6}{memory\_alloc\_limit}};\ \textcolor{comment}{/*\ maximum\ memory\ in\ bytes\ allocated\ for\ particle\ exchange\ arrays\ */}}
+\DoxyCodeLine{00588\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga050b9478450a7134d213220b0c66aff3}{enforce\_locks\_in\_mallocs}};}
+\DoxyCodeLine{00589\ \ \ \textcolor{keywordtype}{void}\ ***\mbox{\hyperlink{group__dpm__parallel_ga875f701be5b35048fd7ff4eca74aa327}{omp\_mem}};\ \textcolor{comment}{/*\ the\ thread\ specific\ memory\ */}}
+\DoxyCodeLine{00590\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga945415c2396acb789fbc704a5d9aacf8}{nomp\_mem}};\ \textcolor{comment}{/*\ the\ number\ of\ thread\ specific\ memory\ */}}
+\DoxyCodeLine{00591\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{group__dpm__parallel_gab6acf02187698d3c24bf4aca6f29fc2b}{lock\_count}};}
+\DoxyCodeLine{00592\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gad3aee8d9d5d358b8cef14fde1ba583b5}{cfunc\_level}};\ \ \ \ \ \ \textcolor{comment}{/*\ us20658\ */}}
+\DoxyCodeLine{00593\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gabe2f6fc3876f1bd332bfed8626f365c2}{cfunc\_level\_last}};\ \textcolor{comment}{/*\ us20658\ */}}
+\DoxyCodeLine{00594\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga4c5afd900d7580309cc95c3e27440b78}{unsteady\_statistics}};}
+\DoxyCodeLine{00595\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga19359470a11eb1089a08631a1193085b}{do\_dpm\_per\_inj\_thread\_summaries}};}
+\DoxyCodeLine{00596\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaf77b2b1fd2ba3cc5c2f6aa4c66cb72b0}{use\_particle\_random\_seeds}};}
+\DoxyCodeLine{00597\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac85f99cc0281c23982f645e6fce893a7}{serial\_particle\_id}};}
+\DoxyCodeLine{00598\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga58ade228089ec47f5d7c233d4794b7dd}{use\_iteration\_seed}};}
+\DoxyCodeLine{00599\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaef2ba80df8412da018a32192e85379b9}{use\_timestep\_seed}};}
+\DoxyCodeLine{00600\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga55eef30fd247a1a17ba797d45b8ada7b}{use\_timestep\_seed\_corrected}};\ \textcolor{comment}{/*\ de176638\ */}}
+\DoxyCodeLine{00601\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad7c1ad3df09bba92ca31cd24b4568c6a}{use\_injection\_name\_seed}};\ \textcolor{comment}{/*\ bugfix\ */}}
+\DoxyCodeLine{00602\ }
+\DoxyCodeLine{00603\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gafb113623c5f79dba1395c2406483f1e8}{surf\_inj\_cont\_part\_id}};}
+\DoxyCodeLine{00604\ }
+\DoxyCodeLine{00605\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga9a1b95e6f59b04cd6490bfd9e6666d99}{do\_rotation}};\ \textcolor{comment}{/*\ used\ to\ control\ visibility\ of\ postprocessing\ variables\ */}}
+\DoxyCodeLine{00606\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gac6affce9b085809bfec9800aabb35716}{visualize\_rotation}};\ \textcolor{comment}{/*\ will\ require\ additional\ memory\ for\ storing\ quaternion\ (4-\/tuple\ array)\ per\ particle.\ */}}
+\DoxyCodeLine{00607\ }
+\DoxyCodeLine{00608\ \ \ \textcolor{comment}{/*\ DEM\ */}}
+\DoxyCodeLine{00609\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga868a64b540908c1d16bdb4ea784c5aa0}{dem\_max\_van\_der\_waals\_range}};}
+\DoxyCodeLine{00610\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{group__dpm__parallel_gafc6dc6f8e53f36f6d79fa6528d238c89}{pl\_velocity\_domain}}[\mbox{\hyperlink{materials_8h_ae9f95c4490b6fbca71154fcef8da1b53}{MATERIAL\_NAME\_LENGTH}}];\ \textcolor{comment}{/*\ velocity\ domain\ for\ pathlines.\ Use\ name\ instead\ of}}
+\DoxyCodeLine{00611\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ domain\ index\ since\ "{}all-\/phases"{}\ is\ also\ an\ option.\ */}}
+\DoxyCodeLine{00612\ }
+\DoxyCodeLine{00613\ \ \ \textcolor{comment}{/*\ Subtet\ tracking\ */}}
+\DoxyCodeLine{00614\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad1d1d722e5db44a29cb3f19233a33a33}{use\_subtet\_tracking}};}
+\DoxyCodeLine{00615\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gadb2c79de65252f3aab09810037cb89e5}{change\_messages\_to\_errors}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ causes\ regression\ tests\ to\ fail\ if\ message\ appears\ */}}
+\DoxyCodeLine{00616\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad95bb2a1d75514ba586b34a665becedd}{check\_cubic\_roots}};}
+\DoxyCodeLine{00617\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga892c0ca23265ed64a48b8cc228234f11}{check\_for\_local\_min\_max}};}
+\DoxyCodeLine{00618\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gacda434a43e6f210e37abd400a52dc727}{check\_subtet\_validity}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ test\ for\ degenerate\ subtets\ */}}
+\DoxyCodeLine{00619\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5f3815c6297637df3f09083f1af600cf}{use\_quad\_face\_centroid}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ use\ face\ centroid\ when\ decomposing\ quad\ faces\ */}}
+\DoxyCodeLine{00620\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaeca46baef862622a87eafb99c15f1d45}{check\_subtet\_before\_intersections}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ skip\ intersection\ calculations\ if\ the\ particle\ is\ within\ the\ subtet\ */}}
+\DoxyCodeLine{00621\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga63d11619867e9ea1b9bb2e77a4b37ceb}{check\_if\_particle\_is\_in\_cell}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ only\ accumulate\ sources\ if\ the\ particle\ is\ in\ the\ expected\ cell\ */}}
+\DoxyCodeLine{00622\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gad625ed86eac0b5276d2b8fb14905a8b3}{check\_for\_missed\_intersections}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ confirm\ particle\ is\ in\ subtet\ when\ interpolating\ variables\ */}}
+\DoxyCodeLine{00623\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5dd3f67cffe1af0d001577836bcb7dcf}{reflect\_pathlines\_from\_walls}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ reflect\ pathlines\ and\ hold\ the\ velocity\ constant\ for\ one\ timestep\ */}}
+\DoxyCodeLine{00624\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga71be5aa446f52f4a06c9f4de997616db}{ignore\_acceleration\_for\_intersections}};\ \ \ \ \ \ \textcolor{comment}{/*\ update\ intersection\ parameters\ if\ point\ is\ outside\ of\ subtet\ */}}
+\DoxyCodeLine{00625\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gab10fbd716bf988de6f99356d4f044261}{zero\_gradients\_on\_walls}};}
+\DoxyCodeLine{00626\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaf05be93d7c5892ced2917b6da0df0960}{zero\_node\_velocity\_on\_walls}};}
+\DoxyCodeLine{00627\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaf2a247f7d126220d46adee2e0aac299d}{move\_particles\_traveling\_in\_plane}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ move\ particles\ off\ of\ subtet\ planes\ if\ they\ are\ traveling\ within\ them\ */}}
+\DoxyCodeLine{00628\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga5fcbbaa00d042106cde8cf82988bc4fb}{scale\_intersection\_tolerance}};}
+\DoxyCodeLine{00629\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga911eb273189586b889da3023f2b662e0}{mdm\_layering\_active}};}
+\DoxyCodeLine{00630\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga565ab2fcb89c6959fe8471e66733c9c7}{project\_lwf\_particle\_to\_film}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ project\ wall\ film\ particles\ to\ film\ when\ entering\ a\ new\ face\ */}}
+\DoxyCodeLine{00631\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga9da0b8c6b8315f3390fb5a59114450f1}{project\_lwf\_particle\_for\_subtet\_tracking}};\ \ \ \textcolor{comment}{/*\ project\ the\ particle\ to\ the\ film\ to\ change\ from\ standard\ tracking\ */}}
+\DoxyCodeLine{00632\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gabaf60edc01a315d9c2da48bd76f0b9b1}{disable\_film\_particle\_acceleration}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ disable\ acceleration\ to\ separate\ tracking\ from\ physics\ */}}
+\DoxyCodeLine{00633\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga65f1fe0856448a98c8165f64b63eb443}{disable\_wallfilm\_stick\_regime}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ ensure\ that\ wall\ film\ particles\ have\ an\ initial\ velocity\ */}}
+\DoxyCodeLine{00634\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8d175617dd0c5aa9d774c6471ac4ef53}{freeze\_wallfilm\_properties}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ holds\ the\ film\ constant,\ permitting\ "{}one-\/way"{}\ tracking\ of\ film\ particles\ */}}
+\DoxyCodeLine{00635\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga25cd647d3931563bbf9ca3bc31f13845}{hanging\_node\_compatibility}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ subtet\ tracking\ is\ compatible\ with\ hanging\ nodes\ when\ true\ */}}
+\DoxyCodeLine{00636\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga810c0c89e7600d5dd11cc9b0f9229b75}{remove\_from\_stationary\_plane\_fraction}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fraction\ to\ move\ the\ particle\ towards\ the\ subtet\ center\ */}}
+\DoxyCodeLine{00637\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gab974ecf8ec6800cd47794c67a34df427}{remove\_from\_moving\_plane\_fraction}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ fraction\ to\ move\ the\ particle\ towards\ the\ subtet\ center\ */}}
+\DoxyCodeLine{00638\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga3d72b8e2fc6c7bf77e51a117623ae0db}{subtet\_intersection\_tolerance}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ intersection\ tolerance\ (linear)\ constant\ */}}
+\DoxyCodeLine{00639\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__dpm__parallel_ga5305f943afbb275be177b2299788e9e4}{missed\_face\_intersection\_tolerance}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ tolerance\ for\ missed\ intersection\ warning\ */}}
+\DoxyCodeLine{00640\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__dpm__parallel_ga543ab15998b9285027f4998c61503a34}{wallfilm\_colinearity\_tolerance}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ tolerance\ scaling\ for\ are\_points\_colinear\ */}}
+\DoxyCodeLine{00641\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__dpm__parallel_ga7cb0d2a02a958d6493be27ae2774dc29}{negative\_discriminant\_limit}};}
+\DoxyCodeLine{00642\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__dpm__parallel_gad301e3875a51a8467d7ff69656bd115d}{crossing\_direction\_tolerance}};}
+\DoxyCodeLine{00643\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__dpm__parallel_ga6e4c5806aa5bb8b4522a108a1d739e79}{check\_cubic\_roots\_tolerance}};}
+\DoxyCodeLine{00644\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga217f0fefc355549e3a784624593eb5b0}{wallfilm\_node\_correction\_method}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ nodal\ velocity\ correction\ method\ for\ wallfilm\ faces\ */}}
+\DoxyCodeLine{00645\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gac0566cc1d52475f2a1222ad35562b0f0}{num\_edge\_update\_tolerance\_increases}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ maximum\ number\ of\ times\ the\ tolerance\ will\ be\ increased\ */}}
+\DoxyCodeLine{00646\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga115c55fc98c7ef45640382d44b97b6a9}{num\_edge\_update\_tolerance\_refinements}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ tolerance\ refinements\ when\ too\ many\ nodes\ are\ found\ */}}
+\DoxyCodeLine{00647\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga576e15267c63a0103601af6c6da406ff}{subtet\_warning\_verbosity}};}
+\DoxyCodeLine{00648\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga75c966b368ec8878a0c95b8901373d15}{newton\_method\_max\_cycles}};}
+\DoxyCodeLine{00649\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__dpm__parallel_gaaf28041c90adf3ea85f42db4e974676d}{low\_order\_intersect\_factor}};}
+\DoxyCodeLine{00650\ }
+\DoxyCodeLine{00651\ \ \ \textcolor{comment}{/*\ Disable\ safety\ belts\ */}}
+\DoxyCodeLine{00652\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaa7e202c43abdf68cd25c81d6daf11580}{disable\_safety\_belts}};\ \ \textcolor{comment}{/*\ disables\ all\ safety\ belts\ except\ for\ the\ exceptions\ below\ */}}
+\DoxyCodeLine{00653\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaf95eecc9f19f13ee0def50f7d8ca3b1d}{use\_inj\_safety\_belts}};\ \ \textcolor{comment}{/*\ for\ injections\ -\/\ does\ nothing\ unless\ disable\_safety\_belts\ is\ TRUE\ */}}
+\DoxyCodeLine{00654\ }
+\DoxyCodeLine{00655\ \ \ \textcolor{comment}{/*\ Erosion\ -\/\ MDM\ coupling\ and\ boundary\ face\ smoothing\ */}}
+\DoxyCodeLine{00656\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga9a80e53c053843c36d53ddcab082245b}{couple\_erosion\_mdm}};}
+\DoxyCodeLine{00657\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga612ffacd8aa09f197da56c015a5366c1}{include\_shear\_erosion}};}
+\DoxyCodeLine{00658\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga1de13346eb08654b7aa1a3454f9c3e90}{face\_smoothing\_number\_of\_sweeps}};}
+\DoxyCodeLine{00659\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga0ff64dbd21f0503073266e0c7edba067}{face\_smoothing\_weighting\_option}};}
+\DoxyCodeLine{00660\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga450b9bf14adcfda8eee5e6c8312152b8}{face\_smoothing\_conservative}};}
+\DoxyCodeLine{00661\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga17d4b6e7e7e543e30436bb7241ed5521}{wall\_material\_density}};}
+\DoxyCodeLine{00662\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gad197cc4005401f0a4fea8938ae0ffaf4}{erosion\_mdm\_termination\_total\_time}};}
+\DoxyCodeLine{00663\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga4404e00d06fa6bafa63e6099675be291}{erosion\_mdm\_termination\_max\_disp}};}
+\DoxyCodeLine{00664\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gaa16772d5c31a7cca1e49a5f6076b033e}{erosion\_mdm\_mesh\_max\_disp}};}
+\DoxyCodeLine{00665\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga4a8e1249aa6239fdbf689443200cb75a}{erosion\_mdm\_ref\_erosion\_model}};}
+\DoxyCodeLine{00666\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga1e8c173a493a767f85630c02cef95fd5}{erosion\_mdm\_simulation\_cntl\_num\_flow\_iterations}};}
+\DoxyCodeLine{00667\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga6a0cebc553d098b408f44c2bbfbdcabc}{crossover\_tol}};}
+\DoxyCodeLine{00668\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gab0268ba6d0aa073e705d2b0ea4aad896}{sample\_plane\_tolerance}};}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00670\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gae0758be48132b7b038047b7d88e158c9}{new\_acceleration\_form}};}
+\DoxyCodeLine{00671\ }
+\DoxyCodeLine{00672\ \ \ \textcolor{comment}{/*\ Wall\ interaction\ control\ factors\ */}}
+\DoxyCodeLine{00673\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga03633f4928606ad190686f0b308ef86c}{always\_move\_away\_from\_face}};}
+\DoxyCodeLine{00674\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gafa4ca0d69ae45496b02d45821adcf958}{push\_from\_wall\_fract}};}
+\DoxyCodeLine{00675\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_gabd873ca34a3414bd10d2cbf66e980a01}{minimum\_wall\_impact\_angle}};}
+\DoxyCodeLine{00676\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga85be49b99d2af3255f8df39c9e2f9a8e}{momentum\_relaxation\_time\_ratio}};}
+\DoxyCodeLine{00677\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8f010e7994094a1947622a3518cbd322}{dpm\_wall\_force}};}
+\DoxyCodeLine{00678\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga81bef364cc54708d85b9421ad1566e31}{ddpm\_implicit\_drag\_udf}};}
+\DoxyCodeLine{00679\ }
+\DoxyCodeLine{00680\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga579671e02589594ef0554cb7e65b1ae1}{breakup\_new\_partid}};}
+\DoxyCodeLine{00681\ }
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\#if\ !\ UDF\_COMPILER\ }\textcolor{comment}{/*\ disable\ for\ interpreted\ udfs\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00683\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm__parallel_ga4878299fee84581ec259e06d987ac4da}{next\_part\_id}};}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00685\ }
+\DoxyCodeLine{00686\ \}\ \mbox{\hyperlink{group__dpm__interface__global_ga4ca5d52c936afdbf94fdbaa408bae009}{dpm\_parameters\_t}};}
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00689\ \{}
+\DoxyCodeLine{00690\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gga0b887f38fa71033f0904f8e2330b6815a9bf961f1cf0a6f6c3a99d19ad749b215}{OM\_OBJP\_MANAGER}}\ =\ 0,}
+\DoxyCodeLine{00691\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gga0b887f38fa71033f0904f8e2330b6815aca29bcce7a165046eaf84d54c7bfa023}{OM\_UNIFORM\_RANDOM}},}
+\DoxyCodeLine{00692\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gga0b887f38fa71033f0904f8e2330b6815abac086065f0c2cc33a76c09a8a479ac6}{OM\_MEMORY\_MANAGER}},}
+\DoxyCodeLine{00693\ \ \ \mbox{\hyperlink{group__dpm__interface__global_gga0b887f38fa71033f0904f8e2330b6815a83fbec5217b39a439c1a8b1ef44c99f5}{OM\_MAX}}}
+\DoxyCodeLine{00694\ \};}
+\DoxyCodeLine{00695\ }
+\DoxyCodeLine{00696\ }
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\#define\ SG\_NODE\_INTERPOLATE\_IN\_TIME(domain)\ (dpm\_par.mesh\_interpolate\_in\_time\ \&\&\ SV\_ALLOCATED\_P\_NEW\ ((Get\_Node\_Thread\ (domain)),\ SV\_N\_X\_M1))}}
+\DoxyCodeLine{00698\ }
+\DoxyCodeLine{00699\ \textcolor{comment}{/*\ informs\ about\ first\ DPM\ iteration\ per\ time\ step,\ always\ true\ for\ steady\ flows\ */}}
+\DoxyCodeLine{00700\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__interface__global_ga614d6057abdf7b7d07ba3b31cce0a8f8}{DPM\_First\_Iteration\_P}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00701\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__interface__global_ga91f485e6d8dd515a7f90f3264dbbe820}{first\_wall\_film\_calculation}};}
+\DoxyCodeLine{00702\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structdpm__parameters__struct}{dpm\_parameters\_t}}\ \mbox{\hyperlink{group__dpm__interface__global_gacbe94b7ba0ca33fbdd3ddf5813e02196}{dpm\_par}};}
+\DoxyCodeLine{00703\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__interface__global_ga8b3b7cd60da6794d43cda8c8a7297c91}{DPM\_Phase\_Id}};}
+\DoxyCodeLine{00704\ }
+\DoxyCodeLine{00705\ \textcolor{comment}{/*\ @\}\ dpm\_interface\_global\ */}}
+\DoxyCodeLine{00706\ }
+\DoxyCodeLine{00710\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__storage_gad29aca9d401069f01657e067055bf26e}{init\_dpm\_scalar\_on\_node}}(\mbox{\hyperlink{structvariable__attribute__struct}{Var\_Attribute}}\ *sv,\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00711\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__storage_ga3d05217cf144a4a1e3a755fded8ebc23}{init\_dpm\_vector\_on\_node}}(\mbox{\hyperlink{structvariable__attribute__struct}{Var\_Attribute}}\ *sv,\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00712\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__storage_ga3bd2ce091ffa2ff0962b27ed980bc384}{init\_dpms\_species\_on\_node}}(\mbox{\hyperlink{structvariable__attribute__struct}{Var\_Attribute}}\ *sv,\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00713\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{group__dpm__interface__storage_gaf3864784a2619c415104443929f755b8}{DPM\_Get\_Storage\_Size}}(\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00715\ \textcolor{comment}{/*\ @\}\ dpm\_interface\_storage\ */}}
+\DoxyCodeLine{00716\ }
+\DoxyCodeLine{00721\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga9be0b27b5c80d7c785f83887b8a3a685}{SV\_FlushDPMSources}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00722\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gac4dce2e25d9958cb5073d7f01f2cf347}{DPM\_Set\_Particles\_In\_Domain}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00723\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga026f7f69e40be49f4f573df3f2abd20b}{Shift\_Unsteady\_Particles\_In\_Cell\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structstrans__struct}{STrans}}\ *\textcolor{keyword}{const});}
+\DoxyCodeLine{00724\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gad02c58c6e27245808ce8a8880e1c7d30}{DPM\_Reset\_Iter}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00725\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga5cd6dc0f984198983d5bbfefe25cbec6}{Unsteady\_PDF\_Transport}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00726\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gaba720648c37ba0bb0d3623e9cc37c3dc}{Move\_Unsteady\_Particles}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dtime);}
+\DoxyCodeLine{00727\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga75df9394e87b396edd63651186e74592}{InitializeDPMPrimitives}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00728\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga02e65f2d80b300cfeac9fae4cf8b4473}{DPM\_Update}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00729\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga4a269985d86c2ffae087759e3c8b76d4}{Model\_Initialize\_dpm}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00730\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga678bc25caa45eaf7935ddf3589a3c0b5}{Init\_Unsteady\_Particles}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00731\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gae07a3245470f95ff5f3e50980a3a4540}{Correct\_PDF\_Transport\_Density}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00732\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga815cfc73775576667ff68781d6f8bd4e}{Create\_Unsteady\_Particles}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ flow\_time,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ update);}
+\DoxyCodeLine{00733\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__interface__solver_ga7bf03ffc52db677536f060b4ac538bb0}{need\_dpm\_surften\_mu}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00734\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gaeeca8519a152548e359f089cabbedee4}{DPM\_Convert\_Transient\_Swirl\_Component}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00735\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gab775cdec01a446ad37b1a9f29d479524}{DPM\_Momentum\_Source}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}});}
+\DoxyCodeLine{00736\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga90e0026bf9c0ce1ca83742061ef5009b}{DPM\_Scalar\_Source}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}},\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}},\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}},\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}},\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}},\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}});}
+\DoxyCodeLine{00737\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gaf44f681bd28c94a40087adaf7a30bdd7}{DPM\_Turb\_Sources}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ eqn,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_phi,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_phi\_ap,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sv\_phi\_s\ );}
+\DoxyCodeLine{00738\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga92ea642407d7b2ec6a3dfc2ed8daf5b3}{SV\_UpdateDPMSourcesWithIteration}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00739\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga69565bdbc4d4d838bdfdb9c2736c5d68}{DPM\_Reset}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00740\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga582fd8718f5d7c33ef7c49ab3b383f45}{DPM\_Sync}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00741\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga79afa332619f28a7ee18ce33e5a75516}{DPM\_Get\_injection\_flows}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *sumdt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *sumnt);}
+\DoxyCodeLine{00742\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga62f4b317fa631721bfef92ceae7c6cdc}{SV\_GetSolverParameters}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00743\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_ga81ecba7551e448dfc0354a984b6cf843}{SV\_GetSolverRdef}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00744\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gaf765e66b4876ae15d5a15942b53f9aa3}{DPM\_Free\_Thread\_Data}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00745\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gabf525cff2efc26154bf85f65a1ca21a7}{DEM\_Set\_Boundary\_Collision\_Partner}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,\ \textcolor{keywordtype}{char}\ *as\_name);}
+\DoxyCodeLine{00746\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__interface__solver_gadcf84291990c773757a67352022abf79}{Reset\_inDomain\_Particles\_Summaries}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00747\ \textcolor{comment}{/*\ @\}\ dpm\_interface\_solver\ */}}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \textcolor{comment}{/*\ @\}\ dpm\_interface\ */}}
+\DoxyCodeLine{00750\ }
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\#if\ !\ UDF\_COMPILER\ }\textcolor{comment}{/*\ disable\ for\ interpreted\ udfs\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \textcolor{keyword}{typedef}\ void\ (*\ \mbox{\hyperlink{group__dpm__io_ga78c5c1f6ae32714dd21e4bbfe9d9cbbc}{dpm\_start\_tracks\_f}})\ (\textcolor{keywordtype}{int}\ nTracks,\ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *trackIdList);}
+\DoxyCodeLine{00758\ \textcolor{keyword}{typedef}\ void\ (*\ \mbox{\hyperlink{group__dpm__io_ga9622f4a75de1397c4a875a528abecd70}{dpm\_insert\_track\_f}})\ (\mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \ \ part\_id,}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ nPoints,}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ *positions,}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ *cellZones,}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ *cellIds,}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ nScalars,}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \ *scalars);}
+\DoxyCodeLine{00765\ \textcolor{keyword}{typedef}\ void\ (*\ \mbox{\hyperlink{group__dpm__io_ga3fd5c5a38c078dad041b2663ec510b4f}{dpm\_end\_tracks\_f}})\ ();}
+\DoxyCodeLine{00766\ }
+\DoxyCodeLine{00767\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00768\ \{}
+\DoxyCodeLine{00769\ }
+\DoxyCodeLine{00770\ \ \ \mbox{\hyperlink{group__dpm__io_ga78c5c1f6ae32714dd21e4bbfe9d9cbbc}{dpm\_start\_tracks\_f}}\ \mbox{\hyperlink{group__dpm__parallel_ga9be03e38842dbf7bfea8b69a6d9b9b11}{start\_tracks}};}
+\DoxyCodeLine{00771\ \ \ \mbox{\hyperlink{group__dpm__io_ga9622f4a75de1397c4a875a528abecd70}{dpm\_insert\_track\_f}}\ \mbox{\hyperlink{group__dpm__parallel_gaae04bfde8642242a34f02c97fdf2edb2}{insert\_track}};}
+\DoxyCodeLine{00772\ \ \ \mbox{\hyperlink{group__dpm__io_ga3fd5c5a38c078dad041b2663ec510b4f}{dpm\_end\_tracks\_f}}\ \ \ \mbox{\hyperlink{group__dpm__parallel_gaf82977b43fb436ff307d2a98bb9119df}{end\_tracks}};}
+\DoxyCodeLine{00773\ }
+\DoxyCodeLine{00774\ \}\ \mbox{\hyperlink{structdpm__track__callbacks__t}{dpm\_track\_callbacks\_t}};}
+\DoxyCodeLine{00775\ }
+\DoxyCodeLine{00776\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__io_gaf71f76c41ea7f5d6025d7c77e8b0108a}{DPM\_Set\_Track\_Callbacks}}(\mbox{\hyperlink{group__dpm__io_ga78c5c1f6ae32714dd21e4bbfe9d9cbbc}{dpm\_start\_tracks\_f}}\ start,\ \mbox{\hyperlink{group__dpm__io_ga9622f4a75de1397c4a875a528abecd70}{dpm\_insert\_track\_f}}\ insert,\ \mbox{\hyperlink{group__dpm__io_ga3fd5c5a38c078dad041b2663ec510b4f}{dpm\_end\_tracks\_f}}\ end);}
+\DoxyCodeLine{00777\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__io_ga280be0ea5ef98982416503766c0e77bd}{DPM\_Track\_Pathlines}}(\textcolor{keywordtype}{int}\ nTracks,}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *position,}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *cellIndex,}
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *cellZone,}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *particleId,}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ surfaceId,}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ maxSteps,}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sprim_8h_af0ac3203ee4ac7f1978fd034401988f5}{reverse}},}
+\DoxyCodeLine{00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nodalValues,}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ errorControl,}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ maxError,}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ lengthScale);}
+\DoxyCodeLine{00789\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !\ UDF\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00790\ }
+\DoxyCodeLine{00794\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__io__file_ga127cd515babd86720972c5f5f5585834}{Read\_Particle\_Data}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ mpi,\ \textcolor{keywordtype}{int}\ fhandle,\ \textcolor{keywordtype}{int}\ *headerbuf,\ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ double\_data);}
+\DoxyCodeLine{00795\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__io__file_gac339ee205d338cfdf790f7b49d6957b6}{Write\_Particle\_Data}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ mpi,\ \textcolor{keywordtype}{int}\ fhandle,\ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary);}
+\DoxyCodeLine{00796\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__io__file_ga5c9eaabef61e60ed16c229c37d38bcf1}{Update\_Wall\_Film\_Before\_Data\_Write}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00797\ \textcolor{comment}{/*\ @\}\ dpm\_io\_file\ */}}
+\DoxyCodeLine{00798\ }
+\DoxyCodeLine{00803\ \textcolor{comment}{/*\ Moved\ here\ from\ dpm\_types.h\ in\ order\ for\ the}}
+\DoxyCodeLine{00804\ \textcolor{comment}{\ *\ subsequent\ typedef\ struct\ ...\ to\ work:}}
+\DoxyCodeLine{00805\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\#define\ DPM\_NAME\_LENGTH\ 80}}
+\DoxyCodeLine{00807\ }
+\DoxyCodeLine{00808\ \textcolor{comment}{/*\ Moved\ here\ from\ dpm.c\ in\ order\ to}}
+\DoxyCodeLine{00809\ \textcolor{comment}{\ *\ use\ fread\_history\_header\ in\ util/sample.c:}}
+\DoxyCodeLine{00810\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00811\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00812\ \{}
+\DoxyCodeLine{00813\ \ \ \mbox{\hyperlink{group__dpm__io__history_gga12765f8f5952f2528563b38c27887afba62734c57b5ff34509794c3f8d12f18ff}{HIST\_COL\_OPTION}}\ =\ 0,}
+\DoxyCodeLine{00814\ \ \ \mbox{\hyperlink{group__dpm__io__history_gga12765f8f5952f2528563b38c27887afba539dc895271ec0e5f3ff4011860f8470}{HIST\_COL\_INTEGER32}},}
+\DoxyCodeLine{00815\ \ \ \mbox{\hyperlink{group__dpm__io__history_gga12765f8f5952f2528563b38c27887afbab2922a2e6a3f579ef378ca623e403137}{HIST\_COL\_INTEGER64}},}
+\DoxyCodeLine{00816\ \ \ \mbox{\hyperlink{group__dpm__io__history_gga12765f8f5952f2528563b38c27887afba10a31f7a77a9da226986946e59ef427e}{HIST\_COL\_FLOAT32}},}
+\DoxyCodeLine{00817\ \ \ \mbox{\hyperlink{group__dpm__io__history_gga12765f8f5952f2528563b38c27887afba5b6e1def5f0d779a80f5a3b61895e423}{HIST\_COL\_FLOAT64}},}
+\DoxyCodeLine{00818\ \ \ \mbox{\hyperlink{group__dpm__io__history_gga12765f8f5952f2528563b38c27887afba76b7285eea540282d476881aea532aae}{HIST\_COL\_MAX}}}
+\DoxyCodeLine{00819\ \}\ \mbox{\hyperlink{group__dpm__io__history_ga12765f8f5952f2528563b38c27887afb}{dpm\_history\_col\_type\_id\_t}};}
+\DoxyCodeLine{00820\ }
+\DoxyCodeLine{00821\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ \ \ \ \mbox{\hyperlink{group__dpm__io__history_ga9d7002bd20fa653f68c669069d683b21}{hist\_col\_type\_name}}[\mbox{\hyperlink{group__dpm__io__history_gga12765f8f5952f2528563b38c27887afba76b7285eea540282d476881aea532aae}{HIST\_COL\_MAX}}][4];}
+\DoxyCodeLine{00822\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{group__dpm__io__history_ga6b5c01613205eb90b3317527c6b075ba}{cfdpost\_col\_type\_name}}[\mbox{\hyperlink{group__dpm__io__history_gga12765f8f5952f2528563b38c27887afba76b7285eea540282d476881aea532aae}{HIST\_COL\_MAX}}][16];}
+\DoxyCodeLine{00823\ }
+\DoxyCodeLine{00824\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00825\ \{}
+\DoxyCodeLine{00826\ \ \ \textcolor{comment}{/*\ number\ of\ columns\ in\ history\ file\ */}}
+\DoxyCodeLine{00827\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga87e8ca5d4bb7a89c76b4393fa61d96c6}{ncol}};}
+\DoxyCodeLine{00828\ \ \ \textcolor{comment}{/*\ number\ of\ exported\ columns\ */}}
+\DoxyCodeLine{00829\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gae338b6ed88263f7c1189a62a0742460a}{nmap}};}
+\DoxyCodeLine{00830\ }
+\DoxyCodeLine{00831\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__history__data__t_1_1dpm__history__column}{dpm\_history\_column}}}
+\DoxyCodeLine{00832\ \ \ \{}
+\DoxyCodeLine{00833\ \ \ \ \ \textcolor{keywordtype}{char}\ type\_name[\mbox{\hyperlink{group__dpm__io__history_ga49135734ae339f4098de92c6e308819a}{DPM\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00834\ \ \ \ \ \mbox{\hyperlink{group__dpm__io__history_ga12765f8f5952f2528563b38c27887afb}{dpm\_history\_col\_type\_id\_t}}\ \mbox{\hyperlink{group__dpm__parallel_ga9bca52c763241a9c72b8b5008c2aa2c4}{read\_type}};}
+\DoxyCodeLine{00835\ \ \ \ \ \mbox{\hyperlink{group__dpm__io__history_ga12765f8f5952f2528563b38c27887afb}{dpm\_history\_col\_type\_id\_t}}\ \mbox{\hyperlink{group__dpm__parallel_gaa4774c5734d9176bf110ac057c905440}{write\_type}};}
+\DoxyCodeLine{00836\ }
+\DoxyCodeLine{00837\ \ \ \ \ \textcolor{keywordtype}{char}\ name[\mbox{\hyperlink{group__dpm__io__history_ga49135734ae339f4098de92c6e308819a}{DPM\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00838\ }
+\DoxyCodeLine{00839\ \ \ \ \ \textcolor{comment}{/*\ column\ index\ to\ be\ exported\ */}}
+\DoxyCodeLine{00840\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga028acbb9d5be8bed26805090dee0f3f5}{map}};}
+\DoxyCodeLine{00841\ }
+\DoxyCodeLine{00842\ \ \ \ \ \textcolor{keywordtype}{char}\ units[\mbox{\hyperlink{group__dpm__io__history_ga49135734ae339f4098de92c6e308819a}{DPM\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00843\ }
+\DoxyCodeLine{00844\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga1717319a933badffcdebbb8f8d97f68f}{min\_i32}};}
+\DoxyCodeLine{00845\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga89170b717686befdd71c589e1a82238f}{max\_i32}};}
+\DoxyCodeLine{00846\ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm__parallel_ga0c56c23868e966d70788dbefb9de4cef}{min\_i64}};}
+\DoxyCodeLine{00847\ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm__parallel_gab38ea11778e614789ac6e0e70b4e4b71}{max\_i64}};}
+\DoxyCodeLine{00848\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{group__dpm__parallel_ga96a24c211a1c3b4537ca006675ba7e55}{min\_f}};}
+\DoxyCodeLine{00849\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{group__dpm__parallel_ga1cd427703a64441f1ed3500107219f57}{max\_f}};}
+\DoxyCodeLine{00850\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__dpm__parallel_gaa227f41b50c9f8c62a10df5d4e66fe6b}{min\_d}};}
+\DoxyCodeLine{00851\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__dpm__parallel_gab0bacd01a71d4a464694866fb1502a4b}{max\_d}};}
+\DoxyCodeLine{00852\ }
+\DoxyCodeLine{00853\ \ \ \ \ \textcolor{keywordtype}{double}\ *\mbox{\hyperlink{group__dpm__parallel_ga095c7b6560dfc88558dd44ff20124706}{data\_d}};}
+\DoxyCodeLine{00854\ \ \ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ *\mbox{\hyperlink{group__dpm__parallel_gad4f0692e60f4c5eba5df23a178d47a06}{data\_i64}};}
+\DoxyCodeLine{00855\ \ \ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{group__dpm__parallel_gab5509170b148e4e162bff9bab3a73346}{data\_f}};}
+\DoxyCodeLine{00856\ \ \ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{group__dpm__parallel_gabfe13c00f88bab489a59c5a6ae94bd83}{data\_i32}};}
+\DoxyCodeLine{00857\ }
+\DoxyCodeLine{00858\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga998401b4484fe7565215772ae50ef4ce}{constant}};}
+\DoxyCodeLine{00859\ }
+\DoxyCodeLine{00860\ \ \ \}\ *col;}
+\DoxyCodeLine{00861\ }
+\DoxyCodeLine{00862\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga54aab7fa8c667267d304fcce6a932efc}{transient}};}
+\DoxyCodeLine{00863\ }
+\DoxyCodeLine{00864\ \ \ \textcolor{comment}{/*\ maps\ to\ certain\ columns\ */}}
+\DoxyCodeLine{00865\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaf0b6b6e161d91afee7c27fe4aaaaeaa7}{col\_pid}};}
+\DoxyCodeLine{00866\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga0fac0405e108dce281a60f4283df0398}{col\_step}};}
+\DoxyCodeLine{00867\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga58f8370b847ee17f60a5c46faa1e293b}{col\_xpos}};}
+\DoxyCodeLine{00868\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga8f6791a48409f7a3e2953f8602e86c49}{col\_ypos}};}
+\DoxyCodeLine{00869\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga1b6cdab76edd4501fa05db6fb94b0292}{col\_zpos}};}
+\DoxyCodeLine{00870\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga60ad30e978cd64c55d37fc879cca0dce}{col\_time}};}
+\DoxyCodeLine{00871\ }
+\DoxyCodeLine{00872\ \ \ \textcolor{comment}{/*\ allocated\ buffer\ size\ */}}
+\DoxyCodeLine{00873\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{group__dpm__parallel_ga799a743b3abd553a37fc01ad3097df08}{buffer\_size}};}
+\DoxyCodeLine{00874\ \}\ \mbox{\hyperlink{structdpm__history__data__t}{dpm\_history\_data\_t}};}
+\DoxyCodeLine{00875\ }
+\DoxyCodeLine{00876\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__io__history_ga59301cc2a13273e6163ca943cd5da04a}{fread\_history\_header}}(FILE\ *fp,\ \mbox{\hyperlink{structdpm__history__data__t}{dpm\_history\_data\_t}}\ *hdata);}
+\DoxyCodeLine{00877\ }
+\DoxyCodeLine{00878\ \textcolor{comment}{/*\ @\}\ dpm\_io\_history\ */}}
+\DoxyCodeLine{00879\ \textcolor{comment}{/*\ @\}\ dpm\_io\ */}}
+\DoxyCodeLine{00880\ }
+\DoxyCodeLine{00884\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_ga8405f9356abcda3f70604b37dd0560b8}{init\_parallel\_injections}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ init\_all\_neighbors);}
+\DoxyCodeLine{00885\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_ga34c5eceeaa7ff0ad6aa4e1c00ec81137}{free\_parallel\_injections}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00886\ \textcolor{comment}{/*\ @\}\ */}}
+\DoxyCodeLine{00887\ }
+\DoxyCodeLine{00888\ }
+\DoxyCodeLine{00891\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_ga8c4d900322a09e90f42746706170e754}{if\_traditional\_dpm\_collide}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00892\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{group__dpm__parallel_gaec84799cd204f1d2027326e7fc9e9f67}{if\_traditional\_dpm\_collide\_no\_vof}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00893\ }
+\DoxyCodeLine{00894\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00895\ \textcolor{comment}{\ *\ For\ IO2\ library}}
+\DoxyCodeLine{00896\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00897\ \textcolor{preprocessor}{\#define\ TO\_STRING(v)\ \#v}}
+\DoxyCodeLine{00898\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__io__t__}{dpm\_io\_t\_}}}
+\DoxyCodeLine{00899\ \{}
+\DoxyCodeLine{00900\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga0a3f6d41e27f792479c72cff3c12312f}{xf\_id}};}
+\DoxyCodeLine{00901\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{group__dpm__parallel_ga0d368c3e2cdb65ffbe7dff2067f80170}{name}}[\mbox{\hyperlink{group__dpm__io__history_ga49135734ae339f4098de92c6e308819a}{DPM\_NAME\_LENGTH}}];}
+\DoxyCodeLine{00902\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaed7ea92f45bd273dde380a45ddced592}{offset}};}
+\DoxyCodeLine{00903\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gac765329451135abec74c45e1897abf26}{type}};}
+\DoxyCodeLine{00904\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gabdb00fc5c746a4841c0cfe3a11aded13}{mpt\_type}};}
+\DoxyCodeLine{00905\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga439227feff9d7f55384e8780cfc2eb82}{size}};}
+\DoxyCodeLine{00906\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__io__t__}{dpm\_io\_t\_}}\ *\mbox{\hyperlink{group__dpm__parallel_ga1c00170c3a52a64604d5979648c35223}{next}};}
+\DoxyCodeLine{00907\ \}\ \mbox{\hyperlink{group__dpm__parallel_ga29d42e3d5fb3eb33f2b8b3da1a0bc2cb}{dpm\_io\_t}};}
+\DoxyCodeLine{00908\ }
+\DoxyCodeLine{00909\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structdpm__io__t__}{dpm\_io\_t}}\ *\mbox{\hyperlink{group__dpm__parallel_ga54750579b5ee3aeae40c13094c2f7c23}{Get\_DPM\_IO\_List\_Created}}(\textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00910\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_gae2a53228e39f757ebf9e7b8e8a4cfbbb}{Get\_DPM\_IO\_List\_Freed}}(\mbox{\hyperlink{structdpm__io__t__}{dpm\_io\_t}}\ **);}
+\DoxyCodeLine{00911\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga60802dddec4d217bb647041ec13eb1e7}{Get\_Particle\_Data\_Write\_Initialized}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00912\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm__parallel_ga23f77862fac01b08aa77b5c2d45f404d}{Get\_Flow\_Time}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00913\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga1e6ede318028116583ad1f432f638f40}{Is\_Next\_Particle\_ID\_Required}}(\textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00914\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga492a9bbbefcd86c79480ca513ad9984b}{Get\_Particles\_Created\_For\_Reading}}(\textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00915\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_gaa7c7874f88bd11266eccc5929852ffd6}{Get\_Particle\_Data\_Read\_Initialized}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{00916\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga69f2c9374b9b23d51515f23b02d818ca}{Get\_Particle\_Data\_Read\_Finalized}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00917\ }
+\DoxyCodeLine{00918\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_ga12656c4e76c5ac9a6356f04a35d86948}{Fix\_Unsteady\_Particles\_Ages}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ flow\_time);}
+\DoxyCodeLine{00919\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_gae3cf7d221c13f67d6c84db2aad29e88a}{Cache\_DPM\_RP\_Vars\_Depend\_On\_NITA}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00920\ }
+\DoxyCodeLine{00921\ }
+\DoxyCodeLine{00922\ \textcolor{comment}{/*\ *****\ oct\ tree\ search\ <cl\_dpm.c>\ */}}
+\DoxyCodeLine{00923\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_ga2f22ea328096797c573271ea523407a5}{DPM\_Init\_Oct\_Tree\_Search}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00924\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_ga6a3cf57af9c8474e6fe17f2849a8fb6b}{DPM\_Update\_Oct\_Tree\_Search}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00925\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_gaf41fdeecfd0edabf6b84f0f0fe835617}{DPM\_End\_Oct\_Tree\_Search}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00926\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_gaf13fb5c9f1e0121dbffabcb0b63f3ca0}{DPM\_Set\_Oct\_Tree\_Init\_Flag}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00927\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_gadcda459cc3a9fb706ac48a2d12a18b1c}{DPM\_Print\_Search\_Statistics}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00928\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm__parallel_ga5a28a89fc3f3030ff9aae89d77820e5c}{SV\_locate\_point}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ [],\ \mbox{\hyperlink{unioncell__id__struct}{CX\_Cell\_Id}}\ *);}
+\DoxyCodeLine{00929\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_ga6eb7c3e91321ced8126b0de53bd71d60}{calculate\_node\_from\_face\_values}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sw);}
+\DoxyCodeLine{00930\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__dpm__parallel_ga7d739a0ab98ec15cc372daf51a13fbec}{calculate\_face\_from\_node\_values}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ sw);}
+\DoxyCodeLine{00931\ }
+\DoxyCodeLine{00932\ \textcolor{preprocessor}{\#define\ PARALLEL\_DPM\ (\ RP\_Get\_Boolean("{}dpm/distributed-\/memory-\/parallel?"{})\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00933\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !I\_AM\_NODE\_SERIAL\_P\ )}}
+\DoxyCodeLine{00934\ }
+\DoxyCodeLine{00935\ \textcolor{preprocessor}{\#define\ I\_DO\_DPM\ (\ I\_AM\_NODE\_SERIAL\_P\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00936\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ PARALLEL\_DPM\ \&\&\ I\_AM\_COMPUTE\_NODE\_P)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00937\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (!PARALLEL\_DPM\ \&\&\ I\_AM\_NODE\_HOST\_P)\ \ )}}
+\DoxyCodeLine{00938\ \textcolor{preprocessor}{\#define\ DPM\_NODE\_ZERO\_OR\_HOST\ ((dpm\_par.par\_dpm\ \&\&\ I\_AM\_NODE\_ZERO\_P)\ ||\ (!dpm\_par.par\_dpm\ \&\&\ I\_AM\_NODE\_HOST\_P))}}
+\DoxyCodeLine{00939\ }
+\DoxyCodeLine{00940\ \textcolor{preprocessor}{\#define\ PARTICLE\_MIGRATION\ (\ PARALLEL\_DPM\ \&\&\ I\_AM\_COMPUTE\_NODE\_P\ )}}
+\DoxyCodeLine{00941\ }
+\DoxyCodeLine{00942\ \textcolor{preprocessor}{\#if\ RP\_2D}}
+\DoxyCodeLine{00943\ \textcolor{preprocessor}{\#\ \ define\ ADD\_SV\_VOLUME\_2D\ SV\_VOLUME\_2D,\ SV\_AREA\_2D,}}
+\DoxyCodeLine{00944\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00945\ \textcolor{preprocessor}{\#\ \ define\ ADD\_SV\_VOLUME\_2D}}
+\DoxyCodeLine{00946\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00947\ }
+\DoxyCodeLine{00948\ \textcolor{preprocessor}{\#define\ SV\_DPM\_DIST\_LIST\ \(\backslash\)}}
+\DoxyCodeLine{00949\ \textcolor{preprocessor}{\ \ SV\_DPM\_BNDRY\_DIST,\(\backslash\)}}
+\DoxyCodeLine{00950\ \textcolor{preprocessor}{\ \ SV\_DPM\_DIST}}
+\DoxyCodeLine{00951\ }
+\DoxyCodeLine{00952\ \textcolor{preprocessor}{\#define\ SV\_DPM\_WALL\_FILM\_LIST\ \(\backslash\)}}
+\DoxyCodeLine{00953\ \textcolor{preprocessor}{\ \ SV\_FILM\_HEIGHT,\(\backslash\)}}
+\DoxyCodeLine{00954\ \textcolor{preprocessor}{\ \ SV\_FILM\_MASS,\(\backslash\)}}
+\DoxyCodeLine{00955\ \textcolor{preprocessor}{\ \ SV\_FILM\_HEIGHT\_M0,\(\backslash\)}}
+\DoxyCodeLine{00956\ \textcolor{preprocessor}{\ \ SV\_FILM\_MASS\_M0,\(\backslash\)}}
+\DoxyCodeLine{00957\ \textcolor{preprocessor}{\ \ SV\_FILM\_TEMP,\(\backslash\)}}
+\DoxyCodeLine{00958\ \textcolor{preprocessor}{\ \ SV\_FILM\_HFLUX,\(\backslash\)}}
+\DoxyCodeLine{00959\ \textcolor{preprocessor}{\ \ SV\_FILM\_TEMP\_M0,\(\backslash\)}}
+\DoxyCodeLine{00960\ \textcolor{preprocessor}{\ \ SV\_FILM\_HFLUX\_M0,\(\backslash\)}}
+\DoxyCodeLine{00961\ \textcolor{preprocessor}{\ \ SV\_FILM\_H\_WALL,\(\backslash\)}}
+\DoxyCodeLine{00962\ \textcolor{preprocessor}{\ \ SV\_FILM\_VELOCITY,\(\backslash\)}}
+\DoxyCodeLine{00963\ \textcolor{preprocessor}{\ \ SV\_FILM\_M\_IMP,\(\backslash\)}}
+\DoxyCodeLine{00964\ \textcolor{preprocessor}{\ \ SV\_FILM\_M\_IMP\_M1,\(\backslash\)}}
+\DoxyCodeLine{00965\ \textcolor{preprocessor}{\ \ SV\_FILM\_MU,\(\backslash\)}}
+\DoxyCodeLine{00966\ \textcolor{preprocessor}{\ \ SV\_FILM\_SURF\_TENSION,\(\backslash\)}}
+\DoxyCodeLine{00967\ \textcolor{preprocessor}{\ \ SV\_FILM\_MU\_M0,\(\backslash\)}}
+\DoxyCodeLine{00968\ \textcolor{preprocessor}{\ \ SV\_FILM\_SURF\_TENSION\_M0,\(\backslash\)}}
+\DoxyCodeLine{00969\ \textcolor{preprocessor}{\ \ SV\_FILM\_STRIPPED,\(\backslash\)}}
+\DoxyCodeLine{00970\ \textcolor{preprocessor}{\ \ SV\_FILM\_LEIDENFROST,\(\backslash\)}}
+\DoxyCodeLine{00971\ \textcolor{preprocessor}{\ \ EXPAND\_PER\_MAT\_SV(FILM\_MASS\_OF)}}
+\DoxyCodeLine{00972\ }
+\DoxyCodeLine{00973\ \textcolor{preprocessor}{\#define\ SV\_DPM\_LEAN\_LIST\ \(\backslash\)}}
+\DoxyCodeLine{00974\ \textcolor{preprocessor}{\ \ SV\_P,\ SV\_DENSITY,\ \(\backslash\)}}
+\DoxyCodeLine{00975\ \textcolor{preprocessor}{\ \ SV\_U,\ SV\_V,\ SV\_W,\ \(\backslash\)}}
+\DoxyCodeLine{00976\ \textcolor{preprocessor}{\ \ SV\_U\_G,\ SV\_V\_G,\ SV\_W\_G,\ SV\_OMEGA\_G,\ \(\backslash\)}}
+\DoxyCodeLine{00977\ \textcolor{preprocessor}{\ \ SV\_P\_G,\ SV\_T\_G,\ \(\backslash\)}}
+\DoxyCodeLine{00978\ \textcolor{preprocessor}{\ \ SV\_U\_RG,\ SV\_V\_RG,\ SV\_W\_RG,\ \(\backslash\)}}
+\DoxyCodeLine{00979\ \textcolor{preprocessor}{\ \ SV\_P\_RG,\ SV\_T\_RG,\ \(\backslash\)}}
+\DoxyCodeLine{00980\ \textcolor{preprocessor}{\ \ SV\_FLUX,\ \(\backslash\)}}
+\DoxyCodeLine{00981\ \textcolor{preprocessor}{\ \ SV\_MU\_LAM,\ SV\_MU\_T,\ \(\backslash\)}}
+\DoxyCodeLine{00982\ \textcolor{preprocessor}{\ \ SV\_D,\ SV\_K,\ SV\_O,\ SV\_NUT,\ \(\backslash\)}}
+\DoxyCodeLine{00983\ \textcolor{preprocessor}{\ \ SV\_N\_FILM\_HEIGHT,\ SV\_WALL\_V,\ SV\_BND\_GRID\_V,\ \(\backslash\)}}
+\DoxyCodeLine{00984\ \textcolor{preprocessor}{\ \ SV\_DPM\_WALL\_FILM\_LIST,\ \(\backslash\)}}
+\DoxyCodeLine{00985\ \textcolor{preprocessor}{\ \ SV\_REFLECT\_HFLUX,\ \(\backslash\)}}
+\DoxyCodeLine{00986\ \textcolor{preprocessor}{\ \ SV\_RUU,\ SV\_RVV,\ SV\_RWW,\ SV\_RUV,\ SV\_RVW,\ SV\_RUW,\ \(\backslash\)}}
+\DoxyCodeLine{00987\ \textcolor{preprocessor}{\ \ SV\_T,\ SV\_H,\ SV\_HEAT\_FLUX,\ \(\backslash\)}}
+\DoxyCodeLine{00988\ \textcolor{preprocessor}{\ \ SV\_P1,\ SV\_DO\_IRRAD,\ SV\_DO\_IRRAD\_OLD,\ SV\_KTC,\ SV\_CP,\ \(\backslash\)}}
+\DoxyCodeLine{00989\ \textcolor{preprocessor}{\ \ SV\_ABS\_COEFF,\ SV\_SCAT\_COEFF,\ \(\backslash\)}}
+\DoxyCodeLine{00990\ \textcolor{preprocessor}{\ \ SV\_FMEAN,\ SV\_FMEAN2,\ SV\_FVAR,\ SV\_FVAR2,\ SV\_PDF\_MW,\ SV\_PREMIXC,\ \(\backslash\)}}
+\DoxyCodeLine{00991\ \textcolor{preprocessor}{\ \ SV\_INERT,\ SV\_INERT\_H,\ \(\backslash\)}}
+\DoxyCodeLine{00992\ \textcolor{preprocessor}{\ \ SV\_Y,\ \(\backslash\)}}
+\DoxyCodeLine{00993\ \textcolor{preprocessor}{\ \ EXPAND\_NPROB\_SV(UFLA\_YI),\ \(\backslash\)}}
+\DoxyCodeLine{00994\ \textcolor{preprocessor}{\ \ EXPAND\_NUDS\_SV(UDS),\ \(\backslash\)}}
+\DoxyCodeLine{00995\ \textcolor{preprocessor}{\ \ SV\_UDM\_I,\ \(\backslash\)}}
+\DoxyCodeLine{00996\ \textcolor{preprocessor}{\ \ SV\_DPM\_VIS\_0,\ \(\backslash\)}}
+\DoxyCodeLine{00997\ \textcolor{preprocessor}{\ \ SV\_DPM\_VIS\_1,\ \(\backslash\)}}
+\DoxyCodeLine{00998\ \textcolor{preprocessor}{\ \ SV\_DPM\_DIST\_LIST,\ }\textcolor{comment}{/*\ DE29924\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00999\ \textcolor{preprocessor}{\ \ SV\_WALL\_DIST,\ \(\backslash\)}}
+\DoxyCodeLine{01000\ \textcolor{preprocessor}{\ \ SV\_RTMP\_0\ }\textcolor{comment}{/*\ DE59560\ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01001\ }
+\DoxyCodeLine{01002\ \textcolor{preprocessor}{\#define\ SV\_DPM\_LIST\ \(\backslash\)}}
+\DoxyCodeLine{01003\ \textcolor{preprocessor}{\ \ SV\_DPM\_LEAN\_LIST,\(\backslash\)}}
+\DoxyCodeLine{01004\ \textcolor{preprocessor}{\ \ SV\_VOLUME,\ SV\_AREA,\(\backslash\)}}
+\DoxyCodeLine{01005\ \textcolor{preprocessor}{\ \ SV\_DPM\_CELLSTEPS,\(\backslash\)}}
+\DoxyCodeLine{01006\ \textcolor{preprocessor}{\ \ ADD\_SV\_VOLUME\_2D\ SV\_CENTROID,\(\backslash\)}}
+\DoxyCodeLine{01007\ \textcolor{preprocessor}{\ \ SV\_CENTROID\_M1,\(\backslash\)}}
+\DoxyCodeLine{01008\ \textcolor{preprocessor}{\ \ SV\_CENTROID\_SLIDE,\(\backslash\)}}
+\DoxyCodeLine{01009\ \textcolor{preprocessor}{\ \ SV\_ZERO\_VOLUME\_M1}}
+\DoxyCodeLine{01010\ }
+\DoxyCodeLine{01011\ \textcolor{preprocessor}{\#define\ DPM\_SRC\_LIST\ \(\backslash\)}}
+\DoxyCodeLine{01012\ \textcolor{preprocessor}{\ \ SV\_DPMS\_MASS,\(\backslash\)}}
+\DoxyCodeLine{01013\ \textcolor{preprocessor}{\ \ SV\_DPMS\_MASS\_AP,\(\backslash\)}}
+\DoxyCodeLine{01014\ \textcolor{preprocessor}{\ \ SV\_DPMS\_MOM\_S,\(\backslash\)}}
+\DoxyCodeLine{01015\ \textcolor{preprocessor}{\ \ SV\_DPMS\_MOM\_AP,\(\backslash\)}}
+\DoxyCodeLine{01016\ \textcolor{preprocessor}{\ \ SV\_DPMS\_WSWIRL\_S,\(\backslash\)}}
+\DoxyCodeLine{01017\ \textcolor{preprocessor}{\ \ SV\_DPMS\_WSWIRL\_AP,\(\backslash\)}}
+\DoxyCodeLine{01018\ \textcolor{preprocessor}{\ \ SV\_DPMS\_ENERGY,\(\backslash\)}}
+\DoxyCodeLine{01019\ \textcolor{preprocessor}{\ \ SV\_DPMS\_ENERGY\_AP,\(\backslash\)}}
+\DoxyCodeLine{01020\ \textcolor{preprocessor}{\ \ SV\_DPMS\_TKE,\(\backslash\)}}
+\DoxyCodeLine{01021\ \textcolor{preprocessor}{\ \ SV\_DPMS\_D,\(\backslash\)}}
+\DoxyCodeLine{01022\ \textcolor{preprocessor}{\ \ SV\_DPMS\_O,\(\backslash\)}}
+\DoxyCodeLine{01023\ \textcolor{preprocessor}{\ \ SV\_DPMS\_TKE\_RUU,\(\backslash\)}}
+\DoxyCodeLine{01024\ \textcolor{preprocessor}{\ \ SV\_DPMS\_TKE\_RVV,\(\backslash\)}}
+\DoxyCodeLine{01025\ \textcolor{preprocessor}{\ \ SV\_DPMS\_TKE\_RWW,\(\backslash\)}}
+\DoxyCodeLine{01026\ \textcolor{preprocessor}{\ \ SV\_DPMS\_TKE\_RUV,\(\backslash\)}}
+\DoxyCodeLine{01027\ \textcolor{preprocessor}{\ \ SV\_DPMS\_TKE\_RVW,\(\backslash\)}}
+\DoxyCodeLine{01028\ \textcolor{preprocessor}{\ \ SV\_DPMS\_TKE\_RUW,\(\backslash\)}}
+\DoxyCodeLine{01029\ \textcolor{preprocessor}{\ \ SV\_DPMS\_SPECIES,\(\backslash\)}}
+\DoxyCodeLine{01030\ \textcolor{preprocessor}{\ \ SV\_DPMS\_SPECIES\_AP,\(\backslash\)}}
+\DoxyCodeLine{01031\ \textcolor{preprocessor}{\ \ EXPAND\_NSPE\_SV(DPMS\_SURFACE\_SPECIES),\(\backslash\)}}
+\DoxyCodeLine{01032\ \textcolor{preprocessor}{\ \ EXPAND\_NSPE\_SV(DPMS\_REACTION\_RATE\_POST),\(\backslash\)}}
+\DoxyCodeLine{01033\ \textcolor{preprocessor}{\ \ EXPAND\_PER\_MAT\_SV(DPMS\_VAP\_PER\_MAT),\(\backslash\)}}
+\DoxyCodeLine{01034\ \textcolor{preprocessor}{\ \ EXPAND\_PER\_MAT\_SV(DPMS\_DEVOL\_PER\_MAT),\(\backslash\)}}
+\DoxyCodeLine{01035\ \textcolor{preprocessor}{\ \ EXPAND\_PER\_MAT\_SV(DPMS\_BURN\_PER\_MAT),\(\backslash\)}}
+\DoxyCodeLine{01036\ \textcolor{preprocessor}{\ \ SV\_DPMS\_PDF\_1,\(\backslash\)}}
+\DoxyCodeLine{01037\ \textcolor{preprocessor}{\ \ SV\_DPMS\_PDF\_2,\(\backslash\)}}
+\DoxyCodeLine{01038\ \textcolor{preprocessor}{\ \ SV\_DPMS\_INERT,\(\backslash\)}}
+\DoxyCodeLine{01039\ \textcolor{preprocessor}{\ \ SV\_DPMS\_PDF\_1\_AP,\(\backslash\)}}
+\DoxyCodeLine{01040\ \textcolor{preprocessor}{\ \ SV\_DPMS\_PDF\_2\_AP,\(\backslash\)}}
+\DoxyCodeLine{01041\ \textcolor{preprocessor}{\ \ SV\_DPMS\_INERT\_AP,\(\backslash\)}}
+\DoxyCodeLine{01042\ \textcolor{preprocessor}{\ \ SV\_DPMS\_EMISS,\(\backslash\)}}
+\DoxyCodeLine{01043\ \textcolor{preprocessor}{\ \ SV\_DPMS\_ABS,\(\backslash\)}}
+\DoxyCodeLine{01044\ \textcolor{preprocessor}{\ \ SV\_DPMS\_SCAT,\(\backslash\)}}
+\DoxyCodeLine{01045\ \textcolor{preprocessor}{\ \ SV\_DPMS\_BURNOUT,\(\backslash\)}}
+\DoxyCodeLine{01046\ \textcolor{preprocessor}{\ \ SV\_DPMS\_CONCENTRATION}}
+\DoxyCodeLine{01047\ }
+\DoxyCodeLine{01048\ \textcolor{preprocessor}{\#define\ DPM\_SRC\_DS\_LIST\ \(\backslash\)}}
+\DoxyCodeLine{01049\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_MASS,\(\backslash\)}}
+\DoxyCodeLine{01050\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_MASS\_AP,\(\backslash\)}}
+\DoxyCodeLine{01051\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_MOM\_S,\(\backslash\)}}
+\DoxyCodeLine{01052\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_MOM\_AP,\(\backslash\)}}
+\DoxyCodeLine{01053\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_WSWIRL\_S,\(\backslash\)}}
+\DoxyCodeLine{01054\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_WSWIRL\_AP,\(\backslash\)}}
+\DoxyCodeLine{01055\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_ENERGY,\(\backslash\)}}
+\DoxyCodeLine{01056\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_ENERGY\_AP,\(\backslash\)}}
+\DoxyCodeLine{01057\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_TKE,\(\backslash\)}}
+\DoxyCodeLine{01058\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_D,\(\backslash\)}}
+\DoxyCodeLine{01059\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_O,\(\backslash\)}}
+\DoxyCodeLine{01060\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_TKE\_RUU,\(\backslash\)}}
+\DoxyCodeLine{01061\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_TKE\_RVV,\(\backslash\)}}
+\DoxyCodeLine{01062\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_TKE\_RWW,\(\backslash\)}}
+\DoxyCodeLine{01063\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_TKE\_RUV,\(\backslash\)}}
+\DoxyCodeLine{01064\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_TKE\_RVW,\(\backslash\)}}
+\DoxyCodeLine{01065\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_TKE\_RUW,\(\backslash\)}}
+\DoxyCodeLine{01066\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_SPECIES,\(\backslash\)}}
+\DoxyCodeLine{01067\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_SPECIES\_AP,\(\backslash\)}}
+\DoxyCodeLine{01068\ \textcolor{preprocessor}{\ \ EXPAND\_NSPE\_SV(DPMS\_DS\_SURFACE\_SPECIES),\(\backslash\)}}
+\DoxyCodeLine{01069\ \textcolor{preprocessor}{\ \ EXPAND\_PER\_MAT\_SV(DPMS\_DS\_VAP\_PER\_MAT),\(\backslash\)}}
+\DoxyCodeLine{01070\ \textcolor{preprocessor}{\ \ EXPAND\_PER\_MAT\_SV(DPMS\_DS\_DEVOL\_PER\_MAT),\(\backslash\)}}
+\DoxyCodeLine{01071\ \textcolor{preprocessor}{\ \ EXPAND\_PER\_MAT\_SV(DPMS\_DS\_BURN\_PER\_MAT),\(\backslash\)}}
+\DoxyCodeLine{01072\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_PDF\_1,\(\backslash\)}}
+\DoxyCodeLine{01073\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_PDF\_2,\(\backslash\)}}
+\DoxyCodeLine{01074\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_INERT,\(\backslash\)}}
+\DoxyCodeLine{01075\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_PDF\_1\_AP,\(\backslash\)}}
+\DoxyCodeLine{01076\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_PDF\_2\_AP,\(\backslash\)}}
+\DoxyCodeLine{01077\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_INERT\_AP,\(\backslash\)}}
+\DoxyCodeLine{01078\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_EMISS,\(\backslash\)}}
+\DoxyCodeLine{01079\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_ABS,\(\backslash\)}}
+\DoxyCodeLine{01080\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_SCAT,\(\backslash\)}}
+\DoxyCodeLine{01081\ \textcolor{preprocessor}{\ \ SV\_DPMS\_DS\_BURNOUT}}
+\DoxyCodeLine{01082\ }
+\DoxyCodeLine{01083\ \textcolor{preprocessor}{\#define\ SV\_DPMS\_LIST\ \(\backslash\)}}
+\DoxyCodeLine{01084\ \textcolor{preprocessor}{\ \ DPM\_SRC\_LIST,\(\backslash\)}}
+\DoxyCodeLine{01085\ \textcolor{preprocessor}{\ \ SV\_DPMS\_EROSION,\(\backslash\)}}
+\DoxyCodeLine{01086\ \textcolor{preprocessor}{\ \ SV\_DPMS\_EROSION\_MDM,\(\backslash\)}}
+\DoxyCodeLine{01087\ \textcolor{preprocessor}{\ \ SV\_DPMS\_ACCRETION,\ \(\backslash\)}}
+\DoxyCodeLine{01088\ \textcolor{preprocessor}{\ \ SV\_DPMS\_EROSION\_SHIELDING,\ \(\backslash\)}}
+\DoxyCodeLine{01089\ \textcolor{preprocessor}{\ \ SV\_DPMS\_WALL\_FORCE,\ \(\backslash\)}}
+\DoxyCodeLine{01090\ \textcolor{preprocessor}{\ \ DPM\_SRC\_DS\_LIST,\(\backslash\)}}
+\DoxyCodeLine{01091\ \textcolor{preprocessor}{\ \ SV\_UDM\_I}}
+\DoxyCodeLine{01092\ }
+\DoxyCodeLine{01093\ \textcolor{preprocessor}{\#if\ \_NT}}
+\DoxyCodeLine{01094\ \textcolor{comment}{/*\ windows\ does\ provide\ different\ 64-\/bit\ pointers\ to\ locate\ a\ position\ in\ file\ */}}
+\DoxyCodeLine{01095\ \textcolor{comment}{/*\ NOTE:}}
+\DoxyCodeLine{01096\ \textcolor{comment}{\ *\ If\ a\ Windows\ process\ reads\ a\ UNIX/Linux-\/style\ text\ file,}}
+\DoxyCodeLine{01097\ \textcolor{comment}{\ *\ fseek\ /\ \_fseeki64\ returns\ incorrect\ values\ (too\ large\ by\ one}}
+\DoxyCodeLine{01098\ \textcolor{comment}{\ *\ for\ every\ LF\ line\ ending\ already\ passed,\ because\ they're}}
+\DoxyCodeLine{01099\ \textcolor{comment}{\ *\ converted\ to\ CRLF\ internally).\ To\ avoid\ trouble,\ please}}
+\DoxyCodeLine{01100\ \textcolor{comment}{\ *\ make\ sure\ to\ open\ the\ file\ using\ 'fopen(...,\ "{}rb"{})',}}
+\DoxyCodeLine{01101\ \textcolor{comment}{\ *\ i.e.\ in\ some\ kind\ of\ binary\ mode..!}}
+\DoxyCodeLine{01102\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01103\ \textcolor{preprocessor}{\#define\ DPM\_FTELL\ \_ftelli64}}
+\DoxyCodeLine{01104\ \textcolor{preprocessor}{\#define\ DPM\_FSEEK\ \_fseeki64}}
+\DoxyCodeLine{01105\ \textcolor{preprocessor}{\#define\ DPM\_FPOS\ \ \_\_int64}}
+\DoxyCodeLine{01106\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01107\ \textcolor{preprocessor}{\#define\ DPM\_FTELL\ ftell}}
+\DoxyCodeLine{01108\ \textcolor{preprocessor}{\#define\ DPM\_FSEEK\ fseek}}
+\DoxyCodeLine{01109\ \textcolor{preprocessor}{\#define\ DPM\_FPOS\ \ long}}
+\DoxyCodeLine{01110\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01111\ }
+\DoxyCodeLine{01112\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_DPM\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

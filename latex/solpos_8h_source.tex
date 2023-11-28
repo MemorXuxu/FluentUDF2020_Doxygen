@@ -1,0 +1,188 @@
+\doxysection{solpos.\+h}
+\hypertarget{solpos_8h_source}{}\label{solpos_8h_source}\index{fluent20.1.0/src/ht/solpos.h@{fluent20.1.0/src/ht/solpos.h}}
+\mbox{\hyperlink{solpos_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_SOLPOS\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_SOLPOS\_H}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{comment}{/*============================================================================}}
+\DoxyCodeLine{00009\ \textcolor{comment}{*}}
+\DoxyCodeLine{00010\ \textcolor{comment}{*\ \ \ \ NAME:\ \ solpos.h}}
+\DoxyCodeLine{00011\ \textcolor{comment}{*}}
+\DoxyCodeLine{00012\ \textcolor{comment}{*\ \ \ \ Contains:}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*\ \ \ \ \ \ \ \ S\_date\ \ \ \ \ \ \ (computes\ the\ date\ from\ the\ day\ number)}}
+\DoxyCodeLine{00014\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ INPUTS:\ \ \ \ \ S\_year,\ S\_daynum}}
+\DoxyCodeLine{00015\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ OUTPUTS:\ \ \ \ S\_year,\ S\_month,\ S\_day}}
+\DoxyCodeLine{00016\ \textcolor{comment}{*}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*\ \ \ \ \ \ \ \ S\_solpos\ \ \ \ \ (computes\ the\ solar\ position\ and\ intensity}}
+\DoxyCodeLine{00018\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ from\ time\ and\ place)}}
+\DoxyCodeLine{00019\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ INPUTS:\ \ \ \ \ S\_month,\ S\_day,\ S\_latitude,\ S\_longitude,\ S\_timezone}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ OPTIONAL:}}
+\DoxyCodeLine{00021\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_year\ \ \ \ DEFAULT\ 2001\ \ \ (non-\/leap)}}
+\DoxyCodeLine{00022\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_hour\ \ \ \ DEFAULT\ \ \ 12\ \ \ (noon)}}
+\DoxyCodeLine{00023\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_minute\ \ DEFAULT\ \ \ \ 0\ \ \ (\ "{}\ \ )}}
+\DoxyCodeLine{00024\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_second\ \ DEFAULT\ \ \ \ 0\ \ \ (\ "{}\ \ )}}
+\DoxyCodeLine{00025\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_press\ \ \ DEFAULT\ 1013.0\ (standard\ pressure)}}
+\DoxyCodeLine{00026\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_temp\ \ \ \ DEFAULT\ \ \ 10.0\ (standard\ temperature)}}
+\DoxyCodeLine{00027\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_tilt\ \ \ \ DEFAULT\ \ \ \ 0.0\ (horizontal\ panel)}}
+\DoxyCodeLine{00028\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_aspect\ \ DEFAULT\ \ 180.0\ (South-\/facing\ panel)}}
+\DoxyCodeLine{00029\ \textcolor{comment}{*}}
+\DoxyCodeLine{00030\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ OUTPUTS:\ \ \ \ S\_daynum,\ S\_amass,\ S\_ampress,\ S\_azim,\ S\_cosinc,}}
+\DoxyCodeLine{00031\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_elevref,\ S\_etr,\ S\_etrn,\ S\_etrtilt,\ S\_prime,}}
+\DoxyCodeLine{00032\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_sbcf,\ S\_sunrise,\ S\_sunset,\ S\_unprime,\ S\_zenref}}
+\DoxyCodeLine{00033\ \textcolor{comment}{*}}
+\DoxyCodeLine{00034\ \textcolor{comment}{*\ \ \ \ Usage:}}
+\DoxyCodeLine{00035\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ In\ calling\ program,\ along\ with\ other\ 'includes',\ insert:}}
+\DoxyCodeLine{00036\ \textcolor{comment}{*}}
+\DoxyCodeLine{00037\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#include\ "{}solpos.h"{}}}
+\DoxyCodeLine{00038\ \textcolor{comment}{*}}
+\DoxyCodeLine{00039\ \textcolor{comment}{*\ \ \ \ Martin\ Rymes}}
+\DoxyCodeLine{00040\ \textcolor{comment}{*\ \ \ \ National\ Renewable\ Energy\ Laboratory}}
+\DoxyCodeLine{00041\ \textcolor{comment}{*\ \ \ \ 25\ March\ 1998}}
+\DoxyCodeLine{00042\ \textcolor{comment}{*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{/*****\ ALPHABETICAL\ LIST\ OF\ COMMON\ VARIABLES\ *****/}}
+\DoxyCodeLine{00045\ \textcolor{comment}{/*\ Each\ comment\ begins\ with\ a\ 1-\/column\ letter\ code:}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ \ \ I:\ \ INPUT\ variable}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ \ \ O:\ \ OUTPUT\ variable}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ \ \ T:\ \ TRANSITIONAL\ variable\ used\ in\ the\ algorithm,}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ \ \ \ \ \ \ of\ interest\ only\ to\ the\ solar\ radiation}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ \ \ \ \ \ \ modelers,\ and\ available\ to\ you\ because\ you}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ \ \ \ \ \ \ may\ be\ one\ of\ them\ */}}
+\DoxyCodeLine{00052\ \textcolor{comment}{/*****\ INTEGERS\ *****/}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{solpos_8h_adfd85df2a22ae3209a933885b05cbd59}{S\_day}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ I/O:\ \ Day\ of\ month\ (May\ 27\ =\ 27,\ etc.)}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_solpos\ needs\ this,\ but\ S\_date\ will}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ calculate\ it\ from\ S\_daynum.\ */}}
+\DoxyCodeLine{00057\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{solpos_8h_a0518daf41c1d213a1186cbda1354cec8}{S\_daynum}};\ \ \ \ \ \textcolor{comment}{/*\ I/O:\ \ Day\ number\ (day\ of\ year;\ Feb\ 1\ =\ 32\ )}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_date\ needs\ this,\ but\ S\_solpos\ will}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ calculate\ it\ from\ S\_month\ and\ S\_day.\ */}}
+\DoxyCodeLine{00060\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{solpos_8h_a24c4b971bbe2d413b08c872e85fa20a4}{S\_hour}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ I:\ \ \ \ Hour\ of\ day,\ 0\ -\/\ 23,\ DEFAULT\ =\ 12\ */}}
+\DoxyCodeLine{00061\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{solpos_8h_a9578dde8d8d61f2302515ea4a037ffc4}{S\_minute}};\ \ \ \ \ \textcolor{comment}{/*\ I:\ \ \ \ Minute\ of\ hour,\ 0\ -\/\ 59,\ DEFAULT\ =\ 0\ */}}
+\DoxyCodeLine{00062\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{solpos_8h_aa36c12d8a9a27f7f8bf6d8c41c57310a}{S\_month}};\ \ \ \ \ \ \textcolor{comment}{/*\ I/O:\ \ Month\ number\ (Jan\ =\ 1,\ Feb\ =\ 2,\ etc.)}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_solpos\ needs\ this,\ but\ S\_date\ will}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ calculate\ it\ from\ S\_daynum.\ */}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{solpos_8h_a88f75a7acb76c02a53137b25824c8f4d}{S\_second}};\ \ \ \ \ \textcolor{comment}{/*\ I:\ \ \ \ Second\ of\ minute,\ 0\ -\/\ 59,\ DEFAULT\ =\ 0\ */}}
+\DoxyCodeLine{00066\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{solpos_8h_a31cace5520ba9cbca3a86a855dc4c4f5}{S\_year}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ I:\ \ \ \ 4-\/digit\ year\ (2-\/digit\ is\ assumed\ 19xx),}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DEFAULT\ =\ 2001\ */}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{comment}{/*****\ FLOATS\ *****/}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a3b62104a6df8520454150002ce3be99c}{S\_amass}};\ \ \ \ \ \ \textcolor{comment}{/*\ O:\ \ Relative\ optical\ airmass\ */}}
+\DoxyCodeLine{00072\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a1f4d31617f29527308ae0757961bb7a8}{S\_ampress}};\ \ \ \ \textcolor{comment}{/*\ O:\ \ Pressure-\/corrected\ airmass\ */}}
+\DoxyCodeLine{00073\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a14e66619c3fea365611ae25e3aac4472}{S\_aspect}};\ \ \ \ \ \textcolor{comment}{/*\ I:\ \ Azimuth\ of\ panel\ surface\ (direction\ it}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ faces)\ N=0,\ E=90,\ S=180,\ W=270,}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DEFAULT\ =\ 180\ */}}
+\DoxyCodeLine{00076\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_aae1d4991fe1cee13e018933402a181a8}{S\_azim}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ O:\ \ Solar\ azimuth\ angle:\ \ N=0,\ E=90,\ S=180,\ W=270\ */}}
+\DoxyCodeLine{00077\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a823bdbd1e52faaeff155e52cc1f5235a}{S\_cosinc}};\ \ \ \ \ \textcolor{comment}{/*\ O:\ \ Cosine\ of\ solar\ incidence\ angle\ on\ panel\ */}}
+\DoxyCodeLine{00078\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a4589ecaac3c0c5c43677ca1ff5468e8f}{S\_dayang}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Day\ angle\ (daynum*360/year-\/length)\ degrees\ */}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_ad118d48e6b39af8aac44974fb6816fb7}{S\_declin}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Declination-\/-\/zenith\ angle\ of\ solar\ noon}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ at\ equator,\ degrees\ NORTH\ */}}
+\DoxyCodeLine{00081\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a1f6c516b82851d36ceb8527576b72ed7}{S\_eclong}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Ecliptic\ longitude,\ degrees\ */}}
+\DoxyCodeLine{00082\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a9410ea355681778322479c7ec96c659b}{S\_ecobli}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Obliquity\ of\ ecliptic\ */}}
+\DoxyCodeLine{00083\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_ad85fc2e9c52ea912d6e8a31334acca75}{S\_ectime}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Time\ of\ ecliptic\ calculations\ */}}
+\DoxyCodeLine{00084\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a99372049e561f04da3c2678878421700}{S\_elevref}};\ \ \ \ \textcolor{comment}{/*\ O:\ \ Solar\ elevation\ angle,}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deg.\ from\ horizon,\ refracted\ */}}
+\DoxyCodeLine{00086\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_aeabc6ff14ca6651ea7ece82e64c42245}{S\_eqntim}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Equation\ of\ time\ (TST\ -\/\ LMT),\ minutes\ */}}
+\DoxyCodeLine{00087\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a4eeda64bbd2473b27b35a86608dc4613}{S\_erv}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Earth\ radius\ vector}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (multiplied\ to\ solar\ constant)\ */}}
+\DoxyCodeLine{00089\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_ae095a4d1b4884ccfd4e40c9a8af0b4f4}{S\_etr}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ O:\ \ Extraterrestrial\ (top-\/of-\/atmosphere)\ W/sq\ m}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ global\ horizontal\ solar\ irradiance\ */}}
+\DoxyCodeLine{00091\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a515db60b4605185b7b77ef292bf6966a}{S\_etrn}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ O:\ \ Extraterrestrial\ (top-\/of-\/atmosphere)\ W/sq\ m}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ direct\ normal\ solar\ irradiance\ */}}
+\DoxyCodeLine{00093\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a81c44724e4b1399460a6aeac088f6cd1}{S\_etrtilt}};\ \ \ \ \textcolor{comment}{/*\ O:\ \ Extraterrestrial\ (top-\/of-\/atmosphere)\ W/sq\ m}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ global\ irradiance\ on\ a\ tilted\ surface\ */}}
+\DoxyCodeLine{00095\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a746ab0e0de35ca3da02081c8354eec10}{S\_gmst}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Greenwich\ mean\ sidereal\ time,\ hours\ */}}
+\DoxyCodeLine{00096\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a80e44a3ce9a84969d3da1a71ae3724b7}{S\_hrang}};\ \ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Hour\ angle-\/-\/hour\ of\ sun\ from\ solar\ noon,}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ degrees\ WEST\ */}}
+\DoxyCodeLine{00098\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a38ecea0631fd69f3b39cdf12290a90b0}{S\_julday}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Julian\ Day\ of\ 1\ JAN\ 2000\ minus\ 2,400,000\ days}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (in\ order\ to\ regain\ single\ precision)\ */}}
+\DoxyCodeLine{00100\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a63eb5c4fb96aff61c020de15f4d75190}{S\_latitude}};\ \ \ \textcolor{comment}{/*\ I:\ \ Latitude,\ degrees\ north\ (south\ negative)\ */}}
+\DoxyCodeLine{00101\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a043c05f9b6860c912b328785aa7a5b0d}{S\_longitude}};\ \ \textcolor{comment}{/*\ I:\ \ Longitude,\ degrees\ east\ (west\ negative)\ */}}
+\DoxyCodeLine{00102\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a107d440ee779003afc501bab3fbe5221}{S\_lmst}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Local\ mean\ sidereal\ time,\ degrees\ */}}
+\DoxyCodeLine{00103\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a41e84cc0c3d8a30ec3ac127eb9311e9a}{S\_mnanom}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Mean\ anomaly,\ degrees\ */}}
+\DoxyCodeLine{00104\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_ad1bd0e8350f3051db6769b19c8af94a2}{S\_mnlong}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Mean\ longitude,\ degrees\ */}}
+\DoxyCodeLine{00105\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a76400f32186017e3d559a1265f2cfe40}{S\_rascen}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Right\ ascension,\ degrees\ */}}
+\DoxyCodeLine{00106\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a3b64ea6ef51c89a3ad2e0d96d1c1eca1}{S\_press}};\ \ \ \ \ \ \textcolor{comment}{/*\ I:\ \ Surface\ pressure,\ millibars,\ used\ for}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ refraction\ correction\ and\ S\_ampress\ */}}
+\DoxyCodeLine{00108\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_af9ac91aba604ad44ec9badbccc390c52}{S\_prime}};\ \ \ \ \ \ \textcolor{comment}{/*\ O:\ \ Factor\ that\ normalizes\ Kt,\ Kn,\ etc.\ */}}
+\DoxyCodeLine{00109\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_aa70e03a8f0c2648fd74360c2ea7ca70c}{S\_sbcf}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ O:\ \ Shadow-\/band\ correction\ factor\ */}}
+\DoxyCodeLine{00110\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a0991f3a57e12da1287601e0aa0129e61}{S\_solcon}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Solar\ constant,\ 1367\ W/sq\ m\ */}}
+\DoxyCodeLine{00111\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a9ed4cc1da4cca12f2c3d3b0b7307d277}{S\_ssha}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Sunset(/rise)\ hour\ angle,\ degrees\ */}}
+\DoxyCodeLine{00112\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a13d521c0bf62f60697cd5f82318a2bdb}{S\_sunrise}};\ \ \ \ \textcolor{comment}{/*\ O:\ \ Sunrise\ time,\ minutes\ from\ midnight,}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ local,\ no\ refraction\ */}}
+\DoxyCodeLine{00114\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_ae52b0aa5d78b7f0b74e094d8b7951de8}{S\_sunset}};\ \ \ \ \ \textcolor{comment}{/*\ O:\ \ Sunset\ time,\ minutes\ from\ midnight,}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ local,\ no\ refraction\ */}}
+\DoxyCodeLine{00116\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a705812ebe429e893cf1e36bc2374bc38}{S\_temp}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ I:\ \ Ambient\ dry-\/bulb\ temperature,\ degrees\ C,}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ used\ for\ refraction\ correction\ */}}
+\DoxyCodeLine{00118\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a86f99fd17c743ffa441bb557c3e9146e}{S\_tilt}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ I:\ \ Degrees\ tilt\ from\ horizontal\ of\ panel\ */}}
+\DoxyCodeLine{00119\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_ad8ab16da72242c3450405a453eba19f3}{S\_timezone}};\ \ \ \textcolor{comment}{/*\ I:\ \ Time\ zone,\ east\ (west\ negative).}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ USA:\ \ Mountain\ =\ -\/7,\ Central\ =\ -\/6,\ etc.\ */}}
+\DoxyCodeLine{00121\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a76b8f7c7d005e18a85983d23cbc23f32}{S\_tst}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ T:\ \ True\ solar\ time,\ minutes\ from\ midnight\ */}}
+\DoxyCodeLine{00122\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a8680a69032dc3c89cdc42ad4f1e1566d}{S\_tstfix}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ True\ solar\ time\ -\/\ local\ standard\ time\ */}}
+\DoxyCodeLine{00123\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a357806cd5ded83d50d4cf571e5a6286d}{S\_unprime}};\ \ \ \ \textcolor{comment}{/*\ O:\ \ Factor\ that\ denormalizes\ Kt',\ Kn',\ etc.\ */}}
+\DoxyCodeLine{00124\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_aa9e1c70439d61ea736b67d134b68d335}{S\_utime}};\ \ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Universal\ (Greenwich)\ standard\ time\ */}}
+\DoxyCodeLine{00125\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_ae7efddefd9b9828e9f852e452bb0eb08}{S\_zenetr}};\ \ \ \ \ \textcolor{comment}{/*\ T:\ \ Solar\ zenith\ angle,}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ no\ atmospheric\ correction\ (=\ ETR)\ */}}
+\DoxyCodeLine{00127\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{solpos_8h_a1c52898daa330d44a6735b493cfb0ec0}{S\_zenref}};\ \ \ \ \ \textcolor{comment}{/*\ O:\ \ Solar\ zenith\ angle,}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deg.\ from\ zenith,\ refracted\ */}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{comment}{/*============================================================================}}
+\DoxyCodeLine{00131\ \textcolor{comment}{*\ \ \ \ Integer\ function\ S\_date,\ adapted\ from\ the\ NREL\ VAX\ solar\ libraries}}
+\DoxyCodeLine{00132\ \textcolor{comment}{*}}
+\DoxyCodeLine{00133\ \textcolor{comment}{*\ \ \ \ This\ function\ calculates\ the\ month\ and\ day\ of\ month,\ given\ the}}
+\DoxyCodeLine{00134\ \textcolor{comment}{*\ \ \ \ day\ number\ (number\ of\ day\ in\ year,\ sometimes\ confusingly\ called}}
+\DoxyCodeLine{00135\ \textcolor{comment}{*\ \ \ \ the\ "{}Julian\ Day"{},\ but\ I\ know\ that\ you\ will\ never\ call\ it\ that).}}
+\DoxyCodeLine{00136\ \textcolor{comment}{*}}
+\DoxyCodeLine{00137\ \textcolor{comment}{*\ \ \ \ Requires:}}
+\DoxyCodeLine{00138\ \textcolor{comment}{*\ \ \ \ \ \ \ \ Year\ and\ day\ number:}}
+\DoxyCodeLine{00139\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_year\ \ \ \ \ \ \ \ \ \ \ NOTE:\ \ 2-\/digit\ year\ "{}xx"{}\ is\ assumed\ "{}19xx"{}}}
+\DoxyCodeLine{00140\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DEFAULT\ S\_year\ =\ 2001}}
+\DoxyCodeLine{00141\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_daynum\ \ \ \ \ \ \ \ \ RANGE:\ -\/1\ to\ a\ large\ positive\ integer}}
+\DoxyCodeLine{00142\ \textcolor{comment}{*}}
+\DoxyCodeLine{00143\ \textcolor{comment}{*\ \ \ \ Returns:}}
+\DoxyCodeLine{00144\ \textcolor{comment}{*\ \ \ \ \ \ \ \ Year,\ month,\ day:}}
+\DoxyCodeLine{00145\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_year}}
+\DoxyCodeLine{00146\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_month}}
+\DoxyCodeLine{00147\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_day}}
+\DoxyCodeLine{00148\ \textcolor{comment}{*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00149\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{solpos_8h_ababe75608c3bbd520d17d1ee9e90c9ba}{S\_date}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{comment}{/*============================================================================}}
+\DoxyCodeLine{00152\ \textcolor{comment}{*\ \ \ \ Integer\ function\ S\_solpos,\ adapted\ from\ the\ NREL\ VAX\ solar\ libraries}}
+\DoxyCodeLine{00153\ \textcolor{comment}{*}}
+\DoxyCodeLine{00154\ \textcolor{comment}{*\ \ \ \ This\ function\ calculates\ the\ apparent\ solar\ position\ and\ intensity}}
+\DoxyCodeLine{00155\ \textcolor{comment}{*\ \ \ \ (theoretical\ maximum\ solar\ energy)\ based\ on\ the\ date,\ time,\ and}}
+\DoxyCodeLine{00156\ \textcolor{comment}{*\ \ \ \ location\ on\ Earth.}}
+\DoxyCodeLine{00157\ \textcolor{comment}{*}}
+\DoxyCodeLine{00158\ \textcolor{comment}{*\ \ \ \ Requires:}}
+\DoxyCodeLine{00159\ \textcolor{comment}{*\ \ \ \ \ \ \ \ Date\ and\ time:}}
+\DoxyCodeLine{00160\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_year\ \ \ \ \ \ DEFAULT\ 2001}}
+\DoxyCodeLine{00161\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_month}}
+\DoxyCodeLine{00162\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_day}}
+\DoxyCodeLine{00163\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_hour\ \ \ \ \ \ DEFAULT\ 12}}
+\DoxyCodeLine{00164\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_minute\ \ \ \ DEFAULT\ \ 0}}
+\DoxyCodeLine{00165\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_second\ \ \ \ DEFAULT\ \ 0}}
+\DoxyCodeLine{00166\ \textcolor{comment}{*\ \ \ \ \ \ \ \ Location:}}
+\DoxyCodeLine{00167\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_latitude}}
+\DoxyCodeLine{00168\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_longitude}}
+\DoxyCodeLine{00169\ \textcolor{comment}{*\ \ \ \ \ \ \ \ Location/time\ adjuster:}}
+\DoxyCodeLine{00170\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_timezone}}
+\DoxyCodeLine{00171\ \textcolor{comment}{*\ \ \ \ \ \ \ \ Atmospheric\ pressure\ and\ temperature:}}
+\DoxyCodeLine{00172\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_press\ \ \ \ \ DEFAULT\ 1013.0\ mb}}
+\DoxyCodeLine{00173\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_temp\ \ \ \ \ \ DEFAULT\ 10.0\ degrees\ C}}
+\DoxyCodeLine{00174\ \textcolor{comment}{*\ \ \ \ \ \ \ \ Tilt\ of\ flat\ surface\ that\ receives\ solar\ energy:}}
+\DoxyCodeLine{00175\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_aspect\ \ \ \ DEFAULT\ 180\ (South)}}
+\DoxyCodeLine{00176\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ S\_tilt\ \ \ \ \ \ DEFAULT\ 0\ (Horizontal)}}
+\DoxyCodeLine{00177\ \textcolor{comment}{*}}
+\DoxyCodeLine{00178\ \textcolor{comment}{*\ \ \ \ Returns:}}
+\DoxyCodeLine{00179\ \textcolor{comment}{*\ \ \ \ \ \ \ \ everything\ defined\ at\ the\ top\ of\ this\ listing.}}
+\DoxyCodeLine{00180\ \textcolor{comment}{*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00181\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{solpos_8h_a5790ccd39ba601d63c00b01e64f94778}{S\_solpos}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_SOLPOS\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

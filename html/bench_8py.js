@@ -1,0 +1,25 @@
+var bench_8py =
+[
+    [ "compare_functions_1v", "bench_8py.html#af2d675183efb68727a30fb1fadf6d225", null ],
+    [ "compare_functions_2v", "bench_8py.html#a5a04beb92e2d43d1173aa32c0563e18a", null ],
+    [ "compare_methods", "bench_8py.html#a50c882327e070822de3cad2df9aa293f", null ],
+    [ "timer", "bench_8py.html#a83af366a01a173bfc246114b31f93933", null ],
+    [ "m1", "bench_8py.html#a34ce14f59a9a84759f1f530b27cc9dd0", null ],
+    [ "m2", "bench_8py.html#a94abbfd34d2b06b063f4fb39401b5e3c", null ],
+    [ "maskx", "bench_8py.html#afde875c44fa4ba37978eaab6dfd1f2d9", null ],
+    [ "masky", "bench_8py.html#aac4fee2d9d2e135b040ff1719e321e75", null ],
+    [ "nloop", "bench_8py.html#a527977877475f832b4ef4a2d1b708232", null ],
+    [ "nmxl", "bench_8py.html#a3bc3ebd0623e23950b36b522ac15cb8d", null ],
+    [ "nmxs", "bench_8py.html#a34b3fd6dee5e2a0737d23d89e35842b2", null ],
+    [ "nmyl", "bench_8py.html#ad0abad2822d179dd8eba0cc872b90cce", null ],
+    [ "nmys", "bench_8py.html#ab53ec3f37677a654f0d9bc8cee9cdbe3", null ],
+    [ "nmzl", "bench_8py.html#a3323c8b6689932dbdc9ce5eb924b0074", null ],
+    [ "nmzs", "bench_8py.html#aab8d952616e2fd4cf8e4515a7f72aa26", null ],
+    [ "test", "bench_8py.html#a05a671c66aefea124cc08b76ea6d30bb", null ],
+    [ "xl", "bench_8py.html#a3c53fbdcb4e4034433f7fb548430436d", null ],
+    [ "xs", "bench_8py.html#ae0f5e82ee31a657ad8312b0ed1851438", null ],
+    [ "yl", "bench_8py.html#a644b142716abd6ef5332df6ba0cc3796", null ],
+    [ "ys", "bench_8py.html#ad38b6ac8340da77803e7ede3631bcf8e", null ],
+    [ "zl", "bench_8py.html#a2405fd0782ec855e8db45c5b019620a6", null ],
+    [ "zs", "bench_8py.html#a34124387b47faebd172f62ab088664f1", null ]
+];

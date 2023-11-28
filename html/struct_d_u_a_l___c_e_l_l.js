@@ -1,0 +1,27 @@
+var struct_d_u_a_l___c_e_l_l =
+[
+    [ "aux_frontal_area", "struct_d_u_a_l___c_e_l_l.html#af6868ce367620b97999be9b6a44eb267", null ],
+    [ "aux_id", "struct_d_u_a_l___c_e_l_l.html#a28cda47841222e6c8619b35b4070fe86", null ],
+    [ "aux_min_max", "struct_d_u_a_l___c_e_l_l.html#a7e1b0f171518b1b6ba6fa24c24750964", null ],
+    [ "aux_nbr", "struct_d_u_a_l___c_e_l_l.html#ad33341dd610af1a3e2fd21484027a9c0", null ],
+    [ "aux_q_rej", "struct_d_u_a_l___c_e_l_l.html#a85f3022d0d7513d780120bcded29aa6c", null ],
+    [ "aux_rt", "struct_d_u_a_l___c_e_l_l.html#addb13c545c69532958900b27b19305ca", null ],
+    [ "aux_totvol", "struct_d_u_a_l___c_e_l_l.html#a158e3d9cf853819e6dd9019177fb1710", null ],
+    [ "fhr", "struct_d_u_a_l___c_e_l_l.html#a4ada860a30d92742ef6d92ca6c9a082b", null ],
+    [ "flow_type", "struct_d_u_a_l___c_e_l_l.html#a3786eb54824f249a109a0ffc53521e3a", null ],
+    [ "ht_table", "struct_d_u_a_l___c_e_l_l.html#a564c809ca4bf103ed4b5aefcf6bb1409", null ],
+    [ "multipass", "struct_d_u_a_l___c_e_l_l.html#a2072275589b1d7e98ae543f7f5f11bb4", null ],
+    [ "name", "struct_d_u_a_l___c_e_l_l.html#ae5cb967283dbbdf75cb2032c1fa08fee", null ],
+    [ "next", "struct_d_u_a_l___c_e_l_l.html#acc197f0fe72b360944c95b27c0a10711", null ],
+    [ "ntu_table", "struct_d_u_a_l___c_e_l_l.html#a7c46200fe9e04b91afc33590e7a02e41", null ],
+    [ "ON", "struct_d_u_a_l___c_e_l_l.html#a9a6aafc815ee71040e6704d39ecef31f", null ],
+    [ "prim_frontal_area", "struct_d_u_a_l___c_e_l_l.html#a5e9e1dbc3506e46a3c128fa95f9db495", null ],
+    [ "prim_id", "struct_d_u_a_l___c_e_l_l.html#a8bc68497605f3eabb0b35238c78bcb10", null ],
+    [ "prim_min_max", "struct_d_u_a_l___c_e_l_l.html#a791f2a6aaa2b1bbf5de934d3ad57b8e1", null ],
+    [ "prim_nbr", "struct_d_u_a_l___c_e_l_l.html#a09397ae21b6bb3d721fac35ad0a01c7f", null ],
+    [ "prim_q_gain", "struct_d_u_a_l___c_e_l_l.html#ad0fc58dbf46d41fe5d043934a4b44d2b", null ],
+    [ "prim_rt", "struct_d_u_a_l___c_e_l_l.html#a9bcb123230c5616aa4f07b78528afd3d", null ],
+    [ "prim_totvol", "struct_d_u_a_l___c_e_l_l.html#a117a793a73010b6ee92f4e120402282e", null ],
+    [ "total_pass_volume", "struct_d_u_a_l___c_e_l_l.html#ab655f60e98cbc1c83ac1b8f8972514d7", null ],
+    [ "UA_scaled", "struct_d_u_a_l___c_e_l_l.html#aec042d14f33c276d95fa4e0dfefa2ca8", null ]
+];

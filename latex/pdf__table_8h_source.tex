@@ -1,0 +1,840 @@
+\doxysection{pdf\+\_\+table.\+h}
+\hypertarget{pdf__table_8h_source}{}\label{pdf__table_8h_source}\index{fluent20.1.0/src/species/pdf\_table.h@{fluent20.1.0/src/species/pdf\_table.h}}
+\mbox{\hyperlink{pdf__table_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*\ Contains\ parameters,\ structures,\ variables\ and\ functions\ related\ to\ non-\//partially-\/premixed\ model\ lookup\ table}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ \ creation\ and\ interpolation\ */}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_PDF\_TABLE\_H}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ \_FLUENT\_PDF\_TABLE\_H}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pdf__table_8h_a95ca26d532c39ec0ce75f7f5162a88d2}{pdf\_multi\_tabulation}};}
+\DoxyCodeLine{00014\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pdf__table_8h_a2327d72ac435475cba522da2477de553}{Need\_Pdf\_Pollut\_Point}};}
+\DoxyCodeLine{00015\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pdf__table_8h_a498c4956ce0bfdc6e9c6f6779ba74994}{pdf\_table\_nodes\_dynamic}};}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ NUM\_PP\ 56\ \ }\textcolor{comment}{/*\ number\ of\ elements\ in\ par\_premix\_poly\ array\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{pdf__table_8h_a7c46fc74a9dae30a73cd983250eee535}{par\_premix\_poly}};}
+\DoxyCodeLine{00018\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{pdf__table_8h_a99ef0ee31265ce3f042776b8acd5475b}{par\_premix\_poly\_sec}};}
+\DoxyCodeLine{00019\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pdf__table_8h_ab184db5bc58a2c6f7feb2e84a55f9715}{n\_table\_scalars}};}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ FMEAN\_SMALL\ \ (real)1.0e-\/10}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ FVAR\_SMALL\ \ \ (real)1.0e-\/4}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ SMALL\_WEIGHT\ (real)1.0E-\/6}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ MAX\_ENTHALPY\_GRID\_PTS\ 500}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ ENTHALPY\_ADIABATIC\ 0}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ ENTHALPY\_COLD\ -\/1}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ ENTHALPY\_HOT\ \ 1}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ LINEAR\ 0}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ POLYNOMIAL\ 2}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ Pollut\_Solve\_Size\_Max\ 3\ }\textcolor{comment}{/*\ this\ is\ good\ enough\ as\ no\ pollutant\ var\ have\ more\ than\ 3\ fields\ in\ tables*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00034\ \{}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{pdf__table_8h_ac8347fa324c6412b168db6df3464ad80a8a19febe8993770dda4305276353fa3b}{TABLE\_SCALAR\_YCVAR}}\ =\ 0,}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{pdf__table_8h_ac8347fa324c6412b168db6df3464ad80a6674a1d35542614e3286bfce3ab3b8e3}{TABLE\_SCALAR\_HOR}}\ \textcolor{comment}{/*\ heat\ of\ reaction\ */}}
+\DoxyCodeLine{00037\ \};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{pdf__table_8h_abe821d0fac05333be298917dcb50ee1da7fb0c1cca10ff57ae7aa3878ba530fbd}{NO\_CHANGE}}\ =\ 0,}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{pdf__table_8h_abe821d0fac05333be298917dcb50ee1daa3a4cd8dc61d33c31ac9c5bccd2187d0}{OLD\_VERSION}}\ =\ 1,}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{pdf__table_8h_abe821d0fac05333be298917dcb50ee1da0e3e8072144926fbba28540db5818f87}{NEWLY\_GENERATED}},}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{pdf__table_8h_abe821d0fac05333be298917dcb50ee1da328f670eb9413ef2d7b4e5185b5bd383}{MULTIPLE\_FLAMELET\_FILES}}}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{pdf__table_8h_a3153161a0d848ec64bf4895db3cf1be4a5778000a071508e0fad368649b0949e8}{VERSION\_PRE\_5\_0}}\ =\ 200,}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{pdf__table_8h_a3153161a0d848ec64bf4895db3cf1be4a0ec362d4ccfc447129b68cfa43dacf99}{VERSION\_5\_0}}\ =\ 300,}
+\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{pdf__table_8h_a3153161a0d848ec64bf4895db3cf1be4a5044a7fff0914bdf6fe62a750859f148}{VERSION\_6\_0}}\ =\ 400,}
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{pdf__table_8h_a3153161a0d848ec64bf4895db3cf1be4aa367b07c503032ce9d5d1de68d840f9c}{VERSION\_6\_1}}\ =\ 410,}
+\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{pdf__table_8h_a3153161a0d848ec64bf4895db3cf1be4a2111d12f81e6109524e3b5dc096a7440}{VERSION\_6\_2}}\ =\ 420,}
+\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{pdf__table_8h_a3153161a0d848ec64bf4895db3cf1be4abd1bf5e08fb3269392b633c5b39c0a83}{VERSION\_13\_0}}\ =\ 430,}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{pdf__table_8h_a3153161a0d848ec64bf4895db3cf1be4ad599f5eb91c23d1e2e80b6a3cbc7f84d}{VERSION\_14\_5}}\ =\ 440,}
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{pdf__table_8h_a3153161a0d848ec64bf4895db3cf1be4a3b32f88da21f914eb07c1002d555c8aa}{VERSION\_15\_0}}\ =\ 450,}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{pdf__table_8h_a3153161a0d848ec64bf4895db3cf1be4a15a002c3f76f6549b043e7ca32fb7224}{VERSION\_18\_0}}\ =\ 460}
+\DoxyCodeLine{00058\ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00061\ \{}
+\DoxyCodeLine{00062\ \ \ \mbox{\hyperlink{pdf__table_8h_a8feb5a39a55448c86e0dfc20f53a6c1daed50ea23e4a4a440d7d42cec20b49bbb}{STD\_SINGLE\_FLAMELET}}\ =\ 0,}
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{pdf__table_8h_a8feb5a39a55448c86e0dfc20f53a6c1da1389cdd689732aea6e5736dc71ab2fc2}{STD\_MULTIPLE\_FLAMELET}},}
+\DoxyCodeLine{00064\ \ \ \mbox{\hyperlink{pdf__table_8h_a8feb5a39a55448c86e0dfc20f53a6c1da40dd3920e2220c5e0096d158e1766975}{FLUENT\_UNSTEADY\_FLAMELET}},}
+\DoxyCodeLine{00065\ \ \ \mbox{\hyperlink{pdf__table_8h_a8feb5a39a55448c86e0dfc20f53a6c1da9f1395dc807f93c43af96a0f6e43ebbf}{STD\_MULTIPLE\_NONADIA\_FLAMELET}}}
+\DoxyCodeLine{00066\ \};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{comment}{/*\ Define\ pdf\ function\ type\ and\ quadrature\ for\ 2\ mixture\ fraction\ pdf.\ */}}
+\DoxyCodeLine{00069\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00070\ \{}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{pdf__table_8h_aaa1faf9307efabe7471b4443de4ba66ba514de9d1fc0bd67b9a0124f04f8b6472}{PDF\_TYPE\_DELTA}},}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{pdf__table_8h_aaa1faf9307efabe7471b4443de4ba66ba96bef784f71bbd0918dbdaabdb281b3f}{PDF\_TYPE\_BETA}}}
+\DoxyCodeLine{00073\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ SCADISTOL\ 1.e-\/4}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ COLD\_SIDE\ 0.75}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ COLD\_FLA\ \ 0.667}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ pdf\_spe\_loop(i)\ for(i=0;i<n\_spe\_pdf;i++)}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00081\ \{}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{pdf__table_8h_a14061dd054afd472999a4f4f6cdf3923ae485049c1c41c18c70041c6ed45d563e}{FUEL\_STREAM}},}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{pdf__table_8h_a14061dd054afd472999a4f4f6cdf3923a4078dc3e02f5534b0591ff9e98cce5f7}{SECONDARY\_STREAM}}}
+\DoxyCodeLine{00084\ \};}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00087\ \{}
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{pdf__table_8h_a5584fee7841d9376fb0394600e9ed81aaef7b7d9693019d158c0be738f00eefbd}{CONSTANT\_TEMPERATURE}},}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{pdf__table_8h_a5584fee7841d9376fb0394600e9ed81aa2b2dba0bad5059e45dbc70f68e9c1a63}{ADIABATIC\_ENTHALPY}},}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{pdf__table_8h_a5584fee7841d9376fb0394600e9ed81aa71d4e57463cd750d06e5ccc37f31bf45}{CONSTANT\_ENTHALPY}},}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{pdf__table_8h_a5584fee7841d9376fb0394600e9ed81aa59c087ad3c96c6e98edc18606337fdb3}{CONSTANT\_COMPOSITION}}}
+\DoxyCodeLine{00092\ \};}
+\DoxyCodeLine{00093\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00094\ \{}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{pdf__table_8h_a5e66f304417530ef056f13a6a6dc668aa1963ebc0cb5a5a18c5c26739c10b0a26}{FGM\_NONAD\_4D}},}
+\DoxyCodeLine{00096\ \ \ \mbox{\hyperlink{pdf__table_8h_a5e66f304417530ef056f13a6a6dc668aa09e319183480f1b4a52228f5b5ecafd3}{FGM\_NONAD\_5D}}}
+\DoxyCodeLine{00097\ \};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpdf__empirical__struct}{pdf\_empirical\_struct}}}
+\DoxyCodeLine{00100\ \{}
+\DoxyCodeLine{00101\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__empirical__struct_a184d4a88e11d482e865278322842b2d9}{ico2}},\ \mbox{\hyperlink{structpdf__empirical__struct_a9a8d62b71019490252ee90983b5af5d7}{iwater}},\ \mbox{\hyperlink{structpdf__empirical__struct_a27628016326d6434a10396710e8ec555}{icarbon}},\ \mbox{\hyperlink{structpdf__empirical__struct_a5a95e73882529fe4cb8336852b53ba13}{ihydrogen}},\ \mbox{\hyperlink{structpdf__empirical__struct_a1b9b6a186693630380e715d32b7a2141}{iso2}},\ \mbox{\hyperlink{structpdf__empirical__struct_a03e015e8f3cd44577b8ed2ab350ddf3b}{isulfur}};}
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__empirical__struct_a4bd06bee110a11d05e118919a4347420}{href\_empirical}}[\mbox{\hyperlink{pdf__props_8h_a993e8f7081554c39fae204bcbd889b65}{N\_STRMS}}];}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__empirical__struct_abcb71ee19045525f2a0baa788efa81ea}{mw\_empirical}}[\mbox{\hyperlink{pdf__props_8h_a993e8f7081554c39fae204bcbd889b65}{N\_STRMS}}];}
+\DoxyCodeLine{00104\ \}\ \mbox{\hyperlink{pdf__table_8h_a42dd49e374f792de4b0de3d8835245b0}{Pdf\_Empirical}};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpdf__define__struct}{pdf\_define\_struct}}}
+\DoxyCodeLine{00107\ \{}
+\DoxyCodeLine{00108\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_aaed6b00acb250ba33646e874860e0bb0}{iequfl}};}
+\DoxyCodeLine{00109\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_af5fd396c2b5f5c9aa3a538b15b9c9d35}{lmulti}};}
+\DoxyCodeLine{00110\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_a1ea32c6b2f2821a3aa5c24ffdb32a8bf}{empirical}}[\mbox{\hyperlink{pdf__props_8h_a993e8f7081554c39fae204bcbd889b65}{N\_STRMS}}];}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__define__struct_a8c9976ace837b97ac62bfd409078d11c}{hcombustion\_empirical}}[\mbox{\hyperlink{pdf__props_8h_a993e8f7081554c39fae204bcbd889b65}{N\_STRMS}}];}
+\DoxyCodeLine{00112\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__define__struct_a3a433a5055667c6a99a4a3fb0503ed01}{cp\_empirical}}[\mbox{\hyperlink{pdf__props_8h_a993e8f7081554c39fae204bcbd889b65}{N\_STRMS}}];}
+\DoxyCodeLine{00113\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__define__struct_a3db5ee5a21730aca55682d08930e4c05}{tinm}}[\mbox{\hyperlink{pdf__props_8h_a993e8f7081554c39fae204bcbd889b65}{N\_STRMS}}];\ \textcolor{comment}{/*\ temperatures\ at\ inlets\ */}}
+\DoxyCodeLine{00114\ \ \ \textcolor{comment}{/*\ IMPORTANT:\ The\ ordering\ of\ streams\ is\ as\ follows:}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ \ \ \ \ 0\ \ \ \ \ \ \ \ =\ primary\ fuel}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ \ \ \ \ ......\ \ =\ secondary\ streams,\ for\ the\ current\ 2-\/mixture\ fraction}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ \ \ \ \ implementation\ this\ is\ 1}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ \ \ \ \ nstrm-\/1\ =\ oxidiser\ stream,\ this\ is\ always\ the\ last\ index.}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ \ \ \ \ so\ in\ the\ current\ implementation:}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ \ \ \ \ for\ the\ single\ mixture\ fraction\ case,\ this\ is\ 1,}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ \ \ \ \ and\ for\ the\ two\ mixture\ fractions\ cases,\ this\ is\ 2.*/}}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__define__struct_ad2d2938ad2583fb0188fe5eb78f42017}{rfl}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}];}
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__define__struct_a57628441e19a53f633b2d74e0ce688db}{tmin}},\ \mbox{\hyperlink{structpdf__define__struct_a195763b3e059bc77631390ba004293df}{tmax}},\ \mbox{\hyperlink{structpdf__define__struct_abc9c68df5b47f5ee711bb562adbdb333}{tmaxratio}},\ \mbox{\hyperlink{structpdf__define__struct_a01527084f489feb0f32e62f234aaf152}{tloss}},\ \mbox{\hyperlink{structpdf__define__struct_a8a8a03dcf392f744529069cb6463de4f}{tadd}};}
+\DoxyCodeLine{00124\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_aa8a09352c127ffa49073391bf4a7f03f}{frozen\_boundaries}};}
+\DoxyCodeLine{00125\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_a188a1fea8f205ed3bf1ff14c497c5652}{include\_equil\_flamelet}};}
+\DoxyCodeLine{00126\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_ac8678b63bb699e0a4dfd2d76a41a1763}{nfl}};}
+\DoxyCodeLine{00127\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_a98c90ae7bde27ad456d9c68b13443950}{nfl2}};}
+\DoxyCodeLine{00128\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_ac1cda2570ab6f182fc361c45c8ee2abd}{nne}};}
+\DoxyCodeLine{00129\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_a885a59879069201d235382a326d9af99}{nne\_cold}};}
+\DoxyCodeLine{00130\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_a7313499d9f561a98e68a4aa14eb795d1}{nne\_hot}};}
+\DoxyCodeLine{00131\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_a0ebc95b06a570ffa635cc45717a557e0}{nstrm}};\ \ \ \ \textcolor{comment}{/*number\ of\ streams\ */}}
+\DoxyCodeLine{00132\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_ab6fac5bbb3ef7217cb5d0f3be8596a85}{nmf}};\ \ \ \ \textcolor{comment}{/*number\ of\ mixture\ fractions\ */}}
+\DoxyCodeLine{00133\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_a910cab4eccb7d4cef8a6cc16a3400071}{nfbm}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}];}
+\DoxyCodeLine{00134\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_a74ee25d8d6cc7f5eff7da582845f452a}{numfl}};}
+\DoxyCodeLine{00135\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_aadcdb8f45721a3c145e75a0a13b5831d}{num\_nonadfla}};}
+\DoxyCodeLine{00136\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__define__struct_a29767bb4f563f6b4b17e58c0bd86302f}{scadmx}};}
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpdf__define__struct_a9dc2742864a709027113ec957fb94ddc}{mole\_or\_mass}};}
+\DoxyCodeLine{00138\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_a06966c10d38027f225d35643f2e17b01}{max\_species}};}
+\DoxyCodeLine{00139\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpdf__define__struct_a93ae39c49c6e70b3b56c8dcf6f5b8daf}{nonAdiaLamFlameSpeed}};}
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpdf__define__struct_affa84ea70dc0912e3c28734eed6b8bf8}{premixFlamelet}};}
+\DoxyCodeLine{00141\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__define__struct_afce9e547d96e8d023d9dcb4e589ba921}{n\_table\_scalars}};}
+\DoxyCodeLine{00142\ \}\ \mbox{\hyperlink{pdf__table_8h_ace4a8131679b7cf9e747cc03ef34f0da}{Pdf\_Define}};}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtable__point__struct}{table\_point\_struct}}}
+\DoxyCodeLine{00145\ \{}
+\DoxyCodeLine{00146\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structtable__point__struct_a971fb266b7efeaf588837d3d177ee5a0}{success}};}
+\DoxyCodeLine{00147\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtable__point__struct_a3b6bbd8a6810bf3afcbc9c600f1daa45}{temp}}\ ;}
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtable__point__struct_a123a732c5c725610cab68d7082ad9591}{den}}\ ;}
+\DoxyCodeLine{00149\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtable__point__struct_aaeb055013cf8cb99dd7d46fd95a5bcfe}{xmol}}\ ;}
+\DoxyCodeLine{00150\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtable__point__struct_a040b8722f381a93d355dc120df62a406}{cp}};}
+\DoxyCodeLine{00151\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtable__point__struct_aa9479414bfd55e7e83d97706e321d235}{mol\_wt}}\ ;}
+\DoxyCodeLine{00152\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtable__point__struct_a4e44277c4ecf2dcb32f5d3ff7398f080}{kin\_src}}\ ;}
+\DoxyCodeLine{00153\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structtable__point__struct_aa49efbe919de2119889397fd30843c4c}{enth}};}
+\DoxyCodeLine{00154\ \ \ \mbox{\hyperlink{structpollut__rate__struct}{Pollut\_Rate}}\ **\mbox{\hyperlink{structtable__point__struct_abb6eec010de7b8842b404f910c6daa38}{pdf\_s\_pollut}};}
+\DoxyCodeLine{00155\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtable__point__struct_addce71d0c72a4c9d19f10a5f507db49d}{pollut\_rates}};}
+\DoxyCodeLine{00156\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structtable__point__struct_aa69713088922ebca31163913c60e37ff}{scalars}};}
+\DoxyCodeLine{00157\ \}\ \mbox{\hyperlink{pdf__table_8h_a82695fa89a3d2a76367770f71ea33732}{Table\_Point}};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structprepdf__struct}{prepdf\_struct}}}
+\DoxyCodeLine{00160\ \textcolor{comment}{/*\ the\ variables\ in\ this\ structure\ are\ used\ in\ the\ mean\ properties}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ \ \ calculation\ stage.\ They\ are\ used\ in\ generating\ the\ pdf\ tables\ and\ also}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ \ \ when\ computing\ the\ integrated\ properties\ on\ the\ fly\ */}}
+\DoxyCodeLine{00163\ \{}
+\DoxyCodeLine{00164\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structprepdf__struct_a8169a698b4fdc9bead10868da1ff94bc}{n\_pdf\_points}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}];\ \textcolor{comment}{/*number\ of\ points\ for\ each\ mixrure\ fractions}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ for\ PDF\ integrations*/}}
+\DoxyCodeLine{00166\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structprepdf__struct_a013cc3d5d3fa678bd1544348e29b5b3b}{stoich}}\ ;\ \ \textcolor{comment}{/*stoichiometric\ coefficients\ in\ mixed-\/is-\/burnt\ model\ */}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structprepdf__struct_a87c7b7138514a7ec400df416125e87bb}{fpm}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}]\ ;\ \textcolor{comment}{/*\ mixture\ fraction\ values\ for\ integration\ with\ the\ PDF's\ */}}
+\DoxyCodeLine{00169\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structprepdf__struct_a2b72dd574a877caa9b59a4dbacabe5d2}{wtm}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}];\ \textcolor{comment}{/*\ persentage\ probability\ at\ each\ location\ above\ */}}
+\DoxyCodeLine{00170\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *\mbox{\hyperlink{structprepdf__struct_a92e7f390e00e85589adfc3981eedb8f8}{point\_active}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}];\ \textcolor{comment}{/*\ the\ point\ is\ required\ for\ the\ mean\ properties\ calculation\ (the\ weights\ wtm\ are\ non-\/zero)\ */}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structprepdf__struct_ad30e4be11c33afea5836dc18089ad9f2}{xm}};\ \ \ \textcolor{comment}{/*work\ array\ for\ reacted\ mixture\ mole\ fractions\ */}}
+\DoxyCodeLine{00173\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structprepdf__struct_ae59c5b914ad9b30b306f419a71b62d02}{xmolic}};\ \textcolor{comment}{/*work\ array\ for\ unreacted\ mixture\ mole\ fractions\ */}}
+\DoxyCodeLine{00174\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structprepdf__struct_ac882dc8be995b978a837e51fca733f33}{ym}};\ \ \ \textcolor{comment}{/*work\ array\ for\ reacted\ mixture\ mass\ fractions\ */}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structprepdf__struct_a4a6362cfbd1caaa89ccf4187f4fbcf36}{tmin\_curve}};}
+\DoxyCodeLine{00177\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structprepdf__struct_ae49b44425d69988071c8706539426c20}{tmax\_curve}};}
+\DoxyCodeLine{00178\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structprepdf__struct_ad80597b90a1a97f6d28d6bc3cac6db8a}{tmin\_slice}};}
+\DoxyCodeLine{00179\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structprepdf__struct_a7107694681e68b84fddb703040252996}{tmax\_slice}};}
+\DoxyCodeLine{00180\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ *\mbox{\hyperlink{structprepdf__struct_a7cf42e2292c74e1f90c7e8f69b91b7a0}{rich\_limit}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}];}
+\DoxyCodeLine{00181\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \mbox{\hyperlink{structprepdf__struct_a7464d3bd7a3d72d90b81a64578919715}{rich\_limit\_2}};}
+\DoxyCodeLine{00182\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structprepdf__struct_a77b1452d956130c76f718edd76b1abdc}{htop\_rich}},\ \mbox{\hyperlink{structprepdf__struct_a21c75f0ccf2e56c3751ef5bec94715f4}{hbot\_rich}};}
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ *\mbox{\hyperlink{structprepdf__struct_aec6b0f6603ada3423e2e2a1bd19a1d75}{curve}};}
+\DoxyCodeLine{00184\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ **\mbox{\hyperlink{structprepdf__struct_a0c739554efbb3d2a4e6c20bf1993eb47}{slice}};}
+\DoxyCodeLine{00185\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ ***\mbox{\hyperlink{structprepdf__struct_ada4c324ada21f7f9bb2bec6d330b7568}{volume}};}
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ ***\mbox{\hyperlink{structprepdf__struct_a7c2bbe844b186ecff7319b8d375a0105}{slice3d}};}
+\DoxyCodeLine{00187\ \}\ \mbox{\hyperlink{pdf__table_8h_a1e4b1965ee19520762b18c06d4269d82}{Prepdf}};}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpdf__file__struct}{pdf\_file\_struct}}}
+\DoxyCodeLine{00190\ \textcolor{comment}{/*\ the\ variables\ in\ this\ structure\ are\ saved\ in\ the\ pdf\ file*/}}
+\DoxyCodeLine{00191\ \{}
+\DoxyCodeLine{00192\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__file__struct_a0b1667ba207857a1d2ae45c2d99a4512}{xinm}}[\mbox{\hyperlink{pdf__props_8h_a993e8f7081554c39fae204bcbd889b65}{N\_STRMS}}][\mbox{\hyperlink{materials_8h_a5ba094c29630668050d5fe9ec66ff751}{MAX\_PDF\_SPECIES}}];\ \textcolor{comment}{/*\ mole\ fractions\ at\ inlets\ */}}
+\DoxyCodeLine{00193\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__file__struct_a61feb2593a7ec16c2a030c02d1ca5dcc}{yinm}}[\mbox{\hyperlink{pdf__props_8h_a993e8f7081554c39fae204bcbd889b65}{N\_STRMS}}][\mbox{\hyperlink{materials_8h_a5ba094c29630668050d5fe9ec66ff751}{MAX\_PDF\_SPECIES}}];\ \textcolor{comment}{/*\ mass\ fractions\ at\ inlets\ */}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_a30c74b2775d352ad506b9bed4dccad3a}{fmeanm}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}];\ \textcolor{comment}{/*\ mixture\ fraction\ intervals\ in\ PDF\ file,}}
+\DoxyCodeLine{00196\ \textcolor{comment}{\ \ \ \ \ \ \ in\ the\ current\ implementation}}
+\DoxyCodeLine{00197\ \textcolor{comment}{\ \ \ \ \ \ \ this\ is\ the\ same\ as\ fpm\ for\ the\ beta\ function\ option\ */}}
+\DoxyCodeLine{00198\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_a4ec9a10536aeba3273ea0869513b41ea}{ffl}}\ ;\textcolor{comment}{/*\ mixture\ fraction\ variance\ intervals\ in\ PDF\ file\ */}}
+\DoxyCodeLine{00199\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_ac10f6935998e4eedbdc131a0f0acbf4b}{ffl2}};}
+\DoxyCodeLine{00200\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_a8a29de340b8e85302fff5527381384c2}{hbar\_hot}}\ ;}
+\DoxyCodeLine{00201\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_ae712c10203b52571501be6865898bdad}{hbar\_cold}}\ ;}
+\DoxyCodeLine{00202\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_a9401df2277d9184028a73fea9672567a}{hbar\_enth}}\ ;}
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_aa233e79dc27e602599a231f47b7c178b}{hbar\_postproc}};}
+\DoxyCodeLine{00204\ \ \ \textcolor{comment}{/*\ Pdf\ instantaneous\ property\ values\ 2\ mixture\ fraction\ adiabatic\ */}}
+\DoxyCodeLine{00205\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ **\mbox{\hyperlink{structpdf__file__struct_abc5c16b869e2f719f781e7d013fa230d}{adia2mf}};}
+\DoxyCodeLine{00206\ \ \ \textcolor{comment}{/*\ Pdf\ instantaneous\ property\ values\ 2\ mixture\ fraction\ nonadiabatic\ */}}
+\DoxyCodeLine{00207\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ***\mbox{\hyperlink{structpdf__file__struct_a3d32bedaad75e67d133a9bf4391a5f95}{nonadia2mf}};}
+\DoxyCodeLine{00208\ \ \ \textcolor{comment}{/*\ non-\/adiabatic\ multiple\ flamelets\ */}}
+\DoxyCodeLine{00209\ \ \ \textcolor{comment}{/*\ Pdf\ integrated\ property\ values\ 1\ mixture\ fraction\ adiabatic\ */}}
+\DoxyCodeLine{00210\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ **\mbox{\hyperlink{structpdf__file__struct_a72a75b5e87989fc178163f1e7ef6d8a8}{adia1mf}}\ ;}
+\DoxyCodeLine{00211\ \ \ \textcolor{comment}{/*\ Pdf\ integrated\ property\ values\ 1\ mixture\ fraction\ nonadiabatic\ */}}
+\DoxyCodeLine{00212\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ***\mbox{\hyperlink{structpdf__file__struct_a69619fcab246636418dd76d3f8f872be}{nonadia1mf}}\ ;}
+\DoxyCodeLine{00213\ \ \ \textcolor{comment}{/*\ Pdf\ integrated\ property\ values\ multiple\ strained\ flamelets\ adiabatic\ */}}
+\DoxyCodeLine{00214\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ***\mbox{\hyperlink{structpdf__file__struct_aa0754e988eb64d331d7e42c37ccea122}{adiastrained}}\ ;}
+\DoxyCodeLine{00215\ \ \ \textcolor{comment}{/*\ Pdf\ integrated\ property\ values\ multiple\ strained\ flamelets\ nonadiabatic\ */}}
+\DoxyCodeLine{00216\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ****\mbox{\hyperlink{structpdf__file__struct_a5f9b1a663f76b4242dd862505e0ca514}{nonadiastrained}}\ ;}
+\DoxyCodeLine{00217\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ****\mbox{\hyperlink{structpdf__file__struct_aad0f6b656d84129a10e3beea29fdb4aa}{premix\_flamelet\_tab}};\ \textcolor{comment}{/*for\ 4D\ adiabatic\ FGM*/}}
+\DoxyCodeLine{00218\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ****\mbox{\hyperlink{structpdf__file__struct_a2b227c6d762ec62e9e96b293bfd3b6f0}{nonadia\_fgm\_props}};}
+\DoxyCodeLine{00219\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ *****\mbox{\hyperlink{structpdf__file__struct_ac43876e5ea9a667afee66aeefffe8bd5}{nonadia\_fgm\_tab}};\ \textcolor{comment}{/*Full\ 5D\ nonadiabatic\ FGM*/}}
+\DoxyCodeLine{00220\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ****\mbox{\hyperlink{structpdf__file__struct_a045446a43afc82934fcb613bab32fd3d}{adia2mf\_tab}};\ \textcolor{comment}{/*\ Full\ 4D\ tabulation\ of\ mean\ 2mf\ tables\ */}}
+\DoxyCodeLine{00221\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ *****\mbox{\hyperlink{structpdf__file__struct_abf4d37bc4beb4b594d5ea611e0dba25d}{nonadia2mf\_tab}};\ \textcolor{comment}{/*\ Full\ 5D\ tabulation\ of\ mean\ 2mf\ tables\ */}}
+\DoxyCodeLine{00222\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ****\mbox{\hyperlink{structpdf__file__struct_a7c95e4d29a6fd71da89c1023d1c4201c}{xmolxe}}\ ;}
+\DoxyCodeLine{00223\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ****\mbox{\hyperlink{structpdf__file__struct_a12ba9597a7ccb6cc3de565c87094f6ac}{xmol0xe}}\ ;}
+\DoxyCodeLine{00224\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_a6ef638d5026960a76a5408add8a4727c}{scadd}}\ ;\ \textcolor{comment}{/*\ scalar\ dissipation\ includes\ 0\ equilibrium\ slice\ */}}
+\DoxyCodeLine{00225\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__file__struct_a70a3b4b237c97789e96aa77fd1067ed2}{exp\_table}}\ ;}
+\DoxyCodeLine{00226\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_a5cebf6505477993f28df89f4d42f292c}{prmx\_alpha}};\ \textcolor{comment}{/*\ reaction\ progress\ =\ c\ =\ Sum(\ prmx\_alpha\_i\ *\ Y\_i\ )\ /\ equil\ */}}
+\DoxyCodeLine{00227\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__file__struct_a260bf05ac560bb143eb0b7b5e1e8e844}{Yc\_eq}};\ \textcolor{comment}{/*\ denominator\ fcn(mf)\ to\ normalize\ reaction\ progress\ */}}
+\DoxyCodeLine{00228\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__file__struct_a1b6921b1e1be8dc459971358ba8bfa16}{Yc\_eq\_2d}};}
+\DoxyCodeLine{00229\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__file__struct_a4f55390903135aed12cd38e9daa47efa}{Yc\_eq\_sqr}};}
+\DoxyCodeLine{00230\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__file__struct_aad5f12e28be8bdd9fea1ebad9cd0296e}{Yc\_eq\_nonad}};}
+\DoxyCodeLine{00231\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__file__struct_afd369bf696f6fbb809251f0fd289be94}{Yc\_in\_nonad}};}
+\DoxyCodeLine{00232\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__file__struct_a69100642597cc3d42935293a74824a77}{Nfgm\_enth}};}
+\DoxyCodeLine{00233\ \}\ \mbox{\hyperlink{pdf__table_8h_ae48fb26397f594a407d511acc915fd1a}{Pdf\_File}};}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structflamelet__import__struct}{flamelet\_import\_struct}}}
+\DoxyCodeLine{00236\ \{}
+\DoxyCodeLine{00237\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structflamelet__import__struct_a9110766823a409d9b668763aafb46d7c}{scd}};\textcolor{comment}{/*\ scalar\ dissipation\ */}}
+\DoxyCodeLine{00238\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structflamelet__import__struct_a371b15bb54bd6a3004c2a7d8c6b7380f}{sr}};\textcolor{comment}{/*\ strain\ rate\ */}}
+\DoxyCodeLine{00239\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structflamelet__import__struct_a6ed400e7311594f3196c62c5fbb60b7b}{react\_progress}};\ \textcolor{comment}{/*\ premixed\ flamelets\ */}}
+\DoxyCodeLine{00240\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structflamelet__import__struct_a5cd350810c9d98b387bd4f9c8d83ca22}{num\_grd\_pnts}}\ ;\ \textcolor{comment}{/*Number\ of\ grid\ points\ of\ a\ flamelet*/}}
+\DoxyCodeLine{00241\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structflamelet__import__struct_ad105ae0adb3c00893dbf0874af102446}{phit\_x}}\ ;}
+\DoxyCodeLine{00242\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ***\mbox{\hyperlink{structflamelet__import__struct_a0af1571df2fc3f9a1d8e9f1b7f1797d4}{phix\_x}}\ ;}
+\DoxyCodeLine{00243\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structflamelet__import__struct_ac7bcb5b28d8dfaff194bff91ea1cf637}{cdot}};\ \textcolor{comment}{/*\ premixed\ flamelet\ source\ */}}
+\DoxyCodeLine{00244\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structflamelet__import__struct_ad7574c901e981a5f04ed7b12c1404ac9}{z\_sto}}\ ;}
+\DoxyCodeLine{00245\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structflamelet__import__struct_ae15abe756647b4e7415785d420c9eed5}{z\_x}}\ ;}
+\DoxyCodeLine{00246\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structflamelet__import__struct_a6d2d144e6acda7a00601bf19a1aa2c52}{z\_c}}\ ;}
+\DoxyCodeLine{00247\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structflamelet__import__struct_a8850c76d1a48dda79de693c0aada83bf}{z\_h}}\ ;}
+\DoxyCodeLine{00248\ \}\ \mbox{\hyperlink{pdf__table_8h_a581f67ee043f90f2a0d491e7b896d374}{Flamelet\_Import}};}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structnonadia__fgm__import__struct}{nonadia\_fgm\_import\_struct}}}
+\DoxyCodeLine{00251\ \{}
+\DoxyCodeLine{00252\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structnonadia__fgm__import__struct_afe15fb1dea5789f044253541618bc013}{num\_fpts}}\ ;\ \textcolor{comment}{/*number\ of\ mixture\ fraction\ points*/}}
+\DoxyCodeLine{00253\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structnonadia__fgm__import__struct_a1ce734b0d6bf3215b8a22851656ee3ef}{num\_cpts}}\ ;}
+\DoxyCodeLine{00254\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structnonadia__fgm__import__struct_a54ec22f43513f2d98b6b43e5f3d51192}{num\_hpts}}\ ;}
+\DoxyCodeLine{00255\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structnonadia__fgm__import__struct_acd6d607b4f933b3b42f192b6207aa11b}{num\_h\_cold\_pts}}\ ;}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \ \ \mbox{\hyperlink{structnonadia__fgm__import__struct_ac196598094a917a4925217445b5f4e38}{z\_sto}}\ \ ;\ \ \textcolor{comment}{/*\ constant\ value*/}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ***\mbox{\hyperlink{structnonadia__fgm__import__struct_a62e895edc781481d985991bc97d8c990}{temp}}\ \ \ ;\ \ \textcolor{comment}{/*\ T\ [ih][ic][iff]*/}}
+\DoxyCodeLine{00260\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ****\mbox{\hyperlink{structnonadia__fgm__import__struct_a7eefa9c28e4532078d584639ececf0fb}{yi}}\ \ \ \ ;\ \ \textcolor{comment}{/*\ yi[ih][ic][ins][iff]*/}}
+\DoxyCodeLine{00261\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ***\mbox{\hyperlink{structnonadia__fgm__import__struct_a0b99987b1efd59680e29c52d37e605f8}{ycdot}}\ \ ;\ \ \textcolor{comment}{/*\ ycdot\ [ih][ic][iff]\ */}}
+\DoxyCodeLine{00262\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ***\mbox{\hyperlink{structnonadia__fgm__import__struct_a4307c61911a07c04e8e3d006531db977}{fgrid}}\ \ ;\ \ \textcolor{comment}{/*\ f[ih][ic][iff]\ */}}
+\DoxyCodeLine{00263\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ***\mbox{\hyperlink{structnonadia__fgm__import__struct_adb4960c5645b3fe0304f4342522e9536}{cgrid}}\ \ \ ;\ \ \textcolor{comment}{/*\ c[ih][ic][iff]\ */}}
+\DoxyCodeLine{00264\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structnonadia__fgm__import__struct_a0415ed86fef248b5b63026aa874ccf27}{hgrid}}\ \ \ ;\ \ \textcolor{comment}{/*\ h[iff][ih]\ */}}
+\DoxyCodeLine{00265\ \}\ \mbox{\hyperlink{pdf__table_8h_a543ce0f392bc413911d6ab2bb12096b3}{Nonadia\_Fgm\_Import}};}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structflamelet__expert__struct}{flamelet\_expert\_struct}}}
+\DoxyCodeLine{00269\ \{}
+\DoxyCodeLine{00270\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structflamelet__expert__struct_a1d291f7095760ba3a77c4e050a13c9dc}{expinv}};}
+\DoxyCodeLine{00271\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structflamelet__expert__struct_ae0a37065ed290e6697b3170f2823f705}{flamtyp}}\ ;}
+\DoxyCodeLine{00272\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structflamelet__expert__struct_a3bae3b2c2d6174daeae4999616a0fcc7}{flammult}}\ ;}
+\DoxyCodeLine{00273\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structflamelet__expert__struct_a3dc7df6ca85c9681ccce3cb3a29f112f}{flampar}}\ ;}
+\DoxyCodeLine{00274\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structflamelet__expert__struct_a906d021b80d88c84e858a9644fc0528e}{fvarlim}}\ ;}
+\DoxyCodeLine{00275\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structflamelet__expert__struct_ad88a397dda588ac77cd5d33b43ae3ee4}{dfsto}};\ \textcolor{comment}{/*\ stochiometric\ mixture\ fraction\ times\ 2*/}}
+\DoxyCodeLine{00276\ \}\ \mbox{\hyperlink{pdf__table_8h_a16ba9cd48d3568da8b32a1c41ba1424f}{Flamelet\_Expert}}\ ;}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpdf__variables__struct}{pdf\_variables\_struct}}}
+\DoxyCodeLine{00279\ \textcolor{comment}{/*the\ variables\ in\ this\ structure\ are\ computed\ after\ reading\ the\ pdf\ file}}
+\DoxyCodeLine{00280\ \textcolor{comment}{\ \ and\ need\ not\ be\ saved\ in\ the\ pdf\ file\ */}}
+\DoxyCodeLine{00281\ \{}
+\DoxyCodeLine{00282\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__variables__struct_ab0bfc197f1be1f6fafa7ad7c7661e224}{htop\_curve}};\ \textcolor{comment}{/*enthalpies\ at\ top\ temperature\ curve\ */}}
+\DoxyCodeLine{00283\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__variables__struct_a8daa8c6ca230b1cf7741626941a2dbcf}{hbot\_curve}};\ \textcolor{comment}{/*\ enthalpies\ at\ bottom\ temperature\ curve\ */}}
+\DoxyCodeLine{00284\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__variables__struct_a4079a2a5ccc39b051bfb6e29db3468a8}{htop\_slice}}\ ;\ \textcolor{comment}{/*enthalpies\ at\ top\ temperature\ slice\ */}}
+\DoxyCodeLine{00285\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__variables__struct_aef2d4b13c0740a42e1467ff717c9e2a6}{hbot\_slice}}\ ;\ \textcolor{comment}{/*enthalpies\ at\ bottom\ temperature\ slice\ */}}
+\DoxyCodeLine{00286\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__variables__struct_ae930bdba9431badadc71f9e3f4083fb0}{hadia\_curve}};\ \textcolor{comment}{/*\ adiabatic\ mixture\ enthalpy\ curve\ */}}
+\DoxyCodeLine{00287\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__variables__struct_a98a5e36c8831ce1b64bc663b82c4811b}{hadia\_slice}};\ \textcolor{comment}{/*\ adiabatic\ mixture\ enthalpy\ slice\ */}}
+\DoxyCodeLine{00288\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **\mbox{\hyperlink{structpdf__variables__struct_a7753361a2212f2b0166892cee1321f60}{enth\_slice}};\ \textcolor{comment}{/*\ enthalpy\ of\ mixture\ in\ properties\ table\ */}}
+\DoxyCodeLine{00289\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ***\mbox{\hyperlink{structpdf__variables__struct_a4c82a5ca9b8851e72939f311b337eab7}{enth\_volume}};\ \textcolor{comment}{/*\ enthalpy\ of\ mixture\ in\ properties\ table\ for\ 2\ mixture\ fractions*/}}
+\DoxyCodeLine{00290\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ ***\mbox{\hyperlink{structpdf__variables__struct_a30b0821aba0215619f81c1f1cfa46ac0}{table\_interpolated}};\ \textcolor{comment}{/*for\ multiple\ strained\ flamelets\ nonadiabatic\ */}}
+\DoxyCodeLine{00291\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ***\mbox{\hyperlink{structpdf__variables__struct_a92dfef350278416a05b1541d89896340}{nonadia\_c}};\ \textcolor{comment}{/*\ for\ partially\ premixed\ non\ adiabatic\ single\ mixture\ fraction\ */}}
+\DoxyCodeLine{00292\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__variables__struct_a107478b95753c3560c5a0d1ddb6a42b3}{entmax}};}
+\DoxyCodeLine{00293\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__variables__struct_a4fb5615673396e975f5160a193dacc1e}{entmin}};}
+\DoxyCodeLine{00294\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpdf__variables__struct_a6fa001ab16199da9c8a5d481cc564e38}{hinm}}[\mbox{\hyperlink{pdf__props_8h_a993e8f7081554c39fae204bcbd889b65}{N\_STRMS}}];}
+\DoxyCodeLine{00295\ \}\ \mbox{\hyperlink{pdf__table_8h_a609a923c5bb9cb40da4ef48e03be84d6}{Pdf\_Variables}};}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpdf__grid__struct}{pdf\_grid\_struct}}}
+\DoxyCodeLine{00298\ \{}
+\DoxyCodeLine{00299\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__grid__struct_a910cab4eccb7d4cef8a6cc16a3400071}{nfbm}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}];}
+\DoxyCodeLine{00300\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__grid__struct_ac8678b63bb699e0a4dfd2d76a41a1763}{nfl}};}
+\DoxyCodeLine{00301\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__grid__struct_a98c90ae7bde27ad456d9c68b13443950}{nfl2}};}
+\DoxyCodeLine{00302\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__grid__struct_ac1cda2570ab6f182fc361c45c8ee2abd}{nne}};}
+\DoxyCodeLine{00303\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__grid__struct_a885a59879069201d235382a326d9af99}{nne\_cold}};}
+\DoxyCodeLine{00304\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpdf__grid__struct_a7313499d9f561a98e68a4aa14eb795d1}{nne\_hot}};}
+\DoxyCodeLine{00305\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__grid__struct_a20e600886b35df39d4ef8304c4744a75}{fmean}}[\mbox{\hyperlink{pdf__props_8h_abd7298331af9c6b50cfe18930a0de33f}{N\_MF}}];}
+\DoxyCodeLine{00306\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__grid__struct_afc8fc9f24fa5618dacbb24ba85c227a3}{fvar}};}
+\DoxyCodeLine{00307\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__grid__struct_ab2123a74d626b3a7a35d7d68beb6e92f}{cvar}};}
+\DoxyCodeLine{00308\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__grid__struct_ae712c10203b52571501be6865898bdad}{hbar\_cold}};}
+\DoxyCodeLine{00309\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structpdf__grid__struct_a8a29de340b8e85302fff5527381384c2}{hbar\_hot}};}
+\DoxyCodeLine{00310\ \}\ \mbox{\hyperlink{pdf__table_8h_ae3cf4b91877517e931151b4f4a1c2e36}{Pdf\_Grid}};}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmulti__fgm__struct}{multi\_fgm\_struct}}}
+\DoxyCodeLine{00313\ \{}
+\DoxyCodeLine{00314\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmulti__fgm__struct_a289a657f6a021b0fe03928dbe0bc5c48}{adia}};}
+\DoxyCodeLine{00315\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmulti__fgm__struct_adefc341b6bb0209b98e64a7476fa5194}{flame\_index\_uds}};}
+\DoxyCodeLine{00316\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structmulti__fgm__struct_ae447f2b8b2b1376ae05f8e354a25b35f}{flame\_index\_udm}};}
+\DoxyCodeLine{00317\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmulti__fgm__struct_ad750c283a01f58df0dac07f57428b49c}{flame\_index\_var\_id}};}
+\DoxyCodeLine{00318\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmulti__fgm__struct_af1fd657126942b1b9f5c8ae7b8a25823}{premix\_grid}}[5];}
+\DoxyCodeLine{00319\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmulti__fgm__struct_a42ec72fce6c3778f399a43b44a38aabb}{diff\_grid}}[5];}
+\DoxyCodeLine{00320\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structmulti__fgm__struct_afd251c9d41737b28344e44b50a2e3dba}{fgm\_fac\_min}};}
+\DoxyCodeLine{00321\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structmulti__fgm__struct_aee481d666439ae3eaeb7f206a0d7927c}{fgm\_fac\_max}};}
+\DoxyCodeLine{00322\ \ \ \textcolor{keywordtype}{char}\ **\mbox{\hyperlink{structmulti__fgm__struct_a63b19c592e289c2a994ff7ee5a71997f}{first\_table\_sp\_names}};}
+\DoxyCodeLine{00323\ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ *****\mbox{\hyperlink{structmulti__fgm__struct_ad0a270a53817bf7f536142063a10a563}{multi\_fgm\_tab}};}
+\DoxyCodeLine{00324\ \}\ \mbox{\hyperlink{pdf__table_8h_a3fe285c19c0d3608f22f6708d5bc1088}{Multi\_Fgm}}\ ;}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structmulti__fgm__struct}{Multi\_Fgm}}\ *\mbox{\hyperlink{pdf__table_8h_aec5c0865352c86a48686c87cbbb3a945}{mfgm}};}
+\DoxyCodeLine{00327\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structprepdf__struct}{Prepdf}}\ *\mbox{\hyperlink{pdf__table_8h_a082e5281b3e39e1a243d5401715d958a}{pr}}\ ;}
+\DoxyCodeLine{00328\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structpdf__file__struct}{Pdf\_File}}\ *\mbox{\hyperlink{pdf__table_8h_aafb24b518a5cc206f8c554e12a8d25a7}{pf}}\ ;}
+\DoxyCodeLine{00329\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structflamelet__import__struct}{Flamelet\_Import}}\ *\mbox{\hyperlink{pdf__table_8h_a526cebfca987a2aea30f5520dc791ccf}{fl}}\ ;}
+\DoxyCodeLine{00330\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structpdf__variables__struct}{Pdf\_Variables}}\ *\mbox{\hyperlink{pdf__table_8h_adbaa5105d1b7db96b5b078d56ce68853}{pv}}\ ;}
+\DoxyCodeLine{00331\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structpdf__define__struct}{Pdf\_Define}}\ *\mbox{\hyperlink{pdf__table_8h_a4e666ed8a28cbf822aea86fdeb45dbb4}{pd}}\ ;}
+\DoxyCodeLine{00332\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structpdf__empirical__struct}{Pdf\_Empirical}}\ *\mbox{\hyperlink{pdf__table_8h_a9c2719ee95deaa153053f21caf301aed}{pe}}\ ;}
+\DoxyCodeLine{00333\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structflamelet__expert__struct}{Flamelet\_Expert}}\ *\mbox{\hyperlink{pdf__table_8h_a769d70e70ea743f554d4f4906e6c2b52}{fe}}\ ;}
+\DoxyCodeLine{00334\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structpdf__grid__struct}{Pdf\_Grid}}\ *\mbox{\hyperlink{pdf__table_8h_ac23734b51adbd8af374c2c11d2356337}{pdf\_grid}}\ ;}
+\DoxyCodeLine{00335\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{pdf__table_8h_abc6f4ce762535cd5e8dbc2ca2df24174}{Multi\_Fgm\_Ad}};}
+\DoxyCodeLine{00336\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structnonadia__fgm__import__struct}{Nonadia\_Fgm\_Import}}\ *\mbox{\hyperlink{pdf__table_8h_a02f4265eb8ad5663729bca0f24aaec4e}{Nfgm}};}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00339\ \{}
+\DoxyCodeLine{00340\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_p_d_f___v_a_r_ade1586eb411ae7c5224d1770af070e63}{nID}};}
+\DoxyCodeLine{00341\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{struct_p_d_f___v_a_r_a5e6182c030324511dd82e9fa1a0ab071}{Name}};}
+\DoxyCodeLine{00342\ \}\ \mbox{\hyperlink{struct_p_d_f___v_a_r}{PDF\_VAR}};}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \textcolor{comment}{/*free\ table\ point\ */}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ FREETP(value)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ \ \ CX\_Free(value.xmol);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\ \ \ \ value.xmol\ =\ NULL;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#define\ FREE\_TP\_SCALARS(value)\(\backslash\)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\ if(NNULLP(value.scalars))\(\backslash\)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\ \ \ \ CX\_Free(value.scalars);\(\backslash\)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\ \ \ \ value.scalars=NULL;\ \(\backslash\)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#define\ FREETP\_POLLUT(value)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{int\ ipz;\ \(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{if(NNULLP(value.pdf\_s\_pollut))\(\backslash\)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{for\ (ipz=0;\ ipz<\ MAX\_POLLUT\_EQNS\ ;\ ipz\ ++)\ \(\backslash\)}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\{\ \(\backslash\)}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{FREE\_POLLUT\_RATE(value.pdf\_s\_pollut[ipz])\ \(\backslash\)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\}\(\backslash\)}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{CX\_Free(value.pdf\_s\_pollut);\(\backslash\)}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{value.pdf\_s\_pollut=NULL;\}\}}}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#define\ FREE\_PDF\_SPECIE\_NAMES\ \{\(\backslash\)}}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{if(NNULLP(pdf\_species\_names))\(\backslash\)}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{FREE\_ARRAY\_2(pdf\_species\_names,0,pdf\_species\_names\_length-\/1,0,CHAR\_SIZE-\/1,sizeof\ (char));\(\backslash\)}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{pdf\_species\_names=NULL;\}}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\#define\ ALLOCATE\_PDF\_SPECIES\_NAMES(num)\{\(\backslash\)}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{FREE\_PDF\_SPECIE\_NAMES;\(\backslash\)}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{pdf\_species\_names\_length=num;\(\backslash\)}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{if(NULLP(pdf\_species\_names=(char**)\(\backslash\)}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{NEW\_ARRAY\_2(0,num-\/1,0,CHAR\_SIZE-\/1,sizeof(char))))\(\backslash\)}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{Error("{}cannot\ allocate\ pdf\ memory!\ (species\ names):\ abort\(\backslash\)n"{});\(\backslash\)}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\}\(\backslash\)}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#define\ SETNULL\_POLLUT\_TP(tp)\{\(\backslash\)}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\ \ tp.pollut\_rates\ =NULL\ ;\}}}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#define\ ALLOCATE\_POLLUT\_TP(tp)\(\backslash\)}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\ \ \ \ if(NULLP(tp.pollut\_rates))\(\backslash\)}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ iss;\(\backslash\)}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ tp.pollut\_rates\ =\ (real\ *)\ CX\_Malloc(Pollut\_Solve\_Size\_Max*Num\_Pollut\_Vars\_Tabulated*sizeof(real));\(\backslash\)}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for(iss=0;iss<\ Pollut\_Solve\_Size\_Max*Num\_Pollut\_Vars\_Tabulated;iss++)\(\backslash\)}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ tp.pollut\_rates[iss]\ =\ 0.;\(\backslash\)}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#define\ FREE\_POLLUT\_TP(tp)\(\backslash\)}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\ \ \ \ if(NNULLP(tp.pollut\_rates))\(\backslash\)}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\ \ \ \ \ \ \ CX\_Free(tp.pollut\_rates);\(\backslash\)}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\ \ \ \ tp.pollut\_rates=NULL;\(\backslash\)}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00399\ \textcolor{comment}{/*AVTTP\ =\ ASSIGN\_VALUE\_TO\_TABLE\_POINT*/}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#define\ AVTTP(RETVAL,TEMP,DEN,XMOL\_SIZE,CP,POLLUT)\{\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\ \ \ \ int\ itp;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\ \ \ \ if(NNULLP(RETVAL.pollut\_rates))\(\backslash\)}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for(itp=0;itp<Pollut\_Solve\_Size\_Max*Num\_Pollut\_Vars\_Tabulated;itp++)\(\backslash\)}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RETVAL.pollut\_rates[itp]=0.;\(\backslash\)}}
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\ \ \ \ RETVAL.success=FALSE;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\ \ \ \ RETVAL.temp=TEMP;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\ \ \ \ RETVAL.den=DEN;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\ \ \ \ if(XMOL\_SIZE<=0)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\ \ \ \ \ \ RETVAL.xmol=NULL;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\ \ \ \ else\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\ \ \ \ \ \ RETVAL.xmol=(real\ *)CX\_Malloc(sizeof(real)*XMOL\_SIZE);\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\ \ \ \ RETVAL.cp=CP;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\ \ \ \ RETVAL.mol\_wt\ =\ 0.;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\ \ \ \ RETVAL.enth\ \ =\ 0.;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\ \ \ \ RETVAL.pdf\_s\_pollut\ =\ POLLUT;\}}}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#define\ SETNULLTP(RETVAL)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\ \ \ \ memset((char\ *)\ \&(RETVAL),\ 0,\ sizeof(Table\_Point));\ \ \(\backslash\)}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\ \ \ \ RETVAL.success=FALSE;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#define\ ALLOCATE\_TP\_SCALARS(RETVAL)\(\backslash\)}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\ \ \ \ if(n\_table\_scalars\ >\ 0)\(\backslash\)}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ iz;\(\backslash\)}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ RETVAL.scalars=(real\ *)CX\_Malloc(sizeof(real)*n\_table\_scalars);\(\backslash\)}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for(iz=0;iz<n\_table\_scalars;iz++)\(\backslash\)}}
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ RETVAL.scalars[iz]\ =\ 0.;\(\backslash\)}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\ \ \ \ else\(\backslash\)}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\ \ \ \ RETVAL.scalars\ =\ NULL;\(\backslash\)}}
+\DoxyCodeLine{00441\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#define\ ALLOCATE\_POLLUT\_MEMORY(VAL)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{int\ ipz;\ int\ iss;\ \(\backslash\)}}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{if(Pdf\_Interpolation\_Method\_Linear)\(\backslash\)}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{VAL.pdf\_s\_pollut\ =\ NULL;\(\backslash\)}}
+\DoxyCodeLine{00447\ \textcolor{preprocessor}{else\{\(\backslash\)}}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{if\ (VAL.pdf\_s\_pollut\ ==\ NULL)\{\ \(\backslash\)}}
+\DoxyCodeLine{00449\ \textcolor{preprocessor}{VAL.pdf\_s\_pollut\ =\ (Pollut\_Rate\ **)\ CX\_Malloc(\ sizeof(Pollut\_Rate\ *)\ *\ MAX\_POLLUT\_EQNS);\ \(\backslash\)}}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{for\ (ipz=0;\ ipz<\ MAX\_POLLUT\_EQNS\ ;\ ipz\ ++)\ \(\backslash\)}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{VAL.pdf\_s\_pollut[ipz]\ =\ NULL;\}\ \(\backslash\)}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{for\ (ipz=0;\ ipz<\ MAX\_POLLUT\_EQNS\ ;\ ipz\ ++)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{if\ (VAL.pdf\_s\_pollut[ipz]\ ==\ NULL)\{\ \(\backslash\)}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{if\ (Pollut\_Par-\/>pollut\_solve[ipz])\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{ALLOCATE\_POLLUT\_RATE(VAL.pdf\_s\_pollut[ipz]\ ,\ MAX\_POLLUT\_MODEL[ipz])\ \(\backslash\)}}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{ZERO\_POLLUT\_RATE(VAL.pdf\_s\_pollut[ipz],\ MAX\_POLLUT\_MODEL[ipz],\ iss)\ \(\backslash\)}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\}\}\}\}\}}}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#define\ COPY\_FROM\_FGM(T1,i,j,k,l,do\_species,table)\(\backslash\)}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\ \ \ \ int\ jj,kk,psize;\(\backslash\)}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\ \ \ \ if(table==0)\(\backslash\)}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00465\ \textcolor{preprocessor}{\ \ \ \ \ T1.success\ =\ P\_SUCCESS\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{\ \ \ \ \ pdf\_interp\_vars\_loop(jj)\(\backslash\)}}
+\DoxyCodeLine{00467\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ ins,ll,iindex,mm\ ;\(\backslash\)}}
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ll\ =\ Pdf\_Interp\_Vars[jj];\(\backslash\)}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ iindex\ =\ (ll\ <\ INTERP\_SP\_START)?\ ll\ :\ (ll\ <INTERP\_SP\_MAX)?\ INTERP\_SP\_START:\ INTERP\_POLLUT\_START;\(\backslash\)}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (ll\ >\ INTERP\_POLLUT\_MAX)\ iindex\ =\ INTERP\_SCALAR\_START;\(\backslash\)}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ switch(iindex)\(\backslash\)}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_TEMP:\(\backslash\)}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T1.temp\ =P\_T\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_RHO:\(\backslash\)}}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T1.den=P\_RHO\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_CP:\(\backslash\)}}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T1.cp=P\_CP\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_MW:\(\backslash\)}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T1.mol\_wt=P\_MW\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ default:\(\backslash\)}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00492\ }
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\#define\ COPY\_FGM\_TO\_FGM(i1,j1,k1,l1,i,j,k,l,do\_species,table)\(\backslash\)}}
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\ \ \ \ int\ jj,kk,psize;\(\backslash\)}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\ \ \ \ if(table==0)\(\backslash\)}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\ \ \ \ \ P\_SUCCESS\_FGM\_PROPS(pf\_shared,i1,j1,k1,l1)\ =\ P\_SUCCESS\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\ \ \ \ \ pdf\_interp\_vars\_loop(jj)\(\backslash\)}}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ ins,ll,iindex,mm\ ;\(\backslash\)}}
+\DoxyCodeLine{00502\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ll\ =\ Pdf\_Interp\_Vars[jj];\(\backslash\)}}
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ iindex\ =\ (ll\ <\ INTERP\_SP\_START)?\ ll\ :\ (ll\ <INTERP\_SP\_MAX)?\ INTERP\_SP\_START:\ INTERP\_POLLUT\_START;\(\backslash\)}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (ll\ >\ INTERP\_POLLUT\_MAX)\ iindex\ =\ INTERP\_SCALAR\_START;\(\backslash\)}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ switch(iindex)\(\backslash\)}}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_TEMP:\(\backslash\)}}
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_T\_FGM\_PROPS(pf\_shared,i1,j1,k1,l1)\ =P\_T\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00510\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_RHO:\(\backslash\)}}
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_RHO\_FGM\_PROPS(pf\_shared,i1,j1,k1,l1)=P\_RHO\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_CP:\(\backslash\)}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_CP\_FGM\_PROPS(pf\_shared,i1,j1,k1,l1)=P\_CP\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_MW:\(\backslash\)}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_MW\_FGM\_PROPS(pf\_shared,i1,j1,k1,l1)=P\_MW\_FGM\_PROPS(pf\_shared,i,j,k,l);\(\backslash\)}}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ default:\(\backslash\)}}
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00521\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00523\ \textcolor{preprocessor}{\ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#define\ COPY\_TO\_FGM\_PRMX(pf\_shared,T1,i,j,k,l,do\_species)\(\backslash\)}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\ \ \ \ int\ jj,kk,psize;\(\backslash\)}}
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\ \ \ \ pdf\_interp\_vars\_loop(jj)\(\backslash\)}}
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00531\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ ins,ll,iindex,mm\ ;\(\backslash\)}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ll\ =\ Pdf\_Interp\_Vars[jj];\(\backslash\)}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ iindex\ =\ (ll\ <\ INTERP\_SP\_START)?\ ll\ :\ (ll\ <INTERP\_SP\_MAX)?\ INTERP\_SP\_START:\ INTERP\_POLLUT\_START;\(\backslash\)}}
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (ll\ >\ INTERP\_POLLUT\_MAX)\ iindex\ =\ INTERP\_SCALAR\_START;\(\backslash\)}}
+\DoxyCodeLine{00535\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ switch(iindex)\(\backslash\)}}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_TEMP:\(\backslash\)}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ P\_T\_FGM\_PRMX(pf\_shared,i,j,k,l)\ =\ T1.temp;\(\backslash\)}}
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00540\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_RHO:\(\backslash\)}}
+\DoxyCodeLine{00541\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ P\_RHO\_FGM\_PRMX(pf\_shared,i,j,k,l)\ =\ T1.den;\(\backslash\)}}
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00543\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_CP:\(\backslash\)}}
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ P\_CP\_FGM\_PRMX(pf\_shared,i,j,k,l)\ =\ T1.cp;\(\backslash\)}}
+\DoxyCodeLine{00545\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_MW:\(\backslash\)}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ P\_MW\_FGM\_PRMX(pf\_shared,i,j,k,l)\ =\ T1.mol\_wt\ ;\(\backslash\)}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00549\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_SP\_START:\(\backslash\)}}
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00551\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if(do\_species)\(\backslash\)}}
+\DoxyCodeLine{00552\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pdf\_interp\_vars\_spe\_loop(kk,jj,ins)\(\backslash\)}}
+\DoxyCodeLine{00553\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_XMOL\_FGM\_PRMX(pf\_shared,i,j,k,l,ins)\ =\ T1.xmol[ins];\(\backslash\)}}
+\DoxyCodeLine{00555\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jj=kk;\(\backslash\)}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00559\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ case\ INTERP\_SCALAR\_START:\(\backslash\)}}
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00561\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pdf\_interp\_vars\_scalar\_loop(kk,jj,ins)\(\backslash\)}}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00563\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_SCALARS\_FGM\_PRMX(pf\_shared,i,j,k,l,ins)\ =\ T1.scalars[ins];\(\backslash\)}}
+\DoxyCodeLine{00564\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jj=kk;\(\backslash\)}}
+\DoxyCodeLine{00566\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ default:\(\backslash\)}}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\#define\ COPY\_TO\_FGM\_PROPS(pf\_shared,T1,i,j,k,l,do\_species)\(\backslash\)}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\ \ \ \ int\ jj,kk,psize;\(\backslash\)}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\ \ \ \ pdf\_interp\_vars\_loop(jj)\(\backslash\)}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ ins,ll,iindex,mm\ ;\(\backslash\)}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ll\ =\ Pdf\_Interp\_Vars[jj];\(\backslash\)}}
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ iindex\ =\ (ll\ <\ INTERP\_SP\_START)?\ ll\ :\ (ll\ <INTERP\_SP\_MAX)?\ INTERP\_SP\_START:\ INTERP\_POLLUT\_START;\(\backslash\)}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (ll\ >\ INTERP\_POLLUT\_MAX)\ iindex\ =\ INTERP\_SCALAR\_START;\(\backslash\)}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ switch(iindex)\(\backslash\)}}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_TEMP:\(\backslash\)}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_T\_FGM\_PROPS(pf\_shared,i,j,k,l)\ =\ T1.temp;\(\backslash\)}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_RHO:\(\backslash\)}}
+\DoxyCodeLine{00589\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_RHO\_FGM\_PROPS(pf\_shared,i,j,k,l)\ =\ T1.den;\(\backslash\)}}
+\DoxyCodeLine{00590\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_CP:\(\backslash\)}}
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_CP\_FGM\_PROPS(pf\_shared,i,j,k,l)\ =\ T1.cp;\(\backslash\)}}
+\DoxyCodeLine{00593\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00594\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_MW:\(\backslash\)}}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ P\_MW\_FGM\_PROPS(pf\_shared,i,j,k,l)\ =\ T1.mol\_wt\ ;\(\backslash\)}}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00598\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_SP\_START:\(\backslash\)}}
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ case\ INTERP\_POLLUT\_START:\(\backslash\)}}
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ case\ INTERP\_SCALAR\_START:\(\backslash\)}}
+\DoxyCodeLine{00603\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ default:\(\backslash\)}}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00608\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00609\ }
+\DoxyCodeLine{00610\ }
+\DoxyCodeLine{00611\ \textcolor{preprocessor}{\#define\ COPYTP\_OPT(T1,T2,do\_species)\ \(\backslash\)}}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\ \ \ \ int\ jj,kk,psize;\(\backslash\)}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\ \ \ \ T2.success\ =\ T1.success;\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\ \ \ \ pdf\_interp\_vars\_loop(jj)\(\backslash\)}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ ins,ll,iindex,mm\ ;\(\backslash\)}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ll\ =\ Pdf\_Interp\_Vars[jj];\(\backslash\)}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ iindex\ =\ (ll\ <\ INTERP\_SP\_START)?\ ll\ :\ (ll\ <INTERP\_SP\_MAX)?\ INTERP\_SP\_START:\ INTERP\_POLLUT\_START;\(\backslash\)}}
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (ll\ >\ INTERP\_POLLUT\_MAX)\ iindex\ =\ INTERP\_SCALAR\_START;\(\backslash\)}}
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ switch(iindex)\(\backslash\)}}
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_TEMP:\(\backslash\)}}
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T2.temp\ =\ T1.temp;\(\backslash\)}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ T2.enth\ =\ T1.enth;\(\backslash\)}}
+\DoxyCodeLine{00626\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_RHO:\(\backslash\)}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T2.den\ =\ T1.den;\(\backslash\)}}
+\DoxyCodeLine{00629\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_CP:\(\backslash\)}}
+\DoxyCodeLine{00631\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T2.cp\ =\ T1.cp;\(\backslash\)}}
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_MW:\(\backslash\)}}
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T2.mol\_wt\ =\ T1.mol\_wt\ ;\(\backslash\)}}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ case\ INTERP\_SP\_START:\(\backslash\)}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if(do\_species)\(\backslash\)}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pdf\_interp\_vars\_spe\_loop(kk,jj,ins)\(\backslash\)}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00641\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T2.xmol[ins]\ =\ T1.xmol[ins];\(\backslash\)}}
+\DoxyCodeLine{00642\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jj=kk;\(\backslash\)}}
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00645\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ case\ INTERP\_POLLUT\_START:\(\backslash\)}}
+\DoxyCodeLine{00647\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00648\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pdf\_interp\_vars\_pollut\_loop(kk,jj,ins)\(\backslash\)}}
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ll\ =\ Pollut\_Solve\_Size\_Max*Pollut\_Solve\_Index[ins]\ ;\(\backslash\)}}
+\DoxyCodeLine{00651\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ psize\ =\ Pollut\_Solve\_Size[ins]\ ;\(\backslash\)}}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ for(mm=0;mm<psize;mm++)\(\backslash\)}}
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T2.pollut\_rates[ll+mm]\ =\ T1.pollut\_rates[ll+mm];\(\backslash\)}}
+\DoxyCodeLine{00654\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00655\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jj=kk;\(\backslash\)}}
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ case\ INTERP\_SCALAR\_START:\(\backslash\)}}
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pdf\_interp\_vars\_scalar\_loop(kk,jj,ins)\(\backslash\)}}
+\DoxyCodeLine{00661\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T2.scalars[ins]\ =\ T1.scalars[ins];\(\backslash\)}}
+\DoxyCodeLine{00663\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jj=kk;\(\backslash\)}}
+\DoxyCodeLine{00665\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break\ ;\(\backslash\)}}
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ default:\(\backslash\)}}
+\DoxyCodeLine{00668\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ break;\(\backslash\)}}
+\DoxyCodeLine{00669\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00672\ }
+\DoxyCodeLine{00673\ \textcolor{comment}{/*\ copy\ table\ point\ */}}
+\DoxyCodeLine{00674\ \textcolor{preprocessor}{\#define\ COPYTP(T1,\ T2,\ do\_species,\ do\_pollut)\(\backslash\)}}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\ \ \ \ int\ iscp;\(\backslash\)}}
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\ \ if(Pdf\_Interpolation\_Method\_Linear)\(\backslash\)}}
+\DoxyCodeLine{00678\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ COPYTP\_OPT(T1,\ T2,do\_species);\(\backslash\)}}
+\DoxyCodeLine{00680\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00681\ \textcolor{preprocessor}{\ \ \ \ else\(\backslash\)}}
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\ \ \{\ \(\backslash\)}}
+\DoxyCodeLine{00683\ \textcolor{preprocessor}{\ \ \ \ }\textcolor{comment}{/*\ MPT\_LOCK(COPYTP);\ */}\textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\ \ \ \ if\ (do\_species)\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00685\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00686\ \textcolor{preprocessor}{\ \ if(num\_spe\_pdf\_interp\ ==\ MAX\_PDF\_SPECIES)\ \(\backslash\)}}
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{\ \ \ \ \ \ pdf\_spe\_loop\ (iscp)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ T2.xmol[iscp]\ =\ T1.xmol[iscp];\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\ \ else\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00693\ \textcolor{preprocessor}{\ \ \ \ \ \ int\ iz\ ;\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00694\ \textcolor{preprocessor}{\ \ \ \ \ \ for(iz=0;iz<num\_spe\_pdf\_interp;iz++)\ \ \(\backslash\)}}
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ iscp=xmol\_pdf\_interp[iz]\ ;\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ T2.xmol[iscp]\ =\ T1.xmol[iscp];\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\ \ \ \ T2.mol\_wt\ =\ T1.mol\_wt\ ;\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\ \ \ \ T2.temp\ =\ T1.temp;\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\ \ \ \ T2.enth\ =\ T1.enth;\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00704\ \textcolor{preprocessor}{\ \ \ \ T2.den\ =\ T1.den;\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\ \ \ \ T2.cp\ =\ T1.cp;\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\ \ \ \ T2.success\ =\ T1.success;\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\ \ \ \ \ \ if(NNULLP(T2.scalars)\ \&\&\ NNULLP(T1.scalars))\(\backslash\)}}
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ iz;\(\backslash\)}}
+\DoxyCodeLine{00710\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ for(iz=0;iz<n\_table\_scalars;iz++)\(\backslash\)}}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00712\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ T2.scalars[iz]\ =\ T1.scalars[iz];\(\backslash\)}}
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\ \ \ \ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\ \ \}\(\backslash\)}}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{\ \ \ \ if\ (do\_pollut)\ \{\ int\ ipz;\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\ \ \ \ \ \ for\ (iscp=0;\ iscp<\ MAX\_POLLUT\_EQNS\ ;\ iscp\ ++)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\ \ if\ (Pollut\_Par-\/>pollut\_solve[iscp])\ \{\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\ \ \ \ T2.pdf\_s\_pollut[iscp]-\/>fwdrate\ =\ T1.pdf\_s\_pollut[iscp]-\/>fwdrate;\ \(\backslash\)}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\ \ \ \ T2.pdf\_s\_pollut[iscp]-\/>revrate\ =\ T1.pdf\_s\_pollut[iscp]-\/>revrate;\ \(\backslash\)}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\ \ T2.pdf\_s\_pollut[iscp]-\/>quasirate\ =\ T1.pdf\_s\_pollut[iscp]-\/>quasirate;\ \(\backslash\)}}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\ \ for\ (ipz\ =\ 0;\ ipz\ <\ MAX\_POLLUT\_MODEL[iscp];\ ipz++)\ \ \(\backslash\)}}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\ \ \ \ T2.pdf\_s\_pollut[iscp]-\/>rate[ipz]\ =\ T1.pdf\_s\_pollut[iscp]-\/>rate[ipz];\}\}\}\ \(\backslash\)}}
+\DoxyCodeLine{00724\ \textcolor{preprocessor}{\ \ }\textcolor{comment}{/*\ MPT\_UNLOCK(COPYTP);\ */}\textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00725\ }
+\DoxyCodeLine{00726\ \textcolor{preprocessor}{\#define\ INIT\_PDF\_DEFINE\_STRUCTURE\ \(\backslash\)}}
+\DoxyCodeLine{00727\ \textcolor{preprocessor}{\{pd-\/>iequfl\ =\ 0;pd-\/>lmulti\ =\ 0;\ \(\backslash\)}}
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{pd-\/>empirical[0]\ =\ RP\_Get\_List\_Ref\_Boolean\ ("{}prepdf/flags"{},\ 2);\ \(\backslash\)}}
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{pd-\/>empirical[1]\ =\ RP\_Get\_List\_Ref\_Boolean\ ("{}prepdf/flags"{},\ 3);\ \(\backslash\)}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{pd-\/>empirical[2]\ =\ 0;\ \(\backslash\)}}
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{pd-\/>tinm[0]\ =\ 300;\ pd-\/>tinm[1]\ =\ 300;\ pd-\/>tinm[2]\ =\ 300;\ \(\backslash\)}}
+\DoxyCodeLine{00732\ \textcolor{preprocessor}{pd-\/>hcombustion\_empirical[0]=RP\_Get\_List\_Ref\_Float\ ("{}prepdf/equil-\/real-\/params"{},\ 2);\ \(\backslash\)}}
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{pd-\/>cp\_empirical[0]=RP\_Get\_List\_Ref\_Float\ ("{}prepdf/equil-\/real-\/params"{},\ 3);\ \(\backslash\)}}
+\DoxyCodeLine{00734\ \textcolor{preprocessor}{pd-\/>hcombustion\_empirical[1]=RP\_Get\_List\_Ref\_Float\ ("{}prepdf/equil-\/real-\/params"{},\ 4);\ \(\backslash\)}}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{pd-\/>cp\_empirical[1]=\ RP\_Get\_List\_Ref\_Float\ ("{}prepdf/equil-\/real-\/params"{},\ 5);\ \(\backslash\)}}
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{pd-\/>hcombustion\_empirical[2]=0;\ pd-\/>cp\_empirical[2]=0;\ \(\backslash\)}}
+\DoxyCodeLine{00737\ \textcolor{preprocessor}{pd-\/>rfl[0]=RP\_Get\_List\_Ref\_Float\ ("{}prepdf/equil-\/real-\/params"{},\ 0);\ \(\backslash\)}}
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{pd-\/>rfl[1]\ =\ RP\_Get\_List\_Ref\_Float\ ("{}prepdf/equil-\/real-\/params"{},\ 1);\ \(\backslash\)}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{pd-\/>tmin=RP\_Get\_List\_Ref\_Float\ ("{}prepdf/equil-\/real-\/params"{},\ 6);\ \(\backslash\)}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{pd-\/>tmax\ =\ 1;\ pd-\/>tmaxratio=RP\_Get\_List\_Ref\_Float\ ("{}prepdf/expert-\/real-\/params"{},\ 0);\ \(\backslash\)}}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{pd-\/>tloss=(real)\ RP\_Get\_List\_Ref\_Float\ ("{}prepdf/expert-\/real-\/params"{},\ 1);\ \(\backslash\)}}
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{pd-\/>tadd=(real)\ RP\_Get\_List\_Ref\_Float\ ("{}prepdf/expert-\/real-\/params"{},\ 2);\ \(\backslash\)}}
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{pd-\/>frozen\_boundaries=RP\_Get\_Integer("{}prepdf/frozen-\/boundaries"{});\ \(\backslash\)}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{pd-\/>include\_equil\_flamelet=RP\_Get\_Boolean\ ("{}prepdf/include-\/equil-\/flamelet?"{})\ ;\(\backslash\)}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{pd-\/>nfl=RP\_Get\_Integer\ ("{}prepdf/nfl"{});\ \(\backslash\)}}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{pd-\/>nne=RP\_Get\_Integer\ ("{}prepdf/nne"{});\ \(\backslash\)}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{pd-\/>nne\_cold\ =\ (int)\ (COLD\_SIDE\ *\ pd-\/>nne)\ ;\ \(\backslash\)}}
+\DoxyCodeLine{00748\ \textcolor{preprocessor}{pd-\/>nne\_hot\ =\ pd-\/>nne\ -\/\ pd-\/>nne\_cold\ ;\ \(\backslash\)}}
+\DoxyCodeLine{00749\ \textcolor{preprocessor}{pd-\/>num\_nonadfla\ =\ 0;\(\backslash\)}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{pd-\/>nstrm=2;pd-\/>nmf=1;\ \(\backslash\)}}
+\DoxyCodeLine{00751\ \textcolor{preprocessor}{pd-\/>nfbm[0]=RP\_Get\_Integer\ ("{}prepdf/nfb"{});\ \(\backslash\)}}
+\DoxyCodeLine{00752\ \textcolor{preprocessor}{pd-\/>nfbm[1]=RP\_Get\_Integer\ ("{}prepdf/nfb2"{});\ \(\backslash\)}}
+\DoxyCodeLine{00753\ \textcolor{preprocessor}{pd-\/>numfl=0;\ pd-\/>scadmx=0;\ \(\backslash\)}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{pd-\/>mole\_or\_mass=FALSE;\ pd-\/>max\_species=RP\_Get\_Integer("{}prepdf/max-\/species"{});\ \(\backslash\)}}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{pd-\/>nonAdiaLamFlameSpeed=FALSE;\ \(\backslash\)}}
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{pd-\/>premixFlamelet=FALSE;\(\backslash\)}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\ \ \ \ pd-\/>n\_table\_scalars=0;\}}}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \textcolor{preprocessor}{\#define\ INIT\_FLAMELET\_EXPERT\ \(\backslash\)}}
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\{fe-\/>expinv=1.;fe-\/>flamtyp=0;fe-\/>flammult=3.;fe-\/>flampar=1.;fe-\/>fvarlim=(real)1.E-\/5;fe-\/>dfsto=(double)0.2;\}}}
+\DoxyCodeLine{00761\ }
+\DoxyCodeLine{00762\ \textcolor{preprocessor}{\#if\ !RP\_NODE}}
+\DoxyCodeLine{00763\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pdf__table_8h_a1487ef83edd5ea1fb20c6fa233ed1db6}{Fill\_multi\_table}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00764\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00765\ }
+\DoxyCodeLine{00766\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}}
+\DoxyCodeLine{00767\ \mbox{\hyperlink{pdf__table_8h_a8c4459a7d4e82573894f9cad71fdb4b7}{Interpolate\_multi\_table}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean0,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar0,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h,\ \textcolor{keywordtype}{int}\ what,}
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_species,\ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars);}
+\DoxyCodeLine{00769\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00770\ \mbox{\hyperlink{pdf__table_8h_a77107f27f6ababb985c01720ac3a688b}{pdf\_locate}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ x,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xx,\ \textcolor{keywordtype}{int}\ nx,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *on\_grid\_line,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ tolerance,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmin,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmax);}
+\DoxyCodeLine{00771\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pdf__table_8h_aef317502567855ce81c11591a5dbb839}{pdf\_interp\_1d}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \textcolor{keywordtype}{int}\ nfmt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *fmt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *table);}
+\DoxyCodeLine{00772\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}
+\DoxyCodeLine{00773\ \mbox{\hyperlink{pdf__table_8h_a55e4c96d09ed9084dc3a188338bf64a1}{pdf\_interp\_2d}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar,\ \textcolor{keywordtype}{int}\ nfmt,\ \textcolor{keywordtype}{int}\ nfvt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *fmt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *fvt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **table,}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean\_max,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar\_max);}
+\DoxyCodeLine{00775\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}}
+\DoxyCodeLine{00776\ \mbox{\hyperlink{pdf__table_8h_aa9c466c3c9c61e6c7b97f2363bbc8beb}{pdf\_interp\_2d\_table\_point}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar,\ \textcolor{keywordtype}{int}\ nfmt,\ \textcolor{keywordtype}{int}\ nfvt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *fmt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *fvt,}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ **table,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean\_max,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar\_max,}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ what,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_species,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_pollut,\ \mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut,}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars);}
+\DoxyCodeLine{00780\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}}
+\DoxyCodeLine{00781\ \mbox{\hyperlink{pdf__table_8h_a3d23f7ebff58fceced22cc847a571e1d}{pdf\_interp\_flam\_table\_point}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ scad,\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ***table,\ \textcolor{keywordtype}{int}\ what,}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_species,\ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars);}
+\DoxyCodeLine{00783\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pdf__table_8h_a13c1f666380dc252ce4f151ee2bfe7a6}{pdf\_weights}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *fmean\_local,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *fvar\_local,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ small,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar\_small);}
+\DoxyCodeLine{00784\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}}
+\DoxyCodeLine{00785\ \mbox{\hyperlink{pdf__table_8h_ac5d9395982b0786ab956366ecbe90eca}{pdf\_integration\_table\_point}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ *struct1,\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ **struct2,}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ what,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_species,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_pollut,\ \mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut,}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars);}
+\DoxyCodeLine{00788\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}}
+\DoxyCodeLine{00789\ \mbox{\hyperlink{pdf__table_8h_a192957f15f4f1a686c7e42b3bee7a56c}{integrate\_ins\_enthalpy}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h\_adia,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ enth,\ \textcolor{keywordtype}{int}\ side,\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ **slice,}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_species,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_pollut,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *previous\_multiplier,}
+\DoxyCodeLine{00791\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut,\ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars);}
+\DoxyCodeLine{00792\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}}
+\DoxyCodeLine{00793\ \mbox{\hyperlink{pdf__table_8h_a62eeb9eb9780e0d16c218a6bececb9f6}{nonadia2mix\_interp\_table\_point}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean2,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h,\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ***phi,}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ what,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_species,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_pollut,\ \mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut,}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars);}
+\DoxyCodeLine{00796\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pdf__table_8h_ab044e8898478a7361464eeb80e3e0041}{Get\_Pdf\_DH}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ff1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ff2,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h\_adiabatic);}
+\DoxyCodeLine{00797\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pdf__table_8h_a007531746b965fbc5006952d31c1bd7e}{Fvar\_scale}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fldim);}
+\DoxyCodeLine{00798\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pdf__table_8h_a615baf07f6c95c3fb0e6178f7cb1e7dc}{Scaled\_fvar}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar);}
+\DoxyCodeLine{00799\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pdf__table_8h_a7fa59c931fd15ae44d248143a4fe1584}{pdf\_interp\_3d}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h\_adiabatic,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ ***table);}
+\DoxyCodeLine{00800\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}}
+\DoxyCodeLine{00801\ \mbox{\hyperlink{pdf__table_8h_a3c9bf2b7aca6c00f07b242eddc854902}{pdf\_interp\_3d\_table\_point}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h\_adiabatic,\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \ ***table,}
+\DoxyCodeLine{00802\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ what,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_species,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *hbar,\ \textcolor{keywordtype}{int}\ *h\_state,}
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars);}
+\DoxyCodeLine{00804\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00805\ \mbox{\hyperlink{pdf__table_8h_a1c2ede3cd2e4e9d656cde8f887d55cd2}{pdf\_interp\_flam\_nonadiabatic}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ scad,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ hadia,\ \textcolor{keywordtype}{int}\ what,}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_species,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_pollut,}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars);}
+\DoxyCodeLine{00808\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pdf__table_8h_a6e5cf0213f2daeea9e878f1351ae276c}{betai}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ a,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ b,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ x);}
+\DoxyCodeLine{00809\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ \mbox{\hyperlink{pdf__table_8h_aa341acb66e9b30657cecffac8d3e3c05}{get\_const\_property}}\ (\textcolor{keywordtype}{char}\ *species,\ \textcolor{keywordtype}{char}\ *propname,\ \textcolor{keywordtype}{int}\ set\_pdf);}
+\DoxyCodeLine{00810\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{pdf__table_8h_ad0feebb26dcedea76c8dc5b9458d5e8b}{get\_pdf\_table\_type}}\ (\textcolor{keywordtype}{int}\ type);}
+\DoxyCodeLine{00811\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pdf__table_8h_aeb03ae5e25ca78288534999c1536a583}{empirical\_stream}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00812\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{pdf__table_8h_a8cd23526deac76f70b18750a4ebcd7d7}{erfcinv}}(\textcolor{keywordtype}{double}\ c);}
+\DoxyCodeLine{00813\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pdf__table_8h_acf4faf69a1dd22f91d8f6de0309f480f}{Discretize\_Enthalpy}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00814\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pdf__table_8h_a7232a7db21e950842a085dbecca6f68c}{fitted\_fuel\_index}}(\mbox{\hyperlink{structmaterial__struct}{Material}}\ *m,\ \textcolor{keywordtype}{int}\ *fuel\_index,\ \textcolor{keywordtype}{int}\ *fluent\_fuel\_index,}
+\DoxyCodeLine{00815\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ yi\_fuel[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ yi\_oxid[],\ \textcolor{keywordtype}{int}\ strm\_indx,}
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ print\_message);}
+\DoxyCodeLine{00817\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pdf__table_8h_aac08221950525a6a8b47e011fbf9cd23}{fitted\_lam\_flame\_speed}}(\textcolor{keywordtype}{int}\ fuel\_index,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ p,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ y\_f,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Tu,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Tb);}
+\DoxyCodeLine{00818\ }
+\DoxyCodeLine{00819\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \mbox{\hyperlink{pdf__table_8h_a8a4856e423ec218df651e8ee608b18c3}{Pdf\_Interpolate\_3D\_Table}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h\_adiab,}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ ***table,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ do\_species,}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ h\_state,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ hbar,\ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *limit);}
+\DoxyCodeLine{00823\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pdf__table_8h_aac535c37fef2d18ca734bf73d0c7a6c3}{get\_hbar\_hstate}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h\_adiab,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *hbot\_curve,}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *htop\_curve,\ \textcolor{keywordtype}{int}\ *hstate,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *hb,\ \textcolor{keywordtype}{int}\ *limit);}
+\DoxyCodeLine{00825\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pdf__table_8h_ace3469269bad19fab02f0dc7b92e7182}{Pdf\_Integrate\_Pollut\_Var}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *input\_params,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *rf,}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *rr,\ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302}{Pollut\_Vars\_Index}}\ pvar\_index,}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars);}
+\DoxyCodeLine{00828\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pdf__table_8h_ac153593dca83f8ceed457ccb2ef2cfe8}{pdf\_interp\_1d\_lin}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \textcolor{keywordtype}{int}\ nfmt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *fmt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *table);}
+\DoxyCodeLine{00829\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{pdf__table_8h_a58811d8759a9441928fbef86bb305457}{pdf\_interp\_1d\_lin\_dufl}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean,\ \textcolor{keywordtype}{int}\ nfmt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *fmt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *table,\ \textcolor{keywordtype}{int}\ ii);}
+\DoxyCodeLine{00830\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pdf__table_8h_af24373f08b77d362916efbe462080fce}{Update\_Pdf\_Table\_on\_nodes}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ force);}
+\DoxyCodeLine{00831\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ \mbox{\hyperlink{pdf__table_8h_a6cd8e03ac7f61a98e5aeccbb580a1433}{Pdf\_Interpolate\_5D\_Nfgm\_Table}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean0,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fldim0,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fldim1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ h,}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structtable__point__struct}{Table\_Point}}\ *****fgm5dtab,\ \textcolor{keywordtype}{int}\ Num\_Pdf\_Interp\_Vars,\ \textcolor{keywordtype}{int}\ *Pdf\_Interp\_Vars,}
+\DoxyCodeLine{00833\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ get\_only\_kin\_src);\textcolor{comment}{/*ryadav\_delete\_it\_before\_commiting*/}}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\_FLUENT\_PDF\_TABLE\_H*/}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

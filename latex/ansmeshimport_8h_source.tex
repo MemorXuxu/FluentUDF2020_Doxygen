@@ -1,0 +1,69 @@
+\doxysection{ansmeshimport.\+h}
+\hypertarget{ansmeshimport_8h_source}{}\label{ansmeshimport_8h_source}\index{fluent20.1.0/src/dx/ansmeshimport.h@{fluent20.1.0/src/dx/ansmeshimport.h}}
+\mbox{\hyperlink{ansmeshimport_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_ANS\_MESHIMPORT\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_ANS\_MESHIMPORT\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ RP\_HOST\_LIB\ ||\ RP\_NODE\_LIB}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ansrpc_8h}{ansrpc.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ CX\_FREE(obj)\ \ \(\backslash\)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\ \ if\ (NNULLP(obj))\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\ \ \ \ CX\_Free(obj);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\ \ obj\ =\ NULL;\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ MIN\_CHUNK\_SIZE\ 524288\ }\textcolor{comment}{/*\ 4MB\ chunk\ for\ size\_t\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ FACE\_ZONE(zone)\ (zone-\/>type\ ==\ (ND\_ND-\/1))}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ CELL\_ZONE(zone)\ (zone-\/>type\ ==\ ND\_ND)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ MIN\_NODE\_PER\_CELL\ 4}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ MIN\_NODE\_PER\_FACE\ 3}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ MIN\_NODE\_PER\_CELL\ 3}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ MIN\_NODE\_PER\_FACE\ 2}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{/*\ Face\ struct\ */}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }imeshface}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ cell0;\ \ \ \textcolor{comment}{/*\ cell\ 0\ of\ the\ face\ */}}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ cell1;\ \ \ \textcolor{comment}{/*\ cell\ 1\ of\ the\ face\ */}}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ *nodes;\ \ \textcolor{comment}{/*\ pointer\ to\ globalFaceNodeManager\ for\ this\ face\ */}}
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{int}\ numNodes;\ \ \ \ \textcolor{comment}{/*\ number\ of\ nodes\ in\ the\ face\ */}}
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{int}\ zoneId;\ \ \textcolor{comment}{/*\ cell\ zone\ for\ the\ face.\ Needed\ to\ associate\ a\ face\ thread\ id\ later\ on\ */}}
+\DoxyCodeLine{00039\ \}\ IMeshFace;}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{/*\ Mesh\ Zone\ struct\ */}}
+\DoxyCodeLine{00042\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }imeshzone}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{ansrpc_8h_a7c6c632c9d4978d59c67adfeed64aac4}{RpcInt16}}\ type;\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ zone\ topology\ -\/\ point(0),\ line(1),\ surface(2),\ volume(3)\ */}}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{ansrpc_8h_ae17d04a5757572d09f84c952afeb7483}{RpcInt64}}\ id;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ zone\ id\ */}}
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{int}\ elemType;\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ element\ type\ for\ the\ zone\ */}}
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{ansrpc_8h_ae17d04a5757572d09f84c952afeb7483}{RpcInt64}}\ elemCount;\ \ \ \textcolor{comment}{/*\ number\ of\ elements\ in\ the\ zone\ */}}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{ansrpc_8h_ae17d04a5757572d09f84c952afeb7483}{RpcInt64}}\ nodeCount;\ \ \ \textcolor{comment}{/*\ number\ of\ unique\ nodes\ in\ the\ zone\ */}}
+\DoxyCodeLine{00049\ \}\ IMeshZone;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain;}
+\DoxyCodeLine{00052\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ \mbox{\hyperlink{case_8h_a575c5f124e773bd461a5a79dc80f0014}{vert\_0}},\ \mbox{\hyperlink{case_8h_adcc3638f98c6bf7d5b245244ad99d7b8}{vert\_1}},\ \mbox{\hyperlink{case_8h_a740fcfbecf09e9595f948b819dffe168}{vert\_n}},\ gvert\_1,\ gvert\_n;}
+\DoxyCodeLine{00053\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ \mbox{\hyperlink{case_8h_a49216299379d160c86703d41928d48ed}{cell\_0}},\ \mbox{\hyperlink{case_8h_a3b74a88441762a229fe4531489eb5829}{cell\_1}},\ \mbox{\hyperlink{case_8h_ab1b94403b275a242a4ecfeaec7bc01e9}{cell\_n}},\ gcell\_1,\ gcell\_n;}
+\DoxyCodeLine{00054\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ \mbox{\hyperlink{case_8h_a32dc623e56a94b9ce93d2b424705722a}{face\_0}},\ \mbox{\hyperlink{case_8h_ade1c8cdd7780ff18087b4a042b539012}{face\_1}},\ \mbox{\hyperlink{case_8h_a32c84f2721cfa7571a9c70e636aa576a}{face\_n}},\ gface\_1,\ gface\_n;}
+\DoxyCodeLine{00055\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{size\_t}\ ncell\_per\_chunk;}
+\DoxyCodeLine{00056\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ nface\_per\_chunk,\ nvert\_per\_chunk;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{int}\ ImportAnsRpcMesh(\textcolor{keywordtype}{char}\ *hostName,\ \textcolor{keywordtype}{int}\ portNum,\ \textcolor{keywordtype}{int}\ timeOut);}
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{int}\ ConvertIMeshToFluentMesh();}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ RP\_HOST\_LIB\ ||\ RP\_NODE\_LIB\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ \_ANS\_MESHIMPORT\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00063\ }
+
+\end{DoxyCode}

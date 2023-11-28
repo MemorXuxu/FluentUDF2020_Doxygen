@@ -1,0 +1,160 @@
+\doxysection{sundials\+\_\+band.\+h}
+\hypertarget{sundials__band_8h_source}{}\label{sundials__band_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_band.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_band.h}}
+\mbox{\hyperlink{sundials__band_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.6\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2010/12/01\ 22:17:18\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer(s):\ Alan\ C.\ Hindmarsh\ and\ Radu\ Serban\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2002,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ This\ is\ the\ header\ file\ for\ a\ generic\ BAND\ linear\ solver}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ package,\ based\ on\ the\ DlsMat\ type\ defined\ in\ sundials\_direct.h.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ There\ are\ two\ sets\ of\ band\ solver\ routines\ listed\ in}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ this\ file:\ one\ set\ uses\ type\ DlsMat\ defined\ below\ and\ the}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ other\ set\ uses\ the\ type\ realtype\ **\ for\ band\ matrix\ arguments.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ Routines\ that\ work\ with\ the\ type\ DlsMat\ begin\ with\ "{}Band"{}.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ Routines\ that\ work\ with\ realtype\ **\ begin\ with\ "{}band"{}}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ \_SUNDIALS\_BAND\_H}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ \_SUNDIALS\_BAND\_H}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__direct_8h}{sundials/sundials\_direct.h}}>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ Function\ :\ BandGBTRF}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ Usage\ :\ ier\ =\ BandGBTRF(A,\ p);}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ if\ (ier\ !=\ 0)\ ...\ A\ is\ singular}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ BandGBTRF\ performs\ the\ LU\ factorization\ of\ the\ N\ by\ N\ band}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *\ matrix\ A.\ This\ is\ done\ using\ standard\ Gaussian\ elimination}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ with\ partial\ pivoting.}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ A\ successful\ LU\ factorization\ leaves\ the\ "{}matrix"{}\ A\ and\ the}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ pivot\ array\ p\ with\ the\ following\ information:}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ (1)\ p[k]\ contains\ the\ row\ number\ of\ the\ pivot\ element\ chosen}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ \ \ \ at\ the\ beginning\ of\ elimination\ step\ k,\ k=0,\ 1,\ ...,\ N-\/1.}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ (2)\ If\ the\ unique\ LU\ factorization\ of\ A\ is\ given\ by\ PA\ =\ LU,}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ \ \ \ \ where\ P\ is\ a\ permutation\ matrix,\ L\ is\ a\ lower\ triangular}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ \ \ \ \ matrix\ with\ all\ 1's\ on\ the\ diagonal,\ and\ U\ is\ an\ upper}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ \ \ \ \ triangular\ matrix,\ then\ the\ upper\ triangular\ part\ of\ A}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ \ \ \ \ (including\ its\ diagonal)\ contains\ U\ and\ the\ strictly\ lower}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ \ \ \ \ triangular\ part\ of\ A\ contains\ the\ multipliers,\ I-\/L.}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ BandGBTRF\ returns\ 0\ if\ successful.\ Otherwise\ it\ encountered}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ a\ zero\ diagonal\ element\ during\ the\ factorization.\ In\ this\ case}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ it\ returns\ the\ column\ index\ (numbered\ from\ one)\ at\ which}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ it\ encountered\ the\ zero.}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ Important\ Note:\ A\ must\ be\ allocated\ to\ accommodate\ the\ increase}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ in\ upper\ bandwidth\ that\ occurs\ during\ factorization.\ If}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ mathematically,\ A\ is\ a\ band\ matrix\ with\ upper\ bandwidth\ mu\ and}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ lower\ bandwidth\ ml,\ then\ the\ upper\ triangular\ factor\ U\ can}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ have\ upper\ bandwidth\ as\ big\ as\ smu\ =\ MIN(n-\/1,mu+ml).\ The\ lower}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *\ triangular\ factor\ L\ has\ lower\ bandwidth\ ml.\ Allocate\ A\ with}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ call\ A\ =\ BandAllocMat(N,mu,ml,smu),\ where\ mu,\ ml,\ and\ smu\ are}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *\ as\ defined\ above.\ The\ user\ does\ not\ have\ to\ zero\ the\ "{}extra"{}}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *\ storage\ allocated\ for\ the\ purpose\ of\ factorization.\ This\ will}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ handled\ by\ the\ BandGBTRF\ routine.}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ BandGBTRF\ is\ only\ a\ wrapper\ around\ bandGBTRF.\ All\ work\ is\ done}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ in\ bandGBTRF\ works\ directly\ on\ the\ data\ in\ the\ DlsMat\ A\ (i.e.,}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ the\ field\ cols).}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__band_8h_adfc4d13a1674fa5f298791cad239bceb}{BandGBTRF}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *p);}
+\DoxyCodeLine{00080\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__band_8h_a620fdfff538989b69610559032a3a96f}{bandGBTRF}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mu,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ ml,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ smu,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *p);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ Function\ :\ BandGBTRS}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ Usage\ :\ BandGBTRS(A,\ p,\ b);}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ BandGBTRS\ solves\ the\ N-\/dimensional\ system\ A\ x\ =\ b\ using}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ the\ LU\ factorization\ in\ A\ and\ the\ pivot\ information\ in\ p}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ computed\ in\ BandGBTRF.\ The\ solution\ x\ is\ returned\ in\ b.\ This}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *\ routine\ cannot\ fail\ if\ the\ corresponding\ call\ to\ BandGBTRF}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ did\ not\ fail.}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ BandGBTRS\ is\ only\ a\ wrapper\ around\ bandGBTRS\ which\ does\ all\ the}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ work\ directly\ on\ the\ data\ in\ the\ DlsMat\ A\ (i.e.,\ the\ field\ cols).}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__band_8h_aeb2d0c7103aeaf764a8dbaf46955f2d7}{BandGBTRS}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *p,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *b);}
+\DoxyCodeLine{00101\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__band_8h_a0c7c5c263684b4df122f19ce0cde639e}{bandGBTRS}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ smu,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ ml,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *p,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *b);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ *\ Function\ :\ BandCopy}}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ *\ Usage\ :\ BandCopy(A,\ B,\ copymu,\ copyml);}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *\ BandCopy\ copies\ the\ submatrix\ with\ upper\ and\ lower\ bandwidths}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ copymu,\ copyml\ of\ the\ N\ by\ N\ band\ matrix\ A\ into\ the\ N\ by\ N}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *\ band\ matrix\ B.}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ BandCopy\ is\ a\ wrapper\ around\ bandCopy\ which\ accesses\ the\ data}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ in\ the\ DlsMat\ A\ and\ B\ (i.e.\ the\ fields\ cols)}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__band_8h_a018533d88bbdbe87faeeb08d095c9c6e}{BandCopy}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A,\ \mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ B,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ copymu,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ copyml);}
+\DoxyCodeLine{00119\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__band_8h_a1f98dc141fb2335a05da204e06e7a4ac}{bandCopy}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **b,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ a\_smu,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ b\_smu,}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ copymu,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ copyml);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ Function:\ BandScale}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ Usage\ :\ BandScale(c,\ A);}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ A(i,j)\ <-\/\ c*A(i,j),\ \ \ j-\/(A-\/>mu)\ <=\ i\ <=\ j+(A-\/>ml).}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ BandScale\ is\ a\ wrapper\ around\ bandScale\ which\ performs\ the\ actual}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *\ scaling\ by\ accessing\ the\ data\ in\ the\ DlsMat\ A\ (i.e.\ the\ field}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *\ cols).}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__band_8h_a0eb8906332e4d1cc3417686b31943b2a}{BandScale}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A);}
+\DoxyCodeLine{00137\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__band_8h_a508bcac92dfaceb380fa2d7d46a8545b}{bandScale}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mu,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ ml,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ smu);}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ Function:\ bandAddIdentity}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *\ bandAddIdentity\ adds\ the\ identity\ matrix\ to\ the\ n-\/by-\/n\ matrix}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ stored\ in\ the\ realtype**\ arrays.}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__band_8h_afbcd63ef61c2fce1ecad4bf6cd79a70d}{bandAddIdentity}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ smu);}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00151\ \}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

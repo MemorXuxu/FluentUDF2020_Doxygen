@@ -1,0 +1,25 @@
+var namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e =
+[
+    [ "TestArithmetic", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_arithmetic.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_arithmetic" ],
+    [ "TestCompanion", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_companion.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_companion" ],
+    [ "TestConstants", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_constants.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_constants" ],
+    [ "TestDerivative", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_derivative.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_derivative" ],
+    [ "TestEvaluation", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_evaluation.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_evaluation" ],
+    [ "TestFitting", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_fitting.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_fitting" ],
+    [ "TestGauss", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_gauss.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_gauss" ],
+    [ "TestIntegral", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_integral.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_integral" ],
+    [ "TestMisc", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_misc.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_misc" ],
+    [ "TestVander", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_vander.html", "classnumpy_1_1polynomial_1_1tests_1_1test__hermite__e_1_1_test_vander" ],
+    [ "trim", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#a3ffbf17a0448e85855b21f2163c17183", null ],
+    [ "He0", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#afb66cf2cf06eb625ec3bbc2ce3573f88", null ],
+    [ "He1", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#a4c271005cc3fa7fdc919870bf90afc80", null ],
+    [ "He2", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#a6b625c777a40e9954e7e7f6ce0f464c9", null ],
+    [ "He3", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#aae993f717d0c8e729652da96df1ad380", null ],
+    [ "He4", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#aa64412af799b590fffa464b1f70f8686", null ],
+    [ "He5", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#a82f53421fd7ce1f101014300ea66cd26", null ],
+    [ "He6", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#ae5e1de7fad89a60c6bbaa8283b845c06", null ],
+    [ "He7", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#a989d4614b573c3f313ff8a4c514ec4bb", null ],
+    [ "He8", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#a1ab1251454786c15a4d007ca1e02339e", null ],
+    [ "He9", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#a77d6d9b80c1f2aaf38f5c408f8998d67", null ],
+    [ "Helist", "namespacenumpy_1_1polynomial_1_1tests_1_1test__hermite__e.html#a581ec643ccaf74a2ecae17d88d9e8efa", null ]
+];

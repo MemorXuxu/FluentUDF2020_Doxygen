@@ -1,0 +1,804 @@
+\doxysection{threads.\+h}
+\hypertarget{threads_8h_source}{}\label{threads_8h_source}\index{fluent20.1.0/src/storage/threads.h@{fluent20.1.0/src/storage/threads.h}}
+\mbox{\hyperlink{threads_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_THREADS\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_THREADS\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ Thread\ types\ */}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29bafae2580fd44e539f29db33b7def7897a}{THREAD\_NULL}}\ =\ 0,}
+\DoxyCodeLine{00014\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba16f62cfa6b04f3f9aec7084c7a9d2100}{THREAD\_C\_GENERIC}}\ =\ 1,}
+\DoxyCodeLine{00015\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29bae33660d9a0e9a1a8bc75f3152ef9bebe}{THREAD\_F\_INTERIOR}}\ =\ 2,}
+\DoxyCodeLine{00016\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba8b9b6d9681b9e8e074dad6022a28975a}{THREAD\_F\_WALL}}\ =\ 3,}
+\DoxyCodeLine{00017\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba7bf8d09b15c0e0fad70cbb866cc056d7}{THREAD\_F\_PINLET}}\ =\ 4,}
+\DoxyCodeLine{00018\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba24986bfbda8e4958e5f7611199ad41f7}{THREAD\_F\_POUTLET}}\ =\ 5,}
+\DoxyCodeLine{00019\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba7faa5e7bf8b309c7365e46b536117741}{THREAD\_F\_PERIODIC\_OLD}}\ =\ 6,}
+\DoxyCodeLine{00020\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba7e8a94c16260718dd13a067c365f3605}{THREAD\_F\_SYMMETRIC}}\ =\ 7,}
+\DoxyCodeLine{00021\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29baf541250b941b7bcb39f07f0c9411c4b3}{THREAD\_F\_SHADOW}}\ =\ 8,}
+\DoxyCodeLine{00022\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba8f2587e76ec37505da8f77c3e96589e9}{THREAD\_F\_PFAR}}\ =\ 9,}
+\DoxyCodeLine{00023\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba1c66ab8195b932a4254fd6800e3793ab}{THREAD\_F\_VINLET}}\ =\ 10,}
+\DoxyCodeLine{00024\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba650bc92bcb751aabc911f186be83a5aa}{THREAD\_F\_VOUTLET}}\ =\ 11,\ \ \textcolor{comment}{/*\ obsolete\ */}}
+\DoxyCodeLine{00025\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29baa1baddf754c00cc596a58c4fdca54e5c}{THREAD\_F\_PERIODIC}}\ =\ 12,}
+\DoxyCodeLine{00026\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba90418c4ba75315e6eac121dabab46f73}{THREAD\_F\_VFAR}}\ =\ 13,\ \ \ \textcolor{comment}{/*\ obsolete\ */}}
+\DoxyCodeLine{00027\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29baedd15df08ca0d4a4ac148036b89deb4b}{THREAD\_F\_JUMP}}\ =\ 14,}
+\DoxyCodeLine{00028\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29baed4a82c507cc36b19821aff3d88cfae9}{THREAD\_F\_INTERNAL}}\ =\ 15,}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29baea0ae0712247fe057e94d65e7274946e}{THREAD\_C\_SOLID}}\ =\ 17,\ \ \ \ \textcolor{comment}{/*\ obsolete,\ merged\ into\ THREAD\_C\_GENERIC\ */}}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba9b9543324d72365bbc12c8289f7ea02d}{THREAD\_F\_MFINLET}}\ =\ 20,}
+\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba2db6192575beba09e555ac44a8a20f1a}{THREAD\_F\_SLIDING\_BOUNDARY}}\ =\ 24,}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#if\ RP\_OVERSET}}
+\DoxyCodeLine{00033\ \ \ THREAD\_F\_OVERSET\ =\ 25,}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29badfd4abcc543ccdce5d4c2d5a35ef6691}{THREAD\_F\_WRAPPER}}\ =\ 29,}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba56137e329a2247f33b48ec1f0149f6ab}{THREAD\_F\_BRIDGE}}\ =\ 30,\ \ \ \textcolor{comment}{/*\ obsolete\ */}}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba97850344569a60965127980694646c40}{THREAD\_F\_PARENT}}\ =\ 31,}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba6377710c0cf0609916c774e032ff722e}{THREAD\_C\_PARENT}}\ =\ 32,}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29bae5b629b375e132c2650cc0131ebdcd9c}{THREAD\_F\_OUTFLOW}}\ =\ 36,}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba450e9f8870995a4e9a26f178a6f3d1f6}{THREAD\_F\_AXIS}}\ =\ 37,}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29baa89f7e8950f003cd782785974c9ae063}{THREAD\_F\_SI\_PARENT}}\ =\ 38,\ \ \ \ \ \ \textcolor{comment}{/*\ obsolete,\ for\ perpendicular\ face\ creation}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ of\ old\ non-\/conformal\ interface\ */}}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba19333760e0e2d03e544d7b83d5d3a538}{THREAD\_N\_GENERIC}}\ =\ 39,\ \ \textcolor{comment}{/*\ node\ thread\ */}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba14ab1d9d9f5e372cfd338f2bff3a7bc9}{THREAD\_F\_UNREFERENCED}}\ =\ 40,\ \ \ \textcolor{comment}{/*\ facetted\ geometry\ */}}
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba57209485196b947d563c6d0003bb7a02}{THREAD\_NETWORK}}\ =\ 51,}
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29bab52ea1ecf640a77a9ff525daf9f2dd6b}{THREAD\_NETWORK\_END}}\ =\ 52,}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba079e5bd0230a737281648a540b58ed29}{THREAD\_TYPE\_CNZ}}\ =\ 55,}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba9cd4b33e3314f747533d9b2c2510658f}{THREAD\_TYPE\_FNZ}}\ =\ 56,}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29ba4e03999e2aa8067ea286f48c7ac47d6b}{THREAD\_TYPE\_MAX}}}
+\DoxyCodeLine{00053\ \}\ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29b}{Thread\_Type}};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{/*\ When\ adding\ a\ new\ thread\ type,\ be\ sure\ to\ update\ the\ thread\_type\_names\ array}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ in\ threads.c\ and\ to\ create\ a\ new\ thread\ object\ in\ rpthreads.scm.\ \ (If\ the}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ thread\ type\ is\ for\ internal\ solver\ use\ only,\ that\ is,\ not\ to\ be\ seen\ in\ the}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ user-\/interface,\ these\ steps\ can\ be\ omitted.)}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ THREAD\_TYPEs\ of\ threads\ which\ are\ saved\ in\ case\ files\ should}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ never\ be\ changed.}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{comment}{/*\ Thread\ flags\ */}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_CELL\ \ \ \ \ (1)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_FACE\ \ \ \ \ (1<<1)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_BOUNDARY\_FACE\ \ (1<<2)\ }\textcolor{comment}{/*\ non-\/removable,\ else\ removable\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_INTERNAL\_FACE\ \ (1<<3)\ }\textcolor{comment}{/*\ has\ two\ cell\ pointers,\ else\ one\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_PERIODIC\_FACE\ \ (1<<4)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_EXTERIOR\_CELL\ \ (1<<5)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_NODELESS\_FACE\ \ (1<<6)\ }\textcolor{comment}{/*\ created\ from\ sliding\ boundaries\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_SLIDING\_INTERFACE\ (1<<7)\ }\textcolor{comment}{/*\ created\ from\ sliding\ boundaries*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_SHADOW\_FACE\ \ \ \ (1<<8)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_MAJOR\_FACE\ \ \ \ \ (1<<9)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_MINOR\_FACE\ \ \ \ \ (1<<10)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_COARSE\_LEVEL\ \ \ (1<<11)\ }\textcolor{comment}{/*\ coarse\ grid\ level\ (FAS\ multigrid)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_TAG\ \ \ \ \ \ \ \ \ \ \ \ (1<<12)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_SHELL\_FACE\ \ \ \ \ (1<<13)\ }\textcolor{comment}{/*\ shell\ face\ thread\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_SHELL\_CELL\ \ \ \ \ (1<<14)\ }\textcolor{comment}{/*\ shell\ cell\ thread\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_SHELL\_JUNCTION\ (1<<15)\ }\textcolor{comment}{/*\ shell\ junction\ thread\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_DEFORMING\ \ \ \ \ \ (1<<16)\ }\textcolor{comment}{/*\ deforming\ thread\ flag\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_MOVING\ \ \ \ \ \ \ \ \ (1<<17)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_NODE\ \ \ \ \ (1<<18)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_REMESH\ \ \ \ \ \ \ \ \ (1<<19)\ }\textcolor{comment}{/*\ remeshing\ flag\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_GEOMETRY\ \ \ \ \ \ \ (1<<20)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_NETWORK\_CELL\ \ \ (1<<21)\ }\textcolor{comment}{/*\ network\ cell\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_NETWORK\_FACE\ \ \ (1<<22)\ }\textcolor{comment}{/*\ network\ face\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_MARK\ \ \ \ \ \ \ \ \ \ \ (1<<23)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_DEACTIVATED\ \ \ \ (1<<24)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_NEW\ \ \ \ \ \ \ \ \ \ \ \ (1<<25)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_EXTENDED\ \ \ \ \ \ \ (1<<28)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_DUAL\ \ \ \ \ \ \ \ \ \ \ (1<<29)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_STRETCHED\_INTERFACE\ (1<<30)\ }\textcolor{comment}{/*\ interface\ stretching;\ same\ flag}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ is\ used\ for\ both\ the\ ghost}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ cells\ and\ the\ interface\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_LABEL\ \ \ \ \ \ \ \ \ \ (1<<31)}}
+\DoxyCodeLine{00098\ \textcolor{comment}{/*\ Thread\ flag\ is\ (unsigned\ int),\ and\ cannot\ carry\ more\ flags.}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ \ \ The\ Intel\ compiler\ currently\ doesn't\ allow\ larger\ shift\ operations}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ \ \ and\ making\ the\ flag\ (long)\ is\ not\ an\ option\ to\ get\ more\ flags.\ */}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_CNZ\ \ \ \ \ \ \ \ \ \ \ \ 4294967296\ }\textcolor{comment}{/*\ (1<<32)\ cell\ nodal\ zone\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ THREAD\_FL\_FNZ\ \ \ \ \ \ \ \ \ \ \ \ 8589934592\ }\textcolor{comment}{/*\ (1<<33)\ face\ nodal\ zone\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{comment}{/*\ Thread\ predicates\ */}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ CELL\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_CELL)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ FACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_FACE)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ NODE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_NODE)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ INTERNAL\_FACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_INTERNAL\_FACE)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ INTERIOR\_FACE\_THREAD\_P(t)(INTERNAL\_FACE\_THREAD\_P(t)\ \&\&\ THREAD\_T0(t)\ ==\ THREAD\_T1(t))}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ BOUNDARY\_FACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_BOUNDARY\_FACE)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ PERIODIC\_FACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_PERIODIC\_FACE)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ SHADOW\_FACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_SHADOW\_FACE)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ EXTERIOR\_CELL\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_EXTERIOR\_CELL)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ NODELESS\_FACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_NODELESS\_FACE)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ SLIDING\_INTERFACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_SLIDING\_INTERFACE)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ STRETCHED\_INTERFACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_STRETCHED\_INTERFACE)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ GHOST\_CELL\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_STRETCHED\_INTERFACE)}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ SLIDING\_BOUNDARY\_THREAD\_P(t)(THREAD\_TYPE(t)==THREAD\_F\_SLIDING\_BOUNDARY)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ HELPER\_THREAD\_P(t)\ ((t)\ ==\ HELPER\_THREAD(t))}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ MAPPED\_THREAD\_P(t)\ ((t)\ ==\ MAPPED\_THREAD(t))}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#if\ RP\_OVERSET}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ OVERSET\_FACE\_THREAD\_P(t)(THREAD\_TYPE(t)==THREAD\_F\_OVERSET)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ OVERSET\_EXTENDED\_INTERIOR\_THREAD\_P(t)(EXTENDED\_THREAD\_P(t)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DUAL\_THREAD\_P(t))}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ COARSE\_LEVEL\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_COARSE\_LEVEL)}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ MAJOR\_FACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_MAJOR\_FACE)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ MINOR\_FACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_MINOR\_FACE)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ COUPLED\_FACE\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ (THREAD\_FL\_MAJOR\_FACE\ |\ THREAD\_FL\_MINOR\_FACE))}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ FLUID\_CELL\_THREAD\_P(t)(CELL\_THREAD\_P(t)\ \&\&\ FLUID\_THREAD\_P(t))}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ SOLID\_CELL\_THREAD\_P(t)(CELL\_THREAD\_P(t)\ \&\&\ SOLID\_THREAD\_P(t))}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ TAGGED\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_TAG)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ TAG\_THREAD(t)(THREAD\_FLAGS(t)\ |=\ THREAD\_FL\_TAG)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ UNTAG\_THREAD(t)(THREAD\_FLAGS(t)\ \&=\ \string~THREAD\_FL\_TAG)}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ MARKED\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_MARK)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ MARK\_THREAD(t)(THREAD\_FLAGS(t)\ |=\ THREAD\_FL\_MARK)}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ UNMARK\_THREAD(t)(THREAD\_FLAGS(t)\ \&=\ \string~THREAD\_FL\_MARK)}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ LABELED\_THREAD\_P(t)(THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_LABEL)}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ LABEL\_THREAD(t)(THREAD\_FLAGS(t)\ |=\ THREAD\_FL\_LABEL)}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ UNLABEL\_THREAD(t)(THREAD\_FLAGS(t)\ \&=\ \string~THREAD\_FL\_LABEL)}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ SHELL\_FACE\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_SHELL\_FACE)}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ SHELL\_CELL\_THREAD\_P(t)\ (NNULLP(t)\ \&\&\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_SHELL\_CELL))}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ SHELL\_JUNCTION\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_SHELL\_JUNCTION)}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ WALL\_THREAD\_P(t)\ (THREAD\_TYPE(t)==THREAD\_F\_WALL)}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ SHELL\_SKIP\_THREAD\_P(t)\ (WALL\_THREAD\_P(t)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SHELL\_FACE\_THREAD\_P(t)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ THREAD\_VAR(t).wall.thermal\_bc\ ==\ THERMAL\_BC\_SKIP)}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ NETWORK\_CELL\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_NETWORK\_CELL)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ NETWORK\_FACE\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_NETWORK\_FACE)}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ EXTENDED\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_EXTENDED)}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ TWO\_CELL\_FACE\_THREAD\_P(t)((THREAD\_FLAGS(t)\ \&\ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\ \ \ (THREAD\_FL\_INTERNAL\_FACE\ |\ THREAD\_FL\_PERIODIC\_FACE\ |\ THREAD\_FL\_SHADOW\_FACE))\ |\ \(\backslash\)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\ \ \ \ (!WALL\_THREAD\_P(t)\ \&\&\ MAJOR\_FACE\_THREAD\_P(t)))}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{comment}{/*\ thread\ flags\ manipulation\ macros\ */}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ SET\_THREAD\_FLAGS(t,flag)\ (THREAD\_FLAGS(t)\ |=\ ((size\_t)(flag)))}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ CLEAR\_THREAD\_FLAGS(t,flag)\ (THREAD\_FLAGS(t)\ \&=\ \string~((size\_t)(flag)))}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ DEFORMING\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_DEFORMING)}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ MOVING\_THREAD\_P(t)\ \ \ \ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_MOVING)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ REMESH\_THREAD\_P(t)\ \ \ \ (THREAD\_FLAGS\ (t)\ \&\ THREAD\_FL\_REMESH)}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ SET\_DEFORMING\_THREAD\_FLAG(t)\ SET\_THREAD\_FLAGS(t,THREAD\_FL\_DEFORMING)}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ UNSET\_DEFORMING\_THREAD\_FLAG(t)\ CLEAR\_THREAD\_FLAGS(t,THREAD\_FL\_DEFORMING)}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ SET\_REMESH\_THREAD\_FLAG(t)\ SET\_THREAD\_FLAGS(t,THREAD\_FL\_REMESH)}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ UNSET\_REMESH\_THREAD\_FLAG(t)\ CLEAR\_THREAD\_FLAGS(t,THREAD\_FL\_REMESH)}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ THREAD\_FLAG\_P(t,flags)\ (THREAD\_FLAGS(t)\ \&\ ((size\_t)(flags)))}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{comment}{/*\ active\ thread\ booleans\ */}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#define\ GENERIC\_CELL\_THREAD\_P(t)(THREAD\_TYPE(t)==THREAD\_C\_GENERIC)}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{comment}{/*\ parent\ thread\ booleans\ */}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#define\ PARENT\_FACE\_THREAD\_P(t)(THREAD\_TYPE(t)==THREAD\_F\_PARENT)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ PARENT\_CELL\_THREAD\_P(t)(THREAD\_TYPE(t)==THREAD\_C\_PARENT)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#define\ PARENT\_THREAD\_P(t)\(\backslash\)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\ \ \ ((THREAD\_TYPE(t)==THREAD\_F\_PARENT)\ ||\ (THREAD\_TYPE(t)==THREAD\_C\_PARENT))}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#define\ HAS\_PARENT\_THREAD\_P(t)(NULLP(THREAD\_PARENT(t))\ ?\ 0\ :\ 1)}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#define\ SI\_PARENT\_FACE\_THREAD\_P(t)(THREAD\_TYPE(t)==THREAD\_F\_SI\_PARENT)\ }\textcolor{comment}{/*\ obsolete,\ used\ for\ perpendicular\ face\ of\ old\ nonconformal\ interface\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ DEACTIVATED\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_DEACTIVATED)}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#define\ UNREFERENCED\_THREAD\_P(t)\ (THREAD\_TYPE(t)\ ==\ THREAD\_F\_UNREFERENCED)}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#define\ NEW\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_NEW)}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#define\ DUAL\_THREAD\_P(t)\ (THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_DUAL)}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ FIXED\_THREAD\_P(t)\ \(\backslash\)}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\ \ (COUPLED\_FACE\_THREAD\_P\ (t)\ ||\ (THREAD\_T0\ (t)\ !=\ THREAD\_T1\ (t)))}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#define\ CNZ\_THREAD\_P(t)((THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_CNZ)\ >\ 0)}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ FNZ\_THREAD\_P(t)((THREAD\_FLAGS(t)\ \&\ THREAD\_FL\_FNZ)\ >\ 0)}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{profile_8h}{profile.h}}"{}}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{comment}{/*\ turbulence\ specification\ methods\ */}}
+\DoxyCodeLine{00208\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00209\ \{}
+\DoxyCodeLine{00210\ \ \ \mbox{\hyperlink{threads_8h_a0e96acf73ec595679ffcca6fecc4d705a5e483abed0603e662e45f83b8f403954}{TURB\_SPEC\_VALUE}}\ =\ 0,}
+\DoxyCodeLine{00211\ \ \ \mbox{\hyperlink{threads_8h_a0e96acf73ec595679ffcca6fecc4d705aed2b228df04b4f6ede9bf5f7635938fa}{TURB\_SPEC\_INTENS\_LEN}},}
+\DoxyCodeLine{00212\ \ \ \mbox{\hyperlink{threads_8h_a0e96acf73ec595679ffcca6fecc4d705af24cc950b9b67a95ac8d9313b14a1bfb}{TURB\_SPEC\_INTENS\_RATIO}},}
+\DoxyCodeLine{00213\ \ \ \mbox{\hyperlink{threads_8h_a0e96acf73ec595679ffcca6fecc4d705a9ec18fb19235752427293f024c9a33ad}{TURB\_SPEC\_INTENS\_DIAM}},}
+\DoxyCodeLine{00214\ \ \ \mbox{\hyperlink{threads_8h_a0e96acf73ec595679ffcca6fecc4d705abddba1421e6df06a63cc5eb9a9b2ac0c}{TURB\_SPEC\_EPS\_OMEGA}},}
+\DoxyCodeLine{00215\ \ \ \mbox{\hyperlink{threads_8h_a0e96acf73ec595679ffcca6fecc4d705a6f5cff158e7494a72e46d0a925dbeb06}{TURB\_SPEC\_MIXING\_PLANE}}}
+\DoxyCodeLine{00216\ \};}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{comment}{/*\ subgrid-\/scale\ k\ \ specification\ methods\ */}}
+\DoxyCodeLine{00219\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00220\ \{}
+\DoxyCodeLine{00221\ \ \ \mbox{\hyperlink{threads_8h_a223be06596dd9ff740bf0a09c8632294aae382305d9bd3b723b2c72e65269a6fd}{KSGS\_SPEC\_VALUE}}\ =\ 0,}
+\DoxyCodeLine{00222\ \ \ \mbox{\hyperlink{threads_8h_a223be06596dd9ff740bf0a09c8632294a496d117785e7d6a4ad7f633d9367f987}{KSGS\_SPEC\_INTENSITY}}}
+\DoxyCodeLine{00223\ \};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ \ OPT\_STR\_VAR\_VAL\_LEN\ \ 64}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{comment}{/*\ les\ inlet\ specification\ methods\ */}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_THREADS\_C}}
+\DoxyCodeLine{00229\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{threads_8h_aee8de1b76d9a7029b12a6df44c94b476}{les\_spec\_name\_strings}}[][\mbox{\hyperlink{threads_8h_a6cd1e601492156da81c4944a9635ed4a}{OPT\_STR\_VAR\_VAL\_LEN}}];}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00231\ \textcolor{comment}{/*\ Create\ the\ following\ exactly\ once\ in\ threads.o,}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ but\ have\ the\ source\ code\ here\ in\ order\ to\ keep}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ it\ in\ perfect\ sync\ with\ the\ enum\ below\ it.}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ *\ These\ name\ strings\ must\ be\ consistent\ with}}
+\DoxyCodeLine{00235\ \textcolor{comment}{\ *\ what\ is\ used\ on\ the\ Scheme\ side..!!}}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00237\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{threads_8h_aee8de1b76d9a7029b12a6df44c94b476}{les\_spec\_name\_strings}}[][\mbox{\hyperlink{threads_8h_a6cd1e601492156da81c4944a9635ed4a}{OPT\_STR\_VAR\_VAL\_LEN}}]\ =}
+\DoxyCodeLine{00238\ \{}
+\DoxyCodeLine{00239\ \ \ \textcolor{stringliteral}{"{}No\ Perturbations"{}},}
+\DoxyCodeLine{00240\ \ \ \textcolor{stringliteral}{"{}Vortex\ Method"{}},}
+\DoxyCodeLine{00241\ \ \ \textcolor{stringliteral}{"{}Spectral\ Synthesizer"{}},}
+\DoxyCodeLine{00242\ \ \ \textcolor{stringliteral}{"{}Random\ Perturbations"{}},}
+\DoxyCodeLine{00243\ \ \ \textcolor{stringliteral}{"{}Synthetic\ Turbulence\ Generator"{}},}
+\DoxyCodeLine{00244\ \ \ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{00245\ \};}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00247\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00248\ \{}
+\DoxyCodeLine{00249\ \ \ \mbox{\hyperlink{threads_8h_ad12587be5bfd3f856fb9fd64f1299266a9d9004c85f50d615a9a73ad9dc979342}{LES\_SPEC\_NO\_PERTURB}}\ =\ 0,}
+\DoxyCodeLine{00250\ \ \ \mbox{\hyperlink{threads_8h_ad12587be5bfd3f856fb9fd64f1299266a25a8d9d513fe3d128840772a97aaee6c}{LES\_SPEC\_VORTEX\_METHOD}}\ =\ 1,}
+\DoxyCodeLine{00251\ \ \ \mbox{\hyperlink{threads_8h_ad12587be5bfd3f856fb9fd64f1299266ac5cdf8636c5237de41ccedeb6cc4a853}{LES\_SPEC\_RFG}}\ =\ 2,}
+\DoxyCodeLine{00252\ \ \ \mbox{\hyperlink{threads_8h_ad12587be5bfd3f856fb9fd64f1299266ad63e5c561a1b6043f3c1dbb8f0fe6dcc}{LES\_SPEC\_RANDOM\_PERTURB}}\ =\ 3,}
+\DoxyCodeLine{00253\ \ \ \mbox{\hyperlink{threads_8h_ad12587be5bfd3f856fb9fd64f1299266a6dbbc821d4a748a0738ae5ecbad8c030}{LES\_SPEC\_SYNTHETIC\_TURBULENCE\_GENERATOR}}\ =\ 4}
+\DoxyCodeLine{00254\ \}\ \mbox{\hyperlink{threads_8h_ad12587be5bfd3f856fb9fd64f1299266}{LES\_Spec\_Type}};}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \textcolor{comment}{/*\ MAX\_DO\_BANDS\ needed\ for\ f\_wall.h\ (and\ sg\_disco.\{ch\})\ */}}
+\DoxyCodeLine{00257\ \textcolor{comment}{/*\#define\ MAX\_DO\_BANDS\ 50*/}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structudf__thread__data__struct}{udf\_thread\_data\_struct}}\ \ \textcolor{comment}{/*\ data\ structure\ to\ cache\ udfs\ */}}
+\DoxyCodeLine{00260\ \{}
+\DoxyCodeLine{00261\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structudf__thread__data__struct_a5ac083a645d964373f022d03df4849c8}{name}};}
+\DoxyCodeLine{00262\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structudf__thread__data__struct_a1a5f1dd24ce670ca89bd8fa920a174ea}{used}};}
+\DoxyCodeLine{00263\ \ \ void\ (*\mbox{\hyperlink{structudf__thread__data__struct_aa09095f7c216e4874ff865510efc4a33}{fcn}})(void);\ \ \ \ \textcolor{comment}{/*\ pointer\ to\ a\ function\ returning\ void\ */}}
+\DoxyCodeLine{00264\ \}\ \mbox{\hyperlink{threads_8h_ab5ea0a3c3490f7d2cdf817ddfe599c2b}{UDF\_Thread\_Data}};}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#define\ MAX\_IMP\ 10}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structimpedance__struct}{impedance\_struct}}}
+\DoxyCodeLine{00269\ \{}
+\DoxyCodeLine{00270\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structimpedance__struct_a412ac02aa43d02e6d986bf0f07a96f8e}{d}};}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structimpedance__struct_acf4b6cea27655a9d2012c09c64d6ca9e}{n1}};}
+\DoxyCodeLine{00273\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structimpedance__struct_a44e1cf3c3a8fc45ae40b9094d3d10833}{lambda}}[\mbox{\hyperlink{threads_8h_a87cf5649b495000c2ed16488a00786b7}{MAX\_IMP}}];}
+\DoxyCodeLine{00274\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structimpedance__struct_aaaaec8bb8b7522cc3f800b17275e0c4e}{a}}[\mbox{\hyperlink{threads_8h_a87cf5649b495000c2ed16488a00786b7}{MAX\_IMP}}];}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structimpedance__struct_aa5d111dfc5a6d5317ca02bed02649f46}{n2}};}
+\DoxyCodeLine{00277\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structimpedance__struct_ad2b5127a9e7b456fcfc01f71ef41c73b}{alpha}}[\mbox{\hyperlink{threads_8h_a87cf5649b495000c2ed16488a00786b7}{MAX\_IMP}}];}
+\DoxyCodeLine{00278\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structimpedance__struct_acabac6ea00e0177c97961da77131c532}{beta}}[\mbox{\hyperlink{threads_8h_a87cf5649b495000c2ed16488a00786b7}{MAX\_IMP}}];}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structimpedance__struct_a2a34e8ed472c110dd50761cd2777a9d7}{b}}[\mbox{\hyperlink{threads_8h_a87cf5649b495000c2ed16488a00786b7}{MAX\_IMP}}];}
+\DoxyCodeLine{00281\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structimpedance__struct_a52e159e6f92aa8a6147f83f963da48a6}{c}}[\mbox{\hyperlink{threads_8h_a87cf5649b495000c2ed16488a00786b7}{MAX\_IMP}}];}
+\DoxyCodeLine{00282\ \};}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structimpedance__struct}{impedance\_struct}}\ \mbox{\hyperlink{structimpedance__struct}{Impedance}};}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00292\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union\ }\mbox{\hyperlink{unioninitialization__bc__data__union}{initialization\_bc\_data\_union}}}
+\DoxyCodeLine{00293\ \{}
+\DoxyCodeLine{00294\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{unioninitialization__bc__data__union_a0add7727e9864ab40376d7e8abeb5b35}{pressure\_from\_bc}};\ }
+\DoxyCodeLine{00295\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{unioninitialization__bc__data__union_a536c4247fc492a41741e42ff78525f3f}{pavg\_at\_mp}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00296\ \}\ \mbox{\hyperlink{threads_8h_a6ccf9dc76a4f24d176ef721109fb8d20}{Initialization\_BC\_Data}};}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{comment}{/**********************************************************}}
+\DoxyCodeLine{00299\ \textcolor{comment}{\ *\ Thread\ variable\ declarations}}
+\DoxyCodeLine{00300\ \textcolor{comment}{\ **********************************************************/}}
+\DoxyCodeLine{00301\ \textcolor{comment}{/*comment\_rsy\ :\ add\ the\ value\ of\ dw\ as\ std\_flow\_boundary\ bc\ option\ */}}
+\DoxyCodeLine{00302\ \textcolor{comment}{/*\ standard\ boundary\ variables\ used\ by\ mfi,\ outflow,\ pfar,\ pi,\ po,\ vi\ */}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#define\ STD\_FLOW\_BOUNDARY\_BCS\ \(\backslash\)}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\ \ int\ turb\_spec;\ \ \ \ }\textcolor{comment}{/*\ turbulence\ specification\ method:\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 0\ =\ specified\ value*/}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 1\ =\ intensity,\ length\ scale\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 2\ =\ intensity,\ viscosity\ ratio\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 3\ =\ intensity,\ hyd\ diam\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 4\ =\ mixing\ plane\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\ \ int\ ksgs\_spec;\ \ \ \ }\textcolor{comment}{/*\ subgrid\ k\ \ specification\ method:\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 0\ =\ specified\ value*/}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 1\ =\ intensity\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\ \ Profile\ nut,kl,k,ksgs,e,v2,o,intermit,turb\_viscosity\_ratio\_prof;\ \(\backslash\)}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\ \ real\ turb\_intensity;\ \(\backslash\)}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\ \ real\ sgs\_turb\_intensity;\ \(\backslash\)}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\ \ real\ turb\_length\_scale;\ \(\backslash\)}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\ \ real\ turb\_hydraulic\_diam;\ \(\backslash\)}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\ \ real\ turb\_viscosity\_ratio;\ \(\backslash\)}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\ \ int\ rst\_spec;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ Reynolds-\/stress\ specification\ method\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 0\ =\ reynolds-\/stress\ components\ \ \ \ \ \ \ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 1\ =\ computed\ from\ turbulence\ intensity\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\ \ Profile\ uu,vv,ww,uv,vw,uw;\ \(\backslash\)}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\ \ Profile\ vof;\ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ volume\ fractions\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\ Profile\ gt;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ granular\ temperature\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\ \ Profile\ *yi;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ species\ mass\ /\ mole\ fractions\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\ \ cxboolean\ species\_in\_mole\_frac;\ \ }\textcolor{comment}{/*\ mole\ fractions\ specified\ at\ inlets\ ?\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\ \ Profile\ phi1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ electric\ potential\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\ \ int\ phi1\_type;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ electric\ potential\ BC\ type\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\ Profile\ dw[NUM\_ENV];\ \(\backslash\)}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\ cxboolean\ equ\_required;\ \ \ \ \ \ \ }\textcolor{comment}{/*\ equilibrium\ calculation\ required\ at\ mixed\ inlets?*/}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\ Profile\ *uds;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ user\ defined\ scalar\ bc's\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\ \ int\ *uds\_bc\_type;\ \(\backslash\)}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ Profile\ *pb\_disc;\ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ population\ balance\ bc\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ int\ *pb\_disc\_bc\_type;\ \(\backslash\)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\ \ Profile\ *pb\_qmom;\ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ population\ balance\ bc\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ int\ *pb\_qmom\_bc\_type;\ \(\backslash\)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\ \ Profile\ *pb\_smm;\ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ population\ balance\ bc\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\ \ int\ *pb\_smm\_bc\_type;\ \(\backslash\)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\ \ Profile\ pb\_dqmom[1];\ }\textcolor{comment}{/*\ DQMOM\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\ \ int\ pb\_dqmom\_bc\_type[1];\ \(\backslash\)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\ \ Profile\ iac;\ }\textcolor{comment}{/*\ interfacial\ area\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\ \ int\ iac\_bc\_type;\ \(\backslash\)}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\ \ Profile\ lsf;\ }\textcolor{comment}{/*\ level-\/set\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\ \ int\ lsf\_bc\_type;\ \(\backslash\)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\ \ int\ Tbb\_spec;\ \ \ \ \ }\textcolor{comment}{/*\ use\ local\ T\ or\ Tbb\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ \ 0\ =\ face\ value\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ \ 1\ =\ user\ specified\ value\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\ \ real\ Tbb;\ \ \ \ \ }\textcolor{comment}{/*\ black\ body\ temperature\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\ \ Profile\ in\_emiss;\ \ \ }\textcolor{comment}{/*\ emissivity\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\ \ Profile\ fmean;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ mean\ mixture\ fraction\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\ \ Profile\ fmean2;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ Secondary\ mean\ mixture\ fraction\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\ \ Profile\ fvar;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ mixture\ fraction\ variance\ */}\textcolor{preprocessor}{\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\ \ Profile\ fvar2;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ Secondary\ mixture\ fraction\ variance\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\ \ Profile\ premix\_c;\ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ progress\ variable\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\ \ Profile\ premix\_cvar;\ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ progress\ variable\ variance\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\ \ Profile\ *tss\_scalar;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ Scalar\ mass\ fractions*/}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\ \ Profile\ ecfm\_sigma;\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ flame\ area\ density\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\ \ Profile\ gvar;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ g\ equation\ variance\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\ \ Profile\ inert;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ inert\ stream\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\ \ Profile\ yi\_pollut[MAX\_POLLUT\_EQNS];\ }\textcolor{comment}{/*\ pollutant\ species\ mass\ fractions\ or\ soot\ nuclei\ number\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\ \ Profile\ tvar;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ temperature\ variance\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\ \ int\ dpm\_bc;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ DPM\ bc\ type\ (types\ defined\ in\ dpm.h)\ */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\ \ Objp\ *dpm\_bc\_collision\_partner;\ }\textcolor{comment}{/*\ DEM\ */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\ \ int\ dpm\_bc\_collision\_partner\_index;\ }\textcolor{comment}{/*\ DEM\ */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\ \ int\ ac\_op;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ acoustic\ options\ */}\textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\ Impedance\ imp;\ \(\backslash\)}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\ Profile\ ac\_wave;\ \(\backslash\)}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\ \ Initialization\_BC\_Data\ initialization;\ }\textcolor{comment}{/*\ storage\ for\ initialization\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\ \ UDF\_Thread\_Data\ dpm\_udf;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ UDF\ fcn\ for\ DPM\_BC\_UDF\ */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\ \ cxboolean\ relative\ \ \ \ \ \ \ }\textcolor{comment}{/*\ is\ velocity\ relative\ to\ rot.\ frame?\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__exterior_8h}{f\_exterior.h}}"{}}}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__fluid_8h}{f\_fluid.h}}"{}}}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#if\ RP\_NETWORK\ \ }\textcolor{comment}{/*\ Compact\ heat\ conduction\ model\ for\ ICEPAK\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{sg__network_8h}{sg\_network.h}}"{}}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \textcolor{comment}{/*\ jump\ (fan,\ radiator\ (heat\ exchanger),\ porous)\ */}}
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__jump_8h}{f\_jump.h}}"{}}}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \textcolor{comment}{/*\ mass-\/flow\ inlet\ */}}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__mfi_8h}{f\_mfi.h}}"{}}}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \textcolor{comment}{/*\ periodic\ */}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__periodic_8h}{f\_periodic.h}}"{}}}
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ \textcolor{comment}{/*\ pressure\ inlet\ */}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__pi_8h}{f\_pi.h}}"{}}}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \textcolor{comment}{/*\ pressure\ outlet\ */}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__po_8h}{f\_po.h}}"{}}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \textcolor{comment}{/*\ pressure\ far\ field\ */}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__pfar_8h}{f\_pfar.h}}"{}}}
+\DoxyCodeLine{00423\ }
+\DoxyCodeLine{00424\ \textcolor{comment}{/*\ sliding\ boundary\ */}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__slide_8h}{f\_slide.h}}"{}}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \textcolor{comment}{/*\ symmetry,\ axis\ */}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__sym_8h}{f\_sym.h}}"{}}}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \textcolor{comment}{/*\ velocity\ inlet\ */}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__vi_8h}{f\_vi.h}}"{}}}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \textcolor{comment}{/*\ wall\ */}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__wall_8h}{f\_wall.h}}"{}}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \textcolor{comment}{/*\ outflow\ */}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{f__outflow_8h}{f\_outflow.h}}"{}}}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \textcolor{comment}{/*\ fluid\ (fluid\ cells)\ */}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{c__fluid_8h}{c\_fluid.h}}"{}}}
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00442\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__var__struct}{thread\_var\_struct}}}
+\DoxyCodeLine{00443\ \{}
+\DoxyCodeLine{00444\ \ \ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29b}{Thread\_Type}}\ \mbox{\hyperlink{structthread__var__struct_acbbe24ab9d5876a7a33d37d98b3a4c6e}{type}};}
+\DoxyCodeLine{00445\ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00446\ \ \ \{}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__pi__struct}{tv\_pi\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a8172e9081b5fb3f0e18c7ab3302546b8}{pi}};}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__po__struct}{tv\_po\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a1e1194a0b4f376fc3b338d9c942075ac}{po}};}
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__outflow__struct}{tv\_outflow\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a14b7649940150b8af4505b6dceb52a02}{outflow}};}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__jump__struct}{tv\_jump\_struct}}\ \mbox{\hyperlink{structthread__var__struct_ad8aa16e0b89d3d532b7af6360f66f506}{jump}};}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__vi__struct}{tv\_vi\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a67bc8a8f3c3f30a1d5e1a48177ced503}{vi}};}
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__pfar__struct}{tv\_pfar\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a4980e7fde92093e6caaa783bb98cda8f}{pfar}};}
+\DoxyCodeLine{00453\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__mfi__struct}{tv\_mfi\_struct}}\ \mbox{\hyperlink{structthread__var__struct_aa4b01e4a9bdabbaa1a175a26dc5160cb}{mfi}};}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__wall__struct}{tv\_wall\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a285a27fe61ef8691c13932d70f9b7096}{wall}};}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__sym__struct}{tv\_sym\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a7e7b01514af458d2a87efa94ff45c918}{sym}};}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\#if\ RP\_NETWORK}}
+\DoxyCodeLine{00457\ \ \ \ \ \textcolor{keyword}{struct\ }tv\_network\_end\_struct\ network\_end;}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__per__struct}{tv\_per\_struct}}\ \mbox{\hyperlink{structthread__var__struct_aa01bfa2b35facee953bf3c0e3dba878a}{per}};}
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{comment}{/*\ cell,\ fluid,\ and\ solid\ can\ be\ used\ interchangeably\ */}}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__cell__struct}{tv\_cell\_struct}}\ \mbox{\hyperlink{structthread__var__struct_aae6db81a5c65fd22bab0762988c783f0}{cell}};}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__cell__struct}{tv\_cell\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a91b5b6225107b1b60ad033f3a1355fc6}{fluid}};}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__cell__struct}{tv\_cell\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a9a7cf789270b9933eacc8420ccb264be}{solid}};}
+\DoxyCodeLine{00464\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__si__struct}{tv\_si\_struct}}\ \mbox{\hyperlink{structthread__var__struct_aad1e878fe3d00d0ed086463217f616c5}{si}};}
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtv__interior__struct}{tv\_interior\_struct}}\ \mbox{\hyperlink{structthread__var__struct_a47bad088bd4cda770b4f2ca1cb902db2}{interior}};}
+\DoxyCodeLine{00466\ \ \ \}\ \mbox{\hyperlink{structthread__var__struct_a0961050891e79fd3bad321b43bc1b205}{thread\_var\_struct\_u}};}
+\DoxyCodeLine{00467\ \};}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \textcolor{comment}{/*\ \#include\ "{}dpm\_types.h"{}}}
+\DoxyCodeLine{00470\ \textcolor{comment}{\ *\ This\ causes\ a\ \ hen-\/and-\/egg\ problem\ in\ the}}
+\DoxyCodeLine{00471\ \textcolor{comment}{\ *\ order\ in\ which\ things\ are\ declared\ in\ the}}
+\DoxyCodeLine{00472\ \textcolor{comment}{\ *\ header\ files.}}
+\DoxyCodeLine{00473\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00474\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__summary__struct}{dpm\_summary\_struct}}}
+\DoxyCodeLine{00475\ \{}
+\DoxyCodeLine{00476\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdpm__summary__struct_abf48f20a5fb011992eaf24778b889042}{n\_particles}};}
+\DoxyCodeLine{00477\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_a244bf42c46054cf1113be44d55f2156d}{mass}},\ \mbox{\hyperlink{structdpm__summary__struct_ae259bc49571a963015c153a01456fc56}{mass\_init}};}
+\DoxyCodeLine{00478\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_a243926ddd436d04fe3968e7b7481f428}{liquid\_mass}},\ \mbox{\hyperlink{structdpm__summary__struct_a549862cdc9b052ad63513f78a15aa0b8}{liquid\_mass\_init}};}
+\DoxyCodeLine{00479\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_a8b1e2a9a4aa7f5c0f146e62cab45318e}{volatile\_mass}},\ \mbox{\hyperlink{structdpm__summary__struct_aa237fcbdf1cbdb0ca5446f5bdc8c0932}{volatile\_mass\_init}};}
+\DoxyCodeLine{00480\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_aecc353f047c6148d6a628fa2e4cfef22}{char\_mass}},\ \mbox{\hyperlink{structdpm__summary__struct_ac1f36c3efff02e97cab681d0f65f7ed5}{char\_mass\_init}};}
+\DoxyCodeLine{00481\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_a92bd8df890311c9ad278b91174e4554f}{surface\_species\_mass}}[\mbox{\hyperlink{materials_8h_aee6d7029bfa673b831eae06ff1dda000}{MAX\_SPE\_EQNS}}];\ \ \textcolor{comment}{/*\ for\ multiple\ char\ combustion\ */}}
+\DoxyCodeLine{00482\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_a18077682cb4bf35b71047b5263f547bb}{surface\_species\_init}}[\mbox{\hyperlink{materials_8h_aee6d7029bfa673b831eae06ff1dda000}{MAX\_SPE\_EQNS}}];}
+\DoxyCodeLine{00483\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_a2d6d50d07e52b6d674c4897be2d8cb7b}{time\_min}},\ \mbox{\hyperlink{structdpm__summary__struct_a91eadaf33faefd5a9405a3f8b8b3fc26}{time\_max}},\ \mbox{\hyperlink{structdpm__summary__struct_a75d8afc5cc065e77a5b4deb067a7cddc}{time\_avg}},\ \mbox{\hyperlink{structdpm__summary__struct_a60a363c58f642ce64e16db28a770a677}{time\_std}};}
+\DoxyCodeLine{00484\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structdpm__summary__struct_a355077db3505c82e3659f51cb736c53a}{injection\_min}}[80],\ \mbox{\hyperlink{structdpm__summary__struct_a1ed2fa5aaa7b8c40a7de512c745bd8a4}{injection\_max}}[80];}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\#if\ !\ UDF\_COMPILER}}
+\DoxyCodeLine{00486\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{structdpm__summary__struct_acdc8460d0537f84a3f1bf76971e84855}{id\_min}},\ \mbox{\hyperlink{structdpm__summary__struct_a51bf0d7269aa662b84e35212cccc8539}{id\_max}};}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00488\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_a8ee9be1b5aa75abae556de3088cba6d9}{h}},\ \mbox{\hyperlink{structdpm__summary__struct_a5d335a75857d2c6e3e6a9fc22e355e60}{h\_init}};}
+\DoxyCodeLine{00489\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_a25f9339d93c17de0e10f4ba8abb37854}{h\_sensible}},\ \mbox{\hyperlink{structdpm__summary__struct_aca96f459002271de9ef122ba57a27d45}{h\_sensible\_init}};}
+\DoxyCodeLine{00490\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_a4bd9771beadbefd264315e7183d1bb50}{h\_latent}};}
+\DoxyCodeLine{00491\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdpm__summary__struct_ab20332451a5b666ef98c55b52eeb1847}{h\_reaction}};}
+\DoxyCodeLine{00492\ \ \ FILE\ *\mbox{\hyperlink{structdpm__summary__struct_a3401e75495e6ceb380e461d737bb914b}{sort\_file}};}
+\DoxyCodeLine{00493\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structdpm__summary__struct_a7e3fc94b4c458153590b679c3e74f838}{sort\_file\_name}};}
+\DoxyCodeLine{00494\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structdpm__summary__struct_adcde83c003beab857366c3de29141f2b}{I}};\ \ \ \textcolor{comment}{/*\ Injection\ -\/-\/\ cannot\ include\ dpm\_types.h\ -\/-\/\ see\ comment\ above\ */}}
+\DoxyCodeLine{00495\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdpm__summary__struct_aadebc114c5eaeef1f9a2f2e9238acf55}{reduced\_to\_node\_zero\_p}};}
+\DoxyCodeLine{00496\ \}\ \mbox{\hyperlink{threads_8h_af8b415c7ea2dcf7dfe733fc768d6b70b}{dpm\_summary\_t}};}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00498\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpathline__summary__struct}{pathline\_summary\_struct}}}
+\DoxyCodeLine{00499\ \{}
+\DoxyCodeLine{00500\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpathline__summary__struct_abf48f20a5fb011992eaf24778b889042}{n\_particles}};}
+\DoxyCodeLine{00501\ \ \ \textcolor{comment}{/*\ NOTE:}}
+\DoxyCodeLine{00502\ \textcolor{comment}{\ \ \ *\ Please\ keep\ all\ reals\ in\ a\ contiguous\ block\ at\ the\ end\ of\ this\ struct,}}
+\DoxyCodeLine{00503\ \textcolor{comment}{\ \ \ *\ and\ keep\ "{}time\_min"{}\ the\ first\ variable\ within\ that\ contiguous\ block\ of\ reals.}}
+\DoxyCodeLine{00504\ \textcolor{comment}{\ \ \ *\ These\ conventions\ are\ relied\ upon\ in\ print\_pathline\_summary().}}
+\DoxyCodeLine{00505\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00506\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpathline__summary__struct_ae42e8e0b7f7533dd412fc6f34b07298c}{time\_min}},\ \mbox{\hyperlink{structpathline__summary__struct_adfa8d11974b86ec218e338ba030fb190}{time\_max}},\ \mbox{\hyperlink{structpathline__summary__struct_a269eb3e0cae2da09682cb5b0d263c74c}{time\_avg}},\ \mbox{\hyperlink{structpathline__summary__struct_aadd1e2802eb4b575484718db95f9fbd3}{time\_std}};}
+\DoxyCodeLine{00507\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpathline__summary__struct_a2464aefce4cd7124edaa678246126b1e}{pos\_min}}[3],\ \mbox{\hyperlink{structpathline__summary__struct_a790cb6e00f07624ef58406c8b076da44}{pos\_max}}[3];}
+\DoxyCodeLine{00508\ \}\ \mbox{\hyperlink{threads_8h_a966101a2b5060838dc37ffed8b9ea30c}{pathline\_summary\_t}};}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00510\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structddpm__flux__struct}{ddpm\_flux\_struct}}}
+\DoxyCodeLine{00511\ \{}
+\DoxyCodeLine{00512\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structddpm__flux__struct_a9daf964ed533cd2e652c1114db7e650f}{mass\_flux}};}
+\DoxyCodeLine{00513\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structddpm__flux__struct_a59cb73a14df7ed45ca4db75eac3ce6e7}{heat\_tot}};}
+\DoxyCodeLine{00514\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structddpm__flux__struct_ac4f27926619394cd0c70c8946c024fac}{heat\_sens}};}
+\DoxyCodeLine{00515\ \}\ \mbox{\hyperlink{threads_8h_a5d6c2b39a6186a56f09dfa56c06e6b03}{ddpm\_flux\_t}};}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__head__struct}{thread\_head\_struct}}}
+\DoxyCodeLine{00518\ \{}
+\DoxyCodeLine{00519\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structthread__head__struct_a3653ca127637b25f35abaa30b9b1d711}{n\_eqns}};\ \ \ \ \ \ \textcolor{comment}{/*\ \#\ of\ eqns\ in\ the\ coupled\ system\ */}}
+\DoxyCodeLine{00520\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structthread__head__struct_a5d075ef8e8ec5a4f911d7c402c39da1b}{ns0\_eqn}};\ \ \ \ \ \textcolor{comment}{/*\ \#\ eqn\ number\ for\ first\ specie\ */}}
+\DoxyCodeLine{00521\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structthread__head__struct_a1f36423b9dc3e4cb26069f5084ee6bbc}{n\_pvt\_eqns}};\ \ \textcolor{comment}{/*\ \#\ of\ p-\/v-\/T\ eqns\ in\ the\ coupled}}
+\DoxyCodeLine{00522\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ -\/\ varies\ with\ dimension\ \&\ inclusion/omission\ of\ energy}}
+\DoxyCodeLine{00523\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ \ \ eqn\ */}}
+\DoxyCodeLine{00524\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structthread__head__struct_ae31802fd3b0dc3326e94d2b9727a8683}{n\_flow\_eqns}};\ \textcolor{comment}{/*\ \#\ of\ eqns\ other\ than\ species\ in\ the\ coupled\ system}}
+\DoxyCodeLine{00525\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ -\/\ varies\ with\ \#\ of\ p-\/v-\/T\ eqns,\ inclusion/omission\ of}}
+\DoxyCodeLine{00526\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ \ \ k-\/e,\ swirl,\ etc.\ */}}
+\DoxyCodeLine{00527\ \ \ \textcolor{comment}{/*\ This\ array\ contains\ the\ SV\_*\ values\ for\ each\ equation.\ */}}
+\DoxyCodeLine{00528\ \ \ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ \mbox{\hyperlink{structthread__head__struct_a56fe0d210fb94c6febc84ba37e9e6788}{eqn\_index}}[\mbox{\hyperlink{mem_8h_adab0c4467b3c6f365e87d0316a74bf64afb724068c533470017bd18641533204f}{MAX\_EQNS}}];}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00530\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structthread__head__struct_a5835f1d2dc3e88205fce207ce5cea09c}{mv\_p}};\ \ \ \textcolor{comment}{/*\ are\ there\ non-\/zero\ grid\ velocities\ */}}
+\DoxyCodeLine{00531\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structthread__head__struct_a8bf55932a51f69d91123e16bb4d8fccb}{n\_profiles}};\ \textcolor{comment}{/*\ the\ number\ of\ profile\ variables\ being\ used\ */}}
+\DoxyCodeLine{00532\ \ \ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ *\mbox{\hyperlink{structthread__head__struct_aaadfdcde3a7d5ad9bd18161781816b62}{profile\_vars}}[\mbox{\hyperlink{src_2storage_2storage_8h_a5486fcaf89a67bfe6ab7432d60fefdd1}{MAX\_PROFILE}}];\textcolor{comment}{/*\ the\ list\ of\ vars\ with\ profiles.\ Not}}
+\DoxyCodeLine{00533\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ all\ the\ vars\ with\ profiles\ are\ stored\ here.}}
+\DoxyCodeLine{00534\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Only\ the\ vars\ that\ have\ a\ distinct\ profile}}
+\DoxyCodeLine{00535\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ stored.\ So,\ valid\ data\ in\ this\ array}}
+\DoxyCodeLine{00536\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\ only\ upto\ length\ n\_profiles.\ */}}
+\DoxyCodeLine{00537\ }
+\DoxyCodeLine{00538\ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00539\ \ \ \{}
+\DoxyCodeLine{00540\ \textcolor{preprocessor}{\#if\ SEEM}}
+\DoxyCodeLine{00541\ \ \ \ \ void\ (*set\_var)(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{seem_8h_add6656cd05b5c4631a94620cb7781317}{Pointer}});}
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00543\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_a2d44cc093ff1dae16290d9f9282802b4}{update}})(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00544\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_ab41927078e2b88341bed509b47d133dd}{update\_profiles}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00545\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_aaa9a23a07078950a5e6ce7c1b768c7ea}{integrals}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ int);}
+\DoxyCodeLine{00546\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_acd99e25a57369bd26336c9cfc15e23a8}{inviscid\_flux}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00547\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_a420348ca313c5622c3a4f4d7f7d8c2ef}{inviscid\_flux\_coarse}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00548\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_ae6c6a43d5450afb4ae3eb996842ba035}{face\_flux}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00549\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_ad7325ac041cc66bb274e8216f605bec3}{viscous\_derivative}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00550\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_a0ff4cf1285f8c703851e26fa49204978}{viscous\_flux}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00551\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_af9fc5f5dad2e2becd47ba6c507c0241f}{reconstruction\_flux}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00552\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_a27922d83694f4365f93d4ec1b1952666}{init\_memory}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00553\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_aa5b31e13f69790262f28a1984fd21a7b}{free\_memory}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00554\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_a1bb276dea841cfc9aac177d10018ae5f}{alloc\_species\_memory}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00555\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_a982b5e4101d1fc34a8780a6997bef0f3}{alloc\_tss\_scalar\_memory}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00556\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_a5e55dbf717056a499b31f7673174b006}{alloc\_uds\_memory}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00557\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_abc43d0123d4100dd0dcfe480015764b8}{alloc\_pb\_memory}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00558\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_a37bd22d30dda30c3f718a572c5e9ccd1}{reinitialize}})(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);\ \ \ \textcolor{comment}{/*\ to\ update\ "{}private"{}\ data\ after\ e.g.\ the\ zone\ has\ been\ split\ */}}
+\DoxyCodeLine{00559\ \ \ \ \ void\ (*\mbox{\hyperlink{structthread__head__struct_a97fda010391cbd12e903c4cc32761abb}{copy\_thread\_head}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__head__struct}{thread\_head\_struct}}\ *,\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__head__struct}{thread\_head\_struct}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00560\ \ \ \}\ \mbox{\hyperlink{structthread__head__struct_afb7593bc383ea593391a40d20b58998c}{method}};}
+\DoxyCodeLine{00561\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__var__struct}{thread\_var\_struct}}\ \mbox{\hyperlink{structthread__head__struct_a227ae4e23346b1552f07238ce7cc4d31}{var}};}
+\DoxyCodeLine{00562\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__summary__struct}{dpm\_summary\_struct}}\ \mbox{\hyperlink{structthread__head__struct_adcedf7c27552018cd163ad1c7c8a042d}{dpm\_summary}};}
+\DoxyCodeLine{00563\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__summary__struct}{dpm\_summary\_struct}}\ \ *\mbox{\hyperlink{structthread__head__struct_a126164e1a5390fbb0b457b412965d2a6}{dpm\_per\_inj\_summaries}};}
+\DoxyCodeLine{00564\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structthread__head__struct_a5dbe1826fb07c7c89faf4954b565ec03}{dpm\_per\_inj\_summaries\_alloced}};}
+\DoxyCodeLine{00565\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpathline__summary__struct}{pathline\_summary\_struct}}\ \mbox{\hyperlink{structthread__head__struct_a9c6bb795f4dc417cc33b347d2aa0cc94}{pathline\_summary}};}
+\DoxyCodeLine{00566\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structddpm__flux__struct}{ddpm\_flux\_struct}}\ \mbox{\hyperlink{structthread__head__struct_a4d7b6ba8da13bcab20882677cf558d25}{ddpm\_flux}};}
+\DoxyCodeLine{00567\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmaterial__struct}{material\_struct}}\ *\mbox{\hyperlink{structthread__head__struct_afd7d4d116d40853da9360e756326b98f}{material}};}
+\DoxyCodeLine{00568\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmaterial__struct}{material\_struct}}\ *\mbox{\hyperlink{structthread__head__struct_a14b07db6ed80e2b7d6f0bcb642ae5b0e}{solid\_material}};}
+\DoxyCodeLine{00569\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structthread__head__struct_a1ceefa0973dc84adc59292e34ec3d464}{num\_material}};}
+\DoxyCodeLine{00570\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structthread__head__struct_a1f9521a539a4f24c400287aa9951ecad}{q\_rad}};\ \textcolor{comment}{/*\ surface-\/to-\/surface\ net\ radiation\ heat\ flux\ for\ thread\ */}}
+\DoxyCodeLine{00571\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structthread__head__struct_a28bc431611295f98da3645bec85751cb}{rad\_sum}};\ \textcolor{comment}{/*\ surface-\/to-\/surface\ radiosity\ sum\ for\ thread\ */}}
+\DoxyCodeLine{00572\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structthread__head__struct_a8d8a4a7d959efc0990f94d96274e4855}{rad\_flag}};\ \textcolor{comment}{/*\ is\ thread\ included\ in\ radiation\ enclosure\ ?\ */}}
+\DoxyCodeLine{00573\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structthread__head__struct_a07e692671961c808ff724b5ce392f513}{vapor\_phase\_realgas}};\ \textcolor{comment}{/*\ thread\ phase\ for\ real-\/gas\ models:\ -\/1\ global\ setting,\ 0\ liquid,\ 1\ vapor\ */}}
+\DoxyCodeLine{00574\ \}\ \mbox{\hyperlink{threads_8h_ab695cb12ac219b318c0242fe1107c880}{Thread\_Head}};}
+\DoxyCodeLine{00575\ }
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\#define\ THREAD\_HEAD\_VAR(\_h)((\_h)-\/>var.thread\_var\_struct\_u)}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#define\ THREAD\_VAR(t)\ THREAD\_HEAD\_VAR(THREAD\_HEAD(t))}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\#define\ THREAD\_TYPE(t)(THREAD\_HEAD(t)-\/>var.type)}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#define\ THREAD\_METHOD(t,f)(THREAD\_HEAD(t)-\/>method.f)}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\#define\ THREAD\_PHASE\_REALGAS(t)\ (THREAD\_HEAD(t)-\/>vapor\_phase\_realgas)}}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\#\ define\ THREAD\_HEAD(t)\ ((struct\ thread\_head\_struct\ *)((t)-\/>head))}}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#\ define\ THREAD\_MATERIAL(t)(THREAD\_HEAD(t)-\/>material)}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#define\ THREAD\_SOLID\_MATERIAL(t)(THREAD\_HEAD(t)-\/>solid\_material)}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#define\ THREAD\_N\_PROFILES(t)\ (THREAD\_HEAD(t)-\/>n\_profiles)}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#define\ THREAD\_PROFILE\_VAR(t,n)\ (THREAD\_HEAD(t)-\/>profile\_vars[n])}}
+\DoxyCodeLine{00589\ \textcolor{comment}{/*\ SOLID\_THREAD\_P\ and\ FLUID\_THREAD\_P\ assume\ <t>\ is\ a\ cell\ thread.}}
+\DoxyCodeLine{00590\ \textcolor{comment}{\ *\ A\ "{}fluid\ thread"{}\ contains\ either\ a\ fluid\ or\ mixture\ material.\ */}}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\#define\ SOLID\_THREAD\_P(t)(MATERIAL\_TYPE(THREAD\_MATERIAL(t))\ ==\ MATERIAL\_SOLID)}}
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\#define\ FLUID\_THREAD\_P(t)(!SOLID\_THREAD\_P(t))}}
+\DoxyCodeLine{00593\ \textcolor{preprocessor}{\#define\ FLUID\_THREAD\_WITH\_NSPE(t)\ \ (FLUID\_THREAD\_P(t)\ \&\&\ THREAD\_NSPE(t))}}
+\DoxyCodeLine{00594\ \textcolor{preprocessor}{\#define\ THREAD\_NSPE(t)MIXTURE\_NSPECIES(THREAD\_MATERIAL(t))}}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\#define\ THREAD\_NSPE\_SURF(t)((rp\_spe\_surf\ ||\ rp\_spe\_part)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MIXTURE\_SURFACE\_NSPECIES(THREAD\_MATERIAL(t))\ :\(\backslash\)}}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0)}}
+\DoxyCodeLine{00598\ \textcolor{preprocessor}{\#define\ THREAD\_NSPE\_SITE(t)((rp\_spe\_surf)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MIXTURE\_SITE\_NSPECIES(THREAD\_MATERIAL(t))\ :\(\backslash\)}}
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0)}}
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\#define\ THREAD\_NSOOTSPE(t)\ ((sg\_soot\ \&\&\ sg\_soot\_mom\ \&\&\ sg\_soot\_mech)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MIXTURE\_SITE\_NSPECIES(THREAD\_MATERIAL(t))\ :\(\backslash\)}}
+\DoxyCodeLine{00603\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0)}}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\#define\ THREAD\_NSOOT\_SPE\_AREA(t)\ ((sg\_soot\ \&\&\ sg\_soot\_mom\ \&\&\ sg\_soot\_mech)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MIXTURE\_SITE\_NSPECIES(THREAD\_MATERIAL(t))\ +\ 1\ :\(\backslash\)}}
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0)}}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\#define\ FLUID\_THREAD\_WITH\_NSOOT(t)\ (FLUID\_THREAD\_P(t)\ \&\&\ (THREAD\_NSOOTSPE(t)\ >\ 0))}}
+\DoxyCodeLine{00608\ }
+\DoxyCodeLine{00609\ \textcolor{preprocessor}{\#define\ THREAD\_MV\_P(t)(THREAD\_HEAD(t)-\/>mv\_p)}}
+\DoxyCodeLine{00610\ }
+\DoxyCodeLine{00611\ \textcolor{preprocessor}{\#define\ THREAD\_RAD(t)(THREAD\_HEAD(t))}}
+\DoxyCodeLine{00612\ }
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\#define\ THREAD\_N\_EQNS(t)(THREAD\_HEAD(t)-\/>n\_eqns)}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#define\ THREAD\_NS0\_EQN(t)(THREAD\_HEAD(t)-\/>ns0\_eqn)}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\#define\ THREAD\_N\_PVT\_EQNS(t)(THREAD\_HEAD(t)-\/>n\_pvt\_eqns)}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\#define\ THREAD\_N\_FLOW\_EQNS(t)(THREAD\_HEAD(t)-\/>n\_flow\_eqns)}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#define\ THREAD\_EQN\_INDEX(t,n)(THREAD\_HEAD(t)-\/>eqn\_index[(n)])}}
+\DoxyCodeLine{00618\ }
+\DoxyCodeLine{00619\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a1b914eefbac9475631755664ecd02a6a}{flow\_boundary\_integrals}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ integral[],\ \textcolor{keywordtype}{int}\ compute);}
+\DoxyCodeLine{00620\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{threads_8h_a1ab0fdff69c5a687e1a40906a4a111cd}{compute\_torque}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{threads_8h_a3a623bd68c99d354e9a93e20950b0281}{Thread\_Type\_Name}}(\textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmaterial__struct_ad792e63b06d3ae6712ac7876ca3f826f}{type}});}
+\DoxyCodeLine{00623\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{threads_8h_a36aa46e06751481ba0eb426d5fe5f3e0}{Set\_Thread\_Type}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29b}{Thread\_Type}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00624\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a3c4bf699a9ec6e8177f6d36de4c79397}{MD\_Set\_Thread\_Type}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{threads_8h_af76279a40630227d0299df66bbafa29b}{Thread\_Type}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00625\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{threads_8h_ac7e52ede9593bca6392cda1707f4bd2b}{Check\_Thread\_Type}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00626\ }
+\DoxyCodeLine{00627\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a1632c9c0fd0466ba83759c6156aba0bb}{MD\_Set\_Thread\_Flags}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00628\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a4bb786878c5eb5d485b48855f59018db}{MD\_Clear\_Thread\_Flags}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00629\ }
+\DoxyCodeLine{00630\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a241d5764cc3eab631316fef24ec3bd87}{Set\_Thread\_Id}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00631\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a02f26356933f94f3032cc9d5af5b8a61}{MD\_Set\_Thread\_T1}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\#if\ SEEM}}
+\DoxyCodeLine{00633\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Thread\_Variables(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00634\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ Get\_Thread\_Derived\_Variables(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00636\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{threads_8h_a7153a18b12eb874346b98f8621ef04be}{Lookup\_Thread}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00637\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{threads_8h_a19c57a648d94e44ad194ae42441c7340}{Lookup\_Thread\_All}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00638\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{threads_8h_a17df4d39938cae6e1e048eeb4852cf5c}{Get\_Thread\_List\_from\_String\_of\_IDs}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ **);}
+\DoxyCodeLine{00639\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a907ebe5df1052665685d7018cb3aa703}{Initialize\_Thread\_All\_Map}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00640\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a9617c21f5808cd0742f32e93457beed5}{Finalize\_Thread\_All\_Map}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ void\ (*\mbox{\hyperlink{threads_8h_ad151bafa9f4606b0466df17ce6169a57}{Thread\_Default}}\ (\textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmaterial__struct_ad792e63b06d3ae6712ac7876ca3f826f}{type}}))(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00643\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a3cd4445c49fcd04513a62cdeae67d8b8}{Thread\_Null\_Default}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00644\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_ad595b371b1fe126e56fa3b890a30bdd4}{thread\_null\_update}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a932bf3daa8baba733f2d3ef38e956521}{thread\_null\_storage}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00647\ }
+\DoxyCodeLine{00648\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{threads_8h_a52510ebd827acfa119edf385257d5927}{Thread\_Id\_Used\_P}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00649\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{threads_8h_ae990a8483410a9b46d5acdd369168eff}{Next\_Thread\_Id}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00650\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{threads_8h_aa5ee9be90fa2dc009787f68393f9f168}{Current\_Thread\_Id}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00651\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{threads_8h_a8e6de063c6a47b34846eb902ab1b981d}{Next\_tmp\_Thread\_Id}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00652\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{threads_8h_a53dd7869da13e57f63c7e2e280c90401}{Max\_Thread\_Id}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00653\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_ab7b51f4c3e574ea3a95223841ae20641}{Reset\_Max\_Thread\_Id}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00654\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a6678027d372251d4e1904f4b272c85d7}{Reset\_Thread\_Id}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00655\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a485f2041a8866b2efb709cf590026664}{Fill\_Reserved\_Thread\_Id\_List}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00656\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a4c8a721c4cb6bbe93a7fad38f575082c}{Free\_Reserved\_Thread\_Id\_List}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_ade29ebfc4f62f175cb90b2733c485a0a}{Thread\_Set\_Profile\_Var}}(\textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00659\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_ab5a8f401d7b98e539421864cdf5259ba}{Thread\_Set\_Profile\_Only\_Var}}(\textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00660\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a90a6c430aad20454d44e235e28670ba4}{Thread\_Set\_Const\_Profile\_Var}}(\mbox{\hyperlink{structthread__profile__struct}{Profile}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00661\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a38499488af0f504277d75f0bf229b715}{Thread\_Set\_Non\_Const\_Profile\_Var}}(\textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00662\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a6e0b280aacd49cb42c79102ca86f5915}{Thread\_Set\_Profile\_List\_Var}}(\textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ *,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00663\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_aac5150d829c77923fcb4b6615aa38760}{Thread\_Set\_Profile\_List\_UDS\_Var}}(\textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{structthread__profile__struct}{Profile}}\ *,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00664\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_afb74364fd54ba3e7f3fb1eb73d055e93}{Thread\_Set\_Real\_Var}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00665\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a2b7c02a98a12ef7d77b62b9f0bcdc750}{Thread\_Set\_Real\_List\_Var}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00666\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a9487215adc626ab7e51c4c060038a7af}{Thread\_Set\_Real\_Matrix\_Var}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structobj}{Pointer}},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00667\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a4057c2e9ce36eb8a9284359dd1d2e9d1}{Thread\_Set\_Int\_Var}}(\textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00668\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_abf25e5256b204e065577eb1ec2ec39a4}{Thread\_Set\_Int\_Var\_byString}}(\textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \textcolor{keywordtype}{char}\ strlst[][\mbox{\hyperlink{threads_8h_a6cd1e601492156da81c4944a9635ed4a}{OPT\_STR\_VAR\_VAL\_LEN}}]);}
+\DoxyCodeLine{00669\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a4b02109eb1dff6a3c8c9397389304b5e}{Thread\_Set\_Int\_List\_Var}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00670\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a5444673a07a44b98a535523cc944fa5e}{Thread\_Set\_Int\_List\_UDS\_Var}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00671\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a1d4dcab31dc77e4fa3b4e859a8e0db28}{Thread\_Set\_Boolean\_Var}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00672\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_af694f7a87efec501609d40ccd601e7a2}{Thread\_Set\_String\_Var}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00673\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a83f4aa2a5faa9718fbafac04852e29e8}{Thread\_Set\_Polynomial\_Var}}(\mbox{\hyperlink{structpolynomial__struct}{Polynomial}}\ *\mbox{\hyperlink{structmaterial__struct_a3dac7b6120f7e1a47eed531b46586f63}{p}},\ \mbox{\hyperlink{structobj}{Pointer}}\ value);}
+\DoxyCodeLine{00674\ }
+\DoxyCodeLine{00675\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{threads_8h_a3078bd0e8ea203a14d73e2fd7e19fd2d}{Flow\_BC\_Set\_Var}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structmaterial__struct_a4d7ffa5ffa053d42198bb456d58e34bf}{name}},\ \mbox{\hyperlink{structobj}{Pointer}}\ value);}
+\DoxyCodeLine{00676\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_aeb5f9425401b0b8bfc0d161e0ec07a27}{Flow\_BC\_Update\_Profiles}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00677\ }
+\DoxyCodeLine{00678\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{threads_8h_ae40375792bb2fe63558d5fc58739dc8c}{Solve\_Face\_Thread\_P}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *d);}
+\DoxyCodeLine{00679\ }
+\DoxyCodeLine{00680\ \textcolor{comment}{/*\ Note:\ wrap\ with\ braces\ when\ needed\ */}}
+\DoxyCodeLine{00681\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\#\ define\ PRIMITIVE\_ERROR(arg\_list)\ \{Message\ arg\_list;\ return;\}\ }\textcolor{comment}{/*\ don't\ use\ ;\ after\ this.\ It\ will\ trigger\ an\ warning!*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00683\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\#\ define\ PRIMITIVE\_ERROR(arg\_list)\ \{Error\ arg\_list;\}}}
+\DoxyCodeLine{00685\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\#define\ EXPAND\_INTEGRAL\_helper(i,s,base)INTEGRAL\_\#\#base\#\#\_\#\#i}}
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{\#define\ EXPAND\_FLUX\_C\_helper(i,s,base)FLUX\_C\_\#\#base\#\#\_\#\#i}}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\#define\ EXPAND\_NPHASE\_INTEGRAL(base)\ EXPAND\_0\_TO\_4(EXPAND\_INTEGRAL\_helper,base)}}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\#define\ EXPAND\_NPHASE\_FLUX\_C(base)\ EXPAND\_0\_TO\_4(EXPAND\_FLUX\_C\_helper,base)}}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\#define\ EXPAND\_NELEM\_INTEGRAL(base)\ EXPAND\_0\_TO\_9(EXPAND\_INTEGRAL\_helper,base)}}
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\#define\ EXPAND\_NUDS\_INTEGRAL(base)\ EXPAND\_0\_TO\_49(EXPAND\_INTEGRAL\_helper,base)}}
+\DoxyCodeLine{00693\ }
+\DoxyCodeLine{00694\ \textcolor{comment}{/*\ integral\ types\ (indices\ into\ integral[]\ array)\ */}}
+\DoxyCodeLine{00695\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00696\ \{}
+\DoxyCodeLine{00697\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805dab3a46bd7da9b45c74e240e7e612fdf36}{INTEGRAL\_FLUX\_MASS}}\ =\ 0,}
+\DoxyCodeLine{00698\ \ \ \mbox{\hyperlink{threads_8h_aeda18f0d69f184bbae746807595e3333}{EXPAND\_NUDS\_INTEGRAL}}(UDS\_FLUX),}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\#define\ INTEGRAL\_UDS\_FLUX\ INTEGRAL\_UDS\_FLUX\_0}}
+\DoxyCodeLine{00700\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da1340564a7a78deba8dc377d84da9f298}{INTEGRAL\_FLUX\_HEAT}},}
+\DoxyCodeLine{00701\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da9276f5f7cd377ad301d6b0c63ed1155b}{INTEGRAL\_FLUX\_HEAT\_SENSIBLE}},}
+\DoxyCodeLine{00702\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805daa575c09afd143a19859ddf2d715fa190}{INTEGRAL\_FORCE\_PRESSURE\_X}},}
+\DoxyCodeLine{00703\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805dafd7229eb2e13f403400614d9daf3f31d}{INTEGRAL\_FORCE\_PRESSURE\_Y}},}
+\DoxyCodeLine{00704\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805dadbc31f85c158742cc8b5d6de422c879a}{INTEGRAL\_FORCE\_PRESSURE\_Z}},}
+\DoxyCodeLine{00705\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da2ddc05685765c9673098fd9bd84ab1c6}{INTEGRAL\_MOMENT\_PRESSURE\_X}},}
+\DoxyCodeLine{00706\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da8f557d1f01bb83d36dfccc4e8a83ee4d}{INTEGRAL\_MOMENT\_PRESSURE\_Y}},}
+\DoxyCodeLine{00707\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805daadd40425a1797c465c80d5e27e93ee0a}{INTEGRAL\_MOMENT\_PRESSURE\_Z}},}
+\DoxyCodeLine{00708\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da67ce41f307f20febbc84580666609d6c}{INTEGRAL\_FORCE\_VISCOUS\_X}},}
+\DoxyCodeLine{00709\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da3650e950db81290c8984f67029f58138}{INTEGRAL\_FORCE\_VISCOUS\_Y}},}
+\DoxyCodeLine{00710\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805daff553e0db87136c1b82e5b85ee3fb5fc}{INTEGRAL\_FORCE\_VISCOUS\_Z}},}
+\DoxyCodeLine{00711\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805dab7033ec8a97b0ebb00fe8e4e51821b60}{INTEGRAL\_MOMENT\_VISCOUS\_X}},}
+\DoxyCodeLine{00712\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da2e8e15d9f0aed0e0dd5cc55aa8849ce1}{INTEGRAL\_MOMENT\_VISCOUS\_Y}},}
+\DoxyCodeLine{00713\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da8326aba35b10608e5524f8eea0e8b63c}{INTEGRAL\_MOMENT\_VISCOUS\_Z}},}
+\DoxyCodeLine{00714\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805dad2df5dfb1a5b43f6456b84bd7cd001ff}{INTEGRAL\_INPUT\_VECTOR\_X}},}
+\DoxyCodeLine{00715\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da1e977e36ff3ddfb306e7e2c88c0ff0d6}{INTEGRAL\_INPUT\_VECTOR\_Y}},}
+\DoxyCodeLine{00716\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da91faa250e5630690fb0ecb984835b0de}{INTEGRAL\_INPUT\_VECTOR\_Z}},}
+\DoxyCodeLine{00717\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805daf01c273a720522189cec853b040c6867}{INTEGRAL\_FLUX\_HEAT\_RAD}},}
+\DoxyCodeLine{00718\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da67fd63d7992580e5cd02750cd2cbc678}{INTEGRAL\_FLUX\_TORQUE}},}
+\DoxyCodeLine{00719\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da1d616342d61e534898a267553433ab30}{INTEGRAL\_FLUX\_T\_ENTHALPY}},}
+\DoxyCodeLine{00720\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805da342d64265ad9475b20666715c507b0e7}{INTEGRAL\_FLUX\_FILM\_MASS}},}
+\DoxyCodeLine{00721\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805daa7180fcd73858df2a4a13f2ff2f65110}{INTEGRAL\_FLUX\_FILM\_HEAT}},}
+\DoxyCodeLine{00722\ \ \ \mbox{\hyperlink{threads_8h_a57650f64da1d1e6ad2ab550013b00715}{EXPAND\_NELEM\_INTEGRAL}}(ELEM\_FLUX),}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\#define\ INTEGRAL\_ELEM\_FLUX\ INTEGRAL\_ELEM\_FLUX\_0}}
+\DoxyCodeLine{00724\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805dafebdecc4ed30bd3a8c19a2665000e349}{INTEGRAL\_MASS\_FLUX\_Y}},\ \textcolor{comment}{/*\ INTEGRAL\_MASS\_FLUX\_Y\ must\ always\ be\ the\ last\ */}}
+\DoxyCodeLine{00725\ \ \ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805dac4f8fc4c60f26ebf4ba59311997e728d}{INTEGRAL\_TYPE\_MAX}}}
+\DoxyCodeLine{00726\ \}\ \mbox{\hyperlink{threads_8h_aa53dd83d5a67f9c05a274600e2c6805d}{Integral\_Type}};}
+\DoxyCodeLine{00727\ }
+\DoxyCodeLine{00728\ \textcolor{comment}{/*\ flux\ function\ "{}compute"{}\ values\ */}}
+\DoxyCodeLine{00729\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00730\ \{}
+\DoxyCodeLine{00731\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6ab07ff5dae52d597a12f5dff79bea9643}{FLUX\_C\_RESIDUALS}},\ \ \ \textcolor{comment}{/*\ residual\ contributions\ */}}
+\DoxyCodeLine{00732\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a77fae28e83b19ea0a412f7f36c9eddfc}{FLUX\_C\_INTEGRALS}},\ \ \ \textcolor{comment}{/*\ integral\ contributions\ */}}
+\DoxyCodeLine{00733\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6ac16d9365a16795648214537d5aa27ebf}{FLUX\_C\_YPLUS}},\ \ \ \ \ \textcolor{comment}{/*\ y-\/plus\ contour\ values\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00734\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6ac6b6bb86bb85e930278cabd33cc998a7}{FLUX\_C\_WALL\_SHEAR}},\ \ \ \ \textcolor{comment}{/*\ wall-\/shear\ contour\ values\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00735\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a252607a7ebe34c802c1e656ed8d2fd8b}{FLUX\_C\_WALL\_SHEAR\_MEAN}},\ \textcolor{comment}{/*\ mean\ wall-\/shear\ contour\ values\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00736\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a774cef83b4667f2752471241b50c875c}{FLUX\_C\_WALL\_HEAT\_TRANSFER}},\ \ \ \ \textcolor{comment}{/*\ wall\ heat-\/transfer\ coeficient\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00737\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a679762d3d705508796f79fd6ffd6650a}{FLUX\_C\_WALL\_HEAT\_TRANSFER\_WALL\_ADJ}},\ \textcolor{comment}{/*heat\ transfer\ coeff\ based\ on\ adjacent\ wall*/}}
+\DoxyCodeLine{00738\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a944d29a448ffce0a0a02983560777bd6}{FLUX\_C\_WALL\_HEAT\_TRANSFER\_MEAN}},\ \ \ \ \textcolor{comment}{/*\ mean\ wall\ heat-\/transfer\ coeficient\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00739\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a3f5f85ad86d8dde8bd0959619b1e9467}{FLUX\_C\_WALL\_FUNCT\_BASED\_HTC}},\ \ \textcolor{comment}{/*\ heat-\/trans.\ coef.\ based\ on\ turbulent\ wall\ funct(fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00740\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a0f1ea07b75f922aeef48fe284c07d57a}{FLUX\_C\_WALL\_HEAT\_FLUX}},\ \ \textcolor{comment}{/*\ wall\ heat-\/flux\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00741\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a261847d38d5578c1b1d00c79e2f6f314}{FLUX\_C\_WALL\_HEAT\_FLUX\_MEAN}},\ \textcolor{comment}{/*\ mean\ wall\ heat-\/flux\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00742\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a3acd3420b8b0b6d45f091e6445d575c5}{FLUX\_C\_WALL\_NUSSELT\_NUMBER}},\ \ \ \textcolor{comment}{/*\ wall\ Nusselt\ number=\ h\_eff*L\_ref/k\_eff\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00743\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a406a679b50f0a581558ad8ede06fd0e7}{FLUX\_C\_WALL\_NUSSELT\_NUMBER\_MEAN}},\ \ \ \textcolor{comment}{/*\ mean\ wall\ Nusselt\ number=\ h\_eff*L\_ref/k\_eff\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00744\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6ab0fa17684ed4cf2654d2826397650081}{FLUX\_C\_WALL\_STANTON\_NUMBER}},\ \ \ \textcolor{comment}{/*\ wall\ Stanton\ number=\ h\_eff/(rho*U*Cp)\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00745\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6ae6012ae6de44249f8cc1434eab2fd9ad}{FLUX\_C\_WALL\_STANTON\_NUMBER\_MEAN}},\ \ \ \textcolor{comment}{/*\ mean\ wall\ Stanton\ number=\ h\_eff/(rho*U*Cp)\ (fill\ C\_TMP)\ */}}
+\DoxyCodeLine{00746\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a6a741ac2c59c184f6fd14ed8d41b7a5f}{FLUX\_C\_WALL\_SHEAR\_X}},\ \ \ \ \textcolor{comment}{/*\ x-\/wall-\/shear\ contour\ values\ */}}
+\DoxyCodeLine{00747\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6aacef779ccdd0bc109c10ce39534a141b}{FLUX\_C\_WALL\_SHEAR\_Y}},\ \ \ \ \textcolor{comment}{/*\ x-\/wall-\/shear\ contour\ values\ */}}
+\DoxyCodeLine{00748\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6abe0fe92e137819887dbd5d0d4047de7a}{FLUX\_C\_WALL\_SHEAR\_Z}},\ \ \ \ \textcolor{comment}{/*\ x-\/wall-\/shear\ contour\ values\ */}}
+\DoxyCodeLine{00749\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a5ef651e2bdd750713b286945478cf01d}{FLUX\_C\_WALL\_SHEAR\_X\_MEAN}},\ \textcolor{comment}{/*\ mean\ x-\/wall-\/shear\ contour\ values\ */}}
+\DoxyCodeLine{00750\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6ae112c61f07b4f8d0e0f27c9a9806b565}{FLUX\_C\_WALL\_SHEAR\_Y\_MEAN}},\ \textcolor{comment}{/*\ mean\ y-\/wall-\/shear\ contour\ values\ */}}
+\DoxyCodeLine{00751\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6ac1bfd6ec0e8bf522d91236acadcc5c50}{FLUX\_C\_WALL\_SHEAR\_Z\_MEAN}},\ \textcolor{comment}{/*\ mean\ z-\/wall-\/shear\ contour\ values\ */}}
+\DoxyCodeLine{00752\ }
+\DoxyCodeLine{00753\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a8f4f1246175537b44f02bf4f35194193}{FLUX\_C\_WALL\_TEMP\_OUTER\_SURF}},\ \ \textcolor{comment}{/*\ wall-\/temperature\ on\ c0\ */}}
+\DoxyCodeLine{00754\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a44307b1189f90e8990d5f99a39e8d86a}{FLUX\_C\_WALL\_TEMP\_INNER\_SURF}},\ \ \textcolor{comment}{/*\ wall-\/temperature\ on\ c1\ */}}
+\DoxyCodeLine{00755\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a478e674f1ad6196a86e7519d989da5ca}{FLUX\_C\_WALL\_EXT\_TEMP\_SHELL}},\ \textcolor{comment}{/*temperature\ on\ external\ planar\ wall*/}}
+\DoxyCodeLine{00756\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6ac31914b3265852a95d3d00c68db727e4}{FLUX\_C\_WALL\_ADJ\_TEMP\_SURF}},\ \textcolor{comment}{/*wall\ adjacent\ temperature*/}}
+\DoxyCodeLine{00757\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a48a0a5faac0b1e613f59acb6a5c56eb1}{FLUX\_C\_NODES}},\ \ \ \ \ \textcolor{comment}{/*\ forces\ accumulated\ at\ nodes\ */}}
+\DoxyCodeLine{00758\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a3b8d394ef2bf10c0dd6b49e5a1e13616}{FLUX\_JUMP\_FACE\_FORCE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ face\ forces\ at\ jump\ boundaries*/}}
+\DoxyCodeLine{00759\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a0f711b1d0f7d943b7e99a63420629e3f}{FLUX\_WALL\_FACE\_FORCE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ force\ accumulation\ at\ face\ */}}
+\DoxyCodeLine{00760\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6afa2179150220ae75c388fa9340893eb4}{FLUX\_WALL\_NODE\_FORCE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ average\ force\ at\ node\ */}}
+\DoxyCodeLine{00761\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a1a97912443518eb6670155eae4b923d1}{FLUX\_JUMP\_NODE\_FORCE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*average\ force\ at\ face\ node\ at\ jump\ boundary*/}}
+\DoxyCodeLine{00762\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6af6c7ded8da7abe9f70da069a014aa418}{FLUX\_C\_WALL\_RAD\_HEAT\_FLUX}},\ \ \textcolor{comment}{/*\ radiation\ heat\ flux\ */}}
+\DoxyCodeLine{00763\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6acc749f5a65ef388eb74df144fe84be50}{FLUX\_C\_YPLUS\_UTAU}},\ \ \ \ \textcolor{comment}{/*\ y-\/plus\ contour\ values\ */}}
+\DoxyCodeLine{00764\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6aa50d2915c63a7efd2dc4a4d38a16158c}{FLUX\_C\_FACE\_FLUX}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ face-\/flux\ contributions\ */}}
+\DoxyCodeLine{00765\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a86a2fec128702b0ab4738de4fc8c3ec7}{FLUX\_C\_FACE\_FLUX\_MASS\_BAL}},\ \ \ \ \textcolor{comment}{/*\ face-\/flux\ contributions\ and\ mass\ balance\ */}}
+\DoxyCodeLine{00766\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6aea067483332d89660bb8dc7a4e06960c}{FLUX\_C\_WALL\_INCIDENT\_RADIATION}},\textcolor{comment}{/*\ Q\_minus\ in\ sg\_disco\ */}}
+\DoxyCodeLine{00767\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a0fbfd508055e331bc72abedf3c34862a}{FLUX\_C\_BOUNDARY\_VALUES}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ update\ b.c.\ dependent\ values\ at\ boundary\ */}}
+\DoxyCodeLine{00768\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a8b6149a1fd51fc0e8a8d90239363662f}{FLUX\_C\_TORQUE}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ torque\ on\ boundary\ for\ swirl\ cons.\ in\ MP\ */}}
+\DoxyCodeLine{00769\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6aceb7971b0d1f23e025578939b1a9de13}{FLUX\_C\_T\_ENTHALPY}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ total\ enthalpy\ integration\ for\ MP\ */}}
+\DoxyCodeLine{00770\ }
+\DoxyCodeLine{00771\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a72ec928cb10dc7898badd2fc7ec04020}{SKIN\_FRICTION\_COEFF}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Skin\ Friction\ Coefficient\ */}}
+\DoxyCodeLine{00772\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a49ef5fdce4a1fba8e7b83083193b5096}{SKIN\_FRICTION\_MEAN\_COEFF}},\ \ \ \ \ \ \textcolor{comment}{/*\ Skin\ Friction\ Mean\ Coefficient\ */}}
+\DoxyCodeLine{00773\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6a6791edfa79d50522398b1f3d0933eda5}{FORCE\_MOMENT\_VECTOR}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ For\ things\ related\ to\ force\ monitor\ only\ */}}
+\DoxyCodeLine{00774\ }
+\DoxyCodeLine{00775\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6abcf790bc2ed761bc1543182122fa51fb}{FLUX\_C\_WALL\_EVAP\_FLUX}},\ \ \ \ \ \ \ \textcolor{comment}{/*\ \ evaporation\ heat\ flux\ in\ boiling\ model\ */}}
+\DoxyCodeLine{00776\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6affdabdfa20145752bcaba5834662b4ae}{FLUX\_C\_WALL\_THIN\_FILM\_FLUX}},\ \ \textcolor{comment}{/*\ \ thin\ liquid\ film\ heat\ flux\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00777\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6af17dcccd854eaba0028461cc1030c839}{FLUX\_C\_WALL\_QUENCH\_FLUX}},\ \ \ \ \ \textcolor{comment}{/*\ \ quench\ heat\ flux\ in\ boiling\ model\ \ \ \ \ */}}
+\DoxyCodeLine{00778\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6aff077017f3f8bca5ab103f880b718ac5}{FLUX\_C\_WALL\_LIQUID\_FLUX}},\ \ \ \ \ \textcolor{comment}{/*\ \ liquid\ phase\ heat\ flux\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00779\ \ \ \mbox{\hyperlink{threads_8h_ac1351f3e26da80ee24b2888ecc68fca6ad2d04befbaee0e82a10debb910d0616f}{FLUX\_C\_WALL\_VAPOR\_FLUX}}\ \ \ \ \ \ \ \textcolor{comment}{/*\ \ vapor\ \ phase\ heat\ flux\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00780\ \};}
+\DoxyCodeLine{00781\ }
+\DoxyCodeLine{00782\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a12019388e68eb27173d69e3ecc8f8783}{fluid\_inviscid\_flux\_jacobians}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\textcolor{keyword}{const}\ t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ w[],}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ r,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea5008b1179f399a2273fd3f6a7fc3b292}{H}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ flux\_w,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ flux\_g,}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\textcolor{keyword}{const}\ A,}
+\DoxyCodeLine{00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ a0[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ a1[]);}
+\DoxyCodeLine{00786\ }
+\DoxyCodeLine{00787\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a9843bad0395e4bfcf3f4241dfb7a92f9}{po\_inviscid\_flux\_jacobian}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ w[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ r,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea5008b1179f399a2273fd3f6a7fc3b292}{H}},}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ flux\_w,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ flux\_g,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ A[],}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ isupr);}
+\DoxyCodeLine{00791\ }
+\DoxyCodeLine{00792\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_aef3a56a1a7ae018032769bddbfe75808}{pi\_inviscid\_flux\_jacobian}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ w[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ r,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea5008b1179f399a2273fd3f6a7fc3b292}{H}},}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ flux\_w,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ flux\_g,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ A[],}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{const_8h_a5c71a5e59a53413cd6c270266d63b031}{R}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Cp,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ni[],}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ideal\_gas,}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ use\_extrap\_pressure);}
+\DoxyCodeLine{00798\ }
+\DoxyCodeLine{00799\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{threads_8h_a1b3460ac4549bbee4997fdcf10c11579}{fluid\_dissipation\_flux\_jacobian}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\textcolor{keyword}{const}\ t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ w[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea5008b1179f399a2273fd3f6a7fc3b292}{H}},}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ur2,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ V,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ r,}
+\DoxyCodeLine{00801\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ eig\_V,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ eig\_p,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ eig\_m,}
+\DoxyCodeLine{00802\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cxlist_8h_a0e3ff7bc014519abed62f9bc228b314b}{At}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\textcolor{keyword}{const}\ A,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ d[]);}
+\DoxyCodeLine{00803\ }
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_THREADS\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

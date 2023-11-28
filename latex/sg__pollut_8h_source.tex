@@ -1,0 +1,409 @@
+\doxysection{sg\+\_\+pollut.\+h}
+\hypertarget{sg__pollut_8h_source}{}\label{sg__pollut_8h_source}\index{fluent20.1.0/src/species/sg\_pollut.h@{fluent20.1.0/src/species/sg\_pollut.h}}
+\mbox{\hyperlink{sg__pollut_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_SG\_POLLUT\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_SG\_POLLUT\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ Define\ constants,\ macros\ and\ prototypes\ for\ pollutants\ */}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ MAX\_FUEL\_STREAMS\ 3\ \ \ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}pollut/max-\/fuel-\/streams"{}\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ MAX\_FUEL\_SPEC\ \ \ 10\ \ \ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}nox/max-\/fuel-\/spec"{}\ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ MAX\_FSPE\_STREAM\ \ 5\ \ \ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}nox/max-\/fspe-\/stream\ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ MAX\_RBFUEL\_SPEC\ \ 5\ \ \ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}nox/max-\/rbfuel-\/spec"{}\ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ MAX\_SOOT\_PREC\ \ \ \ 5\ \ \ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}soot/max-\/prec-\/spec"{}\ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ MAX\_SGROW\_SPEC\ \ \ 5\ \ \ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}soot/max-\/sgs-\/spec"{}\ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ MAX\_SOOT\_FUEL\ \ \ \ 3\ \ \ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}soot/max-\/soot-\/fuel"{}\ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ MAX\_PREC\_COEFF\ \ 34\ \ \ }\textcolor{comment}{/*\ 1\ +\ 3*11\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ MAX\_REAC\_FUEL\ \ \ 11\ \ \ }\textcolor{comment}{/*\ Number\ of\ rates\ in\ fuel\ NOx\ model\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ MAX\_REAC\_SNCR\ \ \ 10\ \ \ }\textcolor{comment}{/*\ Number\ of\ rates\ in\ sncr\ model\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ MAX\_REAC\_SOX\ \ \ \ 24\ \ \ }\textcolor{comment}{/*\ Number\ of\ rates\ in\ SOx\ model\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ Define\ NULL\ Species\ Index\ */}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ POLLUT\_NULL\_SPECIES\_INDEX\ -\/1}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SV\_SOOT\_MOM\_I(i)\ ((Svar)\ ((SV\_SOOT\_MOM\_0+(i)*(SV\_SOOT\_MOM\_1-\/SV\_SOOT\_MOM\_0))))}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SV\_SOOT\_MOM\_M1(i)\ ((Svar)\ (SV\_SOOT\_MOM\_I(i)\ +SV\_SOOT\_MOM\_0\_M1-\/SV\_SOOT\_MOM\_0))}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ SV\_SOOT\_MOM\_M2(i)\ ((Svar)\ (SV\_SOOT\_MOM\_I(i)\ +SV\_SOOT\_MOM\_0\_M2-\/SV\_SOOT\_MOM\_0))}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ SV\_SOOT\_MOM\_AGG\_I(i)\ ((Svar)\ ((SV\_SOOT\_MOM\_AGG\_0+\ (i)*(SV\_SOOT\_MOM\_AGG\_1-\/SV\_SOOT\_MOM\_AGG\_0))))}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ SV\_SOOT\_MOM\_AGG\_M1(i)\ ((Svar)\ ((SV\_SOOT\_MOM\_AGG\_I(i)\ +(SV\_SOOT\_MOM\_AGG\_0\_M1-\/SV\_SOOT\_MOM\_AGG\_0))))}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ SV\_SOOT\_MOM\_AGG\_M2(i)\ ((Svar)\ ((SV\_SOOT\_MOM\_AGG\_I(i)\ +(SV\_SOOT\_MOM\_AGG\_0\_M2-\/SV\_SOOT\_MOM\_AGG\_0))))}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{/*\ Scalar\ equations\ solved\ for\ pollutants\ */}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea654c15763f7edd7cbf5bb64f4445cd97}{EQ\_NO}}\ =\ 0,}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea737a8951e4a075a8366c339710bf2a3a}{EQ\_HCN}},}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779eaa87af636927304407c78f3f05aa45aa4}{EQ\_NH3}},}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779eaab016d30609f8b783f18eb6dde4112aa}{EQ\_N2O}},}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea868a69691b2ac4108f3db65dc79e1d5d}{EQ\_UREA}},}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea272f46b75725d4349995fb07ab26e204}{EQ\_HNCO}},}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea099a9855392d248540976d4919dcec01}{EQ\_NCO}},}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779eae8a70d5cf9cc85ba3c076c4b6bf1ffdd}{EQ\_SO2}},}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea7279cd5ba4b19805dbd2eb8cf9264155}{EQ\_H2S}},}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea4b5b0d4caa5e12f890e74bf9d8d417f9}{EQ\_SO3}},}
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779eaedbe954503de2c749245ffb4abde375a}{EQ\_SH}},}
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea58c5f09af54d9e8cfe3344f81411b425}{EQ\_SO}},}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea724d8bef7bd80c65928b6b68e576fc87}{EQ\_SOOT}},}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea49a43f97048a5b28d4df1b1402e730b1}{EQ\_NUCLEI}},\ \textcolor{comment}{/*This\ ID:13\ has\ been\ used\ in\ rfcell.scm\ to\ identify\ this\ eq-\/name.\ In\ case\ of\ modification,\ make\ sure\ to\ update\ the\ scheme\ file\ also*/}}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ead8bbac13ee10d41480af24db68af59be}{EQ\_CTAR}},}
+\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779eab16f5f38ae9c193c0495e70a29a71375}{EQ\_HG}},}
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779eabaca877b0f0ae7abd129be2cdc29d29a}{EQ\_HGCL2}},}
+\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779eaa149155961d21477c94ee6ee2b56fa42}{EQ\_HCL}},}
+\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea126eae50998502bc3b3ae0982642b5f9}{EQ\_HGO}},}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea070b6705500aa1c110f610190ca9c33d}{EQ\_CL}},}
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779eaaa71ba6345f73acc3b3803260e644f41}{EQ\_CL2}},}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779eabea593ad26de8319cf5edb9177dfde6c}{EQ\_HGCL}},}
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779ea6dcd4f7f37bf18ac9bb1a209b6aaf989}{EQ\_HOCL}}}
+\DoxyCodeLine{00059\ \}\ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779e}{EQ\_Pollut}};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ IT\_NOX\_START\ \ \ \ EQ\_NO}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ IT\_SOX\_START\ \ \ \ EQ\_SO2\ \ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}pollut\_sox/eq\_start"{}\ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ IT\_SOOT\_START\ \ \ EQ\_SOOT\ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}pollut\_soot/eq\_start"{}\ 2\ places*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ IT\_HG\_START\ \ \ \ \ EQ\_HG\ \ \ }\textcolor{comment}{/*\ Make\ sure\ to\ modify\ rpvar\ "{}pollut\_hg/eq\_start"{}\ 2\ places*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ \ Please\ make\ sure\ that\ you\ update\ storage.h,\ sg\_mem.h\ and\ sg\_pdf.c}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ \ according\ to\ the\ enumerations\ defined\ below.\ Also\ look}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ \ for\ SV\_PDF\_xxx\ and\ update\ their\ occurances.}}
+\DoxyCodeLine{00070\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00071\ \textcolor{comment}{/*The\ enum\ should\ be\ defined\ in\ a\ way\ that\ for\ a\ given\ equation,\ all\ options\ should\ be\ together*/}}
+\DoxyCodeLine{00072\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a1369338ba5c421100cd83a77aa3b55bf}{NO\_THERMAL}},}
+\DoxyCodeLine{00075\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302af68f2424aed31a5455bf807d7a5f8c30}{NO\_PROMPT}},}
+\DoxyCodeLine{00076\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a64a0eb1b0060573a004166629f2f759f}{NO\_FUEL\_HCN}},}
+\DoxyCodeLine{00077\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a049429f16cff78168121a07dd68585fe}{NO\_FUEL\_NH3}},}
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302adcabba137cf7934f01bd8eec34a8fe3b}{NO\_N2O}},}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a7c99a2bc2880ae005425bac9fde2dc1a}{NO\_REBURN}},}
+\DoxyCodeLine{00080\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a4185e508ac0cbb81f2d12141d0c7c091}{NO\_SNCR\_NH3}},}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302aa14940009cb104657034ed9f828c5bbe}{NO\_SNCR\_NCO}},}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302ab66fc866fad60b0e1b89745c4c6ed651}{HCN\_FUEL}},}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a72f97bd80998bce63dacbe883366c5ce}{HCN\_REBURN}},}
+\DoxyCodeLine{00084\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a32ae89d43816c2cbb98eca94a2745e18}{NH3\_FUEL}},}
+\DoxyCodeLine{00085\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a2c3ba55e0298e6198e59a2030375f98b}{NH3\_SNCR}},}
+\DoxyCodeLine{00086\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a78d1dfd6602bbe1700dd848ec89777a8}{NH3\_SNCR\_UREA}},}
+\DoxyCodeLine{00087\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302afc872d0a09e8bf436e3fe4ad90242604}{N2O\_SELF}},}
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302ac2d2553e729342cda114e985f10685c3}{N2O\_SNCR}},}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a97f2cded169dd03a41f68367d7ad6516}{UREA\_SNCR}},}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302ad102a2416467829c86b7d3c9c11c81a7}{HNCO\_SNCR}},}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a8345e193f46fbdf099104dab9586e44f}{NCO\_SNCR}},}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a72c7d6005d327747353de809b85421fa}{SOOT\_YI}},}
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302ad878690ed0f426d2f7eacb47cd1d249f}{SOOT\_YI\_NUC\_USER}},}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a524ea4987e158684668b42d9ebf83fdd}{SOOT\_YI\_SGS\_USER}},}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a306c87ed7078035a6827cd6bfd13e734}{SOOT\_YI\_OXID\_USER}},}
+\DoxyCodeLine{00096\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302af770acce61adb1dda742c5e752786fcf}{SOOT\_NUC}},}
+\DoxyCodeLine{00097\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a0589a4ee40191aff91d0f527df4fbe33}{SOOT\_NUC\_NUC\_USER}},}
+\DoxyCodeLine{00098\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302aa47c8a3b0b07cdb32331236861ab5921}{SOOT\_NUC\_COAG\_USER}},}
+\DoxyCodeLine{00099\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302aa6da7fd341833deab6b3f9053b255e5b}{POLLUT\_USER}},}
+\DoxyCodeLine{00100\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a2c4585727151e7e7b8b11f253e74feff}{MULTI\_NO}},}
+\DoxyCodeLine{00101\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a89c225ea9fbdc6e13020ab2499c538b7}{MULTI\_HCN}},}
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a44d95aa7a31f80088bf3dfcce17a309e}{MULTI\_NH3}},}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302acecdfd61721ff6485cb460d10637735e}{MULTI\_N2O}},}
+\DoxyCodeLine{00104\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302aeb4650505b77e1e0934d8b552c6aa92f}{MULTI\_UREA}},}
+\DoxyCodeLine{00105\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302aee6992056da148126d5763112c7c2a50}{MULTI\_HNCO}},}
+\DoxyCodeLine{00106\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a2ffabd13ca40146e645acf2584a1bcf7}{MULTI\_NCO}},}
+\DoxyCodeLine{00107\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a7956101fb53f0e9645dbbfbfcf9afce0}{MULTI\_SOOT}},}
+\DoxyCodeLine{00108\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302ae91a0e0521533d3d36229fb6fa26117f}{MULTI\_NUCLEI}},}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a4721d78e712cfe49be946e8aae769882}{MAX\_POLLUT\_INDEX}}\ \textcolor{comment}{/*if\ any\ change\ here,\ modify\ it\ in\ pdf\_props.h:\ need\ to\ fix\ this*/}}
+\DoxyCodeLine{00110\ \}\ \mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302}{Pollut\_Vars\_Index}};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00113\ \{}
+\DoxyCodeLine{00114\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea8bda58832a68157abbcdcbb92f2e797c}{FUEL}}\ =\ 0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Fuel\ specie\ index\ for\ Prompt\ model*/}}
+\DoxyCodeLine{00115\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eac8f48b0f26e2312f65a82ab7ced0d3e5}{RBFUEL}}\ =\ \mbox{\hyperlink{sg__pollut_8h_a052ac8937917d58da8f33cb2a0295b78}{MAX\_FUEL\_SPEC}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Reburn\ fuel\ species\ index\ */}}
+\DoxyCodeLine{00116\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eaa319a9f030d0fb26e7b0c8901792c3e0}{SNCRSP}}\ =\ \mbox{\hyperlink{sg__pollut_8h_a052ac8937917d58da8f33cb2a0295b78}{MAX\_FUEL\_SPEC}}\ +\ \mbox{\hyperlink{sg__pollut_8h_a571e0794a4b5e799668f190e592062af}{MAX\_RBFUEL\_SPEC}},\ \textcolor{comment}{/*\ SNCR\ species\ index\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00117\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eaa1efdf2880de937184aae0cadbafe235}{PRECSP}},}
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea4db947f105ea6549d7e3d39b932644b4}{SGROWS}}\ =\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eaa1efdf2880de937184aae0cadbafe235}{PRECSP}}\ +\ \mbox{\hyperlink{sg__pollut_8h_adeda6498be2331c9c1b3bb410172ae1e}{MAX\_SOOT\_PREC}},}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eae0debf04d7776cbe65a5b41191ae150c}{SOOT\_FUEL}}\ =\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea4db947f105ea6549d7e3d39b932644b4}{SGROWS}}\ +\ \mbox{\hyperlink{sg__pollut_8h_aa226ee0c36e261c9d156d6f359193c0a}{MAX\_SGROW\_SPEC}},}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ead991a82602d422619c7898e70e32a179}{SOOT\_OXID}}\ =\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eae0debf04d7776cbe65a5b41191ae150c}{SOOT\_FUEL}}\ +\ \mbox{\hyperlink{sg__pollut_8h_a8e5592ded013587b2fb5bec3fdba3546}{MAX\_SOOT\_FUEL}},}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eab6979f4597e3a5529778b427f7ea7e47}{O2}},}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eaf4b8b7698dfedf5562a7db2bdb07010a}{O}},}
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eae6f5f5cf90b7127f6c7391139a1f12ff}{OH}},}
+\DoxyCodeLine{00124\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eabc856fd5d1be355fd3d34b860c506cd0}{H2}},}
+\DoxyCodeLine{00125\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea5008b1179f399a2273fd3f6a7fc3b292}{H}},}
+\DoxyCodeLine{00126\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eaa1f54be2c32cc1838af96b64919511c3}{H2O}},}
+\DoxyCodeLine{00127\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea0232fe8bbd4e97a7404886d6be059611}{N2}},}
+\DoxyCodeLine{00128\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}},}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea69c66d3c1e936dd7d39824492bb31c57}{CO}},}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea19a6131ebca81c932b637a23bfb1281d}{CH}},}
+\DoxyCodeLine{00131\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eae574b39c34bd88c27ea641014831e53a}{CH2}},}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eaaee6d12bf63ae430250764aa97e9e429}{CH3}},}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9eaf1ce01387d2348f8b858721a7db81670}{S}},}
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2d7fb478854b856753f14c685bd72fb3}{C2H2}},}
+\DoxyCodeLine{00135\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea3e1b67789d28a01cb73a8c3bce22b81d}{C6H6}},}
+\DoxyCodeLine{00136\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea02d7bcad40abf7b169a0a2210da6a9fe}{C6H5}},}
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea45104f72acc44c3d9c1581c87653bff8}{CO2}},}
+\DoxyCodeLine{00138\ \ \ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea3617f3cc158ed3ae05f5817fa7a851fe}{MAX\_FLUENT\_SPEC}}}
+\DoxyCodeLine{00139\ \}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9e}{Pollut\_Species\_Index}};}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ IDX(f)\ MAX\_FLUENT\_SPEC\ +\ EQ\_\#\#f}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ MAX\_POLLUT\_SPEC\ MAX\_FLUENT\_SPEC\ +\ MAX\_POLLUT\_EQNS}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00145\ \{}
+\DoxyCodeLine{00146\ \ \ \mbox{\hyperlink{sg__pollut_8h_ab98c672c5aaffb98a9189cd99e58ff23ae22c7fa46c472fbb8cfde634608e8a81}{POLLUT\_NOX}}\ =\ 0,}
+\DoxyCodeLine{00147\ \ \ \mbox{\hyperlink{sg__pollut_8h_ab98c672c5aaffb98a9189cd99e58ff23aa8aa0459f5d286e41871ab4577ef70a5}{POLLUT\_SOX}},}
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{sg__pollut_8h_ab98c672c5aaffb98a9189cd99e58ff23a9daf814a884942072ceb7314be3315bf}{POLLUT\_SOOT}},}
+\DoxyCodeLine{00149\ \ \ \mbox{\hyperlink{sg__pollut_8h_ab98c672c5aaffb98a9189cd99e58ff23a1496bee30f820a9e02faa89fc0676a7b}{POLLUT\_HG}}}
+\DoxyCodeLine{00150\ \};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00153\ \{}
+\DoxyCodeLine{00154\ \ \ \mbox{\hyperlink{sg__pollut_8h_ac791b66a82093c303b1b2aaf4f185edeacc5f2bfa1ff49b18dedb4a92bc38ccf0}{NUC\_NUC}}\ =\ 0,}
+\DoxyCodeLine{00155\ \ \ \mbox{\hyperlink{sg__pollut_8h_ac791b66a82093c303b1b2aaf4f185edea7a43cb74d814204c210df791264d4aff}{NUC\_COAG}},}
+\DoxyCodeLine{00156\ \ \ \mbox{\hyperlink{sg__pollut_8h_ac791b66a82093c303b1b2aaf4f185edea881a3e686a49a05877d8465f01e459cd}{YI\_NUC}},}
+\DoxyCodeLine{00157\ \ \ \mbox{\hyperlink{sg__pollut_8h_ac791b66a82093c303b1b2aaf4f185edeae6bbdcc0befed2a12f2b8fc045f5d328}{YI\_SGS}},}
+\DoxyCodeLine{00158\ \ \ \mbox{\hyperlink{sg__pollut_8h_ac791b66a82093c303b1b2aaf4f185edeadfbdceb78370fbec719e8333b05eb72a}{YI\_OXID}}}
+\DoxyCodeLine{00159\ \};}
+\DoxyCodeLine{00160\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00161\ \{}
+\DoxyCodeLine{00162\ \ \ \mbox{\hyperlink{sg__pollut_8h_aaac9a1fbbe2a76c1975c885f8be6e835ac5cd9000a5749abe233e7fcb924e4873}{FUEL\_G}}\ =\ 0,}
+\DoxyCodeLine{00163\ \ \ \mbox{\hyperlink{sg__pollut_8h_aaac9a1fbbe2a76c1975c885f8be6e835a6d735e372286d28eb0b52504fde4c444}{FUEL\_L}},}
+\DoxyCodeLine{00164\ \ \ \mbox{\hyperlink{sg__pollut_8h_aaac9a1fbbe2a76c1975c885f8be6e835a3fb30830fe036ce3a661198a1e20d4b5}{FUEL\_S}}}
+\DoxyCodeLine{00165\ \}\ \mbox{\hyperlink{sg__pollut_8h_aaac9a1fbbe2a76c1975c885f8be6e835}{Pollut\_Fuel\_Type}};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00168\ \{}
+\DoxyCodeLine{00169\ \ \ \mbox{\hyperlink{sg__pollut_8h_afd23924a9246f5bdb8e5cf368fd3147faafe742aec388883979f292729e6df87b}{IN\_PDF}}\ =\ 0,}
+\DoxyCodeLine{00170\ \ \ \mbox{\hyperlink{sg__pollut_8h_afd23924a9246f5bdb8e5cf368fd3147faf99341b32d689c7a68ea5e292af6f8cd}{OUT\_PDF}},}
+\DoxyCodeLine{00171\ \ \ \mbox{\hyperlink{sg__pollut_8h_afd23924a9246f5bdb8e5cf368fd3147fac78ab11eb0b8e0c15e90bc624609d246}{SET\_VAR}},}
+\DoxyCodeLine{00172\ \ \ \mbox{\hyperlink{sg__pollut_8h_afd23924a9246f5bdb8e5cf368fd3147fab308987d88372cdf09e64746694cba5f}{GET\_VAR}}}
+\DoxyCodeLine{00173\ \}\ \mbox{\hyperlink{sg__pollut_8h_afd23924a9246f5bdb8e5cf368fd3147f}{Pollut\_Io\_Pdf}};}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00176\ \{}
+\DoxyCodeLine{00177\ \ \ \mbox{\hyperlink{sg__pollut_8h_af25959bb40274a6fa0a1f10d6b0d47aca91e5435e5680998fdad3a03ce1b6ee26}{THERMAL\_NOX}}\ =\ 0,}
+\DoxyCodeLine{00178\ \ \ \mbox{\hyperlink{sg__pollut_8h_af25959bb40274a6fa0a1f10d6b0d47aca14f6f3ae6ff01b1aa7e000642b058d80}{PROMPT\_NOX}},}
+\DoxyCodeLine{00179\ \ \ \mbox{\hyperlink{sg__pollut_8h_af25959bb40274a6fa0a1f10d6b0d47aca4f5f0f7556a02e69739768116efd9dae}{FUEL\_NOX}},}
+\DoxyCodeLine{00180\ \ \ \mbox{\hyperlink{sg__pollut_8h_af25959bb40274a6fa0a1f10d6b0d47acaee2df751a4e986785bc91714f6ac5f0c}{N2OPATH}},}
+\DoxyCodeLine{00181\ \ \ \mbox{\hyperlink{sg__pollut_8h_af25959bb40274a6fa0a1f10d6b0d47acad6804e35c07c3112f233b623c38b9cfa}{REBURN}},}
+\DoxyCodeLine{00182\ \ \ \mbox{\hyperlink{sg__pollut_8h_af25959bb40274a6fa0a1f10d6b0d47aca2e9ef03caa13e56cc5ca41ee56766c78}{SNCR}},}
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{sg__pollut_8h_af25959bb40274a6fa0a1f10d6b0d47acace5e380a626222ba2241fdd856506c36}{USER\_NOX}},}
+\DoxyCodeLine{00184\ \ \ \mbox{\hyperlink{sg__pollut_8h_af25959bb40274a6fa0a1f10d6b0d47aca3e1d5f93f885b8f8cc87e73d6e31cda1}{MAX\_NOX\_MODEL}}}
+\DoxyCodeLine{00185\ \}\ \mbox{\hyperlink{sg__pollut_8h_af25959bb40274a6fa0a1f10d6b0d47ac}{NOx\_Model}};}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00188\ \{}
+\DoxyCodeLine{00189\ \ \ \mbox{\hyperlink{sg__pollut_8h_a000f2640e9e49d736e0bd5fe822a1f0dab7096df3d1a1770dc031f3cf0c9d838a}{SOOTM\_NUCL}}\ =\ 0,}
+\DoxyCodeLine{00190\ \ \ \mbox{\hyperlink{sg__pollut_8h_a000f2640e9e49d736e0bd5fe822a1f0da0b1925c58c806e56582c2c42bf7f78fd}{SOOTM\_SURF}},}
+\DoxyCodeLine{00191\ \ \ \mbox{\hyperlink{sg__pollut_8h_a000f2640e9e49d736e0bd5fe822a1f0da15aff3ae01eca5661d7f6cdcae6d5bf8}{SOOTM\_OXID}},}
+\DoxyCodeLine{00192\ \ \ \mbox{\hyperlink{sg__pollut_8h_a000f2640e9e49d736e0bd5fe822a1f0dad93227f6ae925f4c46affc3ec22081d7}{MAX\_SOOTM\_MODEL}}}
+\DoxyCodeLine{00193\ \}\ \mbox{\hyperlink{sg__pollut_8h_a000f2640e9e49d736e0bd5fe822a1f0d}{Soot\_Mass\_Model}};}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00196\ \{}
+\DoxyCodeLine{00197\ \ \ \mbox{\hyperlink{sg__pollut_8h_a44a7b3df48906fa8a22bbd2d6a1c576ba733e297b2a2408f0a6e829517f495ba6}{NUCLEI\_NUCL}}\ =\ 0,}
+\DoxyCodeLine{00198\ \ \ \mbox{\hyperlink{sg__pollut_8h_a44a7b3df48906fa8a22bbd2d6a1c576bae22bfd66fb98187748b2578a0e90202f}{NUCLEI\_COAG}},}
+\DoxyCodeLine{00199\ \ \ \mbox{\hyperlink{sg__pollut_8h_a44a7b3df48906fa8a22bbd2d6a1c576ba56d1b3d67709dd35e093af9cfc132df7}{MAX\_NUCLEI\_MODEL}}}
+\DoxyCodeLine{00200\ \}\ \mbox{\hyperlink{sg__pollut_8h_a44a7b3df48906fa8a22bbd2d6a1c576b}{Soot\_Nuclei\_Model}};}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00203\ \{}
+\DoxyCodeLine{00204\ \ \ \mbox{\hyperlink{sg__pollut_8h_a5efefa44b296976f2147b8acbed1752ca9d9fb93a94dd1a9d64e2aea7dc14badf}{FULL\_EQUILIBRIUM}}\ =\ 0,}
+\DoxyCodeLine{00205\ \ \ \mbox{\hyperlink{sg__pollut_8h_a5efefa44b296976f2147b8acbed1752caae12b20c1882464dd998909e3f5ad4be}{PARTIAL\_EQUILIBRIUM}},}
+\DoxyCodeLine{00206\ \ \ \mbox{\hyperlink{sg__pollut_8h_a5efefa44b296976f2147b8acbed1752cae7e67e6774f036d2a5d951b327e87222}{LOCAL\_MASS\_FRACTION}}}
+\DoxyCodeLine{00207\ \};}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{comment}{/*\ Arrhenious\ Rate\ expression\ */}}
+\DoxyCodeLine{00210\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_rate___const__struct}{Rate\_Const\_struct}}}
+\DoxyCodeLine{00211\ \{}
+\DoxyCodeLine{00212\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct_rate___const__struct_aacaa5b9630e45bd7f464005e7eb9ce14}{A}},\ \mbox{\hyperlink{struct_rate___const__struct_ad5206f95a0e4cea7a8b3a79fd747e4b0}{B}},\ \mbox{\hyperlink{struct_rate___const__struct_a87764be6e0891eb364215d65d4982fc2}{C}};}
+\DoxyCodeLine{00213\ \}\ \mbox{\hyperlink{sg__pollut_8h_abed7256b9d9139f06cfef43e2d1e5d56}{Rate\_Const}};}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_rate___const__d__struct}{Rate\_Const\_d\_struct}}}
+\DoxyCodeLine{00216\ \{}
+\DoxyCodeLine{00217\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_rate___const__d__struct_a2941385b1be5280d3b1f546356f7ec99}{A}},\ \mbox{\hyperlink{struct_rate___const__d__struct_adf085adbf76beb194ac436d42cd1d725}{B}},\ \mbox{\hyperlink{struct_rate___const__d__struct_a8987032f6f7d7cfaa0ff4e2a62ae08fe}{C}};}
+\DoxyCodeLine{00218\ \}\ \mbox{\hyperlink{sg__pollut_8h_aef0bb36d86d42828ee0e489fbf75bfcb}{Rate\_Const\_D}};}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpollut__tci__parameters}{pollut\_tci\_parameters}}}
+\DoxyCodeLine{00221\ \{}
+\DoxyCodeLine{00222\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpollut__tci__parameters_a67b320cd4d186a9431522f6bc516996a}{turbulent}};\ \ \textcolor{comment}{/*\ Flag\ indicating\ if\ turbulence\ interaction\ is\ ON\ */}}
+\DoxyCodeLine{00223\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__tci__parameters_a1c35011a1164bf9f86763ffd3b71af5e}{turb\_mode}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 0:\ none;\ 1:\ T;\ 2:\ T\ +\ S1;\ 3:\ S1\ +\ S2;\ 4:\ mixture\ fraction*/}}
+\DoxyCodeLine{00224\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__tci__parameters_abf8eaf227892b6e1a411a913f0f195e3}{pdf\_points}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ Number\ of\ points\ in\ PDF\ table\ */}}
+\DoxyCodeLine{00225\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__tci__parameters_a51cfd6ce084cf7e2c68e153f9c04240f}{tvar\_method}};}
+\DoxyCodeLine{00226\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__tci__parameters_aaa409c804bd49130732d4d30393fcce3}{pdf\_type}};}
+\DoxyCodeLine{00227\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__tci__parameters_a6d55f848a97cab4e7320444458b3efaa}{tmax\_method}};}
+\DoxyCodeLine{00228\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__tci__parameters_a4195c5723cc21968d1e34694cd527d58}{tmax\_value1}};}
+\DoxyCodeLine{00229\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__tci__parameters_af400b003c0b7d5738011437de37746b5}{fmin1}},\ \mbox{\hyperlink{structpollut__tci__parameters_a7b58c8faaec2b995e8257132663c6bb5}{fmax1}};\ \ \ \ \textcolor{comment}{/*\ Temperature\ and\ species\ mass\ fraction\ limits\ */}}
+\DoxyCodeLine{00230\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__tci__parameters_acb7536d6c46976a1d0a3c48b87eabe8b}{fmin2}},\ \mbox{\hyperlink{structpollut__tci__parameters_a31a55fecefa0f70bc641f924c52b9a59}{fmax2}};}
+\DoxyCodeLine{00231\ \}\ \mbox{\hyperlink{sg__pollut_8h_a1da3edbaa4a96bc5b612dfb98d8cdb59}{Tci\_Params}};}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpollut__param__struct}{pollut\_param\_struct}}}
+\DoxyCodeLine{00234\ \{}
+\DoxyCodeLine{00235\ \ \ \mbox{\hyperlink{sg__pollut_8h_a8660229004fbc19d8272eda69deb779e}{EQ\_Pollut}}\ \mbox{\hyperlink{structpollut__param__struct_abfe4a9d0ccc335622ff295b3c27e87a9}{pollut\_equ}};}
+\DoxyCodeLine{00236\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpollut__param__struct_ae88497f3bf16111fa259ac340ba921e9}{pollut\_solve}}[\mbox{\hyperlink{mem_8h_a9d61480354ed8507f864b317de832c4e}{MAX\_POLLUT\_EQNS}}];}
+\DoxyCodeLine{00237\ \ \ \mbox{\hyperlink{sg__pollut_8h_aaac9a1fbbe2a76c1975c885f8be6e835}{Pollut\_Fuel\_Type}}\ \mbox{\hyperlink{structpollut__param__struct_af47689515dbada4d1a2cacfd3d4504ae}{pollut\_type}}[\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \ \textcolor{comment}{/*\ 0:\ gas,\ 1:\ oil,\ 2:\ coal\ */}}
+\DoxyCodeLine{00238\ \ \ \mbox{\hyperlink{sg__pollut_8h_afd23924a9246f5bdb8e5cf368fd3147f}{Pollut\_Io\_Pdf}}\ \mbox{\hyperlink{structpollut__param__struct_a242b621d02bfd55fad034a065bd1db2d}{pollut\_io\_pdf}};}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \textcolor{comment}{/*\ fuel\ streams\ */}}
+\DoxyCodeLine{00241\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a97c39eaf8e1c0ff89819713339070cb0}{nfstreams}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ fuel\ streams:\ maximum\ 3\ */}}
+\DoxyCodeLine{00242\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_ae10f8d9f20bb89cd5d8af4feff6a1737}{pdfs\_id}}[\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pdf\ stream\ index\ */}}
+\DoxyCodeLine{00243\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a8c5dc0a2a7e02282b82e4eb3f8663137}{fuel\_type}}[\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 0:\ gas,\ 1:\ oil,\ 2:\ coal\ */}}
+\DoxyCodeLine{00244\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_ab84de3afbd91fd735cc319c2c1b81d6b}{nfspe}}[\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ fuel\ species\ */}}
+\DoxyCodeLine{00245\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a6d872a7e75d6affa35b4fe3e01095fe9}{fuel\_idx}}[\mbox{\hyperlink{sg__pollut_8h_ad384a653091a4d9d915212d3dd26d36d}{MAX\_FSPE\_STREAM}}][\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \textcolor{comment}{/*\ fuel\ species\ index\ */}}
+\DoxyCodeLine{00246\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a92d14c27c266b23872d25351784deb2b}{fuel\_dup}}[\mbox{\hyperlink{sg__pollut_8h_ad384a653091a4d9d915212d3dd26d36d}{MAX\_FSPE\_STREAM}}][\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \textcolor{comment}{/*\ flag-\/up\ duplicate\ fuel\ species\ */}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \textcolor{comment}{/*\ N2O\ quasi\ model\ */}}
+\DoxyCodeLine{00249\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpollut__param__struct_a7b1fb70ddce27be186bafb45940b8dc1}{n2o\_quasi}};}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \ \ \textcolor{comment}{/*\ SNCR\ reagent\ and\ water\ injection\ */}}
+\DoxyCodeLine{00252\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a38f6fa451d7fd80d3c19565c72e9e79f}{sncr\_species\_index}},\ \mbox{\hyperlink{structpollut__param__struct_ac064485aa4799fa127aa1b8180d9a218}{sncr\_injection\_type}},\ \mbox{\hyperlink{structpollut__param__struct_abc823b39e5d1ed8991f4bfc49f0d67ed}{sncr\_pdf\_stream\_id}};}
+\DoxyCodeLine{00253\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__param__struct_a8730b35949390ff8e77ceddcfcf04055}{sncr\_pdf\_f\_reagent}};}
+\DoxyCodeLine{00254\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a5199fcae7728d4c798b70d2c1a3cccbf}{h2o\_species\_index}},\ \mbox{\hyperlink{structpollut__param__struct_a805a6a702c06f90919b4d1bad7fc579c}{h2o\_pdf\_stream\_id}};}
+\DoxyCodeLine{00255\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__param__struct_a9837c34614a289a3b0d350ad66f6aad3}{h2o\_pdf\_frac}};}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \textcolor{comment}{/*\ Advanced\ options\ */}}
+\DoxyCodeLine{00258\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpollut__param__struct_ad9632a4bfe88225744a75358b142287b}{plot\_rate\_fuel}},\ \mbox{\hyperlink{structpollut__param__struct_a15c6de999355832656a523402c261021}{plot\_rate\_sncr}},\ \mbox{\hyperlink{structpollut__param__struct_a4df67f3989741169c3a6cf876b0965a9}{plot\_rate\_sox}};}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \ \ \textcolor{comment}{/*\ tar\ from\ coal\ volatiles\ */}}
+\DoxyCodeLine{00261\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_abaf6739be1ac759632195a556fb12fb7}{ctar\_nfs}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ fuel\ streams:\ maximum\ 3\ */}}
+\DoxyCodeLine{00262\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a76940a8df8ce6bcecd4d0b8b9093318b}{ctar\_pdfsid}}[\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pdf\ stream\ index\ */}}
+\DoxyCodeLine{00263\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a9c7c0adbb855529cf099c501a7f5ddae}{ctar\_nfspe}}[\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ fuel\ species\ */}}
+\DoxyCodeLine{00264\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a039a98c06e7d1b88e030a44ecbcc7beb}{ctar\_fuelidx}}[\mbox{\hyperlink{sg__pollut_8h_ad384a653091a4d9d915212d3dd26d36d}{MAX\_FSPE\_STREAM}}][\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \textcolor{comment}{/*\ fuel\ species\ index\ */}}
+\DoxyCodeLine{00265\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__param__struct_a9de1d51f31572792a7a5361c5e721f3b}{ctar\_frac}}[\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ mass\ fraction\ of\ tar\ in\ coal\ volatiles\ */}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \textcolor{comment}{/*\ Species\ list\ */}}
+\DoxyCodeLine{00268\ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00269\ \ \ \{}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_ae40354a1051342eb5a9db005715dcfa9}{idx}};\ \textcolor{comment}{/*\ Species\ global\ index\ */}}
+\DoxyCodeLine{00271\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__param__struct_af233a26a37e541a807ddc1dcea2a49a6}{mw}};\ \textcolor{comment}{/*\ molecular\ weight\ */}}
+\DoxyCodeLine{00272\ \ \ \}\ \mbox{\hyperlink{structpollut__param__struct_a6149cbe0076447e145d114024ba97799}{sp}}[\mbox{\hyperlink{sg__pollut_8h_a7c6bb031b60b4b52e2932de124c58d76}{MAX\_POLLUT\_SPEC}}];}
+\DoxyCodeLine{00273\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__param__struct_a82c864b509d0ff1f17010650904e07bd}{mw\_fluentsp}}[\mbox{\hyperlink{materials_8h_ab2d7dd2b955a8f49b57a920ba61c4231}{MAX\_SPE\_EQNS\_PDF}}];\ \textcolor{comment}{/*\ storage\ for\ fluent\ species\ molecular\ weights\ */}}
+\DoxyCodeLine{00274\ \ \ \textcolor{comment}{/*\ Flow\ properties\ */}}
+\DoxyCodeLine{00275\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__param__struct_a0fb43f8336c85c1a6be6dbf673010577}{uni\_R}};\ \ \textcolor{comment}{/*\ J/mole/K\ */}}
+\DoxyCodeLine{00276\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpollut__param__struct_a67b320cd4d186a9431522f6bc516996a}{turbulent}};\ \ \textcolor{comment}{/*\ Flag\ indicating\ if\ turbulence\ interaction\ is\ ON\ */}}
+\DoxyCodeLine{00277\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpollut__param__struct_a1750440acd790a0da042c1ca06f1c57c}{pdf\_all\_cells}};\ \textcolor{comment}{/*\ if\ TRUE\ apply\ pdf\ integrations\ in\ all\ cells\ */}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a1c35011a1164bf9f86763ffd3b71af5e}{turb\_mode}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 0:\ none;\ 1:\ T;\ 2:\ T\ +\ S1;\ 3:\ S1\ +\ S2;\ 4:\ mixture\ fraction*/}}
+\DoxyCodeLine{00280\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_aeac69a9c939833ea3d75908a1571ce17}{turb\_speidx}};\ \ \ \ \ \ \textcolor{comment}{/*\ Index\ of\ species\ used\ for\ pollut/turbulence\ interaction\ */}}
+\DoxyCodeLine{00281\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_abf8eaf227892b6e1a411a913f0f195e3}{pdf\_points}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ Number\ of\ points\ in\ PDF\ table\ */}}
+\DoxyCodeLine{00282\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a51cfd6ce084cf7e2c68e153f9c04240f}{tvar\_method}};}
+\DoxyCodeLine{00283\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_aaa409c804bd49130732d4d30393fcce3}{pdf\_type}};}
+\DoxyCodeLine{00284\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpollut__param__struct_a6d55f848a97cab4e7320444458b3efaa}{tmax\_method}};}
+\DoxyCodeLine{00285\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__param__struct_a4195c5723cc21968d1e34694cd527d58}{tmax\_value1}};}
+\DoxyCodeLine{00286\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__param__struct_af400b003c0b7d5738011437de37746b5}{fmin1}},\ \mbox{\hyperlink{structpollut__param__struct_a7b58c8faaec2b995e8257132663c6bb5}{fmax1}};\ \ \ \ \textcolor{comment}{/*\ Temperature\ and\ species\ mass\ fraction\ limits\ */}}
+\DoxyCodeLine{00287\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__param__struct_acb7536d6c46976a1d0a3c48b87eabe8b}{fmin2}},\ \mbox{\hyperlink{structpollut__param__struct_a31a55fecefa0f70bc641f924c52b9a59}{fmax2}};}
+\DoxyCodeLine{00288\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structpollut__param__struct_a6673d89cf10ca267f2ad74bb21c6527f}{skip\_pdf\_pollut}},\ \mbox{\hyperlink{structpollut__param__struct_a364806ceb8ef60e5aaa0f1a8ba2eab80}{do\_pollut}};}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \mbox{\hyperlink{struct_rate___const__struct}{Rate\_Const}}\ \mbox{\hyperlink{structpollut__param__struct_afa4a8dfa70c45f68acb1a8e7d3c6668e}{K\_O}}[2],\ \mbox{\hyperlink{structpollut__param__struct_aa1331a01fe0340627245796c82b9295c}{K\_OH}};}
+\DoxyCodeLine{00291\ \}\ \mbox{\hyperlink{sg__pollut_8h_a5694759884c2db0f225a97a86c07e594}{Pollut\_Parameter}};}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpollut__cell__struct}{pollut\_cell\_struct}}}
+\DoxyCodeLine{00294\ \{}
+\DoxyCodeLine{00295\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_aa6ba903ee9c7a1693728bf20c6521926}{temp\_m}};}
+\DoxyCodeLine{00296\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a123a732c5c725610cab68d7082ad9591}{den}};}
+\DoxyCodeLine{00297\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_afae4574cb384adf51e72c5d4e2f3bd0a}{press}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Pa\ (N/m\string^2)\ */}}
+\DoxyCodeLine{00298\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a01e8a5b09b7bcb95348b49053785d19d}{cell\_V}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ cell\ volume\ */}}
+\DoxyCodeLine{00299\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a0abd71fb242e4cd04b596a60d3015c00}{meanmw}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Mean\ molecular\ weight\ kg/kg-\/mol\ */}}
+\DoxyCodeLine{00300\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a0ef6f99205a091e387beb4c3e1920ff1}{fmean}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Mean\ mixture\ fraction\ */}}
+\DoxyCodeLine{00301\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a5bf1f273ba33e0069e508161194bf773}{r\_fuel\_gls}}[\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \ \ \ \ \ \textcolor{comment}{/*\ mean\ limiting\ reaction\ rate\ of\ gasous\ fuel\ or\ gas/volatile\ release\ rate\ from\ liquid/solid\ (kg/m\string^3/s)\ */}}
+\DoxyCodeLine{00302\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a022a8d769fc08aa4029ec8bb06011b58}{r\_char}}[\mbox{\hyperlink{sg__pollut_8h_a426c7d4e4059993a6677f07638a9749f}{MAX\_FUEL\_STREAMS}}];\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ rate\ of\ char\ burn\ out\ (kg/m\string^3/s)\ (solid\ fuel)\ */}}
+\DoxyCodeLine{00303\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a45bf2168f223fb27fe079068e858fa20}{part\_con}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ particle\ concentration\ (kg/m\string^3)\ (solid\ fuel)\ */}}
+\DoxyCodeLine{00304\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a652f9ee802901d96f432cdfe720f659b}{oxy\_order}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ oxygen\_order\ */}}
+\DoxyCodeLine{00305\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a6f2cddf50c33d9d781b09e7f7736c3cf}{r\_reagent}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ rate\ of\ reagent\ release\ from\ liquid\ injection\ */}}
+\DoxyCodeLine{00306\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a3e0298e522a88dd9b6e641ca861354c1}{r\_ctar}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ rate\ of\ tar\ release\ from\ coal\ (kg/m\string^3/s)\ */}}
+\DoxyCodeLine{00307\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_aa11e45ab02658bd200fda1b879a1148e}{turb\_tscale}};\ \ \ \ \ \textcolor{comment}{/*\ time\ scale\ of\ turbulence\ */}}
+\DoxyCodeLine{00308\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_ab30d77002600a012f0c438c448306d4b}{yi}}[\mbox{\hyperlink{sg__pollut_8h_a7c6bb031b60b4b52e2932de124c58d76}{MAX\_POLLUT\_SPEC}}];}
+\DoxyCodeLine{00309\ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00310\ \ \ \{}
+\DoxyCodeLine{00311\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a21ee2128852fa01b45087ce5569baa94}{fwdrate}};}
+\DoxyCodeLine{00312\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a33665d0d72e4e123428b1d0341f5eefb}{revrate}};}
+\DoxyCodeLine{00313\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a6826d1f1300aeff87f8f5a39f9ce7564}{quasirate}};}
+\DoxyCodeLine{00314\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_ab30d77002600a012f0c438c448306d4b}{yi}}[\mbox{\hyperlink{sg__pollut_8h_a7c6bb031b60b4b52e2932de124c58d76}{MAX\_POLLUT\_SPEC}}];}
+\DoxyCodeLine{00315\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a3b6bbd8a6810bf3afcbc9c600f1daa45}{temp}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ K\ */}}
+\DoxyCodeLine{00316\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a123a732c5c725610cab68d7082ad9591}{den}};}
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{comment}{/*\ Molar\ rates\ of\ reaction\ :\ mol/m3/sec\ */}}
+\DoxyCodeLine{00318\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_aff049443646eb7b692fb4ed4f8424143}{molar\_rate\_sncr}}[\mbox{\hyperlink{sg__pollut_8h_a8ac8287f1285bb27b0953791ed2f3ff5}{MAX\_REAC\_SNCR}}];}
+\DoxyCodeLine{00319\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_ada9a95f1f5eadda0e982c894149ea030}{molar\_rate\_fuel}}[\mbox{\hyperlink{sg__pollut_8h_a04af6e0deaa03afb96944c876be006b6}{MAX\_REAC\_FUEL}}];}
+\DoxyCodeLine{00320\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a39f9cba2eaca110f8c28deb95d5adc54}{molar\_rate\_sox}}[\mbox{\hyperlink{sg__pollut_8h_abd9cb6885cbb60fceec5f34c3170693c}{MAX\_REAC\_SOX}}];}
+\DoxyCodeLine{00321\ \ \ \}\ \mbox{\hyperlink{structpollut__cell__struct_a479c76536541c51c4cd309a75863e5fd}{fluct}};}
+\DoxyCodeLine{00322\ \ \ \textcolor{comment}{/*\ Molar\ rates\ of\ reaction\ (mean)\ :\ mol/m3/sec\ */}}
+\DoxyCodeLine{00323\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_aff049443646eb7b692fb4ed4f8424143}{molar\_rate\_sncr}}[\mbox{\hyperlink{sg__pollut_8h_a8ac8287f1285bb27b0953791ed2f3ff5}{MAX\_REAC\_SNCR}}];}
+\DoxyCodeLine{00324\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_ada9a95f1f5eadda0e982c894149ea030}{molar\_rate\_fuel}}[\mbox{\hyperlink{sg__pollut_8h_a04af6e0deaa03afb96944c876be006b6}{MAX\_REAC\_FUEL}}];}
+\DoxyCodeLine{00325\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structpollut__cell__struct_a39f9cba2eaca110f8c28deb95d5adc54}{molar\_rate\_sox}}[\mbox{\hyperlink{sg__pollut_8h_abd9cb6885cbb60fceec5f34c3170693c}{MAX\_REAC\_SOX}}];}
+\DoxyCodeLine{00326\ \}\ \mbox{\hyperlink{sg__pollut_8h_a9357359305bfa41d1112338aed1404e2}{Pollut\_Cell}};}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ ARRH(pollut,k)((k).A*pow((pollut)-\/>fluct.temp,\ (k).B)*exp(MIN(70,\ MAX(-\/70,\ -\/(k).C/(pollut)-\/>fluct.temp))))}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#define\ ARRH\_TR(pollut,k,tr)((k).A*pow((pollut)-\/>fluct.temp/tr,\ (k).B)*exp(MIN(70,\ MAX(-\/70,\ -\/(k).C/(pollut)-\/>fluct.temp))))}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#define\ ARRH\_TM(pollut,k)((k).A*pow((pollut)-\/>temp\_m,\ (k).B)*exp(MIN(70,\ MAX(-\/70,\ -\/(k).C/(pollut)-\/>temp\_m))))}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#define\ ARRH\_TS(pollut,k,ts)((k).A*pow(MAX((pollut)-\/>fluct.temp+ts,\ 0.),\ (k).B)*exp(MIN(70,\ MAX(-\/70,\ -\/(k).C/((pollut)-\/>fluct.temp+ts)))))}}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ POLLUT\_GASDEN(pollut)((pollut)-\/>fluct.den)}}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \textcolor{comment}{/*\ Macro\ to\ convert\ mass\ fraction\ to\ mole\ concentration\ (mole/m\string^3)\ */}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ MOLECON(pollut,spe)(POLLUT\_GASDEN((pollut))*MAX(0.,\ (pollut)-\/>fluct.yi[spe])*1000./Pollut\_Par-\/>sp[spe].mw)}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#define\ NULLIDX(pollut,spe)((pollut)-\/>sp[spe].idx\ ==\ POLLUT\_NULL\_SPECIES\_INDEX)}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#define\ POLLUT\_FRATE(pollut)((pollut)-\/>fluct.fwdrate)}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#define\ POLLUT\_RRATE(pollut)((pollut)-\/>fluct.revrate)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#define\ POLLUT\_QRATE(pollut)((pollut)-\/>fluct.quasirate)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#define\ POLLUT\_MOLRATE\_SNCR(pollut,i)((pollut)-\/>molar\_rate\_sncr[i]*1.e-\/03)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#define\ POLLUT\_MOLRATE\_FUEL(pollut,i)((pollut)-\/>molar\_rate\_fuel[i]*1.e-\/03)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ POLLUT\_MOLRATE\_SOX(pollut,i)((pollut)-\/>molar\_rate\_sox[i]*1.e-\/03)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#define\ POLLUT\_FLUCTDEN(pollut)((pollut)-\/>fluct.den)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ POLLUT\_FLUCTTEM(pollut)((pollut)-\/>fluct.temp)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#define\ POLLUT\_FLUCTYI(pollut,spe)((pollut)-\/>fluct.yi[spe])}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#define\ POLLUT\_CTMAX(pollut)((pollut)-\/>fmax1)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\#define\ POLLUT\_EQN(pollut)((pollut)-\/>pollut\_equ)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#define\ IDEQ(pollut)((pollut)-\/>pollut\_equ+MAX\_FLUENT\_SPEC)}}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#define\ ALLOCATE\_POLLUT\_RATE(pollut\_rate,\ MAX\_MODEL)\ \(\backslash\)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\{pollut\_rate\ =\ (Pollut\_Rate\ *)\ CX\_Malloc(sizeof(Pollut\_Rate));\ \(\backslash\)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\ pollut\_rate-\/>rate\ =\ MAX\_MODEL==0\ ?\ NULL\ :(real\ *)\ CX\_Malloc(sizeof(real)\ *\ MAX\_MODEL);\}}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#define\ ZERO\_POLLUT\_RATE(pollut\_rate,\ MAX\_MODEL,\ is)\ \(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\{pollut\_rate-\/>fwdrate\ =\ 0.0;\ pollut\_rate-\/>revrate\ =\ 0.0;\ \(\backslash\)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{pollut\_rate-\/>quasirate\ =\ 0.0;\ \(\backslash\)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{for\ (is=0;is<MAX\_MODEL;is++)\ if\ (NNULLP\ (pollut\_rate-\/>rate))\ pollut\_rate-\/>rate[is]=0.0;\}}}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#define\ FREE\_POLLUT\_RATE(pollut\_rate)\ \(\backslash\)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\ \ if\ (NNULLP\ (pollut\_rate))\{\ if\ (NNULLP\ (pollut\_rate-\/>rate))\ \{CX\_Free(pollut\_rate-\/>rate);\ pollut\_rate-\/>rate\ =\ NULL;\}\ \(\backslash\)}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{CX\_Free(pollut\_rate);\ pollut\_rate\ =\ NULL;\}\ \(\backslash\)}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#define\ ALLOCATE\_POLLUT\_CELL(Pollut)\ \{Pollut\ =\ (Pollut\_Cell\ *)\ CX\_Malloc(sizeof(Pollut\_Cell));\}}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#define\ FREE\_POLLUT\_CELL(Pollut)\ \{CX\_Free(Pollut);\ Pollut\ =\ NULL;\}}}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00370\ \mbox{\hyperlink{sg__pollut_8h_ac48808fbdda0e09dc3e4696ac72dea7c}{Pollut\_Integral}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \ \mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut,\ \mbox{\hyperlink{structpollut__rate__struct}{Pollut\_Rate}}\ *s\_pollut,}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmean2,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fvar2,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ fluc1,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ fluc2);}
+\DoxyCodeLine{00372\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__pollut_8h_aa90ff1e415abd88a913823f4d1938edb}{Assign\_Cell\_Properties}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,\ \mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut);}
+\DoxyCodeLine{00373\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a6eac5d6737312765bf2343f5809764b7}{Pollut\_Pdf\_Init}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00374\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__pollut_8h_a395ec6abe265023ca7123ae4346865a7}{Model\_Initialize\_pollut}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00375\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__pollut_8h_abb258e48190cfd318ac466fcf207013c}{cell\_MeanMW}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00376\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__pollut_8h_a30c6febb36e684e57ada2caa4532d7ba}{fill\_pdf\_interpolation\_input\_params}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *input\_params);}
+\DoxyCodeLine{00377\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{sg__pollut_8h_afbaa253fe5ea18b42373e4d04d5ca164}{Pollut\_Init}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ update\_properties);}
+\DoxyCodeLine{00378\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__pollut_8h_a569a45a6e370397a78c81e9bf4810011}{Get\_Turb\_Rate}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut,\ \mbox{\hyperlink{structpollut__rate__struct}{Pollut\_Rate}}\ *s\_pollut);}
+\DoxyCodeLine{00379\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__pollut_8h_a1fedefc59b51007baa8990506ed91bab}{get\_oeq}}(\mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut,\ \textcolor{keywordtype}{int}\ o\_mode);}
+\DoxyCodeLine{00380\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__pollut_8h_a4b8bee7d10e65d2503aa80d72e964e2a}{get\_oheq}}(\mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut,\ \textcolor{keywordtype}{int}\ oh\_mode,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ o\_eq);}
+\DoxyCodeLine{00381\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__pollut_8h_a375c994b04012cb3f819b2b504840e78}{check\_spe\_duplication}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00382\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_aa93d7234768be1f9f3e30e8cf2affe9a}{set\_pollut\_turb\_params}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{char}\ *pn1,\ \textcolor{keywordtype}{int}\ pollut\_flag);}
+\DoxyCodeLine{00383\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__pollut_8h_adc94a3f94867a242cb7e76d1bbd379f0}{reagent\_release\_rate}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c);}
+\DoxyCodeLine{00384\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__pollut_8h_a859b57d8b54416ce3801d763c9bd3e08}{fuel\_release\_rate}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \textcolor{keywordtype}{int}\ ifstream,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ r\_reagent,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cell\_V,}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *r\_fuel\_gls\_ifs,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *r\_char\_ifs);}
+\DoxyCodeLine{00386\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sg__pollut_8h_a9ae9ae587b6f796d68c25e40359370a6}{oxygen\_order}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{structpollut__cell__struct}{Pollut\_Cell}}\ *Pollut);}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00388\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{sg__pollut_8h_a7e1b2b72218056782fecc4fc2a76782e}{if\_sg\_pollut\_i}}(\textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structpollut__param__struct}{Pollut\_Parameter}}\ *\mbox{\hyperlink{sg__pollut_8h_a86f7649a71b11c32da1ce482a7ff6549}{Pollut\_Par}};}
+\DoxyCodeLine{00391\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_aff6d698f277ffd797917ee5d2797ea25}{MAX\_POLLUT\_MODEL}}[\mbox{\hyperlink{mem_8h_a9d61480354ed8507f864b317de832c4e}{MAX\_POLLUT\_EQNS}}];}
+\DoxyCodeLine{00392\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_aa77c1686069b4a4dab69a33c59e6c45d}{Pollut\_Global\_Index}}[\mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a4721d78e712cfe49be946e8aae769882}{MAX\_POLLUT\_INDEX}}];}
+\DoxyCodeLine{00393\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a76952a5a3437d80a0a05ccdc1bced7db}{Pollut\_Solve\_Index}}[\mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a4721d78e712cfe49be946e8aae769882}{MAX\_POLLUT\_INDEX}}];}
+\DoxyCodeLine{00394\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_aa4fbdf00622d5373b5b293395cf51689}{Pollut\_Solve\_Size}}[\mbox{\hyperlink{sg__pollut_8h_aeba0289c238149c38580280a96dd5302a4721d78e712cfe49be946e8aae769882}{MAX\_POLLUT\_INDEX}}];}
+\DoxyCodeLine{00395\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a083a45e0b4062344a0a695459f9f316f}{Num\_Pollut\_Vars\_Tabulated}};}
+\DoxyCodeLine{00396\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__pollut_8h_abcf359c9e8898115765912e6a2ca1305}{Free\_Pdf\_Tables\_Pollut\_Data}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00397\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sg__pollut_8h_a98c4b2303f938853438dcb3847b80231}{Fill\_Pdf\_Tables\_Pollut\_Data}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00398\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{sg__pollut_8h_a6dcc096339aec871218421605bf40511}{Tab\_Def\_Nuc\_Rates}};}
+\DoxyCodeLine{00399\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{sg__pollut_8h_acb8c92555953413663e4e7674861e3e5}{Tab\_Def\_Yi\_Rates}};}
+\DoxyCodeLine{00400\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{sg__pollut_8h_ac8a67aa11605d4b5ff60e115e287ead1}{Soot\_Rates\_Udf}}[\mbox{\hyperlink{prop_8h_a55e2064974d707513aaa0571fd7fabfa}{MAX\_SOOT\_UDF\_VARS}}];}
+\DoxyCodeLine{00401\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{sg__pollut_8h_a6081fbffd22e0bc28fc87c79dee2eab8}{Soot\_Udf\_Add\_Default\_Rates}}[\mbox{\hyperlink{prop_8h_a55e2064974d707513aaa0571fd7fabfa}{MAX\_SOOT\_UDF\_VARS}}];}
+\DoxyCodeLine{00402\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{sg__pollut_8h_a98181646b7984eb082624cb47427d923}{Set\_Soot\_Nuc\_Sgs\_Mech}}(\mbox{\hyperlink{structobj}{Pointer}}\ p,\ \mbox{\hyperlink{structobj}{Pointer}}\ x);}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_SG\_POLLUT\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

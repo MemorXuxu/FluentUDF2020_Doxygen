@@ -1,0 +1,327 @@
+\doxysection{ida\+\_\+spils.\+h}
+\hypertarget{ida__spils_8h_source}{}\label{ida__spils_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_spils.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_spils.h}}
+\mbox{\hyperlink{ida__spils_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.9\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2010/12/01\ 22:14:09\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmers:\ Alan\ Hindmarsh,\ Radu\ Serban\ and\ Aaron\ Collier\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2002,\ The\ Regents\ of\ the\ University\ of\ California\ \ }}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ This\ is\ the\ common\ header\ file\ for\ the\ Scaled\ and\ Preconditioned}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ Iterative\ Linear\ Solvers\ in\ IDA.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#ifndef\ \_IDASPILS\_H}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ \_IDASPILS\_H}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__iterative_8h}{sundials/sundials\_iterative.h}}>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__nvector_8h}{sundials/sundials\_nvector.h}}>}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{/*\ }}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ IDASPILS\ return\ values\ }}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ IDASPILS\_SUCCESS\ \ \ \ \ 0}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ IDASPILS\_MEM\_NULL\ \ \ -\/1\ }}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ IDASPILS\_LMEM\_NULL\ \ -\/2\ }}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ IDASPILS\_ILL\_INPUT\ \ -\/3}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ IDASPILS\_MEM\_FAIL\ \ \ -\/4}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ IDASPILS\_PMEM\_NULL\ \ -\/5}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ Type\ :\ IDASpilsPrecSetupFn}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ The\ optional\ user-\/supplied\ functions\ PrecSetup\ and\ PrecSolve}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ together\ must\ define\ the\ left\ preconditoner\ matrix\ P}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ approximating\ the\ system\ Jacobian\ matrix}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ \ \ J\ =\ dF/dy\ +\ c\_j*dF/dy'}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ (where\ the\ DAE\ system\ is\ F(t,y,y')\ =\ 0),\ and\ solve\ the\ linear}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ systems\ P\ z\ =\ r.\ \ \ PrecSetup\ is\ to\ do\ any\ necessary\ setup}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ operations,\ and\ PrecSolve\ is\ to\ compute\ the\ solution\ of}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ P\ z\ =\ r.}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ The\ preconditioner\ setup\ function\ PrecSetup\ is\ to\ evaluate\ and}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ preprocess\ any\ Jacobian-\/related\ data\ needed\ by\ the}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ preconditioner\ solve\ function\ PrecSolve.\ \ This\ might\ include}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ forming\ a\ crude\ approximate\ Jacobian,\ and\ performing\ an\ LU}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ factorization\ on\ it.\ \ This\ function\ will\ not\ be\ called\ in}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ advance\ of\ every\ call\ to\ PrecSolve,\ but\ instead\ will\ be\ called}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ only\ as\ often\ as\ necessary\ to\ achieve\ convergence\ within\ the}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ Newton\ iteration.\ \ If\ the\ PrecSolve\ function\ needs\ no}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ preparation,\ the\ PrecSetup\ function\ can\ be\ NULL.}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ Each\ call\ to\ the\ PrecSetup\ function\ is\ preceded\ by\ a\ call\ to}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ the\ system\ function\ res\ with\ the\ same\ (t,y,y')\ arguments.}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ Thus\ the\ PrecSetup\ function\ can\ use\ any\ auxiliary\ data\ that\ is}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *\ computed\ and\ saved\ by\ the\ res\ function\ and\ made\ accessible}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ to\ PrecSetup.}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *\ A\ preconditioner\ setup\ function\ PrecSetup\ must\ have\ the}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ prototype\ given\ below.\ \ Its\ parameters\ are\ as\ follows:}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ tt\ \ is\ the\ current\ value\ of\ the\ independent\ variable\ t.}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ yy\ \ is\ the\ current\ value\ of\ the\ dependent\ variable\ vector,}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *\ \ \ \ \ namely\ the\ predicted\ value\ of\ y(t).}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *\ yp\ \ is\ the\ current\ value\ of\ the\ derivative\ vector\ y',}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *\ \ \ \ \ namely\ the\ predicted\ value\ of\ y'(t).}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *\ rr\ \ is\ the\ current\ value\ of\ the\ residual\ vector\ F(t,y,y').}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ c\_j\ is\ the\ scalar\ in\ the\ system\ Jacobian,\ proportional\ to\ 1/hh.}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ user\_data\ is\ a\ pointer\ to\ user\ data,\ the\ same\ as\ the\ user\_data}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ \ \ \ \ parameter\ passed\ to\ IDASetUserData.}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ tmp1,\ tmp2,\ tmp3\ are\ pointers\ to\ vectors\ of\ type\ N\_Vector}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ \ \ \ \ which\ can\ be\ used\ by\ an\ IDASpilsPrecSetupFn\ routine}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ \ \ \ \ as\ temporary\ storage\ or\ work\ space.}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *\ NOTE:\ If\ the\ user's\ preconditioner\ needs\ other\ quantities,}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ \ \ \ \ they\ are\ accessible\ as\ follows:\ hcur\ (the\ current\ stepsize)}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ \ \ \ \ and\ ewt\ (the\ error\ weight\ vector)\ are\ accessible\ through}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ \ \ \ \ IDAGetCurrentStep\ and\ IDAGetErrWeights,\ respectively\ (see}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ \ \ \ \ ida.h).\ The\ unit\ roundoff\ is\ available\ as}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ \ \ \ \ UNIT\_ROUNDOFF\ defined\ in\ sundials\_types.h}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *\ The\ IDASpilsPrecSetupFn\ should\ return}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *\ \ \ \ \ 0\ if\ successful,}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *\ \ \ \ \ a\ positive\ int\ if\ a\ recoverable\ error\ occurred,\ or}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *\ \ \ \ \ a\ negative\ int\ if\ a\ nonrecoverable\ error\ occurred.}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *\ In\ the\ case\ of\ a\ recoverable\ error\ return,\ the\ integrator\ will}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ *\ attempt\ to\ recover\ by\ reducing\ the\ stepsize\ (which\ changes\ cj).}}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{ida__spils_8h_a66dd933c015a6b1962691951592fd7aa}{IDASpilsPrecSetupFn}})(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ tt,}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ yp,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ rr,}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c\_j,\ \textcolor{keywordtype}{void}\ *user\_data,}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp1,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp2,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp3);}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ Type\ :\ IDASpilsPrecSolveFn}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ The\ optional\ user-\/supplied\ function\ PrecSolve\ must\ compute\ a}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ solution\ to\ the\ linear\ system\ P\ z\ =\ r,\ where\ P\ is\ the\ left}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ preconditioner\ defined\ by\ the\ user.\ \ If\ no\ preconditioning}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ is\ desired,\ pass\ NULL\ for\ PrecSolve\ to\ IDASp*.}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ A\ preconditioner\ solve\ function\ PrecSolve\ must\ have\ the}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ prototype\ given\ below.\ \ Its\ parameters\ are\ as\ follows:}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ tt\ is\ the\ current\ value\ of\ the\ independent\ variable\ t.}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ yy\ is\ the\ current\ value\ of\ the\ dependent\ variable\ vector\ y.}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ yp\ is\ the\ current\ value\ of\ the\ derivative\ vector\ y'.}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *\ rr\ is\ the\ current\ value\ of\ the\ residual\ vector\ F(t,y,y').}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *\ rvec\ is\ the\ input\ right-\/hand\ side\ vector\ r.}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ *\ zvec\ is\ the\ computed\ solution\ vector\ z.}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *\ c\_j\ is\ the\ scalar\ in\ the\ system\ Jacobian,\ proportional\ to\ 1/hh.}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *\ delta\ is\ an\ input\ tolerance\ for\ use\ by\ PrecSolve\ if\ it\ uses\ an}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ \ \ \ \ iterative\ method\ in\ its\ solution.\ \ \ In\ that\ case,\ the}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ \ \ \ \ the\ residual\ vector\ r\ -\/\ P\ z\ of\ the\ system\ should\ be}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *\ \ \ \ \ made\ less\ than\ delta\ in\ weighted\ L2\ norm,\ i.e.,}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ sqrt\ [\ Sum\ (Res[i]*ewt[i])\string^2\ ]\ <\ delta\ .}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ \ \ \ \ Note:\ the\ error\ weight\ vector\ ewt\ can\ be\ obtained}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *\ \ \ \ \ through\ a\ call\ to\ the\ routine\ IDAGetErrWeights.}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ user\_data\ is\ a\ pointer\ to\ user\ data,\ the\ same\ as\ the\ user\_data}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ \ \ \ \ parameter\ passed\ to\ IDASetUserData.}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *\ tmp\ is\ an\ N\_Vector\ which\ can\ be\ used\ by\ the\ PrecSolve}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ *\ \ \ \ \ routine\ as\ temporary\ storage\ or\ work\ space.}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ *\ The\ IDASpilsPrecSolveFn\ should\ return}}
+\DoxyCodeLine{00155\ \textcolor{comment}{\ *\ \ \ \ \ 0\ if\ successful,}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *\ \ \ \ \ a\ positive\ int\ if\ a\ recoverable\ error\ occurred,\ or}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ \ \ \ \ a\ negative\ int\ if\ a\ nonrecoverable\ error\ occurred.}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *\ Following\ a\ recoverable\ error,\ the\ integrator\ will\ attempt\ to}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *\ recover\ by\ updating\ the\ preconditioner\ and/or\ reducing\ the}}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ *\ stepsize.}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{ida__spils_8h_a1031ef2a1bb8da370ab92070fc3fd36d}{IDASpilsPrecSolveFn}})(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ tt,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ yp,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ rr,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ rvec,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ zvec,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c\_j,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ delta,\ \textcolor{keywordtype}{void}\ *user\_data,}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp);}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ *\ Type\ :\ IDASpilsJacTimesVecFn}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ *\ The\ user-\/supplied\ function\ jtimes\ is\ to\ generate\ the\ product}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ *\ J*v\ for\ given\ v,\ where\ J\ is\ the\ Jacobian\ matrix}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ *\ \ \ \ J\ =\ dF/dy\ +\ c\_j*dF/dy'}}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ *\ \ or\ an\ approximation\ to\ it,\ and\ v\ is\ a\ given\ vector.}}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ *\ It\ should\ return\ 0\ if\ successful\ and\ a\ nonzero\ int\ otherwise.}}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ *\ A\ function\ jtimes\ must\ have\ the\ prototype\ given\ below.\ Its}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ *\ parameters\ are\ as\ follows:}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ *\ \ \ tt\ \ \ is\ the\ current\ value\ of\ the\ independent\ variable.}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ *\ \ \ yy\ \ \ is\ the\ current\ value\ of\ the\ dependent\ variable\ vector,}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ namely\ the\ predicted\ value\ of\ y(t).}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ *\ \ \ yp\ \ \ is\ the\ current\ value\ of\ the\ derivative\ vector\ y',}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ namely\ the\ predicted\ value\ of\ y'(t).}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ *\ \ \ rr\ \ \ is\ the\ current\ value\ of\ the\ residual\ vector\ F(t,y,y').}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ *\ \ \ v\ \ \ \ is\ the\ N\_Vector\ to\ be\ multiplied\ by\ J.}}
+\DoxyCodeLine{00194\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00195\ \textcolor{comment}{\ *\ \ \ Jv\ \ \ is\ the\ output\ N\_Vector\ containing\ J*v.}}
+\DoxyCodeLine{00196\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00197\ \textcolor{comment}{\ *\ \ \ c\_j\ \ is\ the\ scalar\ in\ the\ system\ Jacobian,\ proportional}}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ to\ 1/hh.}}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ *\ \ \ user\_data\ is\ a\ pointer\ to\ user\ data,\ the\ same\ as\ the}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ pointer\ passed\ to\ IDASetUserData.}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ *\ \ \ tmp1,\ tmp2\ are\ two\ N\_Vectors\ which\ can\ be\ used\ by\ Jtimes\ for}}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ work\ space.}}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{ida__spils_8h_a124030cc9f166cf8bfbb13090548f9d6}{IDASpilsJacTimesVecFn}})(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ tt,}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ yp,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ rr,}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ Jv,}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c\_j,\ \textcolor{keywordtype}{void}\ *user\_data,}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp1,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ tmp2);}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00216\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00217\ \textcolor{comment}{\ *\ Optional\ inputs\ to\ the\ IDASPILS\ linear\ solver\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00218\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00219\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ *\ IDASpilsSetPreconditioner\ specifies\ the\ PrecSetup\ and\ PrecSolve\ }}
+\DoxyCodeLine{00221\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ functions.}}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Default\ is\ NULL\ for\ both\ arguments.}}
+\DoxyCodeLine{00223\ \textcolor{comment}{\ *\ IDASpilsSetJacTimesVecFn\ specifies\ the\ jtimes\ function.\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Default\ is\ to\ use\ an\ internal\ finite\ difference\ \ \ \ \ \ }}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ approximation\ routine.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00226\ \textcolor{comment}{\ *\ IDASpilsSetGSType\ specifies\ the\ type\ of\ Gram-\/Schmidt\ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00227\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ orthogonalization\ to\ be\ used.\ This\ must\ be\ one\ of\ \ \ \ }}
+\DoxyCodeLine{00228\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ the\ two\ enumeration\ constants\ MODIFIED\_GS\ or\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00229\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ CLASSICAL\_GS\ defined\ in\ iterativ.h.\ These\ correspond\ }}
+\DoxyCodeLine{00230\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ to\ using\ modified\ Gram-\/Schmidt\ and\ classical\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Gram-\/Schmidt,\ respectively.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Default\ value\ is\ MODIFIED\_GS.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Only\ for\ IDASPGMR.}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ *\ IDASpilsSetMaxRestarts\ specifies\ the\ maximum\ number\ of\ restarts}}
+\DoxyCodeLine{00235\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ to\ be\ used\ in\ the\ GMRES\ algorithm.\ \ maxrs\ must\ be\ a\ \ }}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ non-\/negative\ integer.\ \ Pass\ 0\ to\ specify\ no\ restarts.}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Default\ is\ 5.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Only\ for\ IDASPGMR.}}
+\DoxyCodeLine{00239\ \textcolor{comment}{\ *\ IDASpbcgSetMaxl\ specifies\ the\ maximum\ Krylov\ subspace\ size.\ }}
+\DoxyCodeLine{00240\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Default\ is\ 5.}}
+\DoxyCodeLine{00241\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Only\ for\ IDASPBCG\ and\ IDASPTFQMR.}}
+\DoxyCodeLine{00242\ \textcolor{comment}{\ *\ IDASpilsSetEpsLin\ specifies\ the\ factor\ in\ the\ linear\ iteration\ }}
+\DoxyCodeLine{00243\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ convergence\ test\ constant.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00244\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Default\ is\ 0.05\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00245\ \textcolor{comment}{\ *\ IDASpilsSetIncrementFactor\ specifies\ a\ factor\ in\ the\ increments}}
+\DoxyCodeLine{00246\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ to\ yy\ used\ in\ the\ difference\ quotient\ approximations\ }}
+\DoxyCodeLine{00247\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ to\ matrix-\/vector\ products\ Jv.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00248\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Default\ is\ 1.0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00249\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00250\ \textcolor{comment}{\ *\ The\ return\ value\ of\ IDASpilsSet*\ is\ one\ of:}}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_SUCCESS\ \ \ if\ successful}}
+\DoxyCodeLine{00252\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_MEM\_NULL\ \ if\ the\ ida\ memory\ was\ NULL}}
+\DoxyCodeLine{00253\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_LMEM\_NULL\ if\ the\ linear\ solver\ memory\ was\ NULL}}
+\DoxyCodeLine{00254\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00255\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_a814927d4774d20fc15ad00a59cc651bb}{IDASpilsSetPreconditioner}}(\textcolor{keywordtype}{void}\ *ida\_mem,}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ida__spils_8h_a66dd933c015a6b1962691951592fd7aa}{IDASpilsPrecSetupFn}}\ pset,\ }
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ida__spils_8h_a1031ef2a1bb8da370ab92070fc3fd36d}{IDASpilsPrecSolveFn}}\ psolve);}
+\DoxyCodeLine{00260\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_a5fa34a512bc2e54905e6622515d4e745}{IDASpilsSetJacTimesVecFn}}(\textcolor{keywordtype}{void}\ *ida\_mem,}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ida__spils_8h_a124030cc9f166cf8bfbb13090548f9d6}{IDASpilsJacTimesVecFn}}\ jtv);}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_a52d05bfee431ae9ccb70f61a03870d8e}{IDASpilsSetGSType}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{int}\ gstype);}
+\DoxyCodeLine{00264\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_a907083d8d0f35f3c5570ae44a0349536}{IDASpilsSetMaxRestarts}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{int}\ maxrs);}
+\DoxyCodeLine{00265\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_a2832f76902ee83f72a6f665fefbb9d93}{IDASpilsSetMaxl}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{int}\ maxl);}
+\DoxyCodeLine{00266\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_ad255856ade8f23ae593bb5f6047f6b22}{IDASpilsSetEpsLin}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ eplifac);}
+\DoxyCodeLine{00267\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_ae88d2723aca9f7a15b44d26a4fe7e9d3}{IDASpilsSetIncrementFactor}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ dqincfac);}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00270\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00271\ \textcolor{comment}{\ *\ Optional\ outputs\ from\ the\ IDASPILS\ linear\ solver\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ *-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00273\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00274\ \textcolor{comment}{\ *\ IDASpilsGetWorkSpace\ returns\ the\ real\ and\ integer\ workspace\ used\ }}
+\DoxyCodeLine{00275\ \textcolor{comment}{\ *\ \ \ \ \ by\ IDASPILS.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00276\ \textcolor{comment}{\ *\ IDASpilsGetNumPrecEvals\ returns\ the\ number\ of\ preconditioner\ \ \ }}
+\DoxyCodeLine{00277\ \textcolor{comment}{\ *\ \ \ \ \ evaluations,\ i.e.\ the\ number\ of\ calls\ made\ to\ PrecSetup\ \ \ \ }}
+\DoxyCodeLine{00278\ \textcolor{comment}{\ *\ \ \ \ \ with\ jok==FALSE.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00279\ \textcolor{comment}{\ *\ IDASpilsGetNumPrecSolves\ returns\ the\ number\ of\ calls\ made\ to\ \ \ }}
+\DoxyCodeLine{00280\ \textcolor{comment}{\ *\ \ \ \ \ PrecSolve.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00281\ \textcolor{comment}{\ *\ IDASpilsGetNumLinIters\ returns\ the\ number\ of\ linear\ iterations.}}
+\DoxyCodeLine{00282\ \textcolor{comment}{\ *\ IDASpilsGetNumConvFails\ returns\ the\ number\ of\ linear\ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00283\ \textcolor{comment}{\ *\ \ \ \ \ convergence\ failures.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00284\ \textcolor{comment}{\ *\ IDASpilsGetNumJtimesEvals\ returns\ the\ number\ of\ calls\ to\ jtimes}}
+\DoxyCodeLine{00285\ \textcolor{comment}{\ *\ IDASpilsGetNumResEvals\ returns\ the\ number\ of\ calls\ to\ the\ user\ }}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ *\ \ \ \ \ res\ routine\ due\ to\ finite\ difference\ Jacobian\ times\ vector\ }}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ *\ \ \ \ \ evaluation.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ *\ IDASpilsGetLastFlag\ returns\ the\ last\ error\ flag\ set\ by\ any\ of}}
+\DoxyCodeLine{00289\ \textcolor{comment}{\ *\ \ \ \ \ the\ IDASPILS\ interface\ functions.}}
+\DoxyCodeLine{00290\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00291\ \textcolor{comment}{\ *\ The\ return\ value\ of\ IDASpilsGet*\ is\ one\ of:}}
+\DoxyCodeLine{00292\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_SUCCESS\ \ \ if\ successful}}
+\DoxyCodeLine{00293\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_MEM\_NULL\ \ if\ the\ ida\ memory\ was\ NULL}}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_LMEM\_NULL\ if\ the\ linear\ solver\ memory\ was\ NULL}}
+\DoxyCodeLine{00295\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00296\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_ab418cd46bf84c68f3aa5ef1b61a1c8d2}{IDASpilsGetWorkSpace}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *lenrwLS,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *leniwLS);}
+\DoxyCodeLine{00299\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_aad606890f574b4c2c1650d93052263b6}{IDASpilsGetNumPrecEvals}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *npevals);}
+\DoxyCodeLine{00300\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_ae1d12508a0d108038674d9b7799b761e}{IDASpilsGetNumPrecSolves}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *npsolves);}
+\DoxyCodeLine{00301\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_af292518023da279c9342a19c2d3ebe78}{IDASpilsGetNumLinIters}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *nliters);}
+\DoxyCodeLine{00302\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_a7f373ac94ba1f97bba2706a8d8a2aceb}{IDASpilsGetNumConvFails}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *nlcfails);}
+\DoxyCodeLine{00303\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_aeee53b90aa1fcc4d7926e5d17ba1b452}{IDASpilsGetNumJtimesEvals}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *njvevals);}
+\DoxyCodeLine{00304\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_a1bc35cf45d7cf5445b50a203f3ebca7f}{IDASpilsGetNumResEvals}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *nrevalsLS);\ }
+\DoxyCodeLine{00305\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spils_8h_a0d564b4894094620e3198e8465afcbed}{IDASpilsGetLastFlag}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *flag);}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00308\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00309\ \textcolor{comment}{\ *\ The\ following\ function\ returns\ the\ name\ of\ the\ constant\ }}
+\DoxyCodeLine{00310\ \textcolor{comment}{\ *\ associated\ with\ an\ IDASPILS\ return\ flag}}
+\DoxyCodeLine{00311\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00312\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{ida__spils_8h_a8b85941c82c77fb5353097b47cd3ab17}{IDASpilsGetReturnFlagName}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ flag);}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00318\ \}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

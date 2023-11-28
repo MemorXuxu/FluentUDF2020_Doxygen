@@ -1,0 +1,232 @@
+\doxysection{bgmesh.\+h}
+\hypertarget{bgmesh_8h_source}{}\label{bgmesh_8h_source}\index{fluent20.1.0/tgrid/src/bgmesh.h@{fluent20.1.0/tgrid/src/bgmesh.h}}
+\mbox{\hyperlink{bgmesh_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ BGMESH\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ BGMESH\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{environ_8h}{environ.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tgrid_2src_2entity_8h}{entity.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tg__geom_8h}{tg\_geom.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{kdtree_8h}{kdtree.h}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{meshsize_8h}{meshsize.h}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ BG\_BGMESH\ 1}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ BG\_GEOM\ \ \ 2}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ BG\_BGTHREAD\ 3}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ BG\_BGMESH2\ 4}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ BG\_GEODESIC\ 5}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ CONSTANT\_SIZE\ 1}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ VARIABLE\_SIZE\ 2}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ NO\_SIZE\ 3}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structbg__mesh__struct}{bg\_mesh\_struct}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structbg__mesh__struct}{bg\_mesh\_struct}}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structbg__mesh__struct_ac765329451135abec74c45e1897abf26}{type}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structbg__mesh__struct_a3e8e165b63d10cafb9f889aac223763d}{tg}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ defining\ "{}geometry\ thread"{}\ (not\ in\ bgmesh)\ */}}
+\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *\mbox{\hyperlink{structbg__mesh__struct_aa19bc82cd7f405353202bda0928b1720}{dm}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ domain\ containing\ bg-\/mesh\ threads\ */}}
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{struct__tg__group__struct}{Group}}\ *\mbox{\hyperlink{structbg__mesh__struct_a5820f833d0fa2f3c1f16f2f5f19bb714}{gp}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ group\ containing\ bg-\/mesh\ threads\ */}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structbg__mesh__struct_a31bacb9e516279e8901461fe83c7a026}{tf}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ face\ thread\ */}}
+\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structbg__mesh__struct_ab8fc786e9a2fbbe7c030b8beea346eba}{tv}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ node\ thread\ */}}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structbg__mesh__struct_ae309b8d8a88533091b2d42eb95494b95}{tfp}};\ \ \ \ \ \ \textcolor{comment}{/*\ faces\ in\ parameter\ space\ */}}
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structbg__mesh__struct_a18c678fcf6cfb865c8554e1ba9a3c500}{tvp}};\ \ \ \ \ \ \textcolor{comment}{/*\ parameters\ for\ nodes\ */}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structbg__mesh__struct_a3cf373dd5dfb62e81218ab9625fdf91b}{nte1}};}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structbg__mesh__struct_aaecce982bf7269a77b467dd07b35025c}{max\_nte1}};}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ **\mbox{\hyperlink{structbg__mesh__struct_ac7e294e71ff827fe408aa4f7fddee85c}{lte1}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ list\ of\ boundary/feature\ edge\ threads\ */}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structbg__mesh__struct_ac7859c17b96ee9b582248ccc6ff55733}{nfv1}};}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structbg__mesh__struct_a322713b19d5521fa3de14e7afdba6412}{max\_nfv1}};}
+\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ **\mbox{\hyperlink{structbg__mesh__struct_acb0517c914ce3ad014493c0ce7fd30d2}{lfv1}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ list\ of\ feature\ nodes\ */}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{structkd__tree__struct}{KdTree}}\ *\mbox{\hyperlink{structbg__mesh__struct_a834af97dadbbab5be083608c5d7cd3d9}{tree}};}
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{struct_bounding___box}{Bounding\_Box}}\ \mbox{\hyperlink{structbg__mesh__struct_ae73a5d0ef45892a35931195ce8fe489b}{box}};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structbg__mesh__struct_a2b8f1177334f2017f54b72526eb296a0}{min\_size}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ for\ bgmesh\ size\ */}}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structbg__mesh__struct_a896afea1570559112fcfc358ddc45cd9}{max\_size}};}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structbg__mesh__struct_a79024cb425de1121b7ce90ea3a12e5a2}{size\_method}};}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structbg__mesh__struct_a450cd6fc899b040f7384d362209be6af}{size\_status}};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structbg__mesh__struct_aab34f2fc02b4a86bea93c68e1ec09d75}{tag}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ convert\ to\ bits\ */}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structbg__mesh__struct_a750b5d744c39a06bfb13e6eb010e35d0}{index}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ used\ for\ position\ in\ geom\_bgmesh\ */}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{structbg__mesh__struct_a7f5b1685d7933ecfa2db6d38875c85a0}{next}};}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00064\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a5d27fed76ee196334afc6d8e04cb8a14}{BOUNDARY\_REACHED}}\ \ \ =\ -\/1,}
+\DoxyCodeLine{00066\ \ \ \ \ \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a51b25c32bfdda412a034f1ce2fc280d0}{LOOP\_CREATION}}\ \ \ \ \ \ =\ -\/3,}
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a7b94d7709bc8a7f91c17cfd94906af9b}{FACE\_FOUND}}\ \ \ \ \ \ \ \ \ =\ \ 1,}
+\DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23a20b1e466b8ad257681194161dd2c0060}{NO\_FACE}}\ \ \ \ \ \ \ \ \ \ \ \ =\ 2}
+\DoxyCodeLine{00069\ \}\ \mbox{\hyperlink{bgmesh_8h_a6f367b00b3b3ad681e93ca167893df23}{Type\_Next\_Face}};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00072\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432a6c6841215ab1db2aadd8b515b0a72c07}{NODE\_INTERSECTION}}\ \ \ \ \ \ =\ \ 0,}
+\DoxyCodeLine{00074\ \ \ \ \ \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432a52b32f3d819738e090c34ea66c64c3f4}{EDGE\_INTERSECTION}}\ \ \ \ \ \ =\ -\/1,}
+\DoxyCodeLine{00075\ \ \ \ \ \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432afa320e5ace4e167f62461ec1675802c6}{CLEAR\_INTERSECTION}}\ \ \ \ \ =\ \ 1,}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432aec0b7fa7ca75d03bed7590a7bff17cd0}{UNDEFINED\_INTERSECTION}}\ =\ -\/2}
+\DoxyCodeLine{00077\ \}\mbox{\hyperlink{bgmesh_8h_abd09016c5d4e4e149bf2127b8569d432}{Type\_Iplane\_Face\_Intersect}};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ SV\_FS\_STORAGE(v,t)\ (\&SURF\_SEED\_STRUCT(v))}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ NODE\_SURFSEED(v,t)\ (*SV\_FS\_STORAGE(v,t))}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ NODE\_SURFSEED\_P(v,t)\ SV\_FS\_STORAGE(v,t)}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ NODE\_FSEED(v,t)\ SURFSEED\_FSEED(SV\_FS\_STORAGE(v,t))}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ NODE\_FSEED\_P(v,t)\ (\&SURFSEED\_FSEED(SV\_FS\_STORAGE(v,t)))}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ NODE\_FSEED\_FACE(v,t)\ SURFSEED\_FACE(SV\_FS\_STORAGE(v,t))}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ NODE\_FSEED\_ID(v,t)\ SURFSEED\_ID(SV\_FS\_STORAGE(v,t))}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ NODE\_SURF\_PARA(v,t)\ SURFSEED\_PARA(SV\_FS\_STORAGE(v,t))}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ NODE\_FSEED\_NULL(v,t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\ \ \ \ ((NODE\_FSEED\_FACE(v,t)\ ==\ FACESEED\_FACE(\_TG\_Face\_Seed\_Null))\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\ \ \ \ \ \&\&\ (NODE\_FSEED\_ID(v,t)\ ==\ FACESEED\_ID(\_TG\_Face\_Seed\_Null)))}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ FSEED\_NULL(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\ \ \ \ ((SURFSEED\_FACE(s)\ ==\ FACESEED\_FACE(\_TG\_Face\_Seed\_Null))\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\ \ \ \ \ \&\&\ (SURFSEED\_ID(s)\ ==\ FACESEED\_ID(\_TG\_Face\_Seed\_Null)))}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ BGMESH\_INDEX(s)\ s-\/>index}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00102\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00103\ \{}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{bgmesh_8h_a6dd1f10743101b0b018ff26fbb069cae}{\_TG\_Get\_Geom\_BgMesh\_List}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structkd__tree__struct}{KdTree}}\ *\mbox{\hyperlink{bgmesh_8h_a6ff08ccf0901fadf062ef0e83b17ee2a}{\_TG\_Get\_Geom\_BgMesh\_Tree}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a8c4fb55e06db20154ea252348493ad1e}{\_TG\_Clear\_Geom\_BgMesh\_List}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a8f340a8747e42b17b799962919634904}{\_TG\_Populate\_Geom\_BgMesh\_List}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a77f47a7297ef98710bdbe6e7847de889}{\_TG\_Init\_Surf\_As\_Face\_Thread}}(\mbox{\hyperlink{structsurface__struct}{Surf}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tf);}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a35ffdfec63cebe670e659fc1f258a50a}{\_TG\_Init\_Surf\_As\_BgMesh}}(\mbox{\hyperlink{structsurface__struct}{Surf}}\ *,\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *);}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{bgmesh_8h_ac532a372a32cb0ba62b1881c84077f22}{\_TG\_Create\_BgMesh}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{bgmesh_8h_ac3e984f2ac3ba87dd2e70d6ba65c9fb5}{\_TG\_Create\_BgMesh\_Manifold\_Thread}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{bgmesh_8h_a7f32ba4fd2b6f374dd5a4e0da5d98b8c}{\_TG\_Create\_Geom\_BgMesh}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{bgmesh_8h_a22b0c9291a953fb05d6fadf242196c08}{\_TG\_Create\_Prism\_Cap\_BgMesh}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{bgmesh_8h_ab6014d930e3aaf6eba6432452b5e6559}{\_TG\_Create\_Geodesic\_BgMesh}}(\mbox{\hyperlink{structcons__cell}{List}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{bgmesh_8h_a4da9a92f326c4dabcced042fd86a4d84}{\_TG\_Define\_BgMesh}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_acfe40c4acd3af3a8820852493347ffe9}{\_TG\_Delete\_BgMesh}}(\mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_afc1eb9f43f10e72f6484ddbf7be0bb77}{\_TG\_Clear\_All\_BgMesh}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{bgmesh_8h_ae5505183685cccd7b973b8607081265d}{\_TG\_Add\_Geom\_BgMesh\_Features}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a3a526bd5f662e9a9b659a5f78b31e67c}{\_TG\_Gen\_Angle\_Features\_In\_BgMesh}}(\mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a3768b932a2217b127af293d9904007b8}{\_TG\_Gen\_Boundary\_Edges\_In\_BgMesh}}\ (\mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *,}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a5c967c740f70ea22c3e0b760379df4be}{\_TG\_Construct\_BgMesh\_Features}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\textcolor{keywordtype}{void}\ *,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{bgmesh_8h_aa7bd7845facc5d817a8647f020018b19}{\_TG\_Gen\_Feature\_Edges\_In\_BgMesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a7132abcffd0126c81a9828ecb5a17c09}{\_TG\_Gen\_Edges\_From\_Seed}}\ (\mbox{\hyperlink{struct__tg__face__struct}{Face}}\ *,\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{bgmesh_8h_ac3ba722568421290b2feec36342698bb}{\_TG\_Get\_Current\_BgMesh}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *\mbox{\hyperlink{bgmesh_8h_aa95f90a52608638eaea7f665b1b47422}{\_TG\_Get\_BgMesh\_Of\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *\mbox{\hyperlink{bgmesh_8h_a5394bf05a3346107682e5e87d0fc0b43}{\_TG\_Get\_BgMesh\_Domain}}(\mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *);}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{bgmesh_8h_a231a77b466828b9a8adc51b6a009e62c}{\_TG\_Get\_BgMesh\_Tree}}(\mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *);}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{bgmesh_8h_a6a07b2126b48de6cf698273f8cd5acdb}{\_TG\_Get\_Geom\_BgMesh\_Size}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a88d6cede049bb9d3e5ea4204e232588d}{\_TG\_BgMesh\_Allocate\_Search\_Arrays}}(\textcolor{keywordtype}{int}**,\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}***);}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a84e25b80a9f2661bc56242461d2a40ab}{\_TG\_BgMesh\_Free\_Search\_Arrays}}(\textcolor{keywordtype}{int}*,\ \mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}**);}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_aa63ae6d42465d1d72a406c6fad0cbe72}{\_TG\_Bg\_Node\_Normal}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\textcolor{keywordtype}{void}*,\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a483875aec9400de4193de091e8774186}{\_TG\_Bg\_Face\_Normal}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\textcolor{keywordtype}{void}*,\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_ae456789fda77f4a1998732c484700760}{\_TG\_Bg\_Face\_Normal\_At\_Closest\_Point}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*,\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a1e08cd9cc41bcea4f0dc8e4b5fefb7f8}{\_TG\_Bg\_Host\_Normal}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\textcolor{keywordtype}{void}*,\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a73ada984633ecda3b64b88fcac87c6b1}{\_TG\_Bg\_BBox}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a25d2e7daea72e9f07230a5cf5905994a}{\_TG\_Bg\_Closest\_Point}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ [],\ \textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a24c30d6e689d05758bb8da177bea8d2b}{\_TG\_Bg\_Local\_Closest\_Point}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ [],\ \textcolor{keywordtype}{void}\ *,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_aeca761ede9a4db26cb5c790da8f7bf46}{\_TG\_Bg\_Closest\_Point\_Inside\_Face}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ [],\ \textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{bgmesh_8h_acbe46fff9620f16797b6c7325a49a899}{\_TG\_Geom\_Domain}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a031650b5257875bd1ab5810fa0d27dd6}{\_TG\_Create\_Geometry\_BgMesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *,}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_aea142696f9e0f35090fa51dccd71ef02}{\_TG\_Add\_Geometry\_BgMesh}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *,}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a58696b8f577faacda92f1aad5f74cef4}{\_TG\_Delete\_Geometry\_BgMesh}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_af5eadfe22271a8aea1cb5ca84f1239e0}{\_TG\_Reset\_Node\_SurfSeed}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_ae9ceab2793914770ea7599c8bbbd8149}{\_TG\_Insert\_Edge\_Thread\_In\_BgMesh}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a559b755c209b24a6f8b16bfed0d59379}{\_TG\_Remove\_Edge\_Thread\_From\_BgMesh}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_ad5402bf71f72bd3703a24e5d90fb7ef1}{\_TG\_Check\_Swap\_Edges\_In\_BgMesh}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{bgmesh_8h_a1267bb209cccb9e7808338398908a4c6}{\_TG\_Search\_KdTree\_Faces}}(\mbox{\hyperlink{structkd__tree__struct}{KdTree}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{bgmesh_8h_aaba644730368b214f333a88bd8c034c4}{\_TG\_Search\_BgMesh\_Faces}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{bgmesh_8h_af3746c9b1c0972c8bbfcf645f02e9b9b}{\_TG\_Search\_BgMesh\_Faces\_By\_Thread\_Flags}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{bgmesh_8h_a30d4db1b2890e87f8aaefab404ce5fd0}{\_TG\_Search\_BgMesh\_Faces\_With\_BBox}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{bgmesh_8h_a06335ca0fd773823bae0dbf9f5597647}{\_TG\_Search\_KdTree\_Nodes}}(\mbox{\hyperlink{structbg__mesh__struct}{BgMesh}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{bgmesh_8h_a0032cc20455159016efd5adb9a979bf0}{\_TG\_Search\_BgMesh\_Entities}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{bgmesh_8h_a01873c8e23a2e20cd433e0e7fc0a83ff}{\_TG\_Search\_BgMesh\_Tree\_Entities}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_ab994019fb8ddc4d7e57cb54511eb405b}{\_TG\_BgMesh\_Search\_Targets}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos,}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ range,\ \mbox{\hyperlink{structcons__cell}{List}}\ **l\_target\_faces,}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ **l\_target\_edges,}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_expansion);}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{bgmesh_8h_a007522d597ca7f15f076f615b6d1dd70}{\_TG\_BgMesh\_Search\_Edges\_Safe}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ pos[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ range);}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{bgmesh_8h_aa573750b9f60a65cdce4017cb6717b5f}{\_TG\_BgMesh\_Search\_Faces\_Safe}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ pos[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ range);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{bgmesh_8h_a171401c33d74bd0189eb0161f473f1f4}{\_TG\_Project\_Pos\_To\_BgMesh}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos,}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ range,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ rel\_tol,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_iteration,}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__tg__face__struct}{Face}}\ **ftarget,}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ **l\_target\_faces,}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ **l\_target\_edges);}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{bgmesh_8h_a007da1fb5ff539628f0b4dd35182cf49}{\_TG\_Create\_Surface\_Triangle}}(\mbox{\hyperlink{structsurface__struct}{Surf}}*,\textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\mbox{\hyperlink{structsurf__seed__struct}{SurfSeed}}*,}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[]);}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{bgmesh_8h_a566807ed43a68ac02ada1d4f8aa4108e}{\_TG\_Create\_Surface\_Point}}(\mbox{\hyperlink{structsurface__struct}{Surf}}*,\textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],\mbox{\hyperlink{structsurf__seed__struct}{SurfSeed}}*,}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[]);}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_ac4dde7e579ea359aa252d6563fadb067}{\_TG\_Init\_BgMesh\_Size}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a8c3007ed4da77750b215f72e09042d49}{\_TG\_Smooth\_BgMesh\_Size}}\ (\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a9639f104971888062b6f628edd72b87e}{\_TG\_Compute\_BgMesh\_Size}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_ab79d07b9a4609b8807273a2c4c8be153}{\_TG\_Update\_BgMesh\_Size}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}*,\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a156e2435967e3cb18ec080a78bbd4096}{\_TG\_Set\_BgMesh\_Size}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a826cabf640fd4c8ab4e9e66e99cf2ef8}{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Radius}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a81759c347a7aab248c167bf2bcd897c1}{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Curvature}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a7a5b74190885163622e462e0ea7f69f2}{\_TG\_Compute\_BgMesh\_Size\_Based\_On\_Proximity}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{bgmesh_8h_a16b3959aeffa3bea950ef1adf820acf9}{\_TG\_Get\_Average\_Radius\_On\_Face\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{bgmesh_8h_afd8458fb64d0662fb547bbaf83730102}{\_TG\_Compute\_Curvature\_Size}}(\mbox{\hyperlink{struct__tg__face__struct}{Face}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a706e7550329c0ad8823275d943c1126d}{\_TG\_Compute\_Face\_Node\_Curvature\_Sizes}}(\mbox{\hyperlink{struct__tg__face__struct}{Face}}\ *f,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmin,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fmax,}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ threshold\_angle,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *node\_sizes);}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{bgmesh_8h_ab899400a765439ecf768b48ffdebfe93}{\_TG\_Create\_Surface\_Triangle\_Target}}(\mbox{\hyperlink{structsurface__struct}{Surf}}*,\textcolor{keyword}{const}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structsurf__seed__struct}{SurfSeed}}*,}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[],}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a91de4f245385f1cd3248f84746e654a6}{\_TG\_Recover\_Surface}}\ (\textcolor{keywordtype}{int}\ method,\ \mbox{\hyperlink{struct__tg__face__struct}{Face}}\ *fp,}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ uvp[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ p[]);}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bgmesh_8h_a42e83179ee14d3d035e06221e62c9a61}{\_TG\_BgMesh\_Print\_Statistics}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00224\ \}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ BGMESH\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

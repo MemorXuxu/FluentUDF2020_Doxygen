@@ -1,0 +1,86 @@
+\doxysection{ida\+\_\+lapack.\+h}
+\hypertarget{ida__lapack_8h_source}{}\label{ida__lapack_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_lapack.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_lapack.h}}
+\mbox{\hyperlink{ida__lapack_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.4\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2008/04/18\ 19:42:37\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer:\ Radu\ Serban\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2006,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ Header\ file\ for\ the\ IDA\ dense\ linear\ solver\ IDALAPACK.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#ifndef\ \_IDALAPACK\_H}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ \_IDALAPACK\_H}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{ida__direct_8h}{ida/ida\_direct.h}}>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__lapack_8h}{sundials/sundials\_lapack.h}}>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ Function\ :\ IDALapackDense}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ A\ call\ to\ the\ IDALapackDense\ function\ links\ the\ main\ integrator}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *\ with\ the\ IDALAPACK\ linear\ solver\ using\ dense\ Jacobians.}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ ida\_mem\ is\ the\ pointer\ to\ the\ integrator\ memory\ returned\ by}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ IDACreate.}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ N\ is\ the\ size\ of\ the\ ODE\ system.}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ The\ return\ value\ of\ IDALapackDense\ is\ one\ of:}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_SUCCESS\ \ \ if\ successful}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_MEM\_NULL\ \ if\ the\ IDA\ memory\ was\ NULL}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_MEM\_FAIL\ \ if\ there\ was\ a\ memory\ allocation\ failure}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_ILL\_INPUT\ if\ a\ required\ vector\ operation\ is\ missing}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__lapack_8h_a36084703b3079e7d3f60b4bbab5382cb}{IDALapackDense}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}});}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ Function\ :\ IDALapackBand}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ A\ call\ to\ the\ IDALapackBand\ function\ links\ the\ main\ integrator}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ with\ the\ IDALAPACK\ linear\ solver\ using\ banded\ Jacobians.\ }}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ ida\_mem\ is\ the\ pointer\ to\ the\ integrator\ memory\ returned\ by}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ IDACreate.}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ N\ is\ the\ size\ of\ the\ ODE\ system.}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ mupper\ is\ the\ upper\ bandwidth\ of\ the\ band\ Jacobian\ approximation.}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ mlower\ is\ the\ lower\ bandwidth\ of\ the\ band\ Jacobian\ approximation.}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ The\ return\ value\ of\ IDALapackBand\ is\ one\ of:}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_SUCCESS\ \ \ if\ successful}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_MEM\_NULL\ \ if\ the\ IDA\ memory\ was\ NULL}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_MEM\_FAIL\ \ if\ there\ was\ a\ memory\ allocation\ failure}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *\ \ \ \ IDADLS\_ILL\_INPUT\ if\ a\ required\ vector\ operation\ is\ missing}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ if\ a\ bandwidth\ has\ an\ illegal\ value.}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__lapack_8h_ab2a0a65cff26d106a456f7adc3ec70ab}{IDALapackBand}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}},\ \textcolor{keywordtype}{int}\ mupper,\ \textcolor{keywordtype}{int}\ mlower);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00077\ \}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

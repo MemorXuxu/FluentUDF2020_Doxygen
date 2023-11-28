@@ -1,0 +1,28 @@
+var classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info =
+[
+    [ "__init__", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#abdd362d5f799ad16b5d6700efe590290", null ],
+    [ "_getNCPUs", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a1e8b416fc85387604f74329fb1ee8274", null ],
+    [ "_is_cpusparcv7", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a8f810d2761eec88f042fbdb1deb05b24", null ],
+    [ "_is_cpusparcv8", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a8d1fc1d3cd155e9a89c2e6fd555552c0", null ],
+    [ "_is_cpusparcv9", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#ad89d78aa011314092483c4e8d36ea832", null ],
+    [ "_is_i386", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#abe2c87fe94637bb7f9870ec25230eb93", null ],
+    [ "_is_sparc", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a0160fac671639e885a7d3ef609a5e13c", null ],
+    [ "_is_sparcstation5", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#ae6d07573b39367761d0eb975323b9d5a", null ],
+    [ "_is_sparcv9", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a15d5f7cf159f5cdcf0ff99c3e43aee1a", null ],
+    [ "_is_sun4", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a9927c7bdbc8daf165aa146cf72520814", null ],
+    [ "_is_sunfire", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a4fb60bc336d8c4854894a3471c59bdc7", null ],
+    [ "_is_SUNW", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a8c979eefcb584af0010a25b899589e97", null ],
+    [ "_is_ultra", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a67f59f9aa8ed7b08be28adbd981b2a70", null ],
+    [ "_is_ultra1", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a9c137e3d3ed14eee24b783ab41999e61", null ],
+    [ "_is_ultra2", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a6920ae6dd9c48662e814562f274adb69", null ],
+    [ "_is_ultra250", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a748d1874b8586aca3494b327e2ef87d0", null ],
+    [ "_is_ultra30", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#adb22b7eae10c5868ad9cd835774d4727", null ],
+    [ "_is_ultra4", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a1d71ad6cf7cd98db8ead1616542a3323", null ],
+    [ "_is_ultra5", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#ab023fe5da7caf8f57df34ed642c6118c", null ],
+    [ "_is_ultra5_10", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a769595c0c184b985fa9b609e7c338bcf", null ],
+    [ "_is_ultra60", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#acbfd97dfd4a1a87e38e5c19c9c23fe97", null ],
+    [ "_is_ultra80", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#ad60dd1fa0187a537895a5a925d8ec57a", null ],
+    [ "_is_ultraenterprice", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#ac45529dd286950d6805f012895c3321f", null ],
+    [ "_is_ultraenterprice10k", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#acd77ef3547b46d7d6e612facd6f23122", null ],
+    [ "_not_impl", "classnumpy_1_1distutils_1_1cpuinfo_1_1_sun_o_s_c_p_u_info.html#a2b55d8d3acc5105998e840ecd15c9d3e", null ]
+];

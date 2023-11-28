@@ -1,0 +1,382 @@
+\doxysection{cxsurf.\+h}
+\hypertarget{cxsurf_8h_source}{}\label{cxsurf_8h_source}\index{fluent20.1.0/cortex/src/cxsurf.h@{fluent20.1.0/cortex/src/cxsurf.h}}
+\mbox{\hyperlink{cxsurf_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ \ cxsurf.h}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ \ Included\ by\ CORTEX\ client-\/side\ files.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ Cxsurf\_h}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ Cxsurf\_h}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cxiface_8h}{cxiface.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ NCELL\_GEOM\ 7}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ X\_DIM\ 0}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ Y\_DIM\ 1}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ Z\_DIM\ 2}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ SCALAR\_FLD\ 3}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ QUADRIC\_FLD\ 4}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ MAX\_ISO\_VALUES\ 1000}}
+\DoxyCodeLine{00023\ \textcolor{comment}{/*In\ cortex/cxsurf.h\ redefined\ \ MAX\_NODES\_PER\_POLY\_FACE\ as\ CX\_MAX\_NODES\_PER\_POLY\_FACE\ =\ 256.\ Based}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ on\ RP\_POLYHEDRA\ we\ need\ to\ use\ either\ MAX\_NODES\_PER\_POLY\_FACE\ or\ MAX\_NODES\_PER\_FACE.\ Further}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ \ RP\_POLYHEDRA\ is\ not\ available\ in\ cortex\ and\ it\ will\ be\ decided\ based\ on\ RP\_3D\ and\ RP\_2D.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ \ Cortex\ doesn't\ know\ whether\ Fluent\ is\ 3d/2d.\ Same\ cortex\ exe\ is\ used\ for\ both\ Fluent\ 3d\ and\ 2d\ */}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ CX\_MAX\_NODES\_PER\_POLY\_FACE\ 256}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\ \ Surface\ integral\ geometry\ types\ */}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ SURF\_INTEGRATE\_3D\ 1}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ SURF\_INTEGRATE\_AXI\ \ 2}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ SURF\_INTEGRATE\_2D\ 3}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ TWOPI\ 6.283185308}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{/*\ Surfaces\ */}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ SET\_EVAL\_POINT(val,p)\(\backslash\)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\{int\ \_i;\(\backslash\)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\ \ for(\ \_i=0,\ val\ =0.0;\ \_i\ <\ (p).nc;\ \_i++)\(\backslash\)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ \ val+=((((p).ip)[\_i]).wt*SV\_node\_value(SV\_cell\_node\_id(\&((p).cell),((p).ip)[\_i].nid)));\}}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ SET\_POINT\_COORD(c,p,d)\(\backslash\)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\{int\ \_i;\(\backslash\)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\ \ for(\ \_i=0,\ c\ =0;\ \_i\ <\ (p).nc;\ \_i++)\(\backslash\)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\ \ \ \ \ c+=((((p).ip)[\_i]).wt*SV\_node\_coord(SV\_cell\_node\_id(\&((p).cell),((p).ip)[\_i].nid),\ d));\}}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ SET\_FACET\_AREA\_3D(area,v0,v1,v2)\(\backslash\)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ area[0]\ =\ 0.5*((v1[1]-\/v0[1])*(v2[2]-\/v0[2])\ -\/\ (v2[1]-\/v0[1])*(v1[2]-\/v0[2]));\(\backslash\)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ area[1]\ =\ 0.5*((v1[2]-\/v0[2])*(v2[0]-\/v0[0])\ -\/\ (v2[2]-\/v0[2])*(v1[0]-\/v0[0]));\(\backslash\)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\ \ \ area[2]\ =\ 0.5*((v1[0]-\/v0[0])*(v2[1]-\/v0[1])\ -\/\ (v2[0]-\/v0[0])*(v1[1]-\/v0[1]))}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ SET\_FACET\_AREA\_2D\_AXI(area,v0,v1)\(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ if\ (SV\_Is\_X\_Axis\_Symmetry())\(\backslash\)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\ \ \ \ \ \ area[0]\ =\ (v1[1]\ -\/\ v0[1])*(v1[1]+v0[1])/2.;\(\backslash\)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\ \ \ \ \ \ area[1]\ =\ (v0[0]\ -\/\ v1[0])*(v1[1]+v0[1])/2.;\(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \}\(\backslash\)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\ \ \ else\(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ \ \ area[0]\ =\ (v1[1]\ -\/\ v0[1])*(v1[0]+v0[0])/2.;\(\backslash\)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\ \ \ \ \ \ area[1]\ =\ (v0[0]\ -\/\ v1[0])*(v1[0]+v0[0])/2.;\(\backslash\)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\ \ \ \}}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ SET\_FACET\_AREA\_2D(area,v0,v1)\(\backslash\)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\ \ \ area[0]\ =\ v1[1]\ -\/\ v0[1];\(\backslash\)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ area[1]\ =\ v0[0]\ -\/\ v1[0]}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{/*\ if\ the\ directional\ avg\ flag\ is\ set,\ filters\ the\ velocity\ vectors\ pointing}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ \ \ to\ the\ opposite\ direction}}
+\DoxyCodeLine{00072\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ FILTER\_DIRECTION(adotv)\(\backslash\)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\{\(\backslash\)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ int\ avg\_dir\ =\ Get\_Avg\_Dir();\(\backslash\)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\ \ if\ (avg\_dir)\(\backslash\)}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\ \ \ \ \ if\ ((avg\_dir*adotv)\ <\ 0)\ adotv\ =\ 0;\(\backslash\)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{/*\ This\ must\ be\ consistent\ with\ cxiface.h\ */}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#ifndef\ CELL\_COMPATIBILITY}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#\ define\ CELL\_COMPATIBILITY\ 1}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#ifdef\ CELL\_COMPATIBILITY}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#\ define\ COPY\_CELL\_ID(d,s)\ memcpy((char\ *)(d),(char\ *)(s),sizeof(CX\_Cell\_Id))}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#\ define\ COPY\_CELL\_ID(d,s)\ *(d)=*(s)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_aed170e9fd55a6d6a1a7da9c790bfcb9c}{max\_nodes\_per\_cell}};}
+\DoxyCodeLine{00094\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_ae6afe2eb307f68e56aa6b74ae09a793c}{dim}};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#if\ CX\_NODE}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#\ define\ EMPTY\_SURFACE\_WARNING(s)\ \(\backslash\)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\ \ \ if\ ((MPT\_GISUM1(s-\/>nfl)\ ==\ 0)\ \&\&\ (myid\ ==\ node\_zero))\(\backslash\)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ CX\_Message("{}\(\backslash\)n\ Warning:\ surface-\/integrate:\ empty\ surface"{})}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#if\ CX\_HOST}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#\ define\ EMPTY\_SURFACE\_WARNING(s)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#if\ !PARALLEL}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#\ \ define\ EMPTY\_SURFACE\_WARNING(s)\ \(\backslash\)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ if\ (s-\/>nfl\ ==\ 0)\(\backslash\)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ CX\_Message("{}\(\backslash\)n\ Warning:\ surface-\/integrate:\ empty\ surface"{})}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{comment}{/*The\ area\ of\ the\ facet\ with\ connectivity\ with\ respect\ to\ *pts\ provided\ by\ *facet.\ npts\ is\ the\ number\ of\ nodes\ of\ the\ facet\ */}}
+\DoxyCodeLine{00114\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a43ce6b86b84610c8f1ad814bb268ae31}{Surface\_Facet\_Area}}(\mbox{\hyperlink{struct_surface___point___struct}{Surf\_Point}}\ *pts,\ \textcolor{keywordtype}{int}\ *facet,\ \textcolor{keywordtype}{int}\ npts,\ \textcolor{keywordtype}{double}\ area[],\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ axisymmetric);}
+\DoxyCodeLine{00115\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a50169a0237e59779019ad1266db65398}{Surface\_Zone\_Face\_Area}}(\textcolor{keywordtype}{void}\ *surfData,\ \mbox{\hyperlink{unioncell__id__struct}{CX\_Cell\_Id}}\ *cxcell,\ \textcolor{keywordtype}{double}\ area[]);}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_a401110224fbe77cb16a1ae28aaefe913}{Get\_Surface\_Point\_Coord}}(\mbox{\hyperlink{struct_surface___point___struct}{Surf\_Point}}\ *spt,\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_ae6afe2eb307f68e56aa6b74ae09a793c}{dim}});}
+\DoxyCodeLine{00118\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_a26116d430b399aca78bcf09fb6a27382}{Get\_Surface\_Point\_Value}}(\mbox{\hyperlink{struct_surface___point___struct}{Surf\_Point}}\ *spt);}
+\DoxyCodeLine{00119\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_a9a43880d8c111b8ecfa9efb93c3e24d6}{Tri\_Facet\_Area\_3d}}(\textcolor{keywordtype}{float}\ v0[],\ \textcolor{keywordtype}{float}\ v1[],\ \textcolor{keywordtype}{float}\ v2[]);}
+\DoxyCodeLine{00120\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a66d7b6344c5a26f6b9f5332697a77c04}{Facet\_Area\_Vector\_2d}}(\textcolor{keywordtype}{float}\ v0[],\ \textcolor{keywordtype}{float}\ v1[],\ \textcolor{keywordtype}{float}\ v2[],\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structvec}{vec}}[]);}
+\DoxyCodeLine{00121\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_ac9c7cffa5223a852e8a2cd6f04ffcb60}{Facet\_Area\_2d}}(\textcolor{keywordtype}{float}\ v0[],\ \textcolor{keywordtype}{float}\ v1[],\ \textcolor{keywordtype}{float}\ v2[]);}
+\DoxyCodeLine{00122\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_aa162f2a446314d2817166510d599ca9e}{Facet\_Length\_Vector\_2d}}(\textcolor{keywordtype}{float}\ v0[],\ \textcolor{keywordtype}{float}\ v1[],\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structvec}{vec}}[]);}
+\DoxyCodeLine{00123\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_aa82051fd6922791c0075608f56906eda}{Facet\_Length\_2d}}(\textcolor{keywordtype}{float}\ v0[],\ \textcolor{keywordtype}{float}\ v1[]);}
+\DoxyCodeLine{00124\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a915a18e6119e5d889bf2c8a984536285}{Facet\_Normal\_Vector\_2d}}(\textcolor{keywordtype}{float}\ v0[],\ \textcolor{keywordtype}{float}\ v1[],\ \textcolor{keywordtype}{double}\ normal[]);}
+\DoxyCodeLine{00125\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_a80fa3b97743fc238e714675eb6bf58d3}{Facet\_Area\_2d\_Axi}}(\textcolor{keywordtype}{float}\ v0[],\ \textcolor{keywordtype}{float}\ v1[]);}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a6b95dc16921a9ab947919dd3e46bf98f}{CX\_Iso\_Clip}}\ (\textcolor{keywordtype}{int}\ d\_index,\ \textcolor{keywordtype}{int}\ *s\_index,\ \textcolor{keywordtype}{int}\ nsurfs,\ \textcolor{keywordtype}{float}\ min,\ \textcolor{keywordtype}{float}\ max,\ \textcolor{keywordtype}{int}\ type,\ \mbox{\hyperlink{structquadric__struct}{Quadric}}\ *qd);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{comment}{/*\ Surface\ Management\ Routines\ */}}
+\DoxyCodeLine{00130\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a0340086fb535483c9c2eb900496c0696}{CX\_Delete\_Surface}}\ (\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_af341397ed60ff99f0df0747a11cd6fcb}{CX\_CL\_Append\_Surface}}\ (\textcolor{keywordtype}{int}\ index\_1,\ \textcolor{keywordtype}{int}\ index\_2);}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{comment}{/*\ Other\ Surface\ Routines\ */}}
+\DoxyCodeLine{00135\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a65572fbadf8ba97b1ce4a5979203de7a}{CX\_Cell\_Surface}}\ (\textcolor{keywordtype}{int}\ s\_index,\ \textcolor{keywordtype}{int}\ d\_index);}
+\DoxyCodeLine{00136\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a46cb192a176268aeb951a867bbd9b3aa}{CX\_Probe\_Surface\_Info}}\ (\textcolor{keywordtype}{int}\ active,\ \textcolor{keywordtype}{int}\ surf\_index,\ \textcolor{keywordtype}{int}\ node\_index);}
+\DoxyCodeLine{00137\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a4d7839774541fdf9b590dfcf20f163fa}{CX\_Draw\_Surface\_Elements}}\ (\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00138\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_a54d01c72c94b3d50ece2f41c2ab46f96}{Pt\_Proj\_In\_Face}}(\textcolor{keywordtype}{float}\ *,\ \mbox{\hyperlink{struct_c_x___face___struct}{CX\_Face\_t}}\ *);}
+\DoxyCodeLine{00139\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_aeadb2dc81b471d98548ec7e5a8ce2f54}{CX\_Imprint\_Surface\_Zones}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00140\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a87a7d8b554d27a8d5d8b006fbff2a6bd}{CX\_Transform\_Surface}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{float}\ [4][4],\ \textcolor{keywordtype}{float},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00141\ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{cxsurf_8h_af789b5d2fb22b69051a4c71592e4a718}{CX\_Get\_Surface\_Node\_Tmp}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00142\ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{cxsurf_8h_ab701d1ff8848c8f26fdb6cdceb1d3077}{CX\_Get\_Surface\_Node\_Tmp\_S}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00143\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_af2d6127b700583c9b1579f52d76061f3}{CX\_Set\_Surface\_Node\_Tmp\_Size\_S}}(\ \textcolor{keywordtype}{int}\ size\ );}
+\DoxyCodeLine{00144\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a3f114dd0984b1a58e38f8b8da94a139e}{CX\_Apply\_Quadric\_On\_Surface}}\ (\textcolor{keywordtype}{int},\ \mbox{\hyperlink{structquadric__struct}{Quadric}}\ *,\ \textcolor{keywordtype}{float}\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{comment}{/*\ Facet\_X\ takes\ a\ pointer\ to\ the\ facelist\ that\ contains}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *\ the\ face\ descriptor.\ It\ sums-\/up\ the\ x\ co-\/ordinates}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ of\ the\ points\ in\ the\ face.\ Note\ that\ it\ is\ not\ possible}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ to\ determine\ the\ cell\ on\ which\ the\ face\ lies\ without\ an}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *\ additional\ pointer\ to\ the\ cell\ list\ of\ the\ same\ surface.\ */}}
+\DoxyCodeLine{00151\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_a27b1fd22ef117738cd4af29211a38a1b}{Facet\_X}}\ (\mbox{\hyperlink{struct_surface___struct}{Surface}}\ *s,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00152\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_a25e2a463d97b3922621d31fb9e889f08}{Facet\_Y}}\ (\mbox{\hyperlink{struct_surface___struct}{Surface}}\ *s,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00153\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_ad812e39acd46b2dd4b402a71dd35bfa4}{Facet\_Z}}\ (\mbox{\hyperlink{struct_surface___struct}{Surface}}\ *s,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_a9690ae206f23f0ff96f0987ea1da2815}{CX\_Surface\_Nfacets}}\ (\textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_add107d3e38d92bac5106c81d8bb8eaf3}{ray\_face}}\ (\textcolor{keywordtype}{float}[],\ \textcolor{keywordtype}{float}[],\ \textcolor{keywordtype}{float}\ *,\ \textcolor{keywordtype}{float}[][3],\ \textcolor{keywordtype}{float}[],\ \textcolor{keywordtype}{float}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{comment}{/*\ Pathlines\ */}}
+\DoxyCodeLine{00160\ \textcolor{comment}{/*\ Utility\ routine\ -\/-\/\ used\ in\ pathines.\ */}}
+\DoxyCodeLine{00161\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a75a14d7895cc10ec182042905e85569d}{CX\_Comp\_Inv\_Dist\_Wts}}\ (\textcolor{keywordtype}{float}\ *,\ \textcolor{keywordtype}{float}\ [][3],\ \textcolor{keywordtype}{float}\ [],\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_a379ee91a30f21478bdc973da681356dc}{Calc\_Quad\_Interp\_Vectors}}\ (\ \textcolor{keywordtype}{float}\ v[4][2],\ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structpoint}{point}},\ \mbox{\hyperlink{structinterpolation__vector}{ip\_vec}}\ ip[4]);}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{comment}{/*void\ trans\_ip\ (CX\_Cell\_Id\ *fc,\ Surf\_Point\ *p,\ ip\_vec\ *ipn);*/}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{comment}{/*\ Turbo\ machinery\ */}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{keyword}{extern}\ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_a5f2ccfaa25521cd9e26b42c43b7138b6}{cxfaces\_per\_cell}}[\mbox{\hyperlink{cxsurf_8h_a00a9a6d98b9a0beb004bfb5c9f6d241c}{NCELL\_GEOM}}];}
+\DoxyCodeLine{00171\ \textcolor{keyword}{extern}\ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_a280a8c6a02db9af0788234561a41ede4}{cxfacets\_per\_cell}}[\mbox{\hyperlink{cxsurf_8h_a00a9a6d98b9a0beb004bfb5c9f6d241c}{NCELL\_GEOM}}];}
+\DoxyCodeLine{00172\ \textcolor{keyword}{extern}\ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_a42342d291471709a261595eaca2d4cf3}{cxnodes\_per\_cell}}[\mbox{\hyperlink{cxsurf_8h_a00a9a6d98b9a0beb004bfb5c9f6d241c}{NCELL\_GEOM}}];}
+\DoxyCodeLine{00173\ \textcolor{keyword}{extern}\ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_ad7ccd04aef4f264241fc4517abd86753}{cxnodes\_per\_face}}[\mbox{\hyperlink{cxsurf_8h_a00a9a6d98b9a0beb004bfb5c9f6d241c}{NCELL\_GEOM}}];}
+\DoxyCodeLine{00174\ \textcolor{keyword}{extern}\ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_a27e14ed368f18ad68905454e7a6bd6ae}{cxnodes\_per\_facet}}[\mbox{\hyperlink{cxsurf_8h_a00a9a6d98b9a0beb004bfb5c9f6d241c}{NCELL\_GEOM}}];}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_a9da4aeabbab91754ad1edd99bffda844}{cxFastIso}};}
+\DoxyCodeLine{00177\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_ad58f5683b89fbd2bffb3656b3c25b7b5}{CX\_Start\_Fast\_Iso}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00178\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_aaecfdb0dcfd9eacefc2e52733afedfbc}{CX\_End\_Fast\_Iso}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00179\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a5259f2d36bf7750256302aabc8b9d4c3}{CX\_Suspend\_Fast\_Iso}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00180\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_afea5230f7a31ac1c9235153f14ba2993}{CX\_Activate\_Fast\_Iso}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00181\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a8ea859ef79a5d305a18b3002da235cae}{CX\_Fast\_Iso\_Surface}}\ (\textcolor{keywordtype}{int}\ index,\ \textcolor{keywordtype}{float}\ *vals,\ \textcolor{keywordtype}{int}\ nvals,\ \textcolor{keywordtype}{int}\ nt,\ \textcolor{keywordtype}{int}\ *tids);}
+\DoxyCodeLine{00182\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a5e65d6d51890873434ef01c0a2ac5570}{checkAndAllocateSurface}}(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00185\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00187\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a49f0788e8078cde2777487243bc5a24d}{PSV\_Host\_Finish}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00189\ \}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#if\ (CX\_NODE\ ||\ CX\_HOST)}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#\ \ if\ CX\_HOST}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#\ \ \ \ define\ PCX\_START(command\_args)\ \(\backslash\)}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \{\(\backslash\)}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ CX\_Disable\_Interrupts();\(\backslash\)}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ PRF\_Command\_Start\ command\_args;}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#\ \ \ \ define\ PCX\_FINISH()\ \(\backslash\)}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ PSV\_Host\_Finish(\_\_FILE\_\_,\_\_LINE\_\_);\(\backslash\)}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ CX\_Enable\_Interrupts();\(\backslash\)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#\ \ else\ \ \ \ \ \ \ }\textcolor{comment}{/*\ CX\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#\ \ \ \ define\ PCX\_START(command\_args)}}
+\DoxyCodeLine{00204\ \textcolor{keywordtype}{void}\ PSV\_Node\_Finish(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});\ \textcolor{comment}{/*\ defined\ in\ lmain.c\ */}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#\ \ \ \ define\ PCX\_FINISH()\ PSV\_Node\_Finish(\_\_FILE\_\_,\_\_LINE\_\_);}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#\ \ endif\ \ \ \ \ \ }\textcolor{comment}{/*\ CX\_HOST\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00207\ \textcolor{keywordtype}{void}\ CX\_End\_Draw\_Pathlines\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00208\ \textcolor{keywordtype}{void}\ CX\_End\_Draw\_Pathlines\_Phase\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#else\ \ \ \ \ \ \ }\textcolor{comment}{/*\ Serial\ Cortex\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#\ \ define\ PCX\_START(command\_args)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#\ \ define\ PCX\_FINISH()}}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#endif\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ CX\_HOST\ ||\ CX\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{comment}{/*Parallel\ Cortex\ */}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ PCX\_BUFF\_SIZE\ 8192}}
+\DoxyCodeLine{00219\ \textcolor{keyword}{extern}\ \ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ node\_zero;}
+\DoxyCodeLine{00220\ \textcolor{keyword}{extern}\ \ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ node\_one;}
+\DoxyCodeLine{00221\ \textcolor{keyword}{extern}\ \ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ node\_last;}
+\DoxyCodeLine{00222\ \textcolor{keyword}{extern}\ \ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{lmesh_8h_a95a8ecf452981907273748589fb904e9}{node\_host}};}
+\DoxyCodeLine{00223\ \textcolor{keyword}{extern}\ \ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{src_2parallel_2para_8h_a6f724445566f13f40d0f84c0e6bace81}{myid}};}
+\DoxyCodeLine{00224\ \textcolor{keyword}{extern}\ \ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{src_2parallel_2para_8h_a6b342d5f09db4624cf9572f2d308a2f8}{compute\_node\_count}};}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{comment}{/**************\ cxsrfevl.c\ functions\ ********************/}}
+\DoxyCodeLine{00228\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00229\ \textcolor{comment}{double\ Surface\_Area\ (Surface\ *s,\ double\ depth,\ int\ gtype);}}
+\DoxyCodeLine{00230\ \textcolor{comment}{double\ Surface\_Integral\ (Surface\ *s,\ double\ depth,\ int\ gtype);}}
+\DoxyCodeLine{00231\ \textcolor{comment}{int\ Surface\_Facet\_Count\ (Surface\ *s);}}
+\DoxyCodeLine{00232\ \textcolor{comment}{double\ Surface\_Facet\_Sum\ (Surface\ *s);}}
+\DoxyCodeLine{00233\ \textcolor{comment}{int\ Surface\_Vertex\_Count\ (Surface\ *s);}}
+\DoxyCodeLine{00234\ \textcolor{comment}{double\ Surface\_Vertex\_Sum\ (Surface\ *s);}}
+\DoxyCodeLine{00235\ \textcolor{comment}{double\ Surface\_Flow\_Rate\ (Surface\ *s,\ double\ depth,\ int\ gtype);}}
+\DoxyCodeLine{00236\ \textcolor{comment}{double\ Surface\_Mass\_Flow\_Rate\ (Surface\ *s,\ double\ depth,\ int\ gtype);}}
+\DoxyCodeLine{00237\ \textcolor{comment}{double\ Surface\_Mass\_Average\_Num\ (Surface\ *s,\ double\ depth,\ int\ gtype);}}
+\DoxyCodeLine{00238\ \textcolor{comment}{double\ Surface\_Mass\_Average\_Den\ (Surface\ *s,\ double\ depth,\ int\ gtype);}}
+\DoxyCodeLine{00239\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00240\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00241\ \textcolor{comment}{void\ CX\_Surface\_Velocity\_Vectors\ (int\ index,\ int\ node\_values);}}
+\DoxyCodeLine{00242\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_ad810f4598a806ab3ddd49e929fe59501}{SurfaceIdArg}}\ (\mbox{\hyperlink{structobj}{Pointer}}\ x,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{dbgmsg_8h_a98858dd5dea59756cfe716f0168de035}{msg}});}
+\DoxyCodeLine{00246\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a95ccb2e3279b7e1af499c29ab42a9d60}{CX\_Surface\_Centroids}}\ (\textcolor{keywordtype}{int}\ nsurf,\ \textcolor{keywordtype}{int}\ axi,\ \textcolor{keywordtype}{float}\ *x,\ \textcolor{keywordtype}{float}\ *y,\ \textcolor{keywordtype}{float}\ *z,\ \textcolor{keywordtype}{float}\ *a,\ \mbox{\hyperlink{unioncell__id__struct}{CX\_Cell\_Id}}\ **c);}
+\DoxyCodeLine{00247\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_ada88377e4103b527de38ba6988f217d9}{CX\_Surface\_Centroid\_Normal}}(\textcolor{keywordtype}{int}\ *sids,\ \textcolor{keywordtype}{int}\ count,\ \textcolor{keywordtype}{int}\ axi,\ \textcolor{keywordtype}{float}\ centroid[3],\ \textcolor{keywordtype}{float}\ normal[3]);}
+\DoxyCodeLine{00248\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a27d9346c4b03e8c92c4e99a6c9269f70}{CX\_Surface\_Values}}\ (\textcolor{keywordtype}{int}\ index,\ \textcolor{keywordtype}{int}\ node\_values);}
+\DoxyCodeLine{00249\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a360999607045803b08788a162d8a6d4e}{CX\_Surface\_Get\_Min\_Max}}\ (\textcolor{keywordtype}{int}\ sid,\ \textcolor{keywordtype}{int}\ fn,\ \textcolor{keywordtype}{int}\ node\_values,\ \textcolor{keywordtype}{int}\ for\_integral,\ \textcolor{keywordtype}{float}\ *min,\ \textcolor{keywordtype}{float}\ *max);}
+\DoxyCodeLine{00250\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a8175d8cafed3c225304e3500d90cbce4}{CX\_Surface\_Fill\_Node\_Tmp}}\ (\textcolor{keywordtype}{int}\ sid,\ \textcolor{keywordtype}{int}\ fn,\ \textcolor{keywordtype}{float}\ *min,\ \textcolor{keywordtype}{float}\ *max);}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a75a8b0330100d7be88a76499bde01e7a}{CX\_Surface\_Centroids\_And\_Cells}}(\textcolor{keywordtype}{int}\ nsurf,\ \textcolor{keywordtype}{int}\ axi,\ }
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *x,\ \textcolor{keywordtype}{float}\ *y,\ \textcolor{keywordtype}{float}\ *z,\ }
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *a,\ \mbox{\hyperlink{unioncell__id__struct}{CX\_Cell\_Id}}\ **c);}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a456acae0c5d7d2134bb47752ede08174}{CX\_Surface\_Write\_Values}}\ (FILE\ *fp,\ \textcolor{keywordtype}{int}\ index,\ \textcolor{keywordtype}{int}\ node\_values,\ \textcolor{keywordtype}{float}\ xunit[],\ \textcolor{keywordtype}{float}\ vunit[]);}
+\DoxyCodeLine{00259\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{cxsurf_8h_a19a90060c4a22a2e7559ffae687e98e6}{CX\_Surface\_Integrate}}\ (\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int}\ );}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a81e5b66e158ba01610367e292c009eed}{SV\_Zone\_Surface\_Svar\_Min}}(\mbox{\hyperlink{struct_surface___struct}{Surface}}\ *s,\ \textcolor{keywordtype}{float}\ *min,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ for\_integral);}
+\DoxyCodeLine{00262\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a382f10773f5d11dc729daa877da0bc8e}{SV\_Zone\_Surface\_Svar\_Max}}(\mbox{\hyperlink{struct_surface___struct}{Surface}}\ *s,\ \textcolor{keywordtype}{float}\ *max,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ for\_integral);}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_aebfd9ebb0f8ec06597d87b15a4d6e621}{calc\_surface\_force\_torque}}\ (\mbox{\hyperlink{struct_surface___struct}{Surface}}\ *s,\ \textcolor{keywordtype}{int}\ f,\ \textcolor{keywordtype}{int}\ g,\ \textcolor{keywordtype}{double}\ d,\ \textcolor{keywordtype}{float}\ *c,\ \textcolor{keywordtype}{float}\ *nf,\ \textcolor{keywordtype}{float}\ *nm);}
+\DoxyCodeLine{00265\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_a57bc6868ae0ed972dde9cf7b4e1ca9e7}{Get\_Avg\_Dir}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a19fd55be5185565d6403a351ac28553d}{Set\_Zero\_Dir}}(\textcolor{keywordtype}{float}\ zero[3]);}
+\DoxyCodeLine{00268\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a94320c905440f4a834d21c62fd57cef5}{Set\_Turbo\_Axis}}(\textcolor{keywordtype}{float}\ axis[3],\ \textcolor{keywordtype}{float}\ origin[3]);}
+\DoxyCodeLine{00269\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_aa3e991c0c10a9dbc0fb2090c57c85798}{CX\_Turbo\_Surface}}(\textcolor{keywordtype}{int}\ index,\ \textcolor{keywordtype}{int}\ type,\ \mbox{\hyperlink{struct_surface___struct}{Surface}}\ *s,\ \textcolor{keywordtype}{float}\ *state);}
+\DoxyCodeLine{00270\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_ae2ae0055375d39a87e9528570945fbbd}{CX\_Transform\_Turbo\_Surface}}(\textcolor{keywordtype}{int}\ index,\ \textcolor{keywordtype}{int}\ type,\ \textcolor{keywordtype}{int}\ m\_type);}
+\DoxyCodeLine{00271\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a2a7f170259c56c6377e68849aab29454}{InitializeSurfacePrimitives}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00272\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a8f69b5b87db069b9d5973e3c4a3aef98}{CX\_Set\_Surface\_Node\_Tmp\_Size}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00273\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a89ff3499f2271ee8088a22f45a478caa}{CX\_Add\_2D\_Cell\_To\_Surface}}(\mbox{\hyperlink{unioncell__id__struct}{CX\_Cell\_Id}}\ *);}
+\DoxyCodeLine{00274\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a57c3105d5fc27533ad1d032825bd693e}{CX\_Add\_3D\_Cell\_To\_Surface}}(\mbox{\hyperlink{unioncell__id__struct}{CX\_Cell\_Id}}\ *);}
+\DoxyCodeLine{00275\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxsurf_8h_af4f39995ee486edd6a5079902f2ef135}{Calc\_Hex\_Interp\_Vectors}}(\textcolor{keywordtype}{float}\ v[8][3],\ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structpoint}{point}},\ \mbox{\hyperlink{structinterpolation__vector}{ip\_vec}}\ ip[8]);}
+\DoxyCodeLine{00276\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{cxsurf_8h_aef2daa69b5538d1a8ebc553e1f073421}{facet\_flux\_3D}}(\mbox{\hyperlink{struct_surface___struct}{Surface}}\ *s,\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{int}\ nfacet);}
+\DoxyCodeLine{00277\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{cxsurf_8h_ab3ab7bda283cfcac03efb7fec1e21df7}{facet\_flux\_2Daxi}}(\mbox{\hyperlink{struct_surface___struct}{Surface}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00278\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{cxsurf_8h_ad901e71d30704ff6d4cb3fbbabc9fbaa}{facet\_flux\_2D}}(\mbox{\hyperlink{struct_surface___struct}{Surface}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00279\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxsurf_8h_a39cca2ca606af0e4a08ce184d530feea}{cx\_reset\_edge\_mem}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00280\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{cxsurf_8h_a0715df5207054e54c6e69e3f073e38b9}{CX\_Eng\_Loss\_Coef}}(\mbox{\hyperlink{structobj}{Pointer}}\ idinlet,\ \mbox{\hyperlink{structobj}{Pointer}}\ idoutlet);}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \textcolor{comment}{/*\ if\ only\ some\ cells\ are\ going\ to\ be\ solved,\ skip\ facets\ belonging\ to\ inactive}}
+\DoxyCodeLine{00283\ \textcolor{comment}{\ *\ cell\ */}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#define\ begin\_surface\_facet\_loop\_solved(surface,\ facet\_index,\ facet\_array\_index)\ \{\ \ \(\backslash\)}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\ \ \ \ cxboolean\ need\_to\_check\_solved\ =\ SV\_Need\_To\_Check\_If\_Cell\_Solved();\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\ \ \ \ for\ (facet\_array\_index=0,facet\_index=0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ facet\_index\ <\ surface-\/>nf;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ facet\_array\_index\ +=surface-\/>facets[facet\_array\_index\ ]+1,\ facet\_index++)\ \ \(\backslash\)}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (!need\_to\_check\_solved\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ SV\_Check\_If\_Cell\_Solved(\&surface-\/>cells[facet\_index]))\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ end\_surface\_facet\_loop\_solved()\ \}\}\}}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{comment}{/*\ Mark\ active\ points\ by\ setting\ s-\/>points[n].nc\ to\ negative\ value\ */}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#define\ begin\_surface\_point\_loop\_solved(surface,\ node\_index)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\ \ \ \ cxboolean\ need\_to\_check\_solved\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\ \ \ \ =\ SV\_Need\_To\_Check\_If\_Cell\_Solved();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\ \ \ \ if\ (need\_to\_check\_solved)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ i\_\_,\ k\_\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ begin\_surface\_facet\_loop\_solved(surface,\ k\_\_,\ i\_\_)\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ int\ j\_\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ for\ (j\_\_\ =\ 0;\ j\_\_\ <\ surface-\/>facets[i\_\_];\ ++j\_\_)\ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int\ m\_\_\ =\ surface-\/>facets[i\_\_+j\_\_+1];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (surface-\/>points[m\_\_].nc\ >\ 0)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ surface-\/>points[m\_\_].nc\ =\ -\/surface-\/>points[m\_\_].nc;\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ end\_surface\_facet\_loop\_solved()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\ \ \ \ for\ (node\_index\ =0\ ;\ node\_index\ <\ surface-\/>np;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ ++node\_index)\ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (need\_to\_check\_solved)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (surface-\/>points[node\_index].nc\ >\ 0)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ continue;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ surface-\/>points[node\_index].nc\ =\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ surface-\/>points[node\_index].nc;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#define\ end\_surface\_point\_loop\_solved()\ \ \}\}\}}}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{comment}{/*\ macros\ to\ loop\ through\ only\ facets\ belonging\ to\ rendered\ cells\ */}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ begin\_surface\_facet\_loop\_rendered(surface,\ facet\_index,\ facet\_array\_index)\ \{\(\backslash\)}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\ \ \ \ cxboolean\ need\_to\_check\_active\ =\ SV\_Need\_To\_Check\_If\_Cell\_Active();\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\ \ \ \ for\ (facet\_array\_index=0,facet\_index=0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ facet\_index\ <\ surface-\/>nf;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ facet\_array\_index\ +=surface-\/>facets[facet\_array\_index\ ]+1,\ facet\_index++)\ \ \(\backslash\)}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (!need\_to\_check\_active\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ SV\_Check\_If\_Cell\_Active(\&surface-\/>cells[facet\_index]))\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\#define\ end\_surface\_facet\_loop\_rendered()\ \}\}\}}}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \textcolor{comment}{/*\ Mark\ active\ points\ by\ setting\ s-\/>points[n].nc\ to\ negative\ value\ */}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#define\ begin\_surface\_point\_loop\_rendered(surface,\ node\_index)\ \{\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ \ \ cxboolean\ need\_to\_check\_rendered\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ \ \ =\ SV\_Need\_To\_Check\_If\_Cell\_Active();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\ \ \ \ if\ (need\_to\_check\_rendered)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ int\ i\_\_,\ k\_\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ begin\_surface\_facet\_loop\_rendered(surface,\ k\_\_,\ i\_\_)\ \ \{\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ int\ j\_\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ for\ (j\_\_\ =\ 0;\ j\_\_\ <\ surface-\/>facets[i\_\_];\ ++j\_\_)\ \ \ \{\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int\ m\_\_\ =\ surface-\/>facets[i\_\_+j\_\_+1];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (surface-\/>points[m\_\_].nc\ >\ 0)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ surface-\/>points[m\_\_].nc\ =\ -\/surface-\/>points[m\_\_].nc;\ \ \(\backslash\)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ end\_surface\_facet\_loop\_rendered()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\ \ \ \ for\ (node\_index\ =0\ ;\ node\_index\ <\ surface-\/>np;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ ++node\_index)\ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (need\_to\_check\_rendered)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (surface-\/>points[node\_index].nc\ >\ 0)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ continue;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ surface-\/>points[node\_index].nc\ =\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ surface-\/>points[node\_index].nc;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#define\ end\_surface\_point\_loop\_rendered()\ \ \}\}\}}}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_CXSURF\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ }
+
+\end{DoxyCode}

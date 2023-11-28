@@ -1,0 +1,824 @@
+\doxysection{flow.\+h}
+\hypertarget{flow_8h_source}{}\label{flow_8h_source}\index{fluent20.1.0/src/pbns/flow.h@{fluent20.1.0/src/pbns/flow.h}}
+\mbox{\hyperlink{flow_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_FLOW\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_FLOW\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{global_8h}{global.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{models_8h}{models.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ DEFAULT\_MAX\_RES\ 1024}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{flow_8h_aee6662cf17698865c9679c64a425b4d1}{nres}};\ \ \textcolor{comment}{/*\ current\ number\ of\ residuals\ */}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{flow_8h_a07889222c1759dad228538dbea97c584}{max\_res}};\ \textcolor{comment}{/*\ size\ of\ residual\ history\ buffer\ */}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{flow_8h_a3c3359855cb1836057e670fcd16de5d3}{count2}};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_a56cccc49624a26247694a5ae8f5f2f17}{brucato\_k}};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{/*\ CR\ 15856\ */}}
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ use\ these\ macros\ with\ care\ and\ be\ aware\ that\ using\ RP\_Get\_\ ..\ is\ time}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ consuming.\ You\ should\ not\ use\ these\ macros\ inside\ loops,\ etc.\ */}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ N\_ITER\ ((nres==0)\ ?\ 0\ :\ (int)(count2[nres-\/1]+0.5))\ }\textcolor{comment}{/*\ iteration\ number,\ integer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ N\_TIME\ (RP\_Get\_Integer\ ("{}time-\/step"{}))\ \ \ }\textcolor{comment}{/*\ integer\ timestep\ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ CURRENT\_TIME\ (RP\_Get\_Double("{}flow-\/time"{}))\ }\textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ CURRENT\_TIMESTEP\ (RP\_Get\_Real("{}physical-\/time-\/step"{}))\ }\textcolor{comment}{/*\ real,\ times\ step\ size\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ DUAL\_TIMESTEP\ (RP\_Get\_Boolean("{}pseudo-\/auto-\/time-\/step?"{}))\ ?\ (RP\_Get\_Real("{}pseudo-\/auto-\/time-\/step"{})):(RP\_Get\_Real("{}pseudo-\/time-\/step"{}))}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ SOLID\_TIMESTEP\ (RP\_Get\_Real("{}cht/solid-\/time-\/step-\/size"{}))}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ SOLID\_TIME\ (RP\_Get\_Real("{}cht/solid-\/time"{}))}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ DBNS\_E\_TIMEINTER\ (RP\_Get\_Double("{}coupled-\/explicit/user-\/specified-\/time-\/interval"{}))}}
+\DoxyCodeLine{00032\ \textcolor{comment}{/*\ Adaptive\ time\ stepping\ for\ DBNS\ explicit\ unsteady\ (explicit\ formulation)*/}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ PREVIOUS\_TIME\ (CURRENT\_TIME\ -\/\ CURRENT\_TIMESTEP)\ \ \ \ \ \ }\textcolor{comment}{/*\ real\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ PREVIOUS\_TIMESTEP\ (CURRENT\_TIMESTEP/dt\_factor)\ \ \ \ \ \ \ }\textcolor{comment}{/*\ real,\ prev.\ time\ step\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ PREVIOUS\_2\_TIME\ (CURRENT\_TIME\ -\/\ CURRENT\_TIMESTEP\ -\/\ PREVIOUS\_TIMESTEP)\ }\textcolor{comment}{/*\ real\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ END\_TIME\ (RP\_Get\_Real("{}time-\/end"{}))\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ real\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00037\ \textcolor{comment}{/*\ CR\ 15856\ */}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{flow_8h_a6bf3302647c4315950ca981e95f33380}{flow\_init\_type}}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{flow_8h_a6bf3302647c4315950ca981e95f33380a9e105fe632c0d20b07644ad55255324a}{UNINIT\_DATA}}\ =\ -\/1,\ \textcolor{comment}{/*\ uninitialized\ flow\ */}}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{flow_8h_a6bf3302647c4315950ca981e95f33380aca42624a13702a525847c984f1b92c78}{SOLVED\_DATA}},\ \ \ \ \textcolor{comment}{/*\ set\ value\ after\ solution\ has\ begun\ */}}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{flow_8h_a6bf3302647c4315950ca981e95f33380a0f685f67b8aed9b5c521ab63424f2198}{STD\_INIT}},}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{flow_8h_a6bf3302647c4315950ca981e95f33380a70ed458fe50152ba33dc2e68eaada0d6}{HYB\_INIT}},}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{flow_8h_a6bf3302647c4315950ca981e95f33380a687d2dbf1b83d39957726f71b5672056}{FMG\_INIT}},}
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{flow_8h_a6bf3302647c4315950ca981e95f33380ac1688d5e0d18262ab06867c3c16a8aee}{INTERP\_DATA}}\ \ \ \ \textcolor{comment}{/*\ data\ read\ from\ interpolation\ file\ */}}
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_ae2e0c77ba38f05ec73a9b1909ed6b738}{is\_statistics\_on}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ab0c1c8cab79f6d2b7b067275e8494f0e}{Set\_Fan\_Table}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *d,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *P,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *Q,\ \textcolor{keywordtype}{int}\ nrows,\ \textcolor{keywordtype}{int}\ threadid);}
+\DoxyCodeLine{00052\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a2fa1bab38fd98f5919bc2e0a5e5faece}{read\_input\_fancurve}}(FILE\ *fp,\ \textcolor{keywordtype}{int}\ threadid,\ \textcolor{keywordtype}{int}\ *nrows,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *P,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *Q);}
+\DoxyCodeLine{00053\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a19131c93d1515317f3d8cf0c014f8ac3}{read\_fancurve\_datapoints}}(FILE\ *fp,\ \textcolor{keywordtype}{int}\ threadid,\ \textcolor{keywordtype}{int}\ *nrows);}
+\DoxyCodeLine{00054\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ad2dd85b4b463ed3f7ec14d7c6a16eef9}{Init\_3dFans}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *d);}
+\DoxyCodeLine{00055\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_aeef26f084f438dc62a7765edd10e39ec}{Init\_3dFan\_Zone}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *d,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *ct);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#if\ HOTR\_RESTART}}
+\DoxyCodeLine{00058\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ recon\_uninitialize\_storage(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *d);}
+\DoxyCodeLine{00059\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ pre\_or\_post\_gradient\_p;}
+\DoxyCodeLine{00060\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ restart\_from\_case\_data\_p;}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_a3407f619c7bf4c9d38d925a73a9367f3}{physical\_dt\_m1}};}
+\DoxyCodeLine{00064\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_a34cab83be71d7182688e713b7b6df322}{physical\_dt\_p}};}
+\DoxyCodeLine{00065\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a9491b02d7c0673272bd003ed9b3a64bc}{remesh\_force\_first\_order\_in\_time}};}
+\DoxyCodeLine{00066\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_aba41ff0fddaa23370596f7f39ba464dd}{swap\_adapt\_force\_first\_order\_in\_time}};}
+\DoxyCodeLine{00067\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_ab04ea82ab7c35aef8b4b653d72a46047}{mdm\_allow\_unsteady\_rc\_p}};}
+\DoxyCodeLine{00068\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_a03d9463ecf23f074b4715b86039bf8ad}{transient\_blend\_factor}};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{flow_8h_a5dffbf72691866f7b606084976ab9563}{current\_iter}};}
+\DoxyCodeLine{00071\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{flow_8h_aecae8df3d5ef953f76f0778c281fa8da}{current\_global\_iter}};}
+\DoxyCodeLine{00072\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{flow_8h_a7867fb93ff7459f8af038bffa625b5b0}{step\_iteration}};}
+\DoxyCodeLine{00073\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a9abf9af7297c7310ea82406a25ca70e0}{first\_iter\_in\_interval\_p}};}
+\DoxyCodeLine{00074\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a4904010f11df13be1881d71f559103f7}{first\_iteration}};}
+\DoxyCodeLine{00075\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a7953a1e963429c196942e3c8bcef33ca}{flow\_warnings\_p}};}
+\DoxyCodeLine{00076\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_ac8ebc831158fccc30280f79123ca410a}{pollut\_post}};}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00078\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ sync\_p;}
+\DoxyCodeLine{00079\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ sync\_amg\_p;}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00081\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{flow_8h_a023cfccd5a980ffd59446a2456eaffd0}{uref2\_update\_count}};\ \ \textcolor{comment}{/*\ counter\ for\ update\_uref2\ */}}
+\DoxyCodeLine{00082\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a9e8c513883b4058526fce07be1a7b2f4}{final\_stage\_p}};}
+\DoxyCodeLine{00083\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_ad7b42d3687a831652ac84ac33e56621b}{fine\_domain\_iter\_p}};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a76150fe88bb6f7e7bb9221de4cb49e26}{FMG\_fine\_domain\_iter\_p}};\ \textcolor{comment}{/*\ changes\ for\ FMG\ */}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_aa1b42bb3b51283b7e3a7ad894d39c675}{limiter\_warnings\_p}};}
+\DoxyCodeLine{00088\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_a107f588dc4aabd97738c4bb41435ac9e}{dom\_blending\_factor}};}
+\DoxyCodeLine{00089\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a0bc3349ea763bce6a9011431f92ec0d7}{solve\_radiation}};}
+\DoxyCodeLine{00090\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a1e6c501a88cd54ce95bd0e125b069bfe}{solve\_radiation\_mc}};}
+\DoxyCodeLine{00091\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a4bf058cbae3de876d61ea0340f38f927}{solve\_radiation\_s2s}};}
+\DoxyCodeLine{00092\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a0633d49d875559754d3276e06d25e66e}{solve\_radiation\_solar}};}
+\DoxyCodeLine{00093\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a6fb3d994155ff5fe844b5889f196017a}{solve\_radiation\_n\_time\_step}};}
+\DoxyCodeLine{00094\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_aa63c78a283c402aa45548e9d13bee0de}{pbns\_blending}};}
+\DoxyCodeLine{00095\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_aa57b524c1d73f32ab175170e5940aeba}{dbns\_blending}};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{flow_8h_a3d9804e12aaffb9c73d49b620995702f}{current\_domain\_iter\_stage}};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a583c3c109ceb31b8b7d73acd5ce4a5ca}{Set\_Residual\_History\_Size}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00100\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a51e5a23e9b54c890ab1192dc6d801bc8}{Free\_Domain\_Residuals}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00101\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ac69cc8f3edab544e0e9f5978220ef440}{Init\_Residuals}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a42fa630e731cfa41c7d96feb6def2bba}{Flow\_Iterate}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00104\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a414c25c1e9d13e7548c31685d026c89a}{Reset\_Residuals}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00105\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{flow_8h_ae41c539118cf4a1afc334fd933e796b6}{Get\_Step\_Counter}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00106\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_aab6d0fb502bae752af96404bea528613}{FMG\_Init\_Flow}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00107\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a33ddff4fab2443fd5003afe3f2043303}{Init\_Flow}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00108\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a1dd8aaef82c8ea89ad095684f458315f}{Update\_After\_Flow\_Init}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00109\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a4ddf73d65090a10c2dd15366b5dd86fd}{Clear\_Cell\_Function\_Names}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00110\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ab549bc36d759fbd69ab929b05e672c5d}{Set\_Flow\_Time}}\ (\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00111\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a8819c0c101da75d83267fa564f6abbb2}{Update\_Physical\_Time}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00112\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_aae03f48fa6756cfe04f7730e339751b2}{Update\_Transient\_Time\_Scheme}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00113\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_abf20e1717f14e507c96fd671d8648b2f}{Update\_Motion}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00114\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a454447d46f2f1cb92ed5d2367f77236e}{Update\_Grid}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_aa4b9065ea01f157841fa58eb12644499}{Update\_Before\_Data\_Read}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00117\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a03e88013bdd8ac2544eff5d4fe29e8f6}{Update\_After\_Data\_Read}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00118\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a57628936d1e96245df1b8ef2a379efb2}{Viscous\_Derivatives}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00119\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a2e4bebdd48e3de6a3dd82b084b811511}{ConvRG\_ViscDer}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00120\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ab718362ef4c93c2404f25560a6cbec9c}{Mark\_Derivatives\_Unknown}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_aa67146f71f2a8ad364aa3c6edb4ab585}{RP\_Boundary\_Viscous\_Flux}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ integral[],}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ compute);}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00127\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Update\_After\_Migration(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_aaa244b4de99fbba249a7ebf05268eba3}{Limit\_Turb\_SVar}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ nv,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ tell);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a84381b83ff988508ebeae0be95dc3dc5}{Patch\_Variable\_Names}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}}\ *);}
+\DoxyCodeLine{00133\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a7d2fad4fa0c56aca8c1d5fe2f5a334f5}{Patch}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}}\ args);}
+\DoxyCodeLine{00134\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ad28298b82f6fc7c6b936f0a51a562d90}{Update\_Before\_Patch}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}},\ \ \textcolor{keywordtype}{int}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\ );}
+\DoxyCodeLine{00135\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ab890519238d490b893b73681a046139b}{Update\_Thread\_After\_Patch}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00136\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a15758f459f3244c98bbfc87d6985372f}{Update\_After\_Patch}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \ \textcolor{keywordtype}{int}\ );}
+\DoxyCodeLine{00137\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a416829b358781b3077652f825e50af04}{Smooth\_Volume\_Fraction\_After\_Patch}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a7a574d51232a59f400736a1af1b2eeb1}{cell\_frame\_velocity}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ u[]);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a87743ef84eabc0a5c94500db48565fe7}{Uninitialize\_Solver\_Storage\_After\_Grid\_Update}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00143\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a7ea4fa0c0bde9793a4845d8b95b52c49}{Uninitialize\_Gradient\_Flags}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00144\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a0c7269b1306ab587a0de3e42c6497877}{Update\_Modified\_Grid}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a6e8e324558c509f52542206de299a514}{Reset\_Adaption\_Counter}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00147\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a8451a133628b3c38c96a4527d8b49f6a}{Perform\_Dynamic\_Mesh\_Adaption}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a1b5ce4e93afea0e00e915bd4be19f237}{Init\_Interior\_Face\_Data}}\ (\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00150\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a68f6a898f12da279319a7e3ef0139af3}{Interpolate\_Face\_Data\_List}}\ (\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ *lo,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tlo,\ \textcolor{keywordtype}{int}\ no,\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ *ln,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tln,\ \textcolor{keywordtype}{int}\ nn);}
+\DoxyCodeLine{00151\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a13624beeb05ba89ff59f3655b545ba69}{Interpolate\_Cell\_Data\_List}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ *lo,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tlo,\ \textcolor{keywordtype}{int}\ no,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ *ln,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tln,\ \textcolor{keywordtype}{int}\ nn);}
+\DoxyCodeLine{00152\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a20697185ef6bd1514272c6ba8d0dd174}{Interpolate\_Cell\_Data\_List\_Time\_Second\_Order}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ *lo,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tlo,\ \textcolor{keywordtype}{int}\ no,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ *ln,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tln,\ \textcolor{keywordtype}{int}\ nn);}
+\DoxyCodeLine{00153\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a4471939471c239bb9909b8fb2177ef81}{update\_udiff\_after\_remesh}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00154\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a800400c74dccd8f894b50e2fb4fdda3f}{update\_udiff\_after\_layer}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **,\ \textcolor{keywordtype}{int}\ );}
+\DoxyCodeLine{00155\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_a072c92a9f4ac4c48a79afa8162b52803}{Transient\_Check\_Swap\_Or\_Adapt\_Mesh}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00156\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_af98638964dbca353d0b6d2612adec2eb}{mdm\_press\_work\_energy\_source\_correction}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ );}
+\DoxyCodeLine{00157\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a231f017476ee9b7e357ef9e1034c5c71}{Calculate\_MDM\_Press\_Work\_Source}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a968411522c192a9a7626d7c729a24c02}{transform\_thread\_velocities}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ sgn1,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t2,\ \textcolor{keywordtype}{int}\ sgn2);}
+\DoxyCodeLine{00160\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a959f5e3a21fbbbf50782927c23ae0e89}{cell\_velocity\_absolute}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *u);}
+\DoxyCodeLine{00161\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ab0eb4139005b6df56ed58756b29d6539}{convt\_vel\_absolute}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *u);}
+\DoxyCodeLine{00162\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a3cd20ae821495a9f073366058198d88a}{cell\_velocity\_reference\_relative}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{flowf_8h_a640a109cfa36cf9737a4e828103d9b78}{tref}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *u);}
+\DoxyCodeLine{00163\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a22a74500bd3cc9700765fc640902a2b7}{boundary\_face\_velocity\_absolute}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ u[]);}
+\DoxyCodeLine{00164\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a6a04a1e5022aec45b33c86c906cc8a8a}{boundary\_face\_velocity\_reference\_relative}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{flowf_8h_a640a109cfa36cf9737a4e828103d9b78}{tref}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ u[]);}
+\DoxyCodeLine{00165\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_adf87149072a4a1e0f139c6b03c2dae32}{cell\_mp\_v\_absolute}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *u);}
+\DoxyCodeLine{00166\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_afa103d5f40d1eb176f6cbc876a1adb8e}{cell\_mp\_v\_reference\_relative}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{flowf_8h_a640a109cfa36cf9737a4e828103d9b78}{tref}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *u);}
+\DoxyCodeLine{00167\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ad4bd82af1d0555bb11844a30643a0e87}{Rel\_cell\_velocity}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *u,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *dOM);}
+\DoxyCodeLine{00168\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_af38a90849393397d535ab467e407bf28}{Flags\_Additional\_Inits}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00169\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{flow_8h_a9d43304aaa50d4e6a35ac1a5e7544a05}{Ref\_Pressure\_Location}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \textcolor{keywordtype}{int}\ set);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a8e63bb468f3d59016d30ebbb8c0a4a33}{absolute\_to\_solved\_velocities}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00172\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a8edccb3931c7299456d96955e04c9f71}{solved\_to\_absolute\_velocities}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00173\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_af031e2715d9d0eda6d6cdb460cd71ba6}{absolute\_to\_solved\_velocity\_gradients}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00174\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a01ff6c15f600e35e177d3d5a37117b44}{Convert\_Data\_To\_Relative}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00175\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_adf0ee03af07563ee505f004f04e31989}{Convert\_Data\_To\_Absolute}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00176\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_a20690238495f09470555ea73060345e1}{Cell\_Strain\_Rate\_Mag}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_ae61abda47563300538fad51e8b5c6384}{recon\_disabled}};}
+\DoxyCodeLine{00179\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_acb87af0e0c29fe7417eb7a717d01917f}{reconstruction\_converged\_p}};}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_af9355bbd7e1445b60a829deb31a94bdf}{Initialize\_Reconstruction}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00182\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_ade87b5654be0548d81d8246b729ba296}{Set\_Reconstruction\_Converged\_P}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ value);}
+\DoxyCodeLine{00183\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a21eb968c48d352ecc0622c321055e00d}{Converge\_Reconstruction}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00184\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_abc23c7b3f072907457385461dc26cd9a}{Linear\_Reconstruction}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00185\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_aedde82131a5e5505adb86133ff8b2f40}{Update\_Boundary\_Species\_on\_wall\_thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00186\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_aba4f60ecc91863664a6040ecef4fc073}{LSQ\_Init\_Reconstruction}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00187\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a72a5d5799b31333c2edba4f1014374e6}{solver\_update}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00188\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a23cd3975b9d0595fb75ce4034a8b9a7f}{Calculate\_Automatic\_pseudo\_time\_step}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00189\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_ad496cf266f252082f4bbe20894991c2c}{Solid\_Zone\_Automatic\_Time\_Step}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00190\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_acf3a701955c601c398ac51a282870ebb}{Thread\_Solid\_Zone\_Automatic\_Time\_Step}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread);}
+\DoxyCodeLine{00191\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a0fef0146ba637ef9a115037b4f5b0944}{Calculate\_solid\_time\_step\_auto}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_aed457af9e54120c9c13ee46ead4151e7}{Set\_All\_Node\_Weight\_Init\_P}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00194\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a99175dcf9d6887d5dcc737fe2be19bb6}{Set\_Node\_Weight\_Init\_P}}(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00195\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{flow_8h_adfd4197784156863d21cfdad5c9445c9}{Get\_Node\_Weight\_Init\_P}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \ \mbox{\hyperlink{flow_8h_ac6db95a6fb19c9ddb42919bb18d5a7f8}{Get\_MCFL\_Multiplier}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00200\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Init\_Timer\_History(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *d);}
+\DoxyCodeLine{00201\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Clear\_Timer\_History(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *d);}
+\DoxyCodeLine{00202\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Print\_Timer\_History(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{flow_8h_a7fe681c87b639fab2ff53295d616d57d}{Get\_AR\_Tag}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00206\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_ab1aa962a2783836207f6cd4435457ec2}{Directional\_Min\_AR}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_a01209e986e378306a0da070b41645eaf}{Strainrate\_Sqr}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ u\_g[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ v\_g[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ w\_g[],}
+\DoxyCodeLine{00209\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ omega\_g[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ v);}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_a77ba67cfead9b9db34f8103b81ad5ec5}{Rotationrate\_Sqr}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ u\_g[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ v\_g[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ w\_g[],}
+\DoxyCodeLine{00212\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ omega\_g[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ axis[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ omega,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ v,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ swirl);}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_ae99dc29b562f75a949d81bb9031917c4}{Strainrate\_Mag}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00215\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{flow_8h_a01694249014f8ca8c8847e7b98822c44}{Rotationrate\_Mag}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{comment}{/*\ NV\_S\ (a,\ =,\ 2)\ */}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ NV\_S(a,EQ,s)ND\_VEC((a)[0]EQ(s),(a)[1]EQ(s),(a)[2]EQ(s))}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ ND\_S(a0,a1,a2,EQ,s)ND\_VEC((a0)EQ(s),(a1)EQ(s),(a2)EQ(s))}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ NT\_S(a,EQ,s)ND\_VEC(NV\_S((a)[0],EQ,s),\ \(\backslash\)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_S((a)[1],EQ,s),\ \(\backslash\)}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_S((a)[2],EQ,s))}}
+\DoxyCodeLine{00224\ \textcolor{comment}{/*\ NV\_V\ (a,\ =,\ x)\ */}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ NV\_V(a,EQ,x)ND\_VEC((a)[0]EQ(x)[0],(a)[1]EQ(x)[1],(a)[2]EQ(x)[2])}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ ND\_D(a0,a1,a2,EQ,x0,x1,x2)ND\_VEC((a0)EQ(x0),(a1)EQ(x1),(a2)EQ(x2))}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ NV\_D(a,EQ,x0,x1,x2)ND\_D((a)[0],(a)[1],(a)[2],EQ,x0,x1,x2)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ ND\_V(a0,a1,a2,EQ,x)ND\_D(a0,a1,a2,EQ,(x)[0],(x)[1],(x)[2])}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#define\ NVD\_V\ NV\_D\ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*obsolete*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ NT\_T(a,EQ,x)ND\_VEC(NV\_V((a)[0],EQ,(x)[0]),\ \(\backslash\)}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_V((a)[1],EQ,(x)[1]),\ \(\backslash\)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_V((a)[2],EQ,(x)[2]))}}
+\DoxyCodeLine{00233\ \textcolor{comment}{/*\ NV\_VS\ (a,\ =,\ x,/,2)\ */}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#define\ NV\_VS(a,EQ,x,S,s)ND\_VEC((a)[0]EQ(x)[0]S(s),(a)[1]EQ(x)[1]S(s),(a)[2]EQ(x)[2]S(s))}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ NV\_DS(a,EQ,x0,x1,x2,S,s)ND\_VEC((a)[0]EQ(x0)S(s),(a)[1]EQ(x1)S(s),(a)[2]EQ(x2)S(s))}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ ND\_VS(a0,a1,a2,EQ,x,S,s)ND\_VEC((a0)EQ(x)[0]S(s),(a1)EQ(x)[1]S(s),(a2)EQ(x)[2]S(s))}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ ND\_DS(a0,a1,a2,EQ,x0,x1,x2,S,s)ND\_VEC((a0)EQ(x0)S(s),(a1)EQ(x1)S(s),(a2)EQ(x2)S(s))}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ NT\_TS(a,EQ,x,S,s)ND\_VEC(NV\_VS((a)[0],EQ,(x)[0],S,s),\ \(\backslash\)}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_VS((a)[1],EQ,(x)[1],S,s),\ \(\backslash\)}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_VS((a)[2],EQ,(x)[2],S,s))}}
+\DoxyCodeLine{00241\ \textcolor{comment}{/*\ NV\_VV\ (a,\ =,\ x,+,y)\ */}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ NV\_VV(a,EQ,x,V,y)ND\_VEC((a)[0]EQ(x)[0]V(y)[0],(a)[1]EQ(x)[1]V(y)[1],(a)[2]EQ(x)[2]V(y)[2])}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ NV\_DD(a,EQ,x0,x1,x2,V,y0,y1,y2)\ ND\_VEC((a)[0]EQ(x0)V(y0),(a)[1]EQ(x1)V(y1),(a)[2]EQ(x2)V(y2))}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ ND\_DD(a0,a1,a2,EQ,x0,x1,x2,V,y0,y1,y2)\ ND\_VEC((a0)EQ(x0)V(y0),(a1)EQ(x1)V(y1),(a2)EQ(x2)V(y2))}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ NT\_TT(a,EQ,x,V,y)ND\_VEC(NV\_VV((a)[0],EQ,(x)[0],V,(y)[0]),\ \(\backslash\)}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_VV((a)[1],EQ,(x)[1],V,(y)[1]),\ \(\backslash\)}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_VV((a)[2],EQ,(x)[2],V,(y)[2]))}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{comment}{/*\ NV\_VV\_S\ (a,\ =,\ x,+,y,\ /,\ 2)\ */}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ NV\_VV\_S(a,EQ,x,V,y,S,s)ND\_VEC((a)[0]EQ((x)[0]V(y)[0])S(s),(a)[1]EQ((x)[1]V(y)[1])S(s),(a)[2]EQ((x)[2]V(y)[2])S(s))}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ NV\_VVS\ NV\_VV\_S}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ NV\_DV\_S(a,EQ,x0,x1,x2,V,y,S,s)ND\_VEC((a)[0]EQ((x0)V(y)[0])S(s),(a)[1]EQ((x1)V(y)[1])S(s),(a)[2]EQ((x2)V(y)[2])S(s))}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ NV\_DD\_S(a,EQ,x0,x1,x2,V,y0,y1,y2,S,s)ND\_VEC((a)[0]EQ((x0)V(y0))S(s),(a)[1]EQ((x1)V(y1))S(s),(a)[2]EQ((x2)V(y2))S(s))}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ ND\_VV\_S(a0,a1,a2,EQ,x,V,y,S,s)ND\_VEC((a0)EQ((x)[0]V(y)[0])S(s),(a1)EQ((x)[1]V(y)[1])S(s),(a2)EQ((x)[2]V(y)[2])S(s))}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ ND\_VD\_S(a0,a1,a2,EQ,x,V,y0,y1,y2,S,s)ND\_VEC((a0)EQ((x)[0]V(y0))S(s),(a1)EQ((x)[1]V(y1))S(s),(a2)EQ((x)[2]V(y2))S(s))}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ ND\_DV\_S(a0,a1,a2,EQ,x0,x1,x2,V,y,S,s)ND\_VEC((a0)EQ((x0)V(y)[0])S(s),(a1)EQ((x1)V(y)[1])S(s),(a2)EQ((x2)V(y)[2])S(s))}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ ND\_DD\_S(a0,a1,a2,EQ,x0,x1,x2,V,y0,y1,y2,S,s)ND\_VEC((a0)EQ((x0)V(y0))S(s),(a1)EQ((x1)V(y1))S(s),(a2)EQ((x2)V(y2))S(s))}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#define\ NT\_TT\_S(a,EQ,x,V,y,S,s)ND\_VEC(NV\_VV\_S((a)[0],EQ,(x)[0],V,(y)[0],S,s),\ \(\backslash\)}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_VV\_S((a)[1],EQ,(x)[1],V,(y)[1],S,s),\ \(\backslash\)}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_VV\_S((a)[2],EQ,(x)[2],V,(y)[2],S,s))}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{comment}{/*\ NV\_V\_VS\ (a,\ =,\ x,\ +,\ (y,\ *,\ 0.5))\ */}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#define\ NV\_V\_VS(a,EQ,x,V,y,S,s)ND\_VEC((a)[0]EQ(x)[0]V((y)[0]S(s)),(a)[1]EQ(x)[1]V((y)[1]S(s)),(a)[2]EQ(x)[2]V((y)[2]S(s)))}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{comment}{/*\ NV\_VS\_VS\ (a,\ =,\ x,*,s,\ +,\ y,*,(1-\/s))\ */}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#define\ NV\_VS\_VS(a,EQ,x,SX,sx,V,y,SY,sy)ND\_VEC((a)[0]EQ(((x)[0]SX(sx))V((y)[0]SY(sy))),(a)[1]EQ(((x)[1]SX(sx))V((y)[1]SY(sy))),(a)[2]EQ(((x)[2]SX(sx))V((y)[2]SY(sy))))}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ NV\_VSVS\ NV\_VS\_VS\ \ \ }\textcolor{comment}{/*obsolete*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ ND\_DS\_DS(a0,a1,a2,EQ,x0,x1,x2,SX,sx,V,y0,y1,y2,SY,sy)ND\_VEC((a0)EQ(((x0)SX(sx))V((y0)SY(sy))),(a1)EQ(((x1)SX(sx))V((y1)SY(sy))),(a2)EQ(((x2)SX(sx))V((y2)SY(sy))))}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#define\ ND\_DS\_VS(a0,a1,a2,EQ,x0,x1,x2,SX,sx,V,y,SY,sy)ND\_VEC((a0)EQ(((x0)SX(sx))V((y)[0]SY(sy))),(a1)EQ(((x1)SX(sx))V((y)[1]SY(sy))),(a2)EQ(((x2)SX(sx))V((y)[2]SY(sy))))}}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00274\ \textcolor{comment}{Tensor\ double\ dot\ product\ when\ A\ is}}
+\DoxyCodeLine{00275\ \textcolor{comment}{a\ 2nd\ order\ Tensor\ A[3][3]}}
+\DoxyCodeLine{00276\ \textcolor{comment}{a\ ND\_ND\ x\ ND\_ND\ matrix}}
+\DoxyCodeLine{00277\ \textcolor{comment}{a\ Reynolds-\/stress\ matrix\ reformed\ into\ an\ one\ dimensional\ array\ (a[3]\ for\ 2D\ and\ a[6]\ for\ 3D)}}
+\DoxyCodeLine{00278\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#define\ RANK2\_TENSOR\_TRACE(A)(A[0][0]+A[1][1]+A[2][2])}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ RANK2\_TENSOR\_DOUBLE\_DOT\_PRODUCT(A,B)(\(\backslash\)}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\ \ (A[0][0]*B[0][0])+(A[1][1]*B[1][1])+(A[2][2]*B[2][2])+\(\backslash\)}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\ \ (A[0][1]*B[1][0])+(A[0][2]*B[2][0])+\(\backslash\)}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\ \ (A[1][0]*B[0][1])+(A[1][2]*B[2][1])+\(\backslash\)}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\ \ (A[2][0]*B[0][2])+(A[2][1]*B[1][2]))}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#define\ TRACE\_RST(a)(a[0]+a[1]+a[2])}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#define\ NV\_MATRIX\_TRACE(A)RANK2\_TENSOR\_TRACE(A)}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#define\ DOUBLE\_DOT\_PRODUCT\_RST(a,b)(\(\backslash\)}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{(a[0]*b[0])+(a[1]*b[1])+(a[2]*b[2])+\(\backslash\)}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{(2.*((a[3]*b[3])+(a[4]*b[4])+(a[5]*b[5]))))}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#define\ NV\_MATRIX\_DOUBLE\_DOT\_PRODUCT(A,B)RANK2\_TENSOR\_DOUBLE\_DOT\_PRODUCT(A,B)}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#define\ TRACE\_RST(a)(a[0]+a[1])}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#define\ NV\_MATRIX\_TRACE(A)(A[0][0]+A[1][1])}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#define\ DOUBLE\_DOT\_PRODUCT\_RST(a,b)(\(\backslash\)}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{(a[0]*b[0])+(a[1]*b[1])+\(\backslash\)}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{(2.*(a[2]*b[2])))}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#define\ NV\_MATRIX\_DOUBLE\_DOT\_PRODUCT(A,B)(\(\backslash\)}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{(A[0][0]*B[0][0])+(A[1][1]*B[1][1])+\(\backslash\)}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{(A[1][0]*B[0][1])+(A[0][1]*B[1][0]))}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#define\ TENSOR\_MAG\_RST(a)sqrt(DOUBLE\_DOT\_PRODUCT\_RST(a,a))}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#define\ MATRIX\_MAG(A)sqrt(NV\_MATRIX\_DOUBLE\_DOT\_PRODUCT(A,A))}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#define\ RANK2\_TENSOR\_MAG(A)sqrt(RANK2\_TENSOR\_DOUBLE\_DOT\_PRODUCT(A,A))}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \textcolor{comment}{/*\ Bare\ sequence\ of\ MAX/MIN\ values,\ no\ assignment.\ */}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\#define\ NDD\_MAX(a0,a1,a2,b0,b1,b2)ND\_VEC(MAX((a0),(b0)),MAX((a1),(b1)),MAX((a2),(b2)))}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#define\ NVD\_MAX(a,b)ND\_VEC(MAX((a)[0],(b)[0]),MAX((a)[1],(b)[1]),MAX((a)[2],(b)[2]))}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#define\ NDD\_MIN(a0,a1,a2,b0,b1,b2)ND\_VEC(MIN((a0),(b0)),MIN((a1),(b1)),MIN((a2),(b2)))}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#define\ NVD\_MIN(a,b)ND\_VEC(MIN((a)[0],(b)[0]),MIN((a)[1],(b)[1]),MIN((a)[2],(b)[2]))}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \textcolor{comment}{/*\ Assign\ MAX/MIN\ to\ the\ FIRST\ argument(s)\ */}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#define\ ND\_MAX(a0,a1,a2,b0,b1,b2)ND\_D((a0),(a1),(a2),=,MAX((a0),(b0)),MAX((a1),(b1)),MAX((a2),(b2)))}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#define\ NV\_MAX(a,b)NV\_D((a),=,MAX((a)[0],(b)[0]),MAX((a)[1],(b)[1]),MAX((a)[2],(b)[2]))}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#define\ ND\_MIN(a0,a1,a2,b0,b1,b2)ND\_D((a0),(a1),(a2),=,MIN((a0),(b0)),MIN((a1),(b1)),MIN((a2),(b2)))}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#define\ NV\_MIN(a,b)NV\_D((a),=,MIN((a)[0],(b)[0]),MIN((a)[1],(b)[1]),MIN((a)[2],(b)[2]))}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#define\ NV\_MIN\_I(v)((v)[0]<(v)[1]?((v)[0]<(v)[2]?0:2):((v)[1]<(v)[2]?1:2))}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{comment}{/*\ NV\_OP\_V\ (a,\ =,\ fabs,\ b)\ */}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#define\ NV\_OP\_V(a,EQ,f,b)ND\_VEC((a)[0]EQ(f((b)[0])),(a)[1]EQ(f((b)[1])),(a)[2]EQ(f((b)[2])))}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#\ define\ ND\_OP(OP,x,y,z)((x)OP(y)OP(z))}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#\ define\ NV\_LIST(a)(a)[0],(a)[1],(a)[2]}}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#\ define\ ND\_OP(OP,x,y,z)((x)OP(y))}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#\ define\ NV\_LIST(a)(a)[0],(a)[1]}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#define\ NV\_OP(op,x)ND\_OP(op,(x)[0],(x)[1],(x)[2])}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ N3D\_OP(OP,x,y,z)((x)OP(y)OP(z))}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#define\ ND\_MAP\ ND\_D\ }\textcolor{comment}{/*obsolete*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#define\ ND\_SET(x0,x1,x2,y0,y1,y2)ND\_D(x0,x1,x2,=,y0,y1,y2)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#define\ NV\_SET(x,\ y)ND\_SET(x[0],\ x[1],\ x[2],\ y[0],\ y[1],\ y[2]);}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#define\ NT\_SET(x,\ y)ND\_VEC(NV\_SET(x[0],\ y[0]),\ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_SET(x[1],\ y[1]),\ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NV\_SET(x[2],\ y[2]))}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#define\ ND\_SUM(x0,x1,x2)ND\_OP(+,x0,x1,x2)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ NV\_SUM(x)NV\_OP(+,x)}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ ND\_DOT(x0,x1,x2,y0,y1,y2)ND\_OP(+,(x0)*(y0),(x1)*(y1),(x2)*(y2))}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#define\ NV\_DOT(x,y)ND\_OP(+,(x)[0]*(y)[0],(x)[1]*(y)[1],(x)[2]*(y)[2])}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#define\ NVD\_DOT(x,y0,y1,y2)ND\_OP(+,(x)[0]*(y0),(x)[1]*(y1),(x)[2]*(y2))}}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#define\ ND\_MAG2(x0,x1,x2)ND\_DOT(x0,x1,x2,x0,x1,x2)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#define\ NV\_MAG2(x)NV\_DOT(x,x)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#define\ ND\_MAG(x0,x1,x2)sqrt(ND\_MAG2(x0,x1,x2))}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#define\ NV\_MAG(x)sqrt(NV\_MAG2(x))}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#define\ NV\_DST2(x1,x2)ND\_OP(+,SQR((x2)[0]-\/(x1)[0]),SQR((x2)[1]-\/(x1)[1]),SQR((x2)[2]-\/(x1)[2]))}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#define\ NV\_DST(x1,x2)sqrt(NV\_DST2(x1,x2))}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \textcolor{comment}{/*\ these\ magnitude\ macros\ assume\ three\ components\ are\ available\ regardless}}
+\DoxyCodeLine{00360\ \textcolor{comment}{\ *\ of\ the\ solver's\ dimension\ (i.e\ same\ for\ RP\_2D\ \&\ RP\_3D)\ -\/\ useful\ for}}
+\DoxyCodeLine{00361\ \textcolor{comment}{\ *\ computing\ velocity\ magnitude\ for\ 2D\ axi\ swirl\ */}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#define\ N3D\_MAG2(x0,x1,x2)((x0)*(x0)+(x1)*(x1)+(x2)*(x2))}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\#define\ N3V\_MAG2(x)N3D\_MAG2((x)[0],(x)[1],(x)[2])}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\#define\ N3D\_MAG(x0,x1,x2)sqrt(N3D\_MAG2(x0,x1,x2))}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#define\ N3V\_MAG(x)sqrt(N3V\_MAG2(x))}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#define\ N3V\_DOT(x,y)N3D\_OP(+,(x)[0]*(y)[0],(x)[1]*(y)[1],(x)[2]*(y)[2])}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#define\ N3VD\_DOT(x,y0,y1,y2)N3D\_OP(+,(x)[0]*(y0),(x)[1]*(y1),(x)[2]*(y2))}}
+\DoxyCodeLine{00368\ \textcolor{comment}{/*\ the\ following\ macros\ assume\ three\ components\ */}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\#\ define\ N3V\_LIST\ NV\_LIST}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\#\ define\ N3V\_VEC\ NV\_VEC}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\#\ define\ N3V\_S\ NV\_S}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#\ define\ N3D\_S\ ND\_S}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\#\ define\ N3V\_V\ NV\_V}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\#\ define\ N3D\_V\ ND\_V}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\#\ define\ N3V\_D\ NV\_D}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#\ define\ N3D\_D\ ND\_D}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\#\ define\ N3V\_VV\ NV\_VV}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\#\ define\ N3V\_VV\_S\ NV\_VV\_S}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#\ define\ N3V\_VS\ NV\_VS}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\#\ define\ N3V\_DS\ NV\_DS}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\#\ define\ N3D\_DS\ ND\_DS}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#\ define\ N3V\_V\_VS\ NV\_V\_VS}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\#\ define\ N3V\_VS\_VS\ NV\_VS\_VS}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#\ define\ N3V\_LIST(a)(a)[0],(a)[1],(a)[2]}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#\ define\ N3V\_VEC(a)(a)[3]}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#\ define\ N3V\_S(a,EQ,s)((a)[0]EQ(s),(a)[1]EQ(s),(a)[2]EQ(s))}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#\ define\ N3D\_S(a0,a1,a2,EQ,s)((a0)EQ(s),(a1)EQ(s),(a2)EQ(s))}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#\ define\ N3V\_V(a,EQ,x)((a)[0]EQ(x)[0],(a)[1]EQ(x)[1],(a)[2]EQ(x)[2])}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#\ define\ N3D\_V(a0,a1,a2,EQ,x)((a0)EQ(x)[0],(a1)EQ(x)[1],(a2)EQ(x)[2])}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\#\ define\ N3V\_D(a,EQ,x0,x1,x2)((a)[0]EQ(x0),(a)[1]EQ(x1),(a)[2]EQ(x2))}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#\ define\ N3D\_D(a0,a1,a2,EQ,x0,x1,x2)((a0)EQ(x0),(a1)EQ(x1),(a2)EQ(x2))}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#\ define\ N3V\_VV(a,EQ,x,V,y)((a)[0]EQ(x)[0]V(y)[0],(a)[1]EQ(x)[1]V(y)[1],(a)[2]EQ(x)[2]V(y)[2])}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#\ define\ N3V\_VV\_S(a,EQ,x,V,y,S,s)((a)[0]EQ((x)[0]V(y)[0])S(s),(a)[1]EQ((x)[1]V(y)[1])S(s),(a)[2]EQ((x)[2]V(y)[2])S(s))}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#\ define\ N3V\_VS(a,EQ,x,S,s)((a)[0]EQ(x)[0]S(s),(a)[1]EQ(x)[1]S(s),(a)[2]EQ(x)[2]S(s))}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#\ define\ N3V\_DS(a,EQ,x0,x1,x2,S,s)((a)[0]EQ(x0)S(s),(a)[1]EQ(x1)S(s),(a)[2]EQ(x2)S(s))}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#\ define\ N3D\_DS(a0,a1,a2,EQ,x0,x1,x2,S,s)((a0)EQ(x0)S(s),(a1)EQ(x1)S(s),(a2)EQ(x2)S(s))}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\#\ define\ N3V\_V\_VS(a,EQ,x,V,y,S,s)((a)[0]EQ(x)[0]V((y)[0]S(s)),(a)[1]EQ(x)[1]V((y)[1]S(s)),(a)[2]EQ(x)[2]V((y)[2]S(s)))}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#\ define\ N3V\_VS\_VS(a,EQ,x,SX,sx,V,y,SY,sy)((a)[0]EQ(((x)[0]SX(sx))V((y)[0]SY(sy))),(a)[1]EQ(((x)[1]SX(sx))V((y)[1]SY(sy))),(a)[2]EQ(((x)[2]SX(sx))V((y)[2]SY(sy))))}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#\ define\ ND\_CROSS\_X(x0,x1,x2,y0,y1,y2)(((x1)*(y2))-\/((y1)*(x2)))}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#\ define\ ND\_CROSS\_Y(x0,x1,x2,y0,y1,y2)(((x2)*(y0))-\/((y2)*(x0)))}}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00407\ \textcolor{comment}{/*\ (x0,x1,0)\ X\ (y0,y1,0)\ */}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#\ define\ ND\_CROSS\_X(x0,x1,x2,y0,y1,y2)(0.0)}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\#\ define\ ND\_CROSS\_Y(x0,x1,x2,y0,y1,y2)(0.0)}}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\#\ define\ ND\_CROSS\_Z(x0,x1,x2,y0,y1,y2)(((x0)*(y1))-\/((y0)*(x1)))}}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\#define\ NV\_CROSS\_X(x,y)ND\_CROSS\_X(x[0],x[1],x[2],y[0],y[1],y[2])}}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\#define\ NV\_CROSS\_Y(x,y)ND\_CROSS\_Y(x[0],x[1],x[2],y[0],y[1],y[2])}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\#define\ NV\_CROSS\_Z(x,y)ND\_CROSS\_Z(x[0],x[1],x[2],y[0],y[1],y[2])}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#define\ NV\_CROSS(a,x,y)NV\_D(a,=,NV\_CROSS\_X(x,y),NV\_CROSS\_Y(x,y),NV\_CROSS\_Z(x,y))}}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \textcolor{comment}{/*\ The\ following\ N3D,\ N3V\ macros\ are\ used\ when\ one\ of\ the\ vectors}}
+\DoxyCodeLine{00419\ \textcolor{comment}{\ *\ becomes\ (0,0,1)\ in\ 2D\ (e.g.,\ an\ axis\ of\ rotation)\ */}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#\ define\ N3D\_VEC\ ND\_VEC}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#\ define\ N3D\_DOT\ ND\_DOT}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#\ define\ N3D\_CROSS\_X\ ND\_CROSS\_X}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#\ define\ N3D\_CROSS\_Y\ ND\_CROSS\_Y}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#\ define\ N3D\_CROSS\_Z\ ND\_CROSS\_Z}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#\ define\ N3V\_CROSS\_X\ NV\_CROSS\_X}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#\ define\ N3V\_CROSS\_Y\ NV\_CROSS\_Y}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#\ define\ N3V\_CROSS\_Z\ NV\_CROSS\_Z}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#\ define\ N3D\_VEC(x,y,z)0.0,0.0,1.0}}
+\DoxyCodeLine{00432\ \textcolor{comment}{/*\ (0,0,1)\ .\ (y0,y1,y2)\ */}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#\ define\ N3D\_DOT(x1,y1,z1,x2,y2,z2)(z2)}}
+\DoxyCodeLine{00434\ \textcolor{comment}{/*\ (0,0,1)\ X\ (y0,y1,0)\ */}}
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#\ define\ N3D\_CROSS\_X(x0,x1,x2,y0,y1,y2)(-\/(y1))}}
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\#\ define\ N3D\_CROSS\_Y(x0,x1,x2,y0,y1,y2)(y0)}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\#\ define\ N3D\_CROSS\_Z(x0,x1,x2,y0,y1,y2)(0.0)}}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#\ define\ N3V\_CROSS\_X(x,y)(-\/(y[1]))}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\#\ define\ N3V\_CROSS\_Y(x,y)(y[0])}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\#\ define\ N3V\_CROSS\_Z(x,y)(0.0)}}
+\DoxyCodeLine{00441\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#define\ N3V\_CROSS(a,x,y)NV\_D(a,=,N3V\_CROSS\_X(x,y),N3V\_CROSS\_Y(x,y),N3V\_CROSS\_Z(x,y))}}
+\DoxyCodeLine{00444\ }
+\DoxyCodeLine{00445\ \textcolor{comment}{/*\ Macros\ for\ cross-\/products\ of\ 3D\ vectors\ giving\ a\ 3D\ vector}}
+\DoxyCodeLine{00446\ \textcolor{comment}{\ \ \ These\ are\ needed\ when\ Reynolds-\/stresses\ are\ transformed}}
+\DoxyCodeLine{00447\ \textcolor{comment}{\ \ \ from\ local\ to\ global\ coordinates.}}
+\DoxyCodeLine{00448\ \textcolor{comment}{}}
+\DoxyCodeLine{00449\ \textcolor{comment}{\ \ \ x,y\ are\ 3D\ vetors,\ and\ a\ is\ the\ resulting\ 3D\ vector.\ */}}
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#define\ N2V\_CROSS\_X(x,y)(x[1]*y[2]-\/x[2]*y[1])}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#define\ N2V\_CROSS\_Y(x,y)(x[2]*y[0]-\/x[0]*y[2])}}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{\#define\ N2V\_CROSS\_Z(x,y)(x[0]*y[1]-\/x[1]*y[0])}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#define\ N2V\_CROSS(a,x,y)(a[0]=N2V\_CROSS\_X(x,y),a[1]=N2V\_CROSS\_Y(x,y),a[2]=N2V\_CROSS\_Z(x,y))}}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \textcolor{comment}{/*\ Macros\ for\ second-\/order\ stress\ tensor\ transfomation.}}
+\DoxyCodeLine{00457\ \textcolor{comment}{\ \ \ Needed\ for\ transformation\ of\ Reynolds-\/stress\ tensor}}
+\DoxyCodeLine{00458\ \textcolor{comment}{\ \ \ which\ is\ a\ 3\ x\ 3\ tensor\ regardless\ of\ dimension}}
+\DoxyCodeLine{00459\ \textcolor{comment}{}}
+\DoxyCodeLine{00460\ \textcolor{comment}{\ \ \ R[3][3]\ :\ stress\ tensor\ or\ any\ other\ second-\/order\ tensor}}
+\DoxyCodeLine{00461\ \textcolor{comment}{\ \ \ A[3][3]\ :\ transformation\ matrix\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\#define\ ND\_PROD(x0,x1,x2,y0,y1,y2)((x0)*(y0)+(x1)*(y1)+(x2)*(y2))}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\#define\ NV\_PROD(x,y)(x[0]*y[0]+x[1]*y[1]+x[2]*y[2])}}
+\DoxyCodeLine{00465\ \textcolor{preprocessor}{\#define\ TENSOR\_TRANS\_P(R,A,i,j)\(\backslash\)}}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{ND\_PROD(A[i][0],A[i][1],A[i][2],\(\backslash\)}}
+\DoxyCodeLine{00467\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_PROD(R[0][0],R[1][0],R[2][0],A[j][0],A[j][1],A[j][2]),\(\backslash\)}}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_PROD(R[0][1],R[1][1],R[2][1],A[j][0],A[j][1],A[j][2]),\(\backslash\)}}
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_PROD(R[0][2],R[1][2],R[2][2],A[j][0],A[j][1],A[j][2]))}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#define\ TENSOR\_TRANS\_N(R,A,i,j)\(\backslash\)}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{ND\_PROD(A[0][i],A[1][i],A[2][i],\(\backslash\)}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_PROD(R[0][0],R[1][0],R[2][0],A[0][j],A[1][j],A[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_PROD(R[0][1],R[1][1],R[2][1],A[0][j],A[1][j],A[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_PROD(R[0][2],R[1][2],R[2][2],A[0][j],A[1][j],A[2][j]))}}
+\DoxyCodeLine{00475\ }
+\DoxyCodeLine{00476\ \textcolor{comment}{/*\ Macros\ for\ derivatives-\/of-\/stress-\/tensor\ (third-\/order}}
+\DoxyCodeLine{00477\ \textcolor{comment}{\ \ \ tensor)\ transfomation.}}
+\DoxyCodeLine{00478\ \textcolor{comment}{}}
+\DoxyCodeLine{00479\ \textcolor{comment}{\ \ \ DR[3][3][ND\_ND]\ :\ derivatives-\/of-\/stress-\/tensor}}
+\DoxyCodeLine{00480\ \textcolor{comment}{\ \ \ A[3][3]\ \ \ \ \ \ \ \ \ :\ transformation\ matrix}}
+\DoxyCodeLine{00481\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#define\ RANK3\_TENSOR\_TRANS(DR,A,i,j,k)\(\backslash\)}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{ND\_PROD(A[0][k],A[1][k],A[2][k],\(\backslash\)}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\ ND\_PROD(A[0][i],A[1][i],A[2][i],\(\backslash\)}}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\ \ ND\_PROD(DR[0][0][0],DR[1][0][0],DR[2][0][0],A[0][j],A[1][j],A[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\ \ ND\_PROD(DR[0][1][0],DR[1][1][0],DR[2][1][0],A[0][j],A[1][j],A[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\ \ ND\_PROD(DR[0][2][0],DR[1][2][0],DR[2][2][0],A[0][j],A[1][j],A[2][j])),\(\backslash\)}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\ ND\_PROD(A[0][i],A[1][i],A[2][i],\(\backslash\)}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\ \ ND\_PROD(DR[0][0][1],DR[1][0][1],DR[2][0][1],A[0][j],A[1][j],A[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\ \ ND\_PROD(DR[0][1][1],DR[1][1][1],DR[2][1][1],A[0][j],A[1][j],A[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\ \ ND\_PROD(DR[0][2][1],DR[1][2][1],DR[2][2][1],A[0][j],A[1][j],A[2][j])),\(\backslash\)}}
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\ ND\_PROD(A[0][i],A[1][i],A[2][i],\(\backslash\)}}
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\ \ ND\_PROD(DR[0][0][2],DR[1][0][2],DR[2][0][2],A[0][j],A[1][j],A[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\ \ ND\_PROD(DR[0][1][2],DR[1][1][2],DR[2][1][2],A[0][j],A[1][j],A[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\ \ ND\_PROD(DR[0][2][2],DR[1][2][2],DR[2][2][2],A[0][j],A[1][j],A[2][j])))}}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00498\ \textcolor{comment}{/*\ macros\ to\ computed\ "{}rotated"{}\ components\ of\ a\ vector\ */}}
+\DoxyCodeLine{00499\ \textcolor{comment}{/*\ ROTP\_\{XYZ\}\ compute\ components\ of\ the\ product\ of\ matrix\ r\ with\ vector\ [x\ y\ z]}}
+\DoxyCodeLine{00500\ \textcolor{comment}{\ \ \ while\ ROTN\_\{XYZ\}\ those\ of\ the\ transpose\ of\ r\ and\ vector\ [x\ y\ z]\ */}}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00502\ \textcolor{preprocessor}{\#define\ ROTP\_X(x,y,z,r)ND\_DOT(x,y,z,\ r[0][0],r[0][1],r[0][2])}}
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\#define\ ROTN\_X(x,y,z,r)ND\_DOT(x,y,z,\ r[0][0],r[1][0],r[2][0])}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#define\ ROTP\_Y(x,y,z,r)ND\_DOT(x,y,z,\ r[1][0],r[1][1],r[1][2])}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\#define\ ROTN\_Y(x,y,z,r)ND\_DOT(x,y,z,\ r[0][1],r[1][1],r[2][1])}}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\#define\ ROTP\_Z(x,y,z,r)ND\_DOT(x,y,z,\ r[2][0],r[2][1],r[2][2])}}
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\#define\ ROTN\_Z(x,y,z,r)ND\_DOT(x,y,z,\ r[0][2],r[1][2],r[2][2])}}
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\#define\ NV\_ROTP\_X(x,r)NV\_DOT(x,\ r[0])}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#define\ NV\_ROTN\_X(x,r)NVD\_DOT(x,\ r[0][0],r[1][0],r[2][0])}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\#define\ NV\_ROTP\_Y(x,r)NV\_DOT(x,\ r[1])}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\#define\ NV\_ROTN\_Y(x,r)NVD\_DOT(x,\ r[0][1],r[1][1],r[2][1])}}
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\#define\ NV\_ROTP\_Z(x,r)NV\_DOT(x,\ r[2])}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\#define\ NV\_ROTN\_Z(x,r)NVD\_DOT(x,\ r[0][2],r[1][2],r[2][2])}}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\#define\ NV\_ROTN\_V(y,op,x,r)\(\backslash\)}}
+\DoxyCodeLine{00521\ \textcolor{preprocessor}{\ \ \ \ \ ND\_MAP((y)[0],(y)[1],(y)[2],op,NV\_ROTN\_X(x,r),NV\_ROTN\_Y(x,r),NV\_ROTN\_Z(x,r))}}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \textcolor{preprocessor}{\#define\ NV\_ROTP\_V(y,op,x,r)\(\backslash\)}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\ \ \ \ \ ND\_MAP((y)[0],(y)[1],(y)[2],op,NV\_ROTP\_X(x,r),NV\_ROTP\_Y(x,r),NV\_ROTP\_Z(x,r))}}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \textcolor{comment}{/*\ the\ following\ macros\ assume\ three\ components\ */}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#define\ N3V\_ROTP\_X(x,r)N3V\_DOT(x,\ r[0])}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\#define\ N3V\_ROTN\_X(x,r)N3VD\_DOT(x,\ r[0][0],r[1][0],r[2][0])}}
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\#define\ N3V\_ROTP\_Y(x,r)N3V\_DOT(x,\ r[1])}}
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\#define\ N3V\_ROTN\_Y(x,r)N3VD\_DOT(x,\ r[0][1],r[1][1],r[2][1])}}
+\DoxyCodeLine{00531\ \textcolor{preprocessor}{\#define\ N3V\_ROTP\_Z(x,r)N3V\_DOT(x,\ r[2])}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#define\ N3V\_ROTN\_Z(x,r)N3VD\_DOT(x,\ r[0][2],r[1][2],r[2][2])}}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\#define\ N3V\_ROTN\_V(y,op,x,r)\(\backslash\)}}
+\DoxyCodeLine{00535\ \textcolor{preprocessor}{\ \ \ \ \ N3D\_D((y)[0],(y)[1],(y)[2],op,N3V\_ROTN\_X(x,r),N3V\_ROTN\_Y(x,r),N3V\_ROTN\_Z(x,r))}}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\#define\ N3V\_ROTP\_V(y,op,x,r)\(\backslash\)}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\ \ \ \ \ N3D\_D((y)[0],(y)[1],(y)[2],op,N3V\_ROTP\_X(x,r),N3V\_ROTP\_Y(x,r),N3V\_ROTP\_Z(x,r))}}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ }
+\DoxyCodeLine{00541\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00542\ \textcolor{comment}{\ *\ matrix\ multiply:\ B\ =\ A\ .\ R\string^T\ (matrices\ are\ ND\_ND\ x\ ND\_ND)}}
+\DoxyCodeLine{00543\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\#define\ MAT\_A\_RT(b,op,a,r)\(\backslash\)}}
+\DoxyCodeLine{00545\ \textcolor{preprocessor}{ND\_VEC(\(\backslash\)}}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{NVD\_V(b[0],=,NV\_ROTP\_X(a[0],r),NV\_ROTP\_Y(a[0],r),NV\_ROTP\_Z(a[0],r)),\(\backslash\)}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{NVD\_V(b[1],=,NV\_ROTP\_X(a[1],r),NV\_ROTP\_Y(a[1],r),NV\_ROTP\_Z(a[1],r)),\(\backslash\)}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{NVD\_V(b[2],=,NV\_ROTP\_X(a[2],r),NV\_ROTP\_Y(a[2],r),NV\_ROTP\_Z(a[2],r)))}}
+\DoxyCodeLine{00549\ }
+\DoxyCodeLine{00550\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00551\ \textcolor{comment}{\ *\ matrix\ multiply:\ B\ =\ A\ .\ R\ (matrices\ are\ ND\_ND\ x\ ND\_ND)}}
+\DoxyCodeLine{00552\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00553\ \textcolor{preprocessor}{\#define\ MAT\_A\_R(b,op,a,r)\(\backslash\)}}
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{ND\_VEC(\(\backslash\)}}
+\DoxyCodeLine{00555\ \textcolor{preprocessor}{NVD\_V(b[0],=,NV\_ROTN\_X(a[0],r),NV\_ROTN\_Y(a[0],r),NV\_ROTN\_Z(a[0],r)),\(\backslash\)}}
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{NVD\_V(b[1],=,NV\_ROTN\_X(a[1],r),NV\_ROTN\_Y(a[1],r),NV\_ROTN\_Z(a[1],r)),\(\backslash\)}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{NVD\_V(b[2],=,NV\_ROTN\_X(a[2],r),NV\_ROTN\_Y(a[2],r),NV\_ROTN\_Z(a[2],r)))}}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \textcolor{comment}{/*\ macros\ to\ compute\ "{}rotated"{}\ components\ of\ a\ tensor\ A\ desribed\ by\ the\ matrix}}
+\DoxyCodeLine{00561\ \textcolor{comment}{\ \ \ [\ [xx\ xy\ xz]\ [yx\ yy\ yz]\ [zx\ zy\ zz]\ ]*/}}
+\DoxyCodeLine{00562\ \textcolor{comment}{/*\ ROTP\_\{ij\}\ computes\ the\ ij'th\ entry\ of\ the\ matrix\ product\ r\ A\ r\string^T}}
+\DoxyCodeLine{00563\ \textcolor{comment}{\ \ \ while\ ROTN\_\{ij\}\ computes\ those\ of\ r\string^T\ A\ r\ */}}
+\DoxyCodeLine{00564\ \textcolor{preprocessor}{\#define\ R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,i,j)\(\backslash\)}}
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{ND\_DOT(r[i][0],r[i][1],r[i][2],\(\backslash\)}}
+\DoxyCodeLine{00566\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(xx,xy,xz,r[j][0],r[j][1],r[j][2]),\(\backslash\)}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(yx,yy,yz,r[j][0],r[j][1],r[j][2]),\(\backslash\)}}
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(zx,zy,zz,r[j][0],r[j][1],r[j][2]))}}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\#define\ RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,i,j)\(\backslash\)}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{ND\_DOT(r[0][i],r[1][i],r[2][i],\(\backslash\)}}
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(xx,xy,xz,r[0][j],r[1][j],r[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(yx,yy,yz,r[0][j],r[1][j],r[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(zx,zy,zz,r[0][j],r[1][j],r[2][j]))}}
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\#define\ ROTP\_XX(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,0,0)}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#define\ ROTP\_XY(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,0,1)}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\#define\ ROTP\_YX(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,1,0)}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#define\ ROTP\_YY(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,1,1)}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#define\ ROTP\_XZ(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,0,2)}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\#define\ ROTP\_YZ(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,1,2)}}
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\#define\ ROTP\_ZX(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,2,0)}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#define\ ROTP\_ZY(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,2,1)}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\#define\ ROTP\_ZZ(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)R\_A\_RT(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,2,2)}}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#define\ ROTN\_XX(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,0,0)}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#define\ ROTN\_XY(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,0,1)}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#define\ ROTN\_YX(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,1,0)}}
+\DoxyCodeLine{00589\ \textcolor{preprocessor}{\#define\ ROTN\_YY(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,1,1)}}
+\DoxyCodeLine{00590\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\#define\ ROTN\_XZ(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,0,2)}}
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\#define\ ROTN\_YZ(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,1,2)}}
+\DoxyCodeLine{00593\ \textcolor{preprocessor}{\#define\ ROTN\_ZX(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,2,0)}}
+\DoxyCodeLine{00594\ \textcolor{preprocessor}{\#define\ ROTN\_ZY(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,2,1)}}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\#define\ ROTN\_ZZ(xx,xy,xz,yx,yy,yz,zx,zy,zz,r)RT\_A\_R(xx,xy,xz,yx,yy,yz,zx,zy,zz,r,2,2)}}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00597\ }
+\DoxyCodeLine{00598\ \textcolor{comment}{/*\ the\ following\ macros\ assume\ that\ D\ is\ a\ ND\_ND\ x\ ND\_ND\ matrix}}
+\DoxyCodeLine{00599\ \textcolor{comment}{\ \ \ and\ D[0][0]=u\_x,\ D[0][1]=u\_y,\ D[0][2]=u\_z\ and\ so\ on.\ */}}
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\#define\ NT\_R\_A\_RT(D,r,i,j)\(\backslash\)}}
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{ND\_DOT(r[i][0],r[i][1],r[i][2],\(\backslash\)}}
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(D[0][0],D[1][0],D[2][0],r[j][0],r[j][1],r[j][2]),\(\backslash\)}}
+\DoxyCodeLine{00603\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(D[0][1],D[1][1],D[2][1],r[j][0],r[j][1],r[j][2]),\(\backslash\)}}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(D[0][2],D[1][2],D[2][2],r[j][0],r[j][1],r[j][2]))}}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\#define\ NT\_RT\_A\_R(D,r,i,j)\(\backslash\)}}
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{ND\_DOT(r[0][i],r[1][i],r[2][i],\(\backslash\)}}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(D[0][0],D[1][0],D[2][0],r[0][j],r[1][j],r[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00608\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(D[0][1],D[1][1],D[2][1],r[0][j],r[1][j],r[2][j]),\(\backslash\)}}
+\DoxyCodeLine{00609\ \textcolor{preprocessor}{\ \ \ \ \ \ \ ND\_DOT(D[0][2],D[1][2],D[2][2],r[0][j],r[1][j],r[2][j]))}}
+\DoxyCodeLine{00610\ \textcolor{preprocessor}{\#define\ NT\_ROTP\_XX(D,r)NT\_R\_A\_RT(D,r,0,0)}}
+\DoxyCodeLine{00611\ \textcolor{preprocessor}{\#define\ NT\_ROTP\_XY(D,r)NT\_R\_A\_RT(D,r,0,1)}}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#define\ NT\_ROTP\_YX(D,r)NT\_R\_A\_RT(D,r,1,0)}}
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\#define\ NT\_ROTP\_YY(D,r)NT\_R\_A\_RT(D,r,1,1)}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\#define\ NT\_ROTP\_XZ(D,r)NT\_R\_A\_RT(D,r,0,2)}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\#define\ NT\_ROTP\_YZ(D,r)NT\_R\_A\_RT(D,r,1,2)}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#define\ NT\_ROTP\_ZX(D,r)NT\_R\_A\_RT(D,r,2,0)}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\#define\ NT\_ROTP\_ZY(D,r)NT\_R\_A\_RT(D,r,2,1)}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\#define\ NT\_ROTP\_ZZ(D,r)NT\_R\_A\_RT(D,r,2,2)}}
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\#define\ NT\_ROTN\_XX(D,r)NT\_RT\_A\_R(D,r,0,0)}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\#define\ NT\_ROTN\_XY(D,r)NT\_RT\_A\_R(D,r,0,1)}}
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\#define\ NT\_ROTN\_YX(D,r)NT\_RT\_A\_R(D,r,1,0)}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\#define\ NT\_ROTN\_YY(D,r)NT\_RT\_A\_R(D,r,1,1)}}
+\DoxyCodeLine{00626\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\#define\ NT\_ROTN\_XZ(D,r)NT\_RT\_A\_R(D,r,0,2)}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#define\ NT\_ROTN\_YZ(D,r)NT\_RT\_A\_R(D,r,1,2)}}
+\DoxyCodeLine{00629\ \textcolor{preprocessor}{\#define\ NT\_ROTN\_ZX(D,r)NT\_RT\_A\_R(D,r,2,0)}}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\#define\ NT\_ROTN\_ZY(D,r)NT\_RT\_A\_R(D,r,2,1)}}
+\DoxyCodeLine{00631\ \textcolor{preprocessor}{\#define\ NT\_ROTN\_ZZ(D,r)NT\_RT\_A\_R(D,r,2,2)}}
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00633\ }
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#define\ MAT3T(m,v0,v1,v2,v3)\ \ \ ((m)[0][0]\ =\ (v1)[0]\ -\/\ (v0)[0],\ \(\backslash\)}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (m)[1][0]\ =\ (v1)[1]\ -\/\ (v0)[1],\ \(\backslash\)}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (m)[2][0]\ =\ (v1)[2]\ -\/\ (v0)[2],\ \(\backslash\)}}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (m)[0][1]\ =\ (v2)[0]\ -\/\ (v0)[0],\ \(\backslash\)}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (m)[1][1]\ =\ (v2)[1]\ -\/\ (v0)[1],\ \(\backslash\)}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (m)[2][1]\ =\ (v2)[2]\ -\/\ (v0)[2],\ \(\backslash\)}}
+\DoxyCodeLine{00641\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (m)[0][2]\ =\ (v3)[0]\ -\/\ (v0)[0],\ \(\backslash\)}}
+\DoxyCodeLine{00642\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (m)[1][2]\ =\ (v3)[1]\ -\/\ (v0)[1],\ \(\backslash\)}}
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (m)[2][2]\ =\ (v3)[2]\ -\/\ (v0)[2])}}
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\#define\ \ ROTATE\_OR\_UNROTATE\_SYMM\_TENSOR\_2D(PN,\ rotated,\ original,\ rm,\ n\_s)\ \(\backslash\)}}
+\DoxyCodeLine{00647\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00648\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ int\ rstress\_iterator;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ int\ \_\_ii;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ int\ \_\_jj;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00651\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ loop\_rstress(rstress\_iterator,\ n\_s)\ \(\backslash\)}}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_ii\ =\ stress\_tensor\_ii[rstress\_iterator];\ \ \(\backslash\)}}
+\DoxyCodeLine{00654\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_\_jj\ =\ stress\_tensor\_jj[rstress\_iterator];\ \ \(\backslash\)}}
+\DoxyCodeLine{00655\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[\_\_ii][\_\_jj]\ =\ \ \(\backslash\)}}
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[\_\_jj][\_\_ii]\ =\ \ \(\backslash\)}}
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ \_\_ii,\ \_\_jj);\ \(\backslash\)}}
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \(\backslash\)}}
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00660\ }
+\DoxyCodeLine{00661\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\#define\ \ ROTATE\_OR\_UNROTATE\_SYMM\_TENSOR\_3D\_ADD(PN,\ rotated,\ original,\ rm,\ n\_s)\ \ }\textcolor{comment}{/*\ Nothing\ -\/-\/\ ...\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00663\ \textcolor{comment}{/*\ ROTATE\_OR\_UNROTATE\_SYMM\_TENSOR\_2D\ does\ it\ all\ because\ n\_s\ tells\ it\ how\ many\ components\ (4\ or\ 6)\ to\ treat.\ */}}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00665\ }
+\DoxyCodeLine{00666\ \textcolor{comment}{/*\ Note:\ The\ following\ useD\ ROTP\_XX\ /\ ROTN\_XX\ etc.\ on\ a\ (symmetric)\ tensor\ in\ a\ two-\/dim.\ array.}}
+\DoxyCodeLine{00667\ \textcolor{comment}{\ *\ \ \ \ \ \ \ Now\ it\ uses\ TENSOR\_TRANS\_P(...,\ ...,\ ...,\ ...)\ and\ TENSOR\_TRANS\_N(...,\ ...,\ ...,\ ...)\ instead.}}
+\DoxyCodeLine{00668\ \textcolor{comment}{\ *\ \ \ \ \ \ \ I've\ stated\ this\ here\ so\ that\ a\ search\ for\ ROTP\_XY\ /\ ROTN\_XY\ etc.\ will\ find\ this.}}
+\DoxyCodeLine{00669\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00670\ \textcolor{comment}{/*\ Last\ arg.\ n\_s\ intentionally\ ignored!\ */}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\#define\ \ ROTATE\_OR\_UNROTATE\_TENSOR\_2D(PN,\ rotated,\ original,\ rm,\ n\_s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[0][0]\ =\ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ 0,\ 0),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[0][1]\ =\ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ 0,\ 1),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00674\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[1][0]\ =\ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ 1,\ 0),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[1][1]\ =\ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ 1,\ 1)}}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\#if\ 00}}
+\DoxyCodeLine{00678\ rotated[0][0]\ =\ ROT\ \#\#\ PN\ \#\#\ \_XX(original[0][0],original[0][1],original[0][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[1][0],original[1][1],original[1][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[2][0],original[2][1],original[2][2],rm),\ \ \(\backslash\)}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[0][1]\ =\ ROT\ \#\#\ PN\ \#\#\ \_XY(original[0][0],original[0][1],original[0][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[1][0],original[1][1],original[1][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[2][0],original[2][1],original[2][2],rm),\ \ \(\backslash\)}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[1][0]\ =\ ROT\ \#\#\ PN\ \#\#\ \_YX(original[0][0],original[0][1],original[0][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[1][0],original[1][1],original[1][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[2][0],original[2][1],original[2][2],rm),\ \ \(\backslash\)}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[1][1]\ =\ ROT\ \#\#\ PN\ \#\#\ \_YY(original[0][0],original[0][1],original[0][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[1][0],original[1][1],original[1][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[2][0],original[2][1],original[2][2],rm)}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00691\ }
+\DoxyCodeLine{00692\ }
+\DoxyCodeLine{00693\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Last\ arg.\ n\_s\ intentionally\ ignored!\ */}}
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\#define\ \ ROTATE\_OR\_UNROTATE\_TENSOR\_3D\_ADD(PN,\ rotated,\ original,\ rm,\ n\_s)\ \ \ \ \ \ ,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[0][2]\ =\ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ 0,\ 2),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[1][2]\ =\ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ 1,\ 2),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[2][0]\ =\ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ 2,\ 0),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[2][1]\ =\ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ 2,\ 1),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[2][2]\ =\ TENSOR\_TRANS\_\ \#\#\ PN(original,\ rm,\ 2,\ 2)}}
+\DoxyCodeLine{00701\ }
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\#if\ 00}}
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[0][2]\ =\ ROT\ \#\#\ PN\ \#\#\ \_XZ(original[0][0],original[0][1],original[0][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[1][0],original[1][1],original[1][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00705\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[2][0],original[2][1],original[2][2],rm),\ \ \(\backslash\)}
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[1][2]\ =\ ROT\ \#\#\ PN\ \#\#\ \_YZ(original[0][0],original[0][1],original[0][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00707\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[1][0],original[1][1],original[1][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[2][0],original[2][1],original[2][2],rm),\ \ \(\backslash\)}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[2][0]\ =\ ROT\ \#\#\ PN\ \#\#\ \_ZX(original[0][0],original[0][1],original[0][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[1][0],original[1][1],original[1][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[2][0],original[2][1],original[2][2],rm),\ \ \(\backslash\)}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[2][1]\ =\ ROT\ \#\#\ PN\ \#\#\ \_ZY(original[0][0],original[0][1],original[0][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[1][0],original[1][1],original[1][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[2][0],original[2][1],original[2][2],rm),\ \ \(\backslash\)}
+\DoxyCodeLine{00715\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotated[2][2]\ =\ ROT\ \#\#\ PN\ \#\#\ \_ZZ(original[0][0],original[0][1],original[0][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[1][0],original[1][1],original[1][2],\ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ original[2][0],original[2][1],original[2][2],rm)}
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00720\ }
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ By\ way\ of\ the\ \#\#\ operator,\ the\ following\ macros\ use...}}
+\DoxyCodeLine{00722\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ \ -\/\ ROTATE\_OR\_UNROTATE\_TENSOR\_2D}}
+\DoxyCodeLine{00723\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ \ -\/\ ROTATE\_OR\_UNROTATE\_TENSOR\_3D\_ADD}}
+\DoxyCodeLine{00724\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ \ -\/\ ROTATE\_OR\_UNROTATE\_SYMM\_TENSOR\_2D}}
+\DoxyCodeLine{00725\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ \ -\/\ ROTATE\_OR\_UNROTATE\_SYMM\_TENSOR\_3D\_ADD}}
+\DoxyCodeLine{00726\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00727\ }
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\#define\ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR\_2D(SYMORNOT,\ PN,\ rotated,\ original,\ rm,\ n\_s)\ \(\backslash\)}}
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ROTATE\_OR\_UNROTATE\ \#\#\ SYMORNOT\ \#\#\ TENSOR\_2D(PN,\ rotated,\ original,\ rm,\ n\_s)}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{\#define\ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR\_3D\_ADD(SYMORNOT,\ PN,\ rotated,\ original,\ rm,\ n\_s)\ \(\backslash\)}}
+\DoxyCodeLine{00732\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ROTATE\_OR\_UNROTATE\ \#\#\ SYMORNOT\ \#\#\ TENSOR\_3D\_ADD(PN,\ rotated,\ original,\ rm,\ n\_s)}}
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00734\ }
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#if\ RP\_2D}}
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{\#define\ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR(SYMORNOT,\ PN,\ rotated,\ original,\ rm,\ n\_s)\ \(\backslash\)}}
+\DoxyCodeLine{00737\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR\_2D(SYMORNOT,\ PN,\ rotated,\ original,\ rm,\ n\_s)}}
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#define\ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR(SYMORNOT,\ PN,\ rotated,\ original,\ rm,\ n\_s)\ \(\backslash\)}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR\_2D(SYMORNOT,\ PN,\ rotated,\ original,\ rm,\ n\_s)\ \ \(\backslash\)}}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR\_3D\_ADD(SYMORNOT,\ PN,\ rotated,\ original,\ rm,\ n\_s)}}
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00743\ }
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ rotate\ a\ tensor\ (actually\ a\ symmetric\ tensor..!)\ by\ rotation\ matrix\ rm:}}
+\DoxyCodeLine{00745\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#define\ \ ROTATE\_TENSOR(rotated,\ original,\ rm)\ \(\backslash\)}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR(\_,\ P,\ rotated,\ original,\ rm,\ 0)}}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \textcolor{preprocessor}{\#define\ \ UNROTATE\_TENSOR(rotated,\ original,\ rm)\ \(\backslash\)}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR(\_,\ N,\ rotated,\ original,\ rm,\ 0)}}
+\DoxyCodeLine{00751\ }
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ rotate\ a\ symmetric\ tensor\ by\ rotation\ matrix\ rm\ -\/-\/\ reduce\ effort}}
+\DoxyCodeLine{00753\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ by\ only\ calculating\ the\ diagonal\ and\ one\ off-\/diag.\ half\ and}}
+\DoxyCodeLine{00754\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ copying\ the\ latter:}}
+\DoxyCodeLine{00755\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{\#define\ \ ROTATE\_SYMMETRIC\_TENSOR(rotated,\ original,\ rm,\ n\_s)\ \(\backslash\)}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR(\_SYMM\_,\ P,\ rotated,\ original,\ rm,\ n\_s)}}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \textcolor{preprocessor}{\#define\ \ UNROTATE\_SYMMETRIC\_TENSOR(rotated,\ original,\ rm,\ n\_s)\ \(\backslash\)}}
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ROTATE\_OR\_UNROTATE\_ANY\_TENSOR(\_SYMM\_,\ N,\ rotated,\ original,\ rm,\ n\_s)}}
+\DoxyCodeLine{00761\ }
+\DoxyCodeLine{00762\ }
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ WARNING:\ The\ following\ "{}PROJECT\_..."{}\ macros\ are\ N3V\ versions\ only!!\ */}}
+\DoxyCodeLine{00764\ }
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Project\ a\ vector\ "{}velo"{}\ onto\ a\ unit\ direction\ vector\ "{}dir"{}:\ */}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\#define\ PROJECT\_TO\_DIR(velo,\ dir)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\ \ register\ real\ \_project\_to\_dir\_scalar\_prod\ =\ N3V\_DOT(velo,\ dir);\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\ \ N3V\_VS(velo,\ =,\ dir,\ *,\ \_project\_to\_dir\_scalar\_prod);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00771\ }
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Project\ a\ vector\ "{}velo"{}\ onto\ a\ direction\ vector\ "{}vec"{}\ of\ arbitrary\ length:\ */}}
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#define\ PROJECT\_TO\_VEC(velo,\ vec)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00774\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00775\ \textcolor{preprocessor}{\ \ register\ real\ \_project\_to\_vec\_quot\ =\ N3V\_DOT(velo,\ vec);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00776\ \textcolor{preprocessor}{\ \ \_project\_to\_vec\_quot\ /=\ N3V\_MAG2(vec);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00777\ \textcolor{preprocessor}{\ \ N3V\_VS(velo,\ =,\ vec,\ *,\ \_project\_to\_vec\_quot);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00778\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00779\ }
+\DoxyCodeLine{00780\ }
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Project\ a\ vector\ "{}velo"{}\ onto\ plane,\ given\ by\ its\ normal\ vector\ "{}vec"{}\ of\ arbitrary\ length:\ */}}
+\DoxyCodeLine{00782\ \textcolor{preprocessor}{\#define\ PROJECT\_TO\_PLANE(velo,\ plane)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00783\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00784\ \textcolor{preprocessor}{\ \ real\ N3V\_VEC(\_project\_to\_plane\_projed\_to\_vect);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\ \ N3V\_V(\_project\_to\_plane\_projed\_to\_vect,\ =,\ velo);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00786\ \textcolor{preprocessor}{\ \ PROJECT\_TO\_VEC(\_project\_to\_plane\_projed\_to\_vect,\ plane);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00787\ \textcolor{preprocessor}{\ \ N3V\_V(velo,\ -\/=,\ \_project\_to\_plane\_projed\_to\_vect);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00788\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ *******************************************************************\ */}}
+\DoxyCodeLine{00790\ }
+\DoxyCodeLine{00791\ \textcolor{preprocessor}{\#define\ RADIANS(deg)\ (M\_PI*(deg)/180.0)}}
+\DoxyCodeLine{00792\ \textcolor{preprocessor}{\#define\ DEGREES(rad)\ ((rad)*180.0/M\_PI)}}
+\DoxyCodeLine{00793\ }
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\#define\ NINT(x)\ (((x\ -\/\ ((cxindex)(x)))\ >\ 0.5)\ ?\ ((cxindex)(x)\ +\ 1)\ :\ ((cxindex)(x)))}}
+\DoxyCodeLine{00795\ }
+\DoxyCodeLine{00796\ \textcolor{preprocessor}{\#define\ intloop(n,m)\ for(n=0;\ n<m;\ ++n)}}
+\DoxyCodeLine{00797\ \textcolor{preprocessor}{\#define\ nd\_loop(n)\ intloop\ (n,\ ND\_ND)}}
+\DoxyCodeLine{00798\ }
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ marks\ related\ to\ the\ shadow\ faces\ on\ partition\ interfaces\ */}}
+\DoxyCodeLine{00800\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00801\ \textcolor{preprocessor}{\#define\ INTERIOR\_REFERENCED\_ROOT(\_f,\ \_t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\ \ (!MULTIPLE\_COMPUTE\_NODE\_P\ ||\ !THREAD\_SHADOW(\_t)\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\ \ \ THREAD\_TYPE(\_t)\ ==\ THREAD\_F\_PERIODIC\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\ \ \ THREAD\_TYPE(THREAD\_SHADOW(\_t))\ ==\ THREAD\_F\_PERIODIC\ ||\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00805\ \textcolor{preprocessor}{\ \ \ F\_INTERIOR(\_f,\ \_t))}}
+\DoxyCodeLine{00806\ }
+\DoxyCodeLine{00807\ \textcolor{preprocessor}{\#define\ INTERIOR\_REFERENCED(\_f,\ \_t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\ \ INTERIOR\_REFERENCED\_ROOT(\_f,\ (NNULLP(THREAD\_SUPER\_THREAD(\_t))?\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00809\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ THREAD\_SUPER\_THREAD(\_t):(\_t)))}}
+\DoxyCodeLine{00810\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{/*\ PARALLEL\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00811\ \textcolor{preprocessor}{\#define\ INTERIOR\_REFERENCED(\_f,\ \_t)\ (1)}}
+\DoxyCodeLine{00812\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ PARALLEL\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00813\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a5489f32145d3077b33ebdccd68fac353}{Mark\_Faces\_Referenced\_By\_Interior\_Cells}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00814\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_aa72bb44bddd33e87f2c91d9b775d8e64}{Init\_Iface\_Corner\_Shadow\_Node\_Value}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ ...);}
+\DoxyCodeLine{00815\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a63109c929a31b8092cf646b6559a0c9a}{Set\_Iface\_Corner\_Shadow\_Node\_Mark}}(\textcolor{keywordtype}{int},\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00816\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{flow_8h_a25390cc6ad2f8523c131f18d15e38cc9}{Fill\_Capillary\_Pressure}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *\mbox{\hyperlink{config_8h_af71e76cdebaa3aad8a7c0ebb084f674b}{PTR\_RESTRICT}}\ domain);}
+\DoxyCodeLine{00817\ }
+\DoxyCodeLine{00818\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_FLOW\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

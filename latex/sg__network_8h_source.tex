@@ -1,0 +1,196 @@
+\doxysection{sg\+\_\+network.\+h}
+\hypertarget{sg__network_8h_source}{}\label{sg__network_8h_source}\index{fluent20.1.0/src/ht/sg\_network.h@{fluent20.1.0/src/ht/sg\_network.h}}
+\mbox{\hyperlink{sg__network_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#if\ RP\_NETWORK}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_SG\_NETWORK\_H}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ \_FLUENT\_SG\_NETWORK\_H}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }network\_neighbor\_struct}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ \ \ \textcolor{keywordtype}{int}\ nwindex;\ \textcolor{comment}{/*\ store\ network\ index\ of\ extenal\ neighbor\ */}}
+\DoxyCodeLine{00012\ \ \ \textcolor{keywordtype}{int}\ id;\ \ \ \textcolor{comment}{/*\ network\_cell\_id\ or\ face-\/thread-\/id\ */}}
+\DoxyCodeLine{00013\ \ \ \textcolor{keywordtype}{int}\ f\_index0;\ \textcolor{comment}{/*\ for\ amg\ colum\ index\ for\ neighbor*/}}
+\DoxyCodeLine{00014\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ enthalpy\_coeff;}
+\DoxyCodeLine{00015\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ mass\_flow;\ \textcolor{comment}{/*\ Defined\ this\ way\ so\ that\ user\ can\ hook\ a\ udf\ if\ needed\ */}}
+\DoxyCodeLine{00016\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ temperature;\ \textcolor{comment}{/*\ link\ temperature\ */}}
+\DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{int}\ *node\_f\_index0;\textcolor{comment}{/*\ f\_index0\ values\ for\ nodes\ connected}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ \ \ to\ the\ same\ thread\ */}}
+\DoxyCodeLine{00019\ \}\ Network\_nb;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }network\_cell\_struct}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacenumpy_1_1core_1_1defchararray_abf570afbb7880507acdb1e6b8ebc2ed6}{index}};\ \ \ \textcolor{comment}{/*\ cell\ index\ */}}
+\DoxyCodeLine{00024\ \ \ \textcolor{keywordtype}{int}\ n\_internal\_nb;\ \ \ \textcolor{comment}{/*\ internal\ neighboring\ cells\ */}}
+\DoxyCodeLine{00025\ \ \ \textcolor{keywordtype}{int}\ n\_face\_nb;\ \ \ \ \ \ \ \textcolor{comment}{/*\ real\ face\ neighbor\ */}}
+\DoxyCodeLine{00026\ \ \ \textcolor{keywordtype}{int}\ n\_external\_nb;\ \ \ \textcolor{comment}{/*\ external\ network\ neighbors*/}}
+\DoxyCodeLine{00027\ \ \ \textcolor{keywordtype}{int}\ n\_end\_nb;}
+\DoxyCodeLine{00028\ \ \ Network\_nb\ *internal\_nb;\ \ \textcolor{comment}{/*\ virtual\ cell\ neighbor\ */}}
+\DoxyCodeLine{00029\ \ \ Network\_nb\ *face\_nb;\ \textcolor{comment}{/*\ real\ face\ neighbor\ */}}
+\DoxyCodeLine{00030\ \ \ Network\_nb\ *external\_nb;\ \textcolor{comment}{/*\ external\ network\ neighbor\ */}}
+\DoxyCodeLine{00031\ \ \ Network\_nb\ *end\_nb;}
+\DoxyCodeLine{00032\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ enthalpy\_source;\textcolor{comment}{/*\ enthalpy\ source\ defined\ as\ a\ property\ so\ that\ it}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ can\ \ be\ specified\ through\ a\ udf\ or\ a}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ polynomial\ \ */}}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ temperature;}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ temperature\_M1;}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ temperature\_M2;}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ mass;}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{structproperty__struct}{Property}}\ capacitance;}
+\DoxyCodeLine{00040\ \}\ Network\_cell;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ node\ =\ -\/1,\ \ \textcolor{comment}{/*\ Had\ to\ keep\ this\ in\ lower\ case\ to\ prevent\ conflict}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ \ \ \ \ \ \ with\ cgns\ include\ file\ */}}
+\DoxyCodeLine{00046\ \ \ INTNB\ =\ 0,}
+\DoxyCodeLine{00047\ \ \ EXTNB,}
+\DoxyCodeLine{00048\ \ \ FACENB,}
+\DoxyCodeLine{00049\ \ \ ENDNB}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }network\_struct}
+\DoxyCodeLine{00053\ \{}
+\DoxyCodeLine{00054\ \ \ \textcolor{keywordtype}{int}\ zid;}
+\DoxyCodeLine{00055\ \ \ \textcolor{keywordtype}{int}\ ncells;}
+\DoxyCodeLine{00056\ \ \ \textcolor{keywordtype}{int}\ type;}
+\DoxyCodeLine{00057\ \ \ \textcolor{keywordtype}{int}\ offset;\ \textcolor{comment}{/*\ for\ calculating\ network\ cell\ index\ in\ AMG\ solver\ */}}
+\DoxyCodeLine{00058\ \ \ Network\_cell\ *cell;}
+\DoxyCodeLine{00059\ \}\ Network;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }network\_objp\_struct\ \ \ \textcolor{comment}{/*\ Structure\ for\ facilitating\ more\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ than\ one\ node\ to\ be\ connected\ to\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ face\ zone\ */}}
+\DoxyCodeLine{00062\ \{}
+\DoxyCodeLine{00063\ \ \ \textcolor{keywordtype}{int}\ n;\ \textcolor{comment}{/*\ Network\ id\ */}}
+\DoxyCodeLine{00064\ \ \ \textcolor{keywordtype}{int}\ c;\ \textcolor{comment}{/*\ Cell\ id\ in\ Network\ n\ */}}
+\DoxyCodeLine{00065\ \ \ \textcolor{keywordtype}{int}\ *index1;\ \ \textcolor{comment}{/*Gives\ location\ of\ the\ \ node\ for\ AMG\ matrix\ */}}
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{int}\ *index2;\ \ \textcolor{comment}{/*\ Gives\ \ location\ of\ the\ c0\ of\ face\ for\ AMG\ matrix\ */}}
+\DoxyCodeLine{00067\ \ \ \textcolor{keyword}{struct\ }network\_objp\_struct\ *next;}
+\DoxyCodeLine{00068\ \}\ Network\_Objp;}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ MAX\_END\_NEIGHBOR\ 20}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }network\_link}
+\DoxyCodeLine{00072\ \{}
+\DoxyCodeLine{00073\ \ \ \textcolor{keywordtype}{int}\ n,\ c,\ nb;}
+\DoxyCodeLine{00074\ \}\ Network\_Link;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }network\_end}
+\DoxyCodeLine{00077\ \{}
+\DoxyCodeLine{00078\ \ \ \textcolor{keywordtype}{int}\ zid;}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ temperature;}
+\DoxyCodeLine{00080\ \ \ \textcolor{keywordtype}{int}\ n\_nb;}
+\DoxyCodeLine{00081\ \ \ Network\_Link\ link[MAX\_END\_NEIGHBOR];}
+\DoxyCodeLine{00082\ \}\ Network\_End;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ Network\ *network;}
+\DoxyCodeLine{00085\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ Network\_End\ *nw\_end;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ NW\_NULL\ -\/1}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ NW\_ID(n)(network[n].zid)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ NW\_NELEMENTS(n)(network[n].ncells)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ NW\_OFFSET(n)(network[n].offset)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ NW\_CELL(n)(network[n].cell)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !UDF\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ NWC\_INDEX(n,c)(NW\_CELL(n)[c].index)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ NWC\_N\_INTNB(n,c)(NW\_CELL(n)[c].n\_internal\_nb)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ NWC\_N\_FACENB(n,c)(NW\_CELL(n)[c].n\_face\_nb)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ NWC\_N\_EXTNB(n,c)(NW\_CELL(n)[c].n\_external\_nb)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ NWC\_N\_ENDNB(n,c)(NW\_CELL(n)[c].n\_end\_nb)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ NWC\_INTNB(n,c)(NW\_CELL(n)[c].internal\_nb)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ NWC\_FACENB(n,c)(NW\_CELL(n)[c].face\_nb)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ NWC\_EXTNB(n,c)(NW\_CELL(n)[c].external\_nb)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ NWC\_ENDNB(n,c)(NW\_CELL(n)[c].end\_nb)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ NWC\_T(n,c)(NW\_CELL(n)[c].temperature)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !UDF\_COMPILER\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ NWC\_T\_M1(n,c)(NW\_CELL(n)[c].temperature\_M1)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ NWC\_T\_M2(n,c)(NW\_CELL(n)[c].temperature\_M2)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ NWC\_H\_SRC(n,c)(NW\_CELL(n)[c].enthalpy\_source)}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ NWC\_MASS(n,c)(NW\_CELL(n)[c].mass)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ NWC\_CAPACITANCE(n,c)(NW\_CELL(n)[c].capacitance)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ NWC\_INTNB\_MDOT(n,c,nb)(NWC\_INTNB(n,c)[nb].mass\_flow)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ NWC\_FACENB\_MDOT(n,c,nb)(NWC\_FACENB(n,c)[nb].mass\_flow)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ NWC\_EXTNB\_MDOT(n,c,nb)(NWC\_EXTNB(n,c)[nb].mass\_flow)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ NWC\_ENDNB\_MDOT(n,c,nb)(NWC\_ENDNB(n,c)[nb].mass\_flow)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ NWC\_INTNB\_H\_COEFF(n,c,nb)(NWC\_INTNB(n,c)[nb].enthalpy\_coeff)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ NWC\_FACENB\_H\_COEFF(n,c,nb)(NWC\_FACENB(n,c)[nb].enthalpy\_coeff)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ NWC\_EXTNB\_H\_COEFF(n,c,nb)(NWC\_EXTNB(n,c)[nb].enthalpy\_coeff)}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ NWC\_ENDNB\_H\_COEFF(n,c,nb)(NWC\_ENDNB(n,c)[nb].enthalpy\_coeff)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ NWC\_INTNB\_ID(n,c,nb)(NWC\_INTNB(n,c)[nb].id)}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ NWC\_FACENB\_ID(n,c,nb)(NWC\_FACENB(n,c)[nb].id)}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ NWC\_EXTNB\_ID(n,c,nb)(NWC\_EXTNB(n,c)[nb].id)}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ NWC\_ENDNB\_ID(n,c,nb)(NWC\_ENDNB(n,c)[nb].id)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ NWC\_INTNB\_F0(n,c,nb)(NWC\_INTNB(n,c)[nb].f\_index0)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ NWC\_FACENB\_F0(n,c,nb)(NWC\_FACENB(n,c)[nb].f\_index0)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ NWC\_FACENB\_NODE\_F0(n,c,nb,i)(NWC\_FACENB(n,c)[nb].node\_f\_index0[i])}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ NWC\_EXTNB\_F0(n,c,nb)(NWC\_EXTNB(n,c)[nb].f\_index0)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ NWC\_INTNB\_T(n,c,nb)(NWC\_INTNB(n,c)[nb].temperature)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ NWC\_FACENB\_T(n,c,nb)(NWC\_FACENB(n,c)[nb].temperature)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ NWC\_EXTNB\_T(n,c,nb)(NWC\_EXTNB(n,c)[nb].temperature)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ NWC\_ENDNB\_T(n,c,nb)(NWC\_ENDNB(n,c)[nb].temperature)}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ NWC\_EXTNB\_NWID(n,c,nb)(NWC\_EXTNB(n,c)[nb].nwindex)}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ NWE\_ID(e)(nw\_end[e].zid)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ NWE\_T(e)(nw\_end[e].temperature)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ NWE\_N\_NB(e)(nw\_end[e].n\_nb)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ NWE\_NWID(e,l)(nw\_end[e].link[l].n)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ NWE\_CID(e,l)(nw\_end[e].link[l].c)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ NWE\_NBID(e,l)(nw\_end[e].link[l].nb)}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Num\_Network(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00145\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Which\_Network(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00146\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Free\_Network\_Arrays(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00147\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Check\_Network(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00148\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Init\_Network\_Temperature(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ );}
+\DoxyCodeLine{00149\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Read\_Network\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ FILE\ *,\ \textcolor{keywordtype}{int}\ );}
+\DoxyCodeLine{00150\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Read\_Network\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ FILE\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00151\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_Network\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ FILE\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00152\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Write\_Network\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ FILE\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00153\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Read\_Network\_Vars(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00154\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_Network\_Vars\_Port(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00155\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_Network\_Vars(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ FILE\ *);}
+\DoxyCodeLine{00156\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Network\_End\_T(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00157\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Network\_Link\_T(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00158\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Network\_Massflow\_Facezone\_T(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00159\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Update\_Network\_Old\_Temperature(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00160\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ Get\_Network\_Var(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ var[]);}
+\DoxyCodeLine{00161\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ Get\_Network\_Nb(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00162\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Network\_Var(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00163\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Network\_Temperature(\textcolor{keywordtype}{int}\ zone,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00164\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Write\_Network\_History(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00165\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *Lookup\_Face\_Neighbor(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00166\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Network\_Enthalpysrc(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ );}
+\DoxyCodeLine{00167\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Network\_Capacitance(\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ );}
+\DoxyCodeLine{00168\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Network\_Thermalcoeff(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ );}
+\DoxyCodeLine{00169\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Network\_Capacitance\_Integral(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ );}
+\DoxyCodeLine{00171\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ NetworkNb\_Massflow(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ );}
+\DoxyCodeLine{00172\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Check\_Network\_Massflow\_Balance(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00173\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ network\_disco;}
+\DoxyCodeLine{00174\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ network\_uds;}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#if\ PARALLEL\ }\textcolor{comment}{/*\ hdfio\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00177\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_HDF\_Network\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00178\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Read\_HDF\_Network\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00179\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_HDF\_Network\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00180\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Read\_HDF\_Network\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#if\ MPI\_IO}}
+\DoxyCodeLine{00184\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Write\_MPI\_Network\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ fhandle);}
+\DoxyCodeLine{00185\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Read\_MPI\_Network\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ fhandle,\ \textcolor{keywordtype}{int}\ *headerbuf,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ double\_data);}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\_FLUENT\_SG\_NETWORK\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*RP\_NETWORK*/}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,939 @@
+\doxysection{dynamesh\+\_\+tools.\+h}
+\hypertarget{dynamesh__tools_8h_source}{}\label{dynamesh__tools_8h_source}\index{fluent20.1.0/src/mesh/dynamesh\_tools.h@{fluent20.1.0/src/mesh/dynamesh\_tools.h}}
+\mbox{\hyperlink{dynamesh__tools_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_DYNAMESH\_TOOLS\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_DYNAMESH\_TOOLS\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{quaternion_8h}{quaternion.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tgrid_2src_2entity_8h}{entity.h}}"{}}\ \ \ \textcolor{comment}{/*\ Thread\ */}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdynamic__thread__rigid__body__state}{dynamic\_thread\_rigid\_body\_state}}}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_a5b65aa6eb8ce8a627a169d8458a93f82}{cg}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ center\ of\ gravity}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ position\ wrt\ global\ */}}
+\DoxyCodeLine{00015\ \ \ \mbox{\hyperlink{quaternion_8h_aed5ee440ba9906d589fa57933c24355e}{quaternion}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_a705e947a5fbd4a2d9bc474d9451bdc01}{q}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ orientation\ quaternion\ */}}
+\DoxyCodeLine{00016\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_abff4ea3676daeeeb22211ba075e2114e}{theta}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ orientation\ angles\ wrt\ global,}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Euler\ angles\ for\ 6-\/dof\ */}}
+\DoxyCodeLine{00018\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_aba11c3fa6ac7c25a5ee320a2368aa9d5}{v\_cg}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ instantaneous\ cg\ velocity}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vector\ */}}
+\DoxyCodeLine{00020\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_a207d6767c6fa208aecf0de078c4decc9}{omega\_cg}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ instantaneous\ cg\ angular}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ velocity\ vector\ */}}
+\DoxyCodeLine{00022\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_a0e5ae0b06d5d4631ec925ac50215bb30}{acc\_cg}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ instantaneous}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cg\ acceleration\ vector\ */}}
+\DoxyCodeLine{00024\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_a7bbd91cc99f114cebfefe69d7ea3d73e}{alpha\_cg}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ instantaneous\ cg\ angular}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acceleration\ vector\ */}}
+\DoxyCodeLine{00026\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_abc96d4bceed7903f4754ce221492123e}{dir}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ direction\ of\ motion\ */}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_af07e29161084f4b3a32ba8c00e20dbe4}{W}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Convective\ angular\ velocity\ */}}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_ae0d44e8b61bcf0a79929c9252ce9b423}{A}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Convective\ angular\ acceleration\ */}}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__rigid__body__state_a822bb2e1e3f82cd9f596a272aad2ccff}{torque}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Torque\ */}}
+\DoxyCodeLine{00031\ \}\ \mbox{\hyperlink{dynamesh__tools_8h_accdbe56ff3492299406250bc1e0def82}{Dynamic\_Thread\_Rigid\_Body\_State}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structprism__parameters}{prism\_parameters}}}
+\DoxyCodeLine{00034\ \{}
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{structprism__parameters_ade83ec30a8eee2157e838402933b9459}{offset\_method}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ prism\ layer\ offset\ method\ */}}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structprism__parameters_aea48bde1a661e4c9d8cb7fd80af6a4d9}{h}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ first\ height\ for\ constant\ offset}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ method\ */}}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structprism__parameters_abec433bcdfc6a0a2a7eb42023b46a0ca}{ar}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ first\ aspect\ ratio\ for\ aspect}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ratio\ offset\ method\ */}}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{structprism__parameters_ad42968e08d7a6cdf23b637e61156a36d}{nlayer}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ prism\ layers\ */}}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structprism__parameters_a666b5ac6bcd7542c4adead291518ed87}{growth\_rate}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ geometric\ growth\ rate\ */}}
+\DoxyCodeLine{00042\ \}\ \mbox{\hyperlink{dynamesh__tools_8h_a59469cf4ca59be7e925681e1232e00bb}{Prism\_Parameters}};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdynamic__thread__struct}{dynamic\_thread\_struct}}}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{structdynamic__thread__rigid__body__state}{Dynamic\_Thread\_Rigid\_Body\_State}}\ \mbox{\hyperlink{structdynamic__thread__struct_a75b233acd0b9a4a16bc02faf3f22d54a}{current\_state}};}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{structdynamic__thread__rigid__body__state}{Dynamic\_Thread\_Rigid\_Body\_State}}\ \mbox{\hyperlink{structdynamic__thread__struct_a6d0f448d41d1c8137f26bb7f1baee9b2}{tmp\_state}};}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{structdynamic__thread__rigid__body__state}{Dynamic\_Thread\_Rigid\_Body\_State}}\ \mbox{\hyperlink{structdynamic__thread__struct_a994276cf989f9a15671145ce00547957}{init\_state}};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_ae8f5b92988d67cb0f083e62b639361cb}{dir\_ref}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ reference\ direction\ of\ motion\ */}}
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a2fb9ac75c4b0b8f97b977bccb2dc4b19}{dir\_prev}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ previous\ direction\ of\ motion\ */}}
+\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a6a56df78a6d46e44241af9ab18684557}{axis}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ body-\/fixed\ axis\ of\ motion\ */}}
+\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_acd0e5978bb37af67b8d7fd7d21f9adfe}{refo}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ reference\ point\ */}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a8cbca28c87ae20547d887a9f1a80b8fd}{len}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ length\ scales\ (s0,\ s1,\ skew)\ */}}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a4261d5a4e1ba0dead3e3bac3bc202f69}{h}}[2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ (hmin)\ (hmax),\ if\ applicable\ */}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a9699769d63f9627a21ce438325d960ae}{geom\_origin}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ geom.:\ origin\ */}}
+\DoxyCodeLine{00060\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a19211f12801790d44211030606f91928}{geom\_axis}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ geom.:\ axis/normal\ */}}
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a09de535448657150d41b6c8671155088}{geom\_radius}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ geom.:\ radius\ */}}
+\DoxyCodeLine{00062\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structdynamic__thread__struct_afdbac24ecd1f02cb6d1feb3095804a3d}{geometry\_name}}[132];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ geometry\ of\ geometry\ function\ */}}
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_ac29cf73b920650c788aa82f0b4440324}{geom\_feature\_p}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ geom.:\ use\ feature\ detection\ */}}
+\DoxyCodeLine{00064\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a6e530603f241684f67c8f8ddad55c724}{geom\_feature\_angle}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ geom.:\ feature\ angle\ */}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_ade7956efb1b7d863e70d56589f2372ea}{sop\_comp}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ solver\ options\ for\ system\ coupling/six\ dof\ switch\ */}}
+\DoxyCodeLine{00067\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a52d1551b35c27185ebf29ff5544a56dd}{sop\_scale}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ solver\ option\ scaling\ factor\ */}}
+\DoxyCodeLine{00068\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structdynamic__thread__struct_a0261ab061090572b3f1726dd8c51cbfc}{sop\_type\_name}}[132];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ solver\ option\ type\ name:\ ap,\ cell\ */}}
+\DoxyCodeLine{00069\ \ \ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{structdynamic__thread__struct_a718eb65abf55336d7872c491abd7cc2f}{sop\_type}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 0-\/volume-\/based,\ 1-\/coefficient-\/based,\ 2-\/udf\ (not\ implemented\ yet)\ */}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_ac4fa5adfe5443433664b8766c344acbd}{layer}}[2];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ layering\ action\ */}}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a91d52c0e5df7b5007a3ca2217e33a8f0}{layer\_factor}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ layering\ split/collapse\ factor\ */}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_ac765329451135abec74c45e1897abf26}{type}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ dynamic\ zone\ type\ */}}
+\DoxyCodeLine{00075\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_a077a801956be98586ac788b74405de6f}{udf\_type}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ mover,\ motion,\ 6DOF\ */}}
+\DoxyCodeLine{00076\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_aecb807d396814608a63e40a990ad5d82}{face\_remesh\_count}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ remesh\ counter\ */}}
+\DoxyCodeLine{00077\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_ad085d8727d96cff8b5dcae8b333ff2e3}{face\_remesh\_action}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ split\ or\ collapse\ */}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_a792b4516138dbcfb64e549e9b00038db}{sliding}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ allow\ nodes\ to\ slide/move?\ */}}
+\DoxyCodeLine{00080\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_ad49123a8f1b8272db5ddf8ef37201ae3}{remesh}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ allow\ faces/cells\ to\ be\ remesh?\ */}}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_a9859078ce6e8d1f7a6003f05800d8804}{layering}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ allow\ layering?\ */}}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_aaea5701fc298c81b55e62de1de537c12}{moving}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ freeze\ node\ motion?\ */}}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_a830f57f3fa0c6d3afd25ad236b0b1ed4}{remesh\_globals\_p}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ use\ global\ remesh\ parameters\ */}}
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_a470cf3047de399308ea07512111a7d4c}{sliding\_method}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ method\ to\ slide\ */}}
+\DoxyCodeLine{00085\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_a9d58ff32af5324ba3f20300bdf5e707f}{sliding\_elements}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ spring\ smoothing\ element\ type\ */}}
+\DoxyCodeLine{00086\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_abe32f97f69b262d7907ed98b125ff68c}{remeshing\_method}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ method(s)\ to\ remesh\ */}}
+\DoxyCodeLine{00087\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_a067401d59f43c1a23c8ef65770f3e70e}{boundary\_layer\_deform}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ deform/move\ adjacent\ prisms}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ with\ boundary\ */}}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_a1677e2d1d18a4b8734f6187e8e785b28}{user\_defined\_deform}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ allow\ deformation\ of\ user\ defined}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ zones\ */}}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_af890eb5fb57fa25ca7005bc640f077be}{bc\_exclude\_motion}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ option\ to\ exclude\ boundary\ motion}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in\ boundary\ condition\ */}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structdynamic__thread__struct_ae26401de68c652273a2311f8c7357a15}{profile\_udf\_name}}[132];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ udf\ or\ profile\ name\ */}}
+\DoxyCodeLine{00095\ \ \ void\ (*\mbox{\hyperlink{structdynamic__thread__struct_a24226e8675e4e2b537948dc98c7ef9b3}{update}})();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ motion\ function\ */}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__struct}{thread\_struct}}\ *\mbox{\hyperlink{structdynamic__thread__struct_aa01751d4ad2c442b18a1583d85832e48}{thread}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ face/cell\ thread\ */}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_a8f396623731b319e5566fe81aa6a069b}{separate\_region}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ remesh\ region\ separately?\ */}}
+\DoxyCodeLine{00100\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_a4c41506839ba750fb5f76815df4fc384}{nloops}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ moving\ loops\ */}}
+\DoxyCodeLine{00101\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structedge__loop__struct}{edge\_loop\_struct}}\ *\mbox{\hyperlink{structdynamic__thread__struct_aa01133dd749bc31809b56463d27c0c53}{loops}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ loop\ data\ structure\ */}}
+\DoxyCodeLine{00102\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *\mbox{\hyperlink{structdynamic__thread__struct_adc46930a0ed7651f5099f8866b3ab28a}{lnodes}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ loop\ nodes\ */}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_afc63b603f85ef4c46037bfcf60a1c965}{sdof\_p}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ use\ 6DOF\ to\ compute\ motion\ */}}
+\DoxyCodeLine{00105\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_ab29c460929a732569a0897fa90ee13e6}{sdof\_contribute\_p}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 6DOF:\ contribution\ of\ thread\ */}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_a20142cf43a052ead13c197d8050f8156}{nested\_p}};}
+\DoxyCodeLine{00108\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__struct}{thread\_struct}}\ *\mbox{\hyperlink{structdynamic__thread__struct_a40996c4454352bf0ba94598a5348ed89}{nest\_thread}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ udf\ motion\ is\ specified\ on\ top\ of\ the\ motion\ of\ nest\_thread\ */}}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_a21e3ccf320cde3ef5e90f751df56d79d}{nested\_local\_rot\_p}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ relative\ motion\ is\ specifed\ in\ local\ */}}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_a5f6884f93d03c677c469ab92354c3f52}{nested\_local\_tran\_p}};\ \ \ \ \ \textcolor{comment}{/*\ coordinates\ or\ absolute\ coordinates\ */}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structdynamic__thread__struct_a3571e8b0dfc167ef5f20d27ed21db4c9}{h\_udf\_name}}[2][64];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ udf\ name\ for\ non-\/constant\ layer}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ height\ [0],\ [1]\ (corresponding}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ to\ height0\ and\ height1)\ */}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structdynamic__thread__struct_a9041fc9bb5d64504a39723ea3c602679}{contact\_udf\_name}}[64];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ UDF\ name\ for\ contact\ detection\ */}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{dbgmsg_8h_a5f5a64ef503db0fc824df8320929b126}{real}}\ (*\mbox{\hyperlink{structdynamic__thread__struct_a370420bde81908b1da605f20f705d7b4}{tmp\_cg}})[3];}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structdynamic__thread__struct_a05f2a8ef82baf03b404ec6d3282db4ed}{tmp\_theta}};}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_ae18f716529bc36e27d6c8ba41a0cb9c5}{tmp\_omega}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ zone-\/motion\ variables\ */}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_a88401a68a9016656916fdca367f426ff}{update\_state}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ indicates\ if\ thread\ has\ been}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remeshed,\ smoothed,\ etc.\ */}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a6fc066d6388161fb6042c44ebc718df2}{gocart\_param}}[5];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ GoCart\ remeshing\ parameters}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (max,\ growth\ rate,\ skew,}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aspect\ ratio,\ remesh\ interval)\ */}}
+\DoxyCodeLine{00128\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structdynamic__thread__struct_af2ee46553f4ae3298cbf57906eba45d4}{gocart\_prisms\_p}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ remesh\ GoCart\ with\ inflation}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layers\ */}}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{structprism__parameters}{Prism\_Parameters}}\ \mbox{\hyperlink{structdynamic__thread__struct_a98805a75c518d5a33dcb5e1b3cff3793}{gocart\_prism\_param}};\ \ \ \ \ \textcolor{comment}{/*\ GoCart\ prism\ parameters\ */}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a935880c32a9f2207e8c8878f7a2e2fe7}{tmp\_r1}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ temporary\ memory\ */}}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structdynamic__thread__struct_a258508ed1d64f35b0f37068e92a6e113}{tmp\_r2}};}
+\DoxyCodeLine{00134\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdynamic__thread__struct_a1ed7d99db2f075073b8dd4e0c3d07ce3}{tmp\_i1}};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdynamic__thread__struct}{dynamic\_thread\_struct}}\ *\mbox{\hyperlink{structdynamic__thread__struct_a42e20be0b2d6db49373ba8241f467a71}{next}};\ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ to\ next\ */}}
+\DoxyCodeLine{00137\ \}\ \mbox{\hyperlink{dynamesh__tools_8h_af5578f8a332069d0a5467311e45364d3}{Dynamic\_Thread}};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structrb__state__struct}{rb\_state\_struct}}}
+\DoxyCodeLine{00141\ \{}
+\DoxyCodeLine{00142\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structrb__state__struct_a5b65aa6eb8ce8a627a169d8458a93f82}{cg}}[3];}
+\DoxyCodeLine{00143\ \ \ \mbox{\hyperlink{quaternion_8h_aed5ee440ba9906d589fa57933c24355e}{quaternion}}\ \mbox{\hyperlink{structrb__state__struct_a705e947a5fbd4a2d9bc474d9451bdc01}{q}};}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structrb__state__struct_a332d61843a611c42fc4b3acff49cdcb2}{vel}}[3];}
+\DoxyCodeLine{00146\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structrb__state__struct_a71909ab7bd715d6b232aabbd19f80020}{omega}}[3];}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structrb__state__struct_ae62afd1669db916b1cf089110f1d027e}{acc}}[3];}
+\DoxyCodeLine{00149\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structrb__state__struct_a4131ab2693ae0181bb1a0b7d06761bc8}{alpha}}[3];}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structrb__state__struct_abff4ea3676daeeeb22211ba075e2114e}{theta}}[3];}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structrb__state__struct_af07e29161084f4b3a32ba8c00e20dbe4}{W}}[3],\ \mbox{\hyperlink{structrb__state__struct_ae0d44e8b61bcf0a79929c9252ce9b423}{A}}[3],\ \mbox{\hyperlink{structrb__state__struct_a822bb2e1e3f82cd9f596a272aad2ccff}{torque}}[3];}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \}\ \mbox{\hyperlink{dynamesh__tools_8h_a2c4306ad15744d67cd168aef08622348}{rb\_state}};}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ RB\_CG(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>cg)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ RB\_Q(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>q)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ RB\_VEL(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>vel)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ RB\_OMEGA(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>omega)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ RB\_ACC(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>acc)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ RB\_ALPHA(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>alpha)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ RB\_THETA(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>theta)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ RB\_W(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>W)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ RB\_A(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>A)}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ RB\_TORQUE(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>torque)}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ DT\_THREAD\_NEXT(s)\ \ \ \ \ \ ((s)-\/>next)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ DT\_THREAD(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>thread)}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ DT\_RB\_CURR\_STATE(s)\ \ \ \ ((s)-\/>current\_state)}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ DT\_CG(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.cg)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ DT\_Q(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.q)}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#define\ DT\_VEL\_CG(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.v\_cg)}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ DT\_OMEGA\_CG(s)\ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.omega\_cg)}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ DT\_ACC\_CG(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.acc\_cg)}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ DT\_ALPHA\_CG(s)\ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.alpha\_cg)}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ DT\_THETA(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.theta)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ DT\_DIR(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.dir)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ DT\_W(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.W)}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ DT\_A(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.A)}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#define\ DT\_TORQUE(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>current\_state.torque)}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#define\ DT\_RB\_INIT\_STATE(s)\ \ \ \ ((s)-\/>init\_state)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ DT\_RB\_TMP\_STATE(s)\ \ \ \ \ ((s)-\/>tmp\_state)}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ DT\_INIT\_CG(s)\ \ \ \ \ \ \ \ \ \ ((s)-\/>init\_state.cg)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#define\ DT\_INIT\_Q(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>init\_state.q)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#define\ DT\_INIT\_THETA(s)\ \ \ \ \ \ \ ((s)-\/>init\_state.theta)}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#define\ DT\_INIT\_VEL\_CG(s)\ \ \ \ \ \ ((s)-\/>init\_state.v\_cg)}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#define\ DT\_INIT\_OMEGA\_CG(s)\ \ \ \ ((s)-\/>init\_state.omega\_cg)}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#define\ DT\_INIT\_ACC\_CG(s)\ \ \ \ \ \ ((s)-\/>init\_state.acc\_cg)}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ DT\_INIT\_ALPHA\_CG(s)\ \ \ \ ((s)-\/>init\_state.alpha\_cg)}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#define\ DT\_INIT\_DIR(s)\ \ \ \ \ \ \ \ \ ((s)-\/>init\_state.dir)}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#define\ DT\_DIR\_REF(s)\ \ \ \ \ \ \ \ \ \ ((s)-\/>dir\_ref)}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#define\ DT\_DIR\_PREV(s)\ \ \ \ \ \ \ \ \ ((s)-\/>dir\_prev)}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#define\ DT\_AXIS(s)\ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>axis)}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ DT\_GEOM\_ORIGIN(s)\ \ \ \ \ \ ((s)-\/>geom\_origin)}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#define\ DT\_GEOM\_AXIS(s)\ \ \ \ \ \ \ \ ((s)-\/>geom\_axis)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#define\ DT\_GEOM\_RADIUS(s)\ \ \ \ \ \ ((s)-\/>geom\_radius)}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#define\ DT\_FEATURE\_P(s)\ \ \ \ \ \ \ \ ((s)-\/>geom\_feature\_p)}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ DT\_FEATURE\_ANGLE(s)\ \ \ \ ((s)-\/>geom\_feature\_angle)}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#define\ DT\_UPDATE\_FNC(s)\ \ \ \ \ \ \ ((s)-\/>update)}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#define\ DT\_LEN(s)\ \ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>len)}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#define\ DT\_MIN\_LSCALE(s)\ \ \ \ \ \ \ (DT\_REMESH\_GLOBALS\_P(s)?\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remesh\_min\_lscale:(s)-\/>len[0])}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ DT\_MAX\_LSCALE(s)\ \ \ \ \ \ \ (DT\_REMESH\_GLOBALS\_P(s)?\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remesh\_max\_lscale:(s)-\/>len[1])}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ DT\_MAX\_SKEW(s)\ \ \ \ \ \ \ \ \ (DT\_REMESH\_GLOBALS\_P(s)?\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (CELL\_THREAD\_P(DT\_THREAD(s))?\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remesh\_max\_cell\_skew:remesh\_max\_face\_skew):\ \(\backslash\)}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (s)-\/>len[2])}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ DT\_REFO(s)\ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>refo)}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ DT\_PU\_NAME(s)\ \ \ \ \ \ \ \ \ \ ((s)-\/>profile\_udf\_name)}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ DT\_VLIST(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>lnodes)}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ DT\_TYPE(s)\ \ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>type)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ DT\_UDF\_TYPE(s)\ \ \ \ \ \ \ \ \ ((s)-\/>udf\_type)}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ DT\_HEIGHT(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>h)}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ DT\_SLIDE\_P(s)\ \ \ \ \ \ \ \ \ \ ((s)-\/>sliding)}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ DT\_SLIDE\_METHOD(s)\ \ \ \ \ ((s)-\/>sliding\_method)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ DT\_SLIDE\_ELEMENTS(s)\ \ \ ((s)-\/>sliding\_elements)}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ DT\_REMESH\_P(s)\ \ \ \ \ \ \ \ \ ((s)-\/>remesh)}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ DT\_REMESH\_METHOD(s)\ \ \ \ ((s)-\/>remeshing\_method)}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ DT\_REMESH\_GLOBALS\_P(s)\ ((s)-\/>remesh\_globals\_p)}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ DT\_LAYER\_P(s)\ \ \ \ \ \ \ \ \ \ ((s)-\/>layering)}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ DT\_BL\_DEFORM\_P(s)\ \ \ \ \ \ ((s)-\/>boundary\_layer\_deform)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ DT\_UDF\_DEFORM\_P(s)\ \ \ \ \ ((s)-\/>user\_defined\_deform)}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#define\ DT\_BC\_EXCLUDE\_MOTION\_P(s)\ ((s)-\/>bc\_exclude\_motion)}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ DT\_COUNTER(s)\ \ \ \ \ \ \ \ \ \ ((s)-\/>face\_remesh\_count)}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ DT\_LOOPS(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>loops)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ DT\_NLOOPS(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>nloops)}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ DT\_LAYER(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>layer)}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#define\ DT\_LAY\_FAC(s)\ \ \ \ \ \ \ \ \ \ ((s)-\/>layer\_factor)}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ DT\_RACTION(s)\ \ \ \ \ \ \ \ \ \ ((s)-\/>face\_remesh\_action)}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ DT\_GEOM\_NAME(s)\ \ \ \ \ \ \ \ ((s)-\/>geometry\_name)}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ DT\_REMESH\_SEP(s)\ \ \ \ \ \ \ ((s)-\/>separate\_region)}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ DT\_SDOF\_P(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>sdof\_p)}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#define\ DT\_SDOF\_CONT\_P(s)\ \ \ \ \ \ ((s)-\/>sdof\_contribute\_p)}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ DT\_HIDEAL\_UDF(s)\ \ \ \ \ \ \ ((s)-\/>h\_udf\_name)}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#define\ DT\_CONTACT\_UDF(s)\ \ \ \ \ \ ((s)-\/>contact\_udf\_name)}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ DT\_UPDATE\_STATE(s)\ \ \ \ \ ((s)-\/>update\_state)}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ DT\_RTMP1(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>tmp\_r1)}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ DT\_RTMP2(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>tmp\_r2)}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ DT\_ITMP1(s)\ \ \ \ \ \ \ \ \ \ \ \ ((s)-\/>tmp\_i1)}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ DT\_GOCART(s)\ \ \ \ \ \ \ \ \ \ \ ((s)-\/>gocart\_param)}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_MAX(s)\ \ \ \ \ \ \ ((s)-\/>gocart\_param[0])}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_RATE(s)\ \ \ \ \ \ ((s)-\/>gocart\_param[1])}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_QUALITY(s)\ \ \ ((s)-\/>gocart\_param[2])}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_RATIO(s)\ \ \ \ \ ((s)-\/>gocart\_param[3])}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_INTERVAL(s)\ \ ((s)-\/>gocart\_param[4])}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_PRISMS\_P(s)\ \ ((s)-\/>gocart\_prisms\_p)}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_PRISM\_TYPE(s)\ ((s)-\/>gocart\_prism\_param.offset\_method)}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_PRISM\_H(s)\ \ \ ((s)-\/>gocart\_prism\_param.h)}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_PRISM\_AR(s)\ \ ((s)-\/>gocart\_prism\_param.ar)}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_PRISM\_NLAYER(s)\ ((s)-\/>gocart\_prism\_param.nlayer)}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ DT\_GOCART\_PRISM\_RATE(s)\ ((s)-\/>gocart\_prism\_param.growth\_rate)}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ DT\_SOP\_SWITCH(s)\ \ \ \ \ \ \ ((s)-\/>sop\_comp)}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ DT\_SOP\_METHOD\_NAME(s)\ \ ((s)-\/>sop\_type\_name)}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#define\ DT\_SOP\_METHOD(s)\ \ \ \ \ \ \ ((s)-\/>sop\_type)}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ DT\_SOP\_SCALE(s)\ \ \ \ \ \ \ \ ((s)-\/>sop\_scale)}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ DT\_NESTED\_P(s)\ \ \ \ \ \ \ \ \ ((s)-\/>nested\_p)}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ DT\_NEST\_THREAD(s)\ \ \ \ \ \ ((s)-\/>nest\_thread)}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ DT\_NEST\_LOC\_ROT\_P(s)\ \ \ ((s)-\/>nested\_local\_rot\_p)}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#define\ DT\_NEST\_LOC\_TRAN\_P(s)\ \ ((s)-\/>nested\_local\_tran\_p)}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structedge__loop__struct}{edge\_loop\_struct}}}
+\DoxyCodeLine{00268\ \{}
+\DoxyCodeLine{00269\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structedge__loop__struct_a4284cdcaecdbac2dab9932b1d6eeb983}{gmin}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ maximum\ height\ of\ marked\ faces\ */}}
+\DoxyCodeLine{00270\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structedge__loop__struct_a76e231a2519cb598137dfa4d3af76fe9}{gmax}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ minimum\ height\ of\ marked\ faces\ */}}
+\DoxyCodeLine{00271\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structedge__loop__struct_ad0603acfa9f05a0f3bc20d712d67a2fa}{ave\_h}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ average\ height\ */}}
+\DoxyCodeLine{00272\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structedge__loop__struct_afd80e1660d2d2cad01abb1c968124584}{min\_h}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ minimum\ height\ */}}
+\DoxyCodeLine{00273\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structedge__loop__struct_a40d095dc8a7a9b59b3fe99af6bc96918}{prism\_size\_fac}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ prism\ cap\ size\ factor\ */}}
+\DoxyCodeLine{00274\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structedge__loop__struct_a4545e2d1df20207d6488c295b2f344b0}{loop\_normal}}[3];\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ loop\ normal\ */}}
+\DoxyCodeLine{00275\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structedge__loop__struct_af854472f661aebb3b4e2f0d9ef236790}{normal\_dir}}[3];\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ direction\ in\ which\ face\ height\ is\ computed\ */}}
+\DoxyCodeLine{00276\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structedge__loop__struct_adcc9a19ad3119f823a658f6a49a24e64}{method}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ insertion\ method\ */}}
+\DoxyCodeLine{00277\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structedge__loop__struct_adf916204820072417ed73a32de1cefcf}{flag}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ loop\ action\ */}}
+\DoxyCodeLine{00278\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structedge__loop__struct_a7441ef0865bcb3db9b8064dd7375c1ea}{id}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ id\ of\ cells\ marked\ by\ loop\ */}}
+\DoxyCodeLine{00279\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structedge__loop__struct_a7d1cae889b8379b3d74ee6f95c5244f2}{ncells}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ cells\ associated\ with\ loop\ */}}
+\DoxyCodeLine{00280\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__struct}{thread\_struct}}\ *\mbox{\hyperlink{structedge__loop__struct_a44afb38d8cd61e79a272632890901cea}{tf}};}
+\DoxyCodeLine{00281\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structthread__struct}{thread\_struct}}\ *\mbox{\hyperlink{structedge__loop__struct_a58d6878747ab09bb28a841baf458f741}{prism\_tc}};}
+\DoxyCodeLine{00282\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *\mbox{\hyperlink{structedge__loop__struct_adc46930a0ed7651f5099f8866b3ab28a}{lnodes}};\ \textcolor{comment}{/*\ list\ of\ nodes\ associated\ with\ loop\ */}}
+\DoxyCodeLine{00283\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structobjp__struct}{objp\_struct}}\ *\mbox{\hyperlink{structedge__loop__struct_af0245978359d0e2a64378500db31f07d}{lts}};\ \ \ \ \textcolor{comment}{/*\ list\ of\ adjacent\ deforming\ threads\ */}}
+\DoxyCodeLine{00284\ \}\ \mbox{\hyperlink{dynamesh__tools_8h_abcdef3f53460916b95593699c8da02ad}{Loop}};}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#define\ L\_VLIST(l)\ \ \ \ \ \ ((l)-\/>lnodes)}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#define\ L\_LTF(l)\ \ \ \ \ \ \ \ ((l)-\/>lts)}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#define\ L\_TF(l)\ \ \ \ \ \ \ \ \ ((l)-\/>tf)}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#define\ L\_GMAX(l)\ \ \ \ \ \ \ ((l)-\/>gmax)}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#define\ L\_GMIN(l)\ \ \ \ \ \ \ ((l)-\/>gmin)}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#define\ L\_AVE\_H(l)\ \ \ \ \ \ ((l)-\/>ave\_h)}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#define\ L\_MIN\_H(l)\ \ \ \ \ \ ((l)-\/>min\_h)}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#define\ L\_PRISM\_SFAC(l)\ ((l)-\/>prism\_size\_fac)}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ L\_PRISM\_TC(l)\ \ \ ((l)-\/>prism\_tc)}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#define\ L\_NORMAL(l)\ \ \ \ \ ((l)-\/>loop\_normal)}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#define\ L\_NORMAL\_DIR(l)\ ((l)-\/>normal\_dir)}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#define\ L\_METHOD(l)\ \ \ \ \ ((l)-\/>method)}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#define\ L\_FLAG(l)\ \ \ \ \ \ \ ((l)-\/>flag)}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#define\ L\_ID(l)\ \ \ \ \ \ \ \ \ ((l)-\/>id)}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#define\ L\_NCELLS(l)\ \ \ \ \ ((l)-\/>ncells)}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \textcolor{comment}{/*\ Update\ enumerants\ */}}
+\DoxyCodeLine{00303\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00304\ \{}
+\DoxyCodeLine{00305\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a26c0312ac66c00f31cf886616c48afa2a60c41c34d231f524a802862c3ff13174}{DT\_UPDATE\_DPM}},}
+\DoxyCodeLine{00306\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a26c0312ac66c00f31cf886616c48afa2ab30501e2c0c36fe916d2e49b63ae176d}{DT\_UPDATE\_NCI}},}
+\DoxyCodeLine{00307\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a26c0312ac66c00f31cf886616c48afa2a04a9613ce9d39f3d009ce871c6eb8667}{DT\_UPDATE\_SHELL}},}
+\DoxyCodeLine{00308\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a26c0312ac66c00f31cf886616c48afa2ae16a337d10df3104a6e5faecc0fec56c}{DT\_UPDATE\_OVERSET}},}
+\DoxyCodeLine{00309\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a26c0312ac66c00f31cf886616c48afa2a2e2688c3b43c6b72c7411da1722d4be7}{MAX\_DT\_UPDATES}}}
+\DoxyCodeLine{00310\ \};}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \textcolor{comment}{/*\ region\ face\ remeshing\ type\ */}}
+\DoxyCodeLine{00313\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00314\ \{}
+\DoxyCodeLine{00315\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_aecd12a18eeb0ee701fc7b0efd5068266af22c8532b35979cef328a2a194054440}{LOOP\_SKIP}}\ =\ 0,}
+\DoxyCodeLine{00316\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_aecd12a18eeb0ee701fc7b0efd5068266a3b4ceecf93ab08755a0ebe1a69e50420}{LOOP\_INSERT}},}
+\DoxyCodeLine{00317\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_aecd12a18eeb0ee701fc7b0efd5068266a179bb9c0084db8167e37372beae96e31}{LOOP\_REMOVE}},}
+\DoxyCodeLine{00318\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_aecd12a18eeb0ee701fc7b0efd5068266ac892aaecbb4afaca19b2283365c5743f}{LOOP\_REFINE}}}
+\DoxyCodeLine{00319\ \};}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{comment}{/*\ dynamic\ zone\ type\ */}}
+\DoxyCodeLine{00322\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00323\ \{}
+\DoxyCodeLine{00324\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a8420dba71b9cc240cf981b0bef892004a0276280539db7fb9f50ff4e455f61c1f}{DT\_UNSPECIFIED\_MOTION}}\ =\ -\/1,}
+\DoxyCodeLine{00325\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a8420dba71b9cc240cf981b0bef892004a1a616a7c96d22f4f8a0b0cd852972c7c}{DT\_NO\_MOTION}},}
+\DoxyCodeLine{00326\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a8420dba71b9cc240cf981b0bef892004a9232619e4f57e7b297bc6ecd806f812d}{DT\_SOLID\_BODY\_MOTION}},}
+\DoxyCodeLine{00327\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a8420dba71b9cc240cf981b0bef892004a9a49127187e06ac22f573f27aed955e8}{DT\_USER\_DEFINED}},}
+\DoxyCodeLine{00328\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a8420dba71b9cc240cf981b0bef892004aed10747d11d2a789e0067ae0608fac08}{DT\_DEFORMING}},}
+\DoxyCodeLine{00329\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a8420dba71b9cc240cf981b0bef892004ac9cdfea6123107b2eb384996e59672f3}{DT\_SYSTEM\_COUPLING}},}
+\DoxyCodeLine{00330\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a8420dba71b9cc240cf981b0bef892004ab4fd87fcf238d025782ca1e9b0f37d03}{DT\_INTRINSIC\_COUPLING\_MOTION}},}
+\DoxyCodeLine{00331\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a8420dba71b9cc240cf981b0bef892004a164c1d66bc49588e7b3b95100c38c8a5}{DT\_UDF\_DEFORM\_BASE}}}
+\DoxyCodeLine{00332\ \};}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#define\ DT\_NO\_MOTION\_P(\_dt)\ (DT\_TYPE\ (\_dt)\ ==\ DT\_NO\_MOTION)}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#define\ DT\_SOLID\_BODY\_MOTION\_P(\_dt)\ (DT\_TYPE\ (\_dt)\ ==\ DT\_SOLID\_BODY\_MOTION)}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ DT\_INTRINSIC\_COUPLING\_MOTION\_P(\_dt)\ (DT\_TYPE\ (\_dt)\ ==\ DT\_INTRINSIC\_COUPLING\_MOTION)}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\#define\ DT\_DEFORMING\_P(\_dt)\ (DT\_TYPE\ (\_dt)\ ==\ DT\_DEFORMING\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DT\_UDF\_DEFORM\_P(\_dt))}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#define\ DT\_USER\_DEFINED\_P(\_dt)\ (DT\_TYPE\ (\_dt)\ ==\ DT\_USER\_DEFINED)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#define\ DT\_SYSTEM\_COUPLING\_P(\_dt)\ (DT\_TYPE\ (\_dt)\ ==\ DT\_SYSTEM\_COUPLING)}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#define\ DT\_USER\_DEFINED\_OR\_ENABLED\_SYSTEM\_COUPLING\_P(\_dt)\ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ (DT\_USER\_DEFINED\_P\ (\_dt)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ \ (DT\_SYSTEM\_COUPLING\_P\ (\_dt)\ \&\&\ dynamesh\_sc\_enabled\_p))}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#define\ DT\_NO\_MOTION\_OR\_DISABLED\_SYSTEM\_COUPLING\_P(\_dt)\ \(\backslash\)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\ \ (DT\_NO\_MOTION\_P\ (\_dt)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ \ (DT\_SYSTEM\_COUPLING\_P\ (\_dt)\ \&\&\ !dynamesh\_sc\_enabled\_p))}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ DT\_UDF\_DEFORM\_BASE\_P(\_dt)(DT\_TYPE(\_dt)==DT\_UDF\_DEFORM\_BASE)}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \textcolor{comment}{/*\ solver\ options\ for\ dynamic\ zone\ */}}
+\DoxyCodeLine{00350\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00351\ \{}
+\DoxyCodeLine{00352\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_afb24d298ddd4bc4ff61aa333f07a574aa71d2ac2a447fefc0ca5bf8ce9aa64c4a}{SOLVER\_METHOD\_CELL}}\ =\ 1,}
+\DoxyCodeLine{00353\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_afb24d298ddd4bc4ff61aa333f07a574aa61465166e1749f5d0972d2fe96318b75}{SOLVER\_METHOD\_AP}}\ \ \ =\ 2}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ SOLVER\_METHOD\_UDF\ \ =\ 3*/}}
+\DoxyCodeLine{00355\ \};}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \textcolor{comment}{/*\ sliding\ method\ */}}
+\DoxyCodeLine{00358\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00359\ \{}
+\DoxyCodeLine{00360\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a39b4e25c4e8f5fed29720be17a532fa8ac044b922a9758e565cc7102ad5148c00}{DT\_SLIDE\_OFF}}\ =\ \ \ \ \ 0,}
+\DoxyCodeLine{00361\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a39b4e25c4e8f5fed29720be17a532fa8a7368df2f5352483444ede271631ef7b5}{DT\_SLIDE\_SPRING}}\ =\ \ 1,}
+\DoxyCodeLine{00362\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a39b4e25c4e8f5fed29720be17a532fa8a91c36846aee36bf2382ef412e475ad46}{DT\_SLIDE\_LAPLACE}}\ =\ 2}
+\DoxyCodeLine{00363\ \};}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \textcolor{comment}{/*\ smoothing\ method\ */}}
+\DoxyCodeLine{00366\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00367\ \{}
+\DoxyCodeLine{00368\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a4efaf4e07364d6302f598569aa7e55dcaac8feb39e26e41c1256d0fdf29593577}{DT\_SMOOTH\_SPRING}}\ =\ \ 1,}
+\DoxyCodeLine{00369\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a4efaf4e07364d6302f598569aa7e55dca23d5aaf761d6d6e641bb002cd7b517f3}{DT\_SMOOTH\_LAPLACE}}\ =\ 2,\ \ \textcolor{comment}{/*\ diffusion-\/based\ smoothing,\ FVM\ */}}
+\DoxyCodeLine{00370\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a4efaf4e07364d6302f598569aa7e55dca66a406fe8e7eced7062b4fbf6918b232}{DT\_SMOOTH\_FEM}}\ =\ \ \ \ \ 3\ \ \ \textcolor{comment}{/*\ diffusion\ or\ linear\ elastic\ solid\ smoothing,\ FEM\ */}}
+\DoxyCodeLine{00371\ \};}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \textcolor{comment}{/*\ equation\ for\ FEM\ smoothing\ */}}
+\DoxyCodeLine{00374\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00375\ \{}
+\DoxyCodeLine{00376\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a34df7cc7f69a8ec535eec8a524dcbaf9ac03ae4a53646aeced2d4efd2f1ab3dba}{FEM\_SMOOTH\_DIFFUSION}}\ =\ 0,}
+\DoxyCodeLine{00377\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a34df7cc7f69a8ec535eec8a524dcbaf9a5aedfdfb2846a953656d715b1441e8de}{FEM\_SMOOTH\_LINELAST}}\ =\ 1}
+\DoxyCodeLine{00378\ \};}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \textcolor{comment}{/*\ volume\ remeshing\ method\ */}}
+\DoxyCodeLine{00381\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00382\ \{}
+\DoxyCodeLine{00383\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a81929fb3d21206b62f55bcb744f71d5da6446746928557e71dfc611c3fd835d42}{DT\_REMESH\_OFF}}\ =\ \ \ \ \ 0,}
+\DoxyCodeLine{00384\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a81929fb3d21206b62f55bcb744f71d5dad804f69467f39a8c86830d12cf59490d}{DT\_REMESH\_REGION}}\ =\ \ 1,}
+\DoxyCodeLine{00385\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a81929fb3d21206b62f55bcb744f71d5da1e8ab3002ff0636430312beeada79c0d}{DT\_REMESH\_LOCAL}}\ \ =\ \ 2,}
+\DoxyCodeLine{00386\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a81929fb3d21206b62f55bcb744f71d5da010993c88dbb23e9e86807f546df6e94}{DT\_REMESH\_GOCART}}\ =\ \ 4}
+\DoxyCodeLine{00387\ \};}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \textcolor{comment}{/*\ surface\ remeshing\ method\ */}}
+\DoxyCodeLine{00390\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00391\ \{}
+\DoxyCodeLine{00392\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a7ada2556f3c386db5f31969fb6d4d002a4a99f8e290086ab06ff9b91f3ae676ae}{SURF\_REMESH\_STANDARD}}\ =\ \ \ \ \ 0,}
+\DoxyCodeLine{00393\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a7ada2556f3c386db5f31969fb6d4d002a0e4ac144db0a907869985b4aa87846cb}{SURF\_REMESH\_IMPROVED}}\ =\ \ \ \ \ 1,}
+\DoxyCodeLine{00394\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a7ada2556f3c386db5f31969fb6d4d002a9a8de9b430e19b74e306ed98a3882bbb}{SURF\_REMESH\_SKEW\_IMPROVE}}\ =\ 2}
+\DoxyCodeLine{00395\ \};}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \textcolor{comment}{/*\ Marking\ of\ cells\ and\ nodes\ */}}
+\DoxyCodeLine{00398\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00399\ \{}
+\DoxyCodeLine{00400\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a25e50be5c73e0b2fab54944e68dd48c2abeb830218024afa5f765ed5be22b7c01}{MARK\_ALL}}\ =\ 0,}
+\DoxyCodeLine{00401\ \ \ \mbox{\hyperlink{dynamesh__tools_8h_a25e50be5c73e0b2fab54944e68dd48c2ae3bdf00f20637050d6efa54a8c424432}{MARK\_BY\_REGISTERS}}\ =\ 1}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ ,}}
+\DoxyCodeLine{00403\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ MARK\_FROM\_FACES\_BY\_DISTANCE\ =\ 2,}}
+\DoxyCodeLine{00404\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ MARK\_FROM\_FACES\_BY\_LAYERS\ =\ 3}}
+\DoxyCodeLine{00405\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00406\ \};}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \textcolor{comment}{/*\ dynamic\ thread\ update\ states\ */}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\#define\ DT\_STATE\_UNCHANGED\ \ \ 0x0000}}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#define\ DT\_STATE\_SMOOTHED\ \ \ \ 0x0001}}
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\#define\ DT\_STATE\_REMESHED\ \ \ \ 0x0002}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\#define\ DT\_STATE\_MIGRATED\ \ \ \ 0x0004}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\#define\ DT\_STATE\_MOVED\ \ \ \ \ \ \ 0x0008}}
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\#define\ DT\_SET\_UPDATE\_STATE(\_dt,\_state)\ (DT\_UPDATE\_STATE\ (\_dt)\ |=\ (\_state))}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#define\ DT\_CLEAR\_UPDATE\_STATE(\_dt,\_state)\ (DT\_UPDATE\_STATE\ (\_dt)\ \&=\ \string~(\_state))}}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\#define\ DT\_UPDATE\_STATE\_P(\_dt,\_state)\ (DT\_UPDATE\_STATE\ (\_dt)\ \&\ (\_state))}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#define\ THREAD\_DYNAMIC\_MESH\_STATE\_P(\_t,\_state)\ \(\backslash\)}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\ \ (NNULLP\ (THREAD\_DT\ (\_t))\ ?\ DT\_UPDATE\_STATE\_P\ (THREAD\_DT\ (\_t),\ \_state)\ :\ FALSE)}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a48e2150d34476e135053eb3fa53000c6}{Create\_Dynamic\_Thread}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobj}{Pointer}}\ *);}
+\DoxyCodeLine{00422\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_af62bab9c4fe31e7d206c5ac98d3c9db0}{Delete\_Dynamic\_Thread}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00423\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_ab08ac521ea62ac473d0743f0844564bb}{Copy\_Dynamic\_Thread\_Rigid\_Body\_State}}(}
+\DoxyCodeLine{00424\ \ \ \mbox{\hyperlink{structdynamic__thread__rigid__body__state}{Dynamic\_Thread\_Rigid\_Body\_State}}\ *,}
+\DoxyCodeLine{00425\ \ \ \mbox{\hyperlink{structdynamic__thread__rigid__body__state}{Dynamic\_Thread\_Rigid\_Body\_State}}\ *);}
+\DoxyCodeLine{00426\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a49a3a895387264028b3e091446562663}{Dynamic\_Thread\_Ideal\_Length\_Scale}}\ (\mbox{\hyperlink{structdynamic__thread__struct}{Dynamic\_Thread}}\ *);}
+\DoxyCodeLine{00427\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_ac65fe281fe6ff25e1b2d7ab4eb354d3b}{Update\_Dynamic\_Threads\_Update\_Function}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00428\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a2b4b84a8f062300c01f467a10d8a4b94}{Init\_Dynamic\_Threads\_Update\_State}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00429\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *\mbox{\hyperlink{dynamesh__tools_8h_a25e21fdf95e2fad879f91c0cd315327f}{Create\_Udf\_Deform\_Base\_Dt}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *);}
+\DoxyCodeLine{00430\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a8bd196187917018502dacf0f6d364e05}{Free\_Udf\_Deform\_Base\_Dt}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *);}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00433\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Exchange\_Dynamic\_Threads\_Update\_State\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00435\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a75a21bf230bf5654d38cca414c4f172b}{Free\_Dynamic\_Mesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_abca2d4df352b3bb78a40b3e8f78f49d2}{Update\_Nested\_RB\_State}}\ (\mbox{\hyperlink{structdynamic__thread__struct}{Dynamic\_Thread}}\ *,\ \mbox{\hyperlink{structrb__state__struct}{rb\_state}}\ *,\ \mbox{\hyperlink{quaternion_8h_aed5ee440ba9906d589fa57933c24355e}{quaternion}},}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ [],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00440\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a5266a30c0e7dbb21eaaa7108bdd39888}{Dynamic\_Mesh\_Clear\_Sliding\_Interfaces}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00441\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_ab082471905dd4115285723544fd72ecd}{Dynamic\_Mesh\_Update\_Sliding\_Interfaces}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a6400d2bba9c1de952492bdf5cb9a201f}{Init\_Dynamic\_Mesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00444\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_ae357070a5a5200d5aadb93b65d3a9512}{Reset\_Motion\_Attributes}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00445\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a78a9f4a8720c2cf13fb1cc218f64d302}{Free\_Dynamic\_Mesh\_Node\_Ids}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00446\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_ac864f60daadc6806efdfff09854cd5af}{Set\_Void\_Dynamic\_Mesh\_Node\_Ids}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00447\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a221b1e7850163ee9a2f29d32547e3563}{Copy\_Node\_Coordinates}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00449\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Node\_Moved\_P\ (\mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *);}
+\DoxyCodeLine{00450\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Node\_Moved\ (\mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *);}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00452\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a604b7368b3367f7ff326725a0a178bee}{Update\_Dynamic\_Threads}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00455\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a84c34ee2ac73478d6e4bc311d060614d}{Project\_Dynamic\_Thread}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structdynamic__thread__struct}{Dynamic\_Thread}}\ *);}
+\DoxyCodeLine{00456\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a4ac05ce0a17441bc7d477f46653061cf}{Fill\_Dynamic\_Mesh\_Node\_Motion}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00457\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_accb84a1d136b76a5d244a31121642b01}{Get\_Min\_Max\_Length\_Scale\_On\_Thread}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00460\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a264191f85f5d187bacec111639e1a8aa}{Get\_Min\_Max\_Edge\_Length\_At\_Face\_Thread}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00463\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_adc8191d43b64b513eb8ec815a05ad392}{Max\_Cell\_Aspect\_Ratio\_On\_Thread}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00464\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_aaa180e97d58a19dbb390934841987967}{Max\_Cell\_Skewness\_On\_Thread}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00465\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a78cf2612b84692fe174b75d728ac0cdd}{Count\_Skewed\_Cells\_On\_Thread}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00467\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Max\_Face\_Skewness\_On\_Thread\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00469\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a8a6abac9384604a803ec2e34dc97b9d9}{Simplex\_Max\_Ideal\_Edge\_Length}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00470\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a7695dc8c507ea2c467ef49f532f60147}{Get\_Erosion\_Time\_Step}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00471\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_ae5404624631724644c64cdacc3d51a74}{Check\_Dynamic\_Mesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00472\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a96fe2f010783aa47934c44af9709e41d}{Update\_Dynamic\_Mesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00473\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_aafff4fc543304aab7d3cf39f1dd95161}{Dynamic\_Mesh\_Check\_Motion\_Convergence}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00474\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a715f58cddcb05e6d8c99ae989d79bca0}{Update\_Dynamic\_Mesh\_In\_Timestep}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00475\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_aae03000dc359800f0f343782b714f4fa}{Dynamic\_Mesh\_Needs\_Extended\_Neighborhood}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00476\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a5bc59ad87db81506e14f6b71fd28dab9}{Dynamic\_Mesh\_Clear\_Update}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ []);}
+\DoxyCodeLine{00477\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a4c6656a1ec43d747d3baa2e6877e462c}{Dynamic\_Mesh\_Reset\_Update}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ []);}
+\DoxyCodeLine{00478\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a8f67b27c8c1dbe81e9498842a5a42597}{Pre\_Update\_Dynamic\_Mesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00481\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a8f412a1171562d9db97f9172f3a9e388}{Pre\_Update\_Dynamic\_Mesh\_In\_Timestep}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00482\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a91d005908aac0d74cd538fc14108bb00}{Post\_Update\_Dynamic\_Mesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00483\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a5a72a47c9b88c9c88c6b414e91ca7dd6}{Update\_All\_Dynamic\_Mesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00484\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_ad6a62a0141a16fcedbed58c21bc85daf}{Steady\_Update\_All\_Dynamic\_Mesh}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00485\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a7b29e2dd96b16f611247bb38b6dbdf20}{Update\_Dynamic\_Mesh\_Parameters}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00486\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a5f9fdebc8ea03dbb5504a1cb5561d8f1}{Update\_Dynamic\_Threads\_State}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_ad2aca4a6a18fb26aa5f4defc67e94e90}{In\_Cylinder\_Thread\_P}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00489\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a7b85303f1dc4374735c7a9ee4c2161fa}{Compute\_Lift}}\ (\textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00490\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_ac11fec429b5bd4060e5bee70aa16defe}{Modify\_Lift}}\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00491\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a9dfc9b349eed26206b39edfe34982a39}{Free\_Dynamic\_Mesh\_Ref\_Coords}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00492\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a36adaea0df2cdb30d5821f173ba9d5fb}{Alloc\_And\_Fill\_Ref\_Coords}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00493\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_af8c9a95398ad49593b95aa74358d6e3d}{Alloc\_And\_Init\_Ref\_Coords}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00494\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a73bdc7276502ff6c039d64b4fd5a9997}{Is\_Ref\_Coords\_Allocated\_And\_Filled}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00495\ }
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#if\ !RP\_NODE}}
+\DoxyCodeLine{00497\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_ac6a55ed65bceb5757957e4360e4fe1d6}{Write\_File\_Motion\_History}}\ (\textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[3],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[3]);}
+\DoxyCodeLine{00498\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a6d06e6201b9cc32dbbdffdf40f93eed6}{Get\_File\_Motion\_History\_Data\_At\_Time}}\ (\textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[3],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[3]);}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00501\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a2a9ec38441d6db4e15b0ece7383f3d45}{Free\_Motion\_History}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00502\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a7167fdd47b53feb137d85fd49997151a}{Compute\_Motion\_History}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}});}
+\DoxyCodeLine{00503\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_aff543da15910564a3181e62c9e34a9b5}{Get\_Motion\_History}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00504\ }
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a6bc12b5a0042e3d0fe1ebbb5a394fe1f}{Compute\_And\_Write\_Swirl\_Tumble}}\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **,\ \textcolor{keywordtype}{int},}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ [3],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[3],}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[3],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}[3]);}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00510\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a6b0a654cea288ddebfd91ac822da18c9}{Dynamic\_Mesh\_Fill\_Bridge\_Nodes\_Of\_Cells}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00511\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a6a1a28181b78790f229410420affc73f}{Dynamic\_Mesh\_Free\_Bridge\_Nodes\_Of\_Cells}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00512\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a7ebecb910862ad1ad85de6e47b78a7b9}{Tag\_Adapted\_Cells\_Adjacent\_Moving\_Thread}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_ae4c5909361f11167538c5e8857f6d1b9}{Sort\_Element\_Array\_On\_Skewness}}\ (\textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00516\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *\mbox{\hyperlink{dynamesh__tools_8h_ab3656590111a5528855b0eda332e5a5d}{Sort\_Cell\_List\_On\_Skewness}}\ (\mbox{\hyperlink{structobjp__struct}{Objp}}\ *);}
+\DoxyCodeLine{00517\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ *\mbox{\hyperlink{dynamesh__tools_8h_acd9a7e4335891bf328adb36eef7ebe39}{Fill\_Cell\_Thread\_Array\_On\_Skewness}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00519\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ *Fill\_Face\_Thread\_Array\_On\_Skewness\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00523\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Cosine\_Face\_Angle\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a2fb5d76151cd395bab97e6d2c081228e}{Unmark\_Face\_Threads}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00528\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a6a9981fe11464c6408402a79c776b58a}{Reverse\_Dynamic\_Thread\_Orientation}}\ (\mbox{\hyperlink{structdynamic__thread__struct}{Dynamic\_Thread}}\ *);}
+\DoxyCodeLine{00529\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a55ffe0275382544fa0bab3dde93eb910}{Assure\_Face\_Thread\_Orientation}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00530\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_ae4d62cd834871922eaa4ac70610bcb6c}{Reverse\_Orientation\_Marked\_Face\_Threads}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00531\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a0d6dc3bcfcb9c68c54837464b2ce69e8}{Reverse\_Orientation\_Marked\_Dynamic\_Face\_Threads}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00532\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a718294b6991fc28c08454af73ad48763}{Contour\_Node\_Displacement}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a16eacf8499af731cf81b98040158710c}{cell\_height}}\ (\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00535\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a733de729d8dfb6b8509191acb2a82f5c}{fill\_cell\_skewness\_on\_thread}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00536\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a9fe8876b8ec17fe4a3805f5ebf3bb98f}{fill\_cell\_skewness}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00537\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a96d52d214fe42d19bce453c4b986db25}{Get\_Cellfaces\_Inzone}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00539\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ fill\_face\_skewness\_on\_thread\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00540\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ fill\_face\_skewness\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00541\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Evaluate\_Face\_Skewness\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a94c9282cb32af59a195e762434b5be1a}{DM\_Free\_TG\_Memory}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00545\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{dynamesh__tools_8h_aa82a1dbfe4a2415dbe6035e48f3c75d9}{DM\_Alloc\_TG\_Memory}}\ (\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{00546\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{dynamesh__tools_8h_a893680399cc3bed6faaa2340af0a818c}{DM\_Get\_TG\_Memory}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00548\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a8a38d517295c770a12a348e445db5981}{Print\_Global\_Conserved\_Vars}}\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00549\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a458e45d8fcadd717e5703a6cb90b2a2c}{Conserve\_Cell\_Data}}\ (\mbox{\hyperlink{structobjp__struct}{Objp}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00552\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_af99c3e890acb1301fc69705305f5cac2}{Init\_Cell\_Interior\_Face\_Data}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00553\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a398d452baa751abecb4de61a0a022939}{Reconstruct\_Scalar\_From\_Cell\_At\_Position}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ (*)[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}],}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *);}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a90dd830e6a9e41a8d8da67f01120b0cd}{Model\_Initialize\_dynamesh}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00557\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_aa2a9d445aad5df4613e83fb6c803c7be}{Download\_Dynamic\_Mesh\_Parameters}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00558\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_afc1902390cb041b5deedadabcd621ccf}{Download\_All\_Dynamic\_Mesh\_Parameters}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a1839bba334f9daf2d22f410640338da8}{Prism\_Layer\_Count}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00561\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a8e7fff31ff8eb5543e21979e5cd36322}{Valid\_Prism\_Layer\_Base\_Thread}}(\mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00562\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a9494646f6ab801cf3c282fc6b4d95f91}{Check\_Deforming\_Cell\_Threads}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00563\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a97d87e0a3d682afc3589dedaad5a4873}{Check\_Smoothing\_Cell\_Threads}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00564\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_aaa543b8d5f7962a2bb9f83abbf596c9a}{Relax\_Node\_Motion}}(\mbox{\hyperlink{struct__tg__node__struct}{Node}}*\ \mbox{\hyperlink{structobjp__struct_a893f0469811811b062c920b37ecb836d}{v}});}
+\DoxyCodeLine{00565\ \textcolor{comment}{/*\ remeshing\ methods\ */}}
+\DoxyCodeLine{00566\ \textcolor{preprocessor}{\#define\ REMESH\_UNIDENTIFIED\ \ \ \ \ 0x0000}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#define\ REMESH\_CELL\_LOCAL\ \ \ \ \ \ \ 0x0001}}
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\#define\ REMESH\_CELL\_THREAD\ \ \ \ \ \ 0x0002}}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\#define\ REMESH\_GOCART\_THREAD\ \ \ \ 0x0004}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\#define\ REMESH\_FACE\_LOCAL\ \ \ \ \ \ \ 0x0010}}
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\#define\ REMESH\_FACE\_REGION\ \ \ \ \ \ 0x0020}}
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\#define\ REMESH\_TWO\_FIVE\_LOCAL\ \ \ 0x0100}}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\#define\ ENABLE\_REMESH\_METHOD(method)\ \ (remesh\_methods\ |=\ (method))}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#define\ DISABLE\_REMESH\_METHOD(method)\ (remesh\_methods\ \&=\ \string~(method))}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\#define\ SET\_REMESH\_METHOD(method,status)\ \(\backslash\)}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\ \ (status\ ?\ ENABLE\_REMESH\_METHOD\ (method)\ :\ DISABLE\_REMESH\_METHOD\ (method))}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\#define\ CHECK\_REMESH\_METHOD\_P(method)\ (remesh\_methods\ \&\ (method))}}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\#define\ IMPROVE\_MESH\_ALL\ \ \ \ \ \ \ 0x0001}}
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\#define\ IMPROVE\_MESH\_ZONE\ \ \ \ \ \ 0x0002}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#define\ AVG\_HEIGHT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x0004}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\#define\ ACTUAL\_DIST\ \ \ \ \ \ \ \ \ \ \ \ 0x0008}}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#define\ TRANSLATION\_DIR\_CHECK\ \ 0x0010}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\#define\ LOCAL\_DIR\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0020}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#define\ CUT\_LOOPS\_AT\_CORNERS\ \ \ 0x0040}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#define\ ACCEPT\_AVG\_SKEW\ \ \ \ \ \ \ \ 0x0080}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#define\ BL\_NORMAL\_DIR\ \ \ \ \ \ \ \ \ \ 0x0100}}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00590\ \textcolor{preprocessor}{\#define\ REMESH\_IMPROVEMENT\_P(method)(remesh\_improvements\ \&\ (method))}}
+\DoxyCodeLine{00591\ }
+\DoxyCodeLine{00592\ \textcolor{comment}{/*\ number\ of\ conserved\ variables\ */}}
+\DoxyCodeLine{00593\ \textcolor{preprocessor}{\#\ define\ MAX\_NCBVARS\ 9}}
+\DoxyCodeLine{00594\ \textcolor{preprocessor}{\#define\ MAX\_NCVARS\ (MAX\_NCBVARS+MAX\_SPE\_EQNS-\/1)}}
+\DoxyCodeLine{00595\ }
+\DoxyCodeLine{00596\ \textcolor{comment}{/*\ temporary\ node\ data\ */}}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\#define\ NODE\_LINK\ \ \ NODE\_DL\_PREV}}
+\DoxyCodeLine{00598\ \textcolor{preprocessor}{\#define\ NODE\_DUP\ \ \ \ NODE\_DL\_NEXT}}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\#define\ LOCAL\_LIST(v)\ \ (NODE\_TMP\_0(v).asObjp)}}
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\#define\ FACE\_LIST(v)\ \ \ (NODE\_TMP\_1(v).asObjp)}}
+\DoxyCodeLine{00602\ }
+\DoxyCodeLine{00603\ \textcolor{comment}{/*used\ in\ updating\ svars\ during\ transient\ cases\ with\ layering\ */}}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\#define\ F\_AREA\_MAG\_M1(\_f,\_t)\ F\_STORAGE\_R(\_f,\_t,\ SV\_AREA\_MAG\_M1)}}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\#define\ C\_VOLUME\_M1(\_c,\_t)\ \ \ C\_STORAGE\_R(\_c,\_t,\ SV\_VOLUME\_M1)}}
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\#define\ C\_VOLUME\_INTERPOLATION(c,t)\ (SV\_ALLOCATED\_P\_NEW(t,SV\_VOLUME\_M1)?\(\backslash\)}}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ C\_VOLUME\_M1(c,t):C\_VOLUME(c,t))}}
+\DoxyCodeLine{00608\ \textcolor{preprocessor}{\#define\ C\_VOLUME\_INTERPOLATION\_M1(c,t,dt)\ (SV\_ALLOCATED\_P\_NEW(t,SV\_DVOLUME\_DT)?\(\backslash\)}}
+\DoxyCodeLine{00609\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ C\_VOLUME\_INTERPOLATION(c,t)-\/CELL\_DVOLUME\_DT(c,t)*(dt):\(\backslash\)}}
+\DoxyCodeLine{00610\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ C\_VOLUME\_INTERPOLATION(c,t))}}
+\DoxyCodeLine{00611\ }
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#define\ DT\_GMIN(dt)\ \ \ \ DT\_HEIGHT(dt)[0]}}
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\#define\ DT\_GMAX(dt)\ \ \ \ DT\_HEIGHT(dt)[1]}}
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00615\ \textcolor{comment}{/*\ specific\ flags\ that\ are\ shared\ by\ multiple\ dynamic\ mesh\ subroutines\ */}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\#define\ NEW\_FLAG\ \ \ \ \ \ \ \ \ \ \ NEW\_ENTITY\_FLAG}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#define\ EXT\_FLAG\ \ \ \ \ \ \ \ \ \ \ UNREAD\_NODE}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\#define\ CELL\_REMESH\_FLAG\ \ \ INTERNAL\_ORIG\_NODE}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\#define\ FACE\_REMESH\_FLAG\ \ \ VISITED\_NODE}}
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\#define\ FACE\_REVERSED\_FLAG\ HANGING\_FACE\_NODE}}
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\#\ define\ PHANTOM\_NODE\_FLAG\ KEEP\_FLAG}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00624\ }
+\DoxyCodeLine{00625\ \textcolor{comment}{/*\ node\ id:\ used\ for\ TGrid\ remeshing\ */}}
+\DoxyCodeLine{00626\ \textcolor{preprocessor}{\#if\ RP\_3D\ ||\ PARALLEL\ ||\ DEBUG}}
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\#\ define\ NODE\_SID(v)\ N\_STORAGE\_I\ (NODE\_INDEX\ (v),\ NODE\_THREAD\ (v),\ SV\_ID)}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00629\ \textcolor{preprocessor}{\#\ define\ NODE\_SID(v)\ NODE\_TMP\_0(v).asInt}}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \textcolor{comment}{/*\ node\ id:\ used\ if\ dynamesh\_node\_id\_p\ is\ enabled\ for\ code\ coupling\ */}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\#define\ NODE\_DM\_ID(v)\ N\_STORAGE\_I\ (NODE\_INDEX\ (v),\ NODE\_THREAD\ (v),\ SV\_DM\_ID)}}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ \textcolor{comment}{/*\ node\ marks\ */}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\#define\ NODE\_NULL\ \ \ \ \ \ \ 0x0000}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#define\ NODE\_FIXED\ \ \ \ \ \ 0x0001}}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\#define\ NODE\_MOVABLE\ \ \ \ 0x0002}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\#define\ NODE\_CONTACT\ \ \ \ 0x0004}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\#define\ NODE\_MOVED\ \ \ \ \ \ 0x0008}}
+\DoxyCodeLine{00641\ \textcolor{preprocessor}{\#define\ NODE\_ADAPT\ \ \ \ \ \ 0x0010}}
+\DoxyCodeLine{00642\ \textcolor{preprocessor}{\#define\ NODE\_DEFORMED\ \ \ 0x0020}}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\#define\ NODE\_SET\_NULL(v)\ (NODE\_MARK(v)\ =\ NODE\_NULL)}}
+\DoxyCodeLine{00645\ \textcolor{preprocessor}{\#define\ NODE\_SET\_MARK(v,\ mark)\ (NODE\_MARK(v)\ |=\ (mark))}}
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\#define\ NODE\_CLEAR\_MARK(v,\ mark)\ (NODE\_MARK(v)\ \&=\ \string~(mark))}}
+\DoxyCodeLine{00647\ }
+\DoxyCodeLine{00648\ \textcolor{preprocessor}{\#define\ NODE\_POS\_FIXED(v)\ \(\backslash\)}}
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\ \ (NODE\_CLEAR\_MARK(v,\ NODE\_MOVED\ |\ NODE\_MOVABLE\ |\ NODE\_ADAPT),\ \(\backslash\)}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\ \ \ NODE\_SET\_MARK(v,\ NODE\_FIXED))}}
+\DoxyCodeLine{00651\ \textcolor{preprocessor}{\#define\ NODE\_POS\_FIXED\_P(v)\ (NODE\_MARK(v)\ \&\ NODE\_FIXED)}}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\#define\ NODE\_POS\_MOVABLE(v)\ \(\backslash\)}}
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{\ \ (NODE\_CLEAR\_MARK(v,\ NODE\_MOVED\ |\ NODE\_FIXED\ |\ NODE\_ADAPT),\ \(\backslash\)}}
+\DoxyCodeLine{00654\ \textcolor{preprocessor}{\ \ \ NODE\_SET\_MARK(v,\ NODE\_MOVABLE))}}
+\DoxyCodeLine{00655\ \textcolor{preprocessor}{\#define\ NODE\_POS\_NEED\_UPDATE(v)\ (NODE\_MARK(v)\ \&\ NODE\_MOVABLE)}}
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\#define\ NODE\_POS\_UPDATED(v)\ \(\backslash\)}}
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\ \ (NODE\_CLEAR\_MARK(v,\ NODE\_MOVABLE\ |\ NODE\_FIXED\ |\ NODE\_ADAPT),\ \(\backslash\)}}
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\ \ \ NODE\_SET\_MARK(v,\ NODE\_MOVED))}}
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\#define\ NODE\_POS\_UPDATED\_P(v)\ (NODE\_MARK(v)\ \&\ NODE\_MOVED)}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{\#define\ NODE\_POS\_DEFORMED\_P(v)\ (NODE\_MARK(v)\ \&\ NODE\_DEFORMED)}}
+\DoxyCodeLine{00661\ \textcolor{preprocessor}{\#define\ NODE\_POS\_DEFORMED(v)\ (NODE\_SET\_MARK(v,\ NODE\_DEFORMED))}}
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\#define\ NODE\_POS\_DEFORMABLE\_P(v)\ ((NODE\_POS\_NEED\_UPDATE(v)\ ||\ NODE\_POS\_UPDATED(v))\ \&\&\ !NODE\_POS\_DEFORMED\_P(v))}}
+\DoxyCodeLine{00663\ \textcolor{preprocessor}{\#define\ NODE\_POS\_CONTACT(v)\ (NODE\_SET\_MARK(v,\ NODE\_CONTACT))}}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\#define\ NODE\_POS\_CONTACT\_P(v)\ (NODE\_MARK(v)\ \&\ NODE\_CONTACT)}}
+\DoxyCodeLine{00665\ \textcolor{preprocessor}{\#define\ NODE\_POS\_ADAPTED\_NEED\_UPDATE(v)\ (NODE\_SET\_MARK(v,\ NODE\_ADAPT))}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#define\ NODE\_POS\_ADAPTED\_NEED\_UPDATE\_P(v)\ (NODE\_MARK(v)\ \&\ NODE\_ADAPT)}}
+\DoxyCodeLine{00667\ }
+\DoxyCodeLine{00668\ \textcolor{comment}{/*\ identify\ tri/tet/mixed\ etc.\ threads\ */}}
+\DoxyCodeLine{00669\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\#\ define\ SIMPLEX\_FACE\ TRI\_FACE}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\#\ define\ TRI\_FACE\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\ \ \ ((Face\_Element\_Type)THREAD\_ELEMENT\_TYPE\ (\_thread)\ ==\ SIMPLEX\_FACE)}}
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\#\ define\ QUAD\_FACE\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00674\ \textcolor{preprocessor}{\ \ \ ((Face\_Element\_Type)THREAD\_ELEMENT\_TYPE\ (\_thread)\ ==\ QUAD\_FACE)}}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\#\ define\ EXTRUDABLE\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\ \ \ (THREAD\_ELEMENT\_TYPE(\_thread)\ ==\ WEDGE\_CELL\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\ \ \ \ THREAD\_ELEMENT\_TYPE(\_thread)\ ==\ HEX\_CELL\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00678\ \textcolor{preprocessor}{\ \ \ \ THREAD\_ELEMENT\_TYPE(\_thread)\ ==\ QUAD\_CELL)}}
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00680\ \textcolor{preprocessor}{\#\ define\ SIMPLEX\_FACE\ LINEAR\_FACE}}
+\DoxyCodeLine{00681\ \textcolor{preprocessor}{\#\ define\ EXTRUDABLE\_THREAD\_P(\_thread)\ FALSE}}
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00683\ \textcolor{preprocessor}{\#define\ TRI\_TET\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\ \ ((Cell\_Element\_Type)THREAD\_ELEMENT\_TYPE\ (\_thread)\ ==\ SIMPLEX\_CELL)}}
+\DoxyCodeLine{00685\ \textcolor{preprocessor}{\#define\ DEFORMABLE\_CELL\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00686\ \textcolor{preprocessor}{\ \ ((((Cell\_Element\_Type)THREAD\_ELEMENT\_TYPE\ (\_thread)\ ==\ SIMPLEX\_CELL)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\ \ \ \ ((Cell\_Element\_Type)THREAD\_ELEMENT\_TYPE\ (\_thread)\ ==\ MIXED\_CELL))\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{\ \ \ !SHELL\_CELL\_THREAD\_P\ (\_thread))}}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\#define\ DEFORMABLE\_FACE\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\ \ (BOUNDARY\_FACE\_THREAD\_P\ (\_thread)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\ \ \ !SHELL\_FACE\_THREAD\_P\ (\_thread)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\ \ \ (DEFORMABLE\_CELL\_THREAD\_P\ (THREAD\_T0\ (\_thread))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00693\ \textcolor{preprocessor}{\ \ \ \ EXTRUDABLE\_THREAD\_P\ (THREAD\_T0\ (\_thread))))}}
+\DoxyCodeLine{00694\ \textcolor{preprocessor}{\#define\ DEFORMABLE\_CELL\_P(\_c,\_t)\ SIMPLEX\_CELL\_P\ (\_c,\ \_t)}}
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\#define\ DEFORMABLE\_FACE\_P(\_f,\_t)\ \(\backslash\)}}
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\ \ ((Face\_Element\_Type)F\_TYPE\ (\_f,\ \_t)\ ==\ SIMPLEX\_FACE)}}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\#define\ DEFORMING\_BOUNDARY\_LAYER\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\ ((((Cell\_Element\_Type)THREAD\_ELEMENT\_TYPE(\_thread)\ ==\ HEX\_CELL)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\ \ \ ((Cell\_Element\_Type)THREAD\_ELEMENT\_TYPE(\_thread)\ ==\ WEDGE\_CELL))\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\ \ !SHELL\_CELL\_THREAD\_P\ (\_thread)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\ \ (NNULLP\ (THREAD\_DT\ (\_thread))\ \&\&\ (DT\_DEFORMING\_P(THREAD\_DT(\_thread)))\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\ \ \ DT\_SLIDE\_P\ (THREAD\_DT\ (\_thread))))}}
+\DoxyCodeLine{00704\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\#define\ DEFORMING\_BOUNDARY\_LAYER\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\ (((Cell\_Element\_Type)THREAD\_ELEMENT\_TYPE(\_thread)\ ==\ QUAD\_CELL)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\ \ (NNULLP\ (THREAD\_DT\ (\_thread))\ \&\&\ (DT\_DEFORMING\_P(THREAD\_DT(\_thread)))\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\ \ \ DT\_SLIDE\_P\ (THREAD\_DT\ (\_thread))))}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00710\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#\ define\ PRISMATIC\_CELL\_P(\_c,\_tc)\ \(\backslash\)}}
+\DoxyCodeLine{00712\ \textcolor{preprocessor}{\ \ (((Cell\_Element\_Type)C\_TYPE(\_c,\_tc)\ ==\ HEX\_CELL)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\ \ \ ((Cell\_Element\_Type)C\_TYPE(\_c,\_tc)\ ==\ WEDGE\_CELL))}}
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\#\ define\ PRISMATIC\_BASE\_FACE\_P(\_f,\_tf,\_c,\_tc)\ \(\backslash\)}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\ \ ((((Cell\_Element\_Type)C\_TYPE(\_c,\_tc)\ ==\ HEX\_CELL)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{\ \ \ \ ((Face\_Element\_Type)F\_TYPE(\_f,\_tf)\ ==\ QUAD\_FACE))\ \ \ \ ||\ \(\backslash\)}}
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\ \ \ (((Cell\_Element\_Type)C\_TYPE(\_c,\_tc)\ ==\ WEDGE\_CELL)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\ \ \ \ ((Face\_Element\_Type)F\_TYPE(\_f,\_tf)\ ==\ TRI\_FACE)))}}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#\ define\ PRISMATIC\_CELL\_P(\_c,\_tc)\ \(\backslash\)}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\ \ ((Cell\_Element\_Type)C\_TYPE(\_c,\_tc)\ ==\ QUAD\_CELL)}}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#\ define\ PRISMATIC\_BASE\_FACE\_P(\_f,\_tf,\_c,\_tc)\ TRUE}}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00724\ }
+\DoxyCodeLine{00725\ \textcolor{comment}{/*\ identify\ GoCart\ cell\ threads\ */}}
+\DoxyCodeLine{00726\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00727\ \textcolor{preprocessor}{\#\ define\ ACTIVE\_GOCART\_CELL\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\ \ (NNULLP\ (THREAD\_DT\ (\_thread))\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\ \ \ CELL\_THREAD\_P\ (\_thread)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\ \ \ (DT\_DEFORMING\_P(THREAD\_DT(\_thread)))\ \&\&\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{\ \ \ DT\_REMESH\_P\ (THREAD\_DT\ (\_thread))\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{00732\ \textcolor{preprocessor}{\ \ \ CHECK\_METHOD\_BIT\ (DT\_REMESH\_METHOD\ (THREAD\_DT\ (\_thread)),\ DT\_REMESH\_GOCART))}}
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00734\ \textcolor{preprocessor}{\#\ define\ ACTIVE\_GOCART\_CELL\_THREAD\_P(\_thread)\ FALSE}}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00736\ }
+\DoxyCodeLine{00737\ \textcolor{comment}{/*\ check\ on\ reasonable\ size/skewness\ limits\ */}}
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{\#if\ RP\_2D}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#\ define\ MIN\_REASONABLE\_CELL\_SKEWNESS\ 0.4}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\#\ define\ MIN\_REASONABLE\_FACE\_SKEWNESS\ 0.0}}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{\#\ define\ MIN\_REASONABLE\_CELL\_SKEWNESS\ 0.7}}
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{\#\ define\ MIN\_REASONABLE\_FACE\_SKEWNESS\ 0.4}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\#define\ MAX\_REASONABLE\_SKEWNESS\ 0.95}}
+\DoxyCodeLine{00746\ }
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\#define\ VALID\_SIZE\_LIMITS\_P(min,max)\ \(\backslash\)}}
+\DoxyCodeLine{00748\ \textcolor{preprocessor}{\ \ (min\ >=\ 0.0\ \&\&\ max\ >\ 0.0\ \&\&\ max\ >\ min)}}
+\DoxyCodeLine{00749\ \textcolor{preprocessor}{\#define\ VALID\_CELL\_SKEWNESS\_LIMIT\_P(skew)\ \(\backslash\)}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\ \ (skew\ >=\ MIN\_REASONABLE\_CELL\_SKEWNESS\ \&\&\ skew\ <=\ MAX\_REASONABLE\_SKEWNESS)}}
+\DoxyCodeLine{00751\ \textcolor{preprocessor}{\#define\ VALID\_FACE\_SKEWNESS\_LIMIT\_P(skew)\ \(\backslash\)}}
+\DoxyCodeLine{00752\ \textcolor{preprocessor}{\ \ (skew\ >=\ MIN\_REASONABLE\_FACE\_SKEWNESS\ \&\&\ skew\ <=\ MAX\_REASONABLE\_SKEWNESS)}}
+\DoxyCodeLine{00753\ \textcolor{preprocessor}{\#define\ VALID\_THREAD\_SKEWNESS\_LIMIT\_P(skew,\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{\ \ (CELL\_THREAD\_P\ (\_thread)\ ?\ \(\backslash\)}}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\ \ \ \ VALID\_CELL\_SKEWNESS\_LIMIT\_P\ (skew):\ VALID\_FACE\_SKEWNESS\_LIMIT\_P\ (skew))}}
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{\#define\ DT\_VALID\_LSCALE\_P(dt)\ \(\backslash\)}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\ \ VALID\_SIZE\_LIMITS\_P\ (DT\_MIN\_LSCALE\ (dt),\ DT\_MAX\_LSCALE\ (dt))}}
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\#define\ DT\_IDEAL\_LSCALE(dt)\ Dynamic\_Thread\_Ideal\_Length\_Scale\ (dt)}}
+\DoxyCodeLine{00759\ }
+\DoxyCodeLine{00760\ \textcolor{comment}{/*\ misc\ */}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#define\ FIND\_CELL\_DEPTH\ 2000}}
+\DoxyCodeLine{00762\ \textcolor{preprocessor}{\#define\ CHECK\_METHOD\_BIT(method,bit)\ ((method)\ \&\ (bit))}}
+\DoxyCodeLine{00763\ \textcolor{preprocessor}{\#define\ ROUNDOFF\_NTH\_DECIMAL(v,n)\ ((long)((v*1.0e\#\#n\ +\ 0.5))/1.0e\#\#n)}}
+\DoxyCodeLine{00764\ \textcolor{preprocessor}{\#define\ THREAD\_T\_DIR(\_thread,\_dir)\ \(\backslash\)}}
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\ \ (((\_dir)\ ==\ 0)\ ?\ THREAD\_T0\ (\_thread)\ :\ THREAD\_T1\ (\_thread))}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\#define\ DYNAMIC\_INTERIOR\_FACE\_THREAD\_P(\_thread)\ \(\backslash\)}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\ \ (NNULLP\ (THREAD\_DT\ (\_thread))\ \&\&\ INTERIOR\_FACE\_THREAD\_P\ (\_thread))}}
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\#\ define\ CORNER\_NODE\_P(d,v)\ \(\backslash\)}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{\ \ \ NNULLP\ (Lookup\_Corner\_Node\_In\_Lists\ (d,\ NODE\_ID\ (v)))}}
+\DoxyCodeLine{00771\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00772\ \textcolor{preprocessor}{\#\ define\ CORNER\_NODE\_P(d,v)\ FALSE}}
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00774\ }
+\DoxyCodeLine{00775\ \textcolor{comment}{/*\ different\ verbosity\ levels\ */}}
+\DoxyCodeLine{00776\ \textcolor{preprocessor}{\#define\ DYNMESH\_VB1\ remesh\_verbosity\ >\ 0}}
+\DoxyCodeLine{00777\ \textcolor{preprocessor}{\#define\ DYNMESH\_VB2\ remesh\_verbosity\ >\ 1}}
+\DoxyCodeLine{00778\ \textcolor{preprocessor}{\#define\ DYNMESH\_VB3\ remesh\_verbosity\ >\ 2}}
+\DoxyCodeLine{00779\ \textcolor{preprocessor}{\#define\ DYNMESH\_VB4\ remesh\_verbosity\ >\ 3}}
+\DoxyCodeLine{00780\ }
+\DoxyCodeLine{00781\ \textcolor{comment}{/*\ debugging\ */}}
+\DoxyCodeLine{00782\ \textcolor{preprocessor}{\#if\ !RP\_HOST\ \&\&\ DEBUG}}
+\DoxyCodeLine{00783\ \textcolor{preprocessor}{\#\ define\ NOBJP(where)\ \(\backslash\)}}
+\DoxyCodeLine{00784\ \textcolor{preprocessor}{\ \ \ \ Message\ ("{}\(\backslash\)n\%s:\ number\ of\ Objps\ on\ \%d:\ \%d\(\backslash\)n"{},\ \(\backslash\)}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ where,\ myid,\ Get\_Number\_Objps\_Used\ ());}}
+\DoxyCodeLine{00786\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00787\ }
+\DoxyCodeLine{00788\ \textcolor{comment}{/*\ global\ variables\ */}}
+\DoxyCodeLine{00789\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_adb2f03e3ca17cd51d390c4386dd40552}{remesh\_p}};}
+\DoxyCodeLine{00790\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_aeb1620b4c65bf9e3818e3137d082fa32}{remesh\_exterior\_p}};}
+\DoxyCodeLine{00791\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a4cd9fcca78d885f87bfbb748c0cf8251}{remesh\_exterior\_enhanced\_p}};}
+\DoxyCodeLine{00792\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a93f95a1d07a11ebfa14cae14ad109021}{remesh\_skewness\_priority\_marking\_p}};}
+\DoxyCodeLine{00793\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a25766b305d53a1b1dfa78ec4c0e5f677}{remesh\_methods}};}
+\DoxyCodeLine{00794\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a53f9f763156abba0a0cc0a6d6bcfb21f}{remesh\_max\_cell\_skew}};}
+\DoxyCodeLine{00795\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_aaa1c200f907f92cde74d08dd33f6ec15}{remesh\_max\_face\_skew}};}
+\DoxyCodeLine{00796\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_ab2d2aeda537ce82c93f2f8e3c1d4f2ff}{remesh\_face\_skew\_rejection\_threshold}};}
+\DoxyCodeLine{00797\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a10be4562d829930e641714e2420c1cd8}{remesh\_min\_lscale}};}
+\DoxyCodeLine{00798\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_ac69b41bae3c1d00ab124808341130975}{remesh\_max\_lscale}};}
+\DoxyCodeLine{00799\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_abedc869922fef44e4b57ceeecbe34615}{remesh\_height\_relax\_factor}};}
+\DoxyCodeLine{00800\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a68710898b7b07fb777386ad77c16b2d4}{remesh\_max\_sweeps}};}
+\DoxyCodeLine{00801\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a6e2a504b57952d9d87576173122c459c}{remesh\_refine\_coarsen\_order\_p}};}
+\DoxyCodeLine{00802\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_ac03b2caafbcd4601f30ee8c0c7325bb3}{remesh\_verbosity}};}
+\DoxyCodeLine{00803\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a0da8e60ea0c40d5a41f8dbdabd333e90}{remesh\_improvements}};}
+\DoxyCodeLine{00804\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a619102d4144e0ad6b8390efe5ba64e55}{remesh\_swap\_angle}};}
+\DoxyCodeLine{00805\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a6e21b8edd9a1c630eef6963f6c40310c}{remesh\_swap\_iter}};}
+\DoxyCodeLine{00806\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a2ec1c1cd513e2da2fac42fdf7104bdc6}{remesh\_refine\_method}};}
+\DoxyCodeLine{00807\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a9ecbfcee2ebb109d1f5f782020680c4e}{remesh\_skewness\_method}};}
+\DoxyCodeLine{00808\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a134aba967ec3574324b1ac4b1c5e3a25}{remesh\_surfer\_improve\_method}};}
+\DoxyCodeLine{00809\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a6bc9cea686d823039e97f78b1fc07986}{remesh\_boundary\_sliver\_threshold}};}
+\DoxyCodeLine{00810\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a42ef45afbb2f713bc8c2a088259d6fca}{remesh\_sliver\_skew}};}
+\DoxyCodeLine{00811\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a14e72687757d60867df682a0e5667172}{remesh\_improve\_remeshed\_cavity\_threshold}};}
+\DoxyCodeLine{00812\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a8e16ffcb41be9c1294244a9ef6834f3b}{remesh\_improve\_remesh\_local\_p}};}
+\DoxyCodeLine{00813\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_abc285bc0ca581b2e2e7e4aef0510e5b4}{remesh\_sizing\_function\_p}};}
+\DoxyCodeLine{00814\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_ae1597477c53093f1b5bd95bff544054c}{remesh\_size\_interval}};}
+\DoxyCodeLine{00815\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a93ddf13f558f6b39e49781775d7601bd}{remesh\_lscale\_limit\_factor}};}
+\DoxyCodeLine{00816\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a71de89eea6dee131d9d44cda3a2d75f8}{adapted\_threads\_readapt\_after\_remeshing\_p}};}
+\DoxyCodeLine{00817\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a6c3e0b5339f482f76ae9f3584717add2}{adapted\_threads\_move\_cells\_p}};}
+\DoxyCodeLine{00818\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a6756eea7bd88014fe7cb12002702e5fd}{remesh\_perturb\_cavity\_nodes\_p}};}
+\DoxyCodeLine{00819\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_ad4b7d94ab0c4a991c9f4e064468a1b7c}{remesh\_with\_prisms\_p}};}
+\DoxyCodeLine{00820\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_af40fe58b2ac2562588bc97ac386d9083}{remesh\_allow\_prism\_stairstepping\_p}};}
+\DoxyCodeLine{00821\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_aea28e580ea3cb67ea9ace7d1459a22af}{remesh\_check\_self\_intersecting\_loops}};}
+\DoxyCodeLine{00822\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a35e8f2a29b115cc75ce568b03f7aed8e}{remesh\_thread\_parallel\_p}};}
+\DoxyCodeLine{00823\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_ac5bf29e1e886b56ebd215479c1d298ba}{remesh\_thread\_multinode\_p}};}
+\DoxyCodeLine{00824\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a1d68b626c1cb5037baeb209aeda60213}{remesh\_thread\_include\_quad\_faces\_p}};}
+\DoxyCodeLine{00825\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a550f26bf40c40780f71855ce0f7e6f19}{remesh\_cavities\_on\_same\_cpu}};}
+\DoxyCodeLine{00826\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_aeda0c1a012b106ec90fa8fe635f65f77}{remesh\_intersecting\_padding}};}
+\DoxyCodeLine{00827\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a30da7d2f2dad3687be0730b2b45a5991}{remesh\_prism\_first\_height}};}
+\DoxyCodeLine{00828\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a084148eea5c8653214cc316c215b4a6c}{remesh\_prism\_growth\_rate}};}
+\DoxyCodeLine{00829\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_ac3462ed98889d43a789324494f3120c4}{remesh\_prism\_nlayers}};}
+\DoxyCodeLine{00830\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a3edb0cfdc2207c85bead627bba406506}{remesh\_prism\_nlayers\_max}};}
+\DoxyCodeLine{00831\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_acf74d62721b2b4a8607eacda41a189a9}{remesh\_threads\_on\_prism\_quality\_p}};}
+\DoxyCodeLine{00832\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a3fc38f1a5fc54539194b9bfb88e4a291}{collect\_node\_connected\_tetrahedra\_p}};}
+\DoxyCodeLine{00833\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_ac34fc993bdd03dc6d190a9b4a8a8e1e9}{collect\_connected\_wedges\_p}};}
+\DoxyCodeLine{00834\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a07d1b2190963210c9aec63d103a77b61}{remesh\_udf\_deform\_p}};}
+\DoxyCodeLine{00835\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_abf3401197c23bcc390a8448bd31139a8}{tetrahedra\_connectivity\_level}};}
+\DoxyCodeLine{00836\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a32b766a5b4f95199066eb2f2fbc78158}{max\_prism\_size\_factor}};}
+\DoxyCodeLine{00837\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00838\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ remesh\_local\_prism\_all\_layer\_prox\_p;}
+\DoxyCodeLine{00839\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00840\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00841\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ remesh\_repartition\_enable\_p;}
+\DoxyCodeLine{00842\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ remesh\_repartition\_auto\_p;}
+\DoxyCodeLine{00843\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ remesh\_repartition\_interval;}
+\DoxyCodeLine{00844\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ remesh\_repartition\_load\_threshold;}
+\DoxyCodeLine{00845\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ remesh\_repartition\_interface\_threshold;}
+\DoxyCodeLine{00846\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ remesh\_repartition\_last\_interface\_ratio;}
+\DoxyCodeLine{00847\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00848\ }
+\DoxyCodeLine{00849\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_ad94581173bfff38f6fc9909526eb9192}{layer\_p}};}
+\DoxyCodeLine{00850\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_aacdf9ff26e4ce06f64ce4a1e2b9caf95}{layer\_relax\_sub}};}
+\DoxyCodeLine{00851\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_aab363eb45ee68cca1f318a67600720b0}{layer\_relax\_col}};}
+\DoxyCodeLine{00852\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_af911bab8e204058d2c2934c79b71650a}{layer\_constant\_layer\_height\_p}};}
+\DoxyCodeLine{00853\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_ae964a6338d21015452a942689dc4baf8}{subdivide\_dvolume\_dt}};}
+\DoxyCodeLine{00854\ }
+\DoxyCodeLine{00855\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_aeb05783bfe28ce0471db9a42fd48eb4b}{contact\_active\_p}};}
+\DoxyCodeLine{00856\ }
+\DoxyCodeLine{00857\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a2d943169f82ae35e83e34bbb0a174865}{spring\_all\_cell\_type\_p}};}
+\DoxyCodeLine{00858\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_aac82ed34f24c2f223349e12b3e9bf011}{spring\_deformable\_cell\_type\_p}};}
+\DoxyCodeLine{00859\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a364a05091b4dca7cc71fb095ff6d014d}{spring\_verbosity}};}
+\DoxyCodeLine{00860\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a0473902a602ebb19eb4e0d8c66d227d9}{spring\_itermax}};}
+\DoxyCodeLine{00861\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_ae6fe2a884d29a0d730547a92e3f6ae67}{spring\_epsilon}};}
+\DoxyCodeLine{00862\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a95b4891b34aad5eb38b394e51b751f31}{spring\_relax}};}
+\DoxyCodeLine{00863\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a15a127360f107d47d824eb52bfd4583f}{spring\_bnd\_relax}};}
+\DoxyCodeLine{00864\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a6a499bcd856cead51e634088ae2fd95e}{spring\_bnd\_stiffness}};}
+\DoxyCodeLine{00865\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_abf1a69b9239972a3ecdb8cd53e4540d8}{spring\_face\_node\_skewness}};}
+\DoxyCodeLine{00866\ }
+\DoxyCodeLine{00867\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_affd7f727c1ac1eefb3c24d4c634e4661}{bnd\_laplace\_relax}};}
+\DoxyCodeLine{00868\ }
+\DoxyCodeLine{00869\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_ae1ffb46a9c4a4a320da1f86079876914}{smooth\_method}};}
+\DoxyCodeLine{00870\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_ac8fa851e3e02bec7e1e7a7a73d9f07fd}{smooth\_iter}};}
+\DoxyCodeLine{00871\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a313de90abc56e17a68a4deff31ced71e}{smooth\_face\_skew}};}
+\DoxyCodeLine{00872\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a21166d7ad125ba4127d9fadb4834be08}{smooth\_cell\_skew}};}
+\DoxyCodeLine{00873\ }
+\DoxyCodeLine{00874\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a1c004d65edb722cf22eb7ab2d1fa441b}{smooth\_diff\_from\_ref\_p}};}
+\DoxyCodeLine{00875\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_abeea38dec3783026100b40a63463fc70}{update\_moving\_smooth\_ref\_p}};}
+\DoxyCodeLine{00876\ }
+\DoxyCodeLine{00877\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a512c63414c057930d8b38d45ce77c461}{local\_smooth}};}
+\DoxyCodeLine{00878\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_aa8f1bb33d3fee721d07fa1ba4759a1d7}{local\_smooth\_mark\_method}};}
+\DoxyCodeLine{00879\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{dynamesh__tools_8h_ab61615d9b215a0915fb8a538d7589d20}{local\_smooth\_mark\_register\_name}};}
+\DoxyCodeLine{00880\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_af838ba137e7666f43762f780e8829d94}{local\_smooth\_verbosity}};}
+\DoxyCodeLine{00881\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}\ \mbox{\hyperlink{dynamesh__tools_8h_a755acd718e8cf304bb258736eb1aff82}{sv\_def\_cell\_mark}};}
+\DoxyCodeLine{00882\ }
+\DoxyCodeLine{00883\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_aa7176e2dc74d96476f75e7515bdb19df}{mesh\_smooth\_boundary\_distance\_method}};}
+\DoxyCodeLine{00884\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{dynamesh__tools_8h_a11153ba3d18bb96190b898aac8a1c2e3}{mesh\_smooth\_diff\_coeff\_func}};}
+\DoxyCodeLine{00885\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a8cd6a9ec377b237b7f8b9410fa835e13}{mesh\_smooth\_diff\_coeff\_param}};}
+\DoxyCodeLine{00886\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_ada24ba34961219c0e60b7c6708efe10a}{laplace\_smooth\_verbosity}};}
+\DoxyCodeLine{00887\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_aa1872c28170d33d3583ca1c358ff9774}{laplace\_smooth\_memory\_allocated\_p}};}
+\DoxyCodeLine{00888\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a9ac998945e68b1f095ab9b1f8a274663}{lms\_use\_node\_based\_lsq}};}
+\DoxyCodeLine{00889\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a520ee335cc08cba29bf4181736b5d3e3}{fem\_smooth\_verbosity}};}
+\DoxyCodeLine{00890\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{dynamesh__tools_8h_a760e4426f2683000a91a317f9789832f}{fem\_smooth\_model}};}
+\DoxyCodeLine{00891\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a9857c278c12cb10deb4c45f1441b9bdb}{fem\_smooth\_memory\_allocated\_p}};}
+\DoxyCodeLine{00892\ }
+\DoxyCodeLine{00893\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_afb3bf33a4cdab337047941a634b52968}{dynmesh\_use\_cell\_data\_when\_face\_interpol\_fails\_p}};}
+\DoxyCodeLine{00894\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a209c33d2cbb622d73c056bebf50fb6fb}{dynmesh\_face\_interpol\_range}};}
+\DoxyCodeLine{00895\ }
+\DoxyCodeLine{00896\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a731d4b1f720d878de83e4513f37e384b}{in\_cylinder\_p}};}
+\DoxyCodeLine{00897\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a304e6478948a6f6e3fb6c0c764f6255b}{in\_cyn\_ca}};}
+\DoxyCodeLine{00898\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a9d18a5619ff8933682c95e78ea55c858}{in\_cyn\_min\_lift}};}
+\DoxyCodeLine{00899\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_ae7134687cc8504c2691e3779b1d093c5}{in\_cyn\_min\_stroke}};}
+\DoxyCodeLine{00900\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a1725640ee8938b5e89401777013a8ffb}{in\_cyn\_ca\_start}};}
+\DoxyCodeLine{00901\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_abb3f608e2efe9b9cd560c86ae8c48eba}{in\_cyn\_ca\_period}};}
+\DoxyCodeLine{00902\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a3cdc59d33720e618e559a233aea01c56}{in\_cyn\_ca\_rpm}};}
+\DoxyCodeLine{00903\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a7f801991cbbea7efe0821de68d5d2049}{in\_cyn\_piston\_data}}[3];}
+\DoxyCodeLine{00904\ }
+\DoxyCodeLine{00905\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a19a6310c4ebdb314b825f861bade2d5a}{pump25d\_p}};}
+\DoxyCodeLine{00906\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a831e347d526e7644d51bd88220822462}{sdof\_p}};}
+\DoxyCodeLine{00907\ }
+\DoxyCodeLine{00908\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a711337f584f0e1020980cce12740f61b}{dynamesh\_node\_id\_p}};}
+\DoxyCodeLine{00909\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a746d5c571d722d418c5939a62c3e89ad}{grid\_motion\_retain\_normal\_bc\_p}};}
+\DoxyCodeLine{00910\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_a16110e717f00a15f5f313dfaaee2ec56}{dynamesh\_set\_dynamic\_threads\_state\_p}};}
+\DoxyCodeLine{00911\ }
+\DoxyCodeLine{00912\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_af1abc86f646daf890073982a1bac0c29}{dynamesh\_time}};}
+\DoxyCodeLine{00913\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_ae8117bd64b2dd0d3c5b6313cd2c4f58f}{dynamesh\_dtime}};}
+\DoxyCodeLine{00914\ }
+\DoxyCodeLine{00915\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{dynamesh__tools_8h_aceba9ed2f96731ce9d32070096c1477d}{dynamesh\_sc\_enabled\_p}};}
+\DoxyCodeLine{00916\ \textcolor{preprocessor}{\#define\ DYNAMESH\_CURRENT\_TIME\ (dynamesh\_time\ +\ dynamesh\_dtime)}}
+\DoxyCodeLine{00917\ }
+\DoxyCodeLine{00918\ \textcolor{preprocessor}{\#define\ TIME\_TO\_ABSOLUTE\_CRANK\_ANGLE(time)\ \(\backslash\)}}
+\DoxyCodeLine{00919\ \textcolor{preprocessor}{\ (in\_cyn\_ca\_start\ +\ 6.0\ *\ in\_cyn\_ca\_rpm\ *\ time)}}
+\DoxyCodeLine{00920\ }
+\DoxyCodeLine{00921\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{dynamesh__tools_8h_a916717fedeb0836f42725a0ad2349ad0}{CA\_to\_time}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ time,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ crank\_angle);}
+\DoxyCodeLine{00922\ }
+\DoxyCodeLine{00923\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a1a0e7965d3b63e6bab72f154f9229d8e}{Register\_Dyamic\_Mesh\_HDF\_IO\_Managers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00924\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{dynamesh__tools_8h_a7c2a56b2bb9234ad02598f64c5c35d7d}{Deregister\_Dyamic\_Mesh\_HDF\_IO\_Managers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00925\ }
+\DoxyCodeLine{00926\ \textcolor{preprocessor}{\#define\ SMOOTHING\_CELL\_THREAD\_P(t)\ ((NULLP(THREAD\_DT(t))\ \&\&\ DEFORMING\_THREAD\_P(t))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00927\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (NNULLP(THREAD\_DT(t))\ \&\&\ DT\_DEFORMING\_P(THREAD\_DT(t))\ \&\&\ DT\_SLIDE\_P(THREAD\_DT(t))))}}
+\DoxyCodeLine{00928\ }
+\DoxyCodeLine{00929\ }
+\DoxyCodeLine{00930\ \textcolor{comment}{/*\ partial/local\ smoothing\ of\ deforming\ cell\ zone\ */}}
+\DoxyCodeLine{00931\ \textcolor{preprocessor}{\#define\ DEF\_CELL\_MARK(c,t)\ (CELL\_MANAGED\_TMP\_INT(c,t,sv\_def\_cell\_mark))}}
+\DoxyCodeLine{00932\ }
+\DoxyCodeLine{00933\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_DYNAMESH\_TOOLS\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

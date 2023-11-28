@@ -1,0 +1,407 @@
+\doxysection{sofc.\+h}
+\hypertarget{sofc_8h_source}{}\label{sofc_8h_source}\index{fluent20.1.0/addons/sofc/src/sofc.h@{fluent20.1.0/addons/sofc/src/sofc.h}}
+\mbox{\hyperlink{sofc_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ SOFC\_MOD\ 1}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ SHOW\_ECHEM\ 0}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{udf_8h}{udf.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{surf_8h}{surf.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{species_8h}{species.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{sg_8h}{sg.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{amgif_8h}{amgif.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{sg__press_8h}{sg\_press.h}}"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#if\ NTX86\ ||\ LNX86\ ||win64}}
+\DoxyCodeLine{00017\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ isinf(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ isnan(\textcolor{keywordtype}{double});}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*********************/}}
+\DoxyCodeLine{00023\ \textcolor{comment}{/*\ GLOGAL\ ENUMS/DEFS\ */}}
+\DoxyCodeLine{00024\ \textcolor{comment}{/*********************/}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{/*\ UDS\ */}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{sofc_8h_aae05225933a42f81e7c4a9fb286596f9aaa48c246574afbd808bf13e298775dab}{POTENTIAL}},}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{sofc_8h_aae05225933a42f81e7c4a9fb286596f9a77c7372760a2d2bdfa42017093712966}{NO\_OF\_UDS}}}
+\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{/*\ UDM\ */}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a7770173898835c0954853cb16e8d284a}{CURRENT}},\ \ \ \ \ \textcolor{comment}{/*\ 0\ */}}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a2f639435a229c26c7c5b834fdfdc475a}{NERNST}},\ \ \ \ \ \ \textcolor{comment}{/*\ 1\ */}}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a8b7f2cbefe8879fe98627feb05632045}{ACTIVATION}},\ \ \textcolor{comment}{/*\ 2\ */}}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a27d1be2dca039db4fbb69a2909af29c1}{VOL\_OHMIC\_SOURCE}},}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a3d5b6fcfa68fb3ebd79c2b7d21ab2aed}{CURR\_X}},}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a349de5aa84418dde41816938c01fb333}{CURR\_Y}},}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a234c7e394838391151e1e24a1e13326d}{CURR\_Z}},}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a3a56726974fce635a780754808364369}{VOLTAGE\_JUMP}},}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a3bd6cacafa4a54adb6463eb3b9d093ce}{RESISTIVITY}},}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a83f3ca2d440241aa8daf9ca19bbf7ec5}{RESIST\_EFF}},}
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a27cefb71354e47ef38d443ad0d7507f7}{ANODE\_ACTIVATION}},}
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a02073293a6f9e26b02bf82d1b325daf6}{CATHODE\_ACTIVATION}},}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13addf65d30c8b2cd5d49cd089a05cefae5}{ECHEM\_SOURCE}},\ \ \textcolor{comment}{/*\ Energy\ source\ due\ to\ e-\/chem\ reaction\ */}}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13a14f4b44a415f86cbf4287c81c4212518}{CURR\_M}},\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Magnitude\ of\ current\ density\ vector\ \ */}}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{sofc_8h_a39fca1837c5ce7715cbf571669660c13ab7228bfb236acf356cc7c6210f335dc8}{NO\_OF\_UDMS}}\ \ \ \ \ \textcolor{comment}{/*\ 14\ */}}
+\DoxyCodeLine{00051\ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{/*\ NUMBER\_OF\_SPECIES\ */}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ NO\_OF\_FC\_SPECIES\ 20}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{/*\ MAX\ NUMBER\ OF\ CELLS\ */}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ MAX\_NO\_OF\_CELLS\ 100}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{/*********************/}}
+\DoxyCodeLine{00061\ \textcolor{comment}{/*\ GLOBAL\ PROTOTYPES\ */}}
+\DoxyCodeLine{00062\ \textcolor{comment}{/*********************/}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_af8f7c099c71ae6e6b9a4f238fadaa1df}{sofc\_diffusivity}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_aa03e940ffd891f22fdf94f5547cc8ef5}{CONDUCTIVITY\_CELL\_THREAD}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00067\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_acf83a0c172b75b5b8bf10a40bc414f7c}{CONDUCTIVITY\_CELL}}\ (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00068\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a3a3a135ab9d5071cd86f7302207cde4a}{CONTACT\_RESIST\_FACE\_THREAD}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00069\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_aeb1845458fd63f5bd540190d73cd65a2}{CONTACT\_RESIST\_FACE}}\ (\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_ab413020047877f36e7f08b5017fc27c9}{LOOKUP\_CONDUCTIVE\_ZONE}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00072\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_abf051ffc59d364d6dae471de02de7275}{LOOKUP\_CONTACT\_SURFACE}}\ (\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a5ca0caa6d3582f7c9ca18b41bf508e2d}{sofc\_source}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dS[],\ \textcolor{keywordtype}{int}\ i);}
+\DoxyCodeLine{00075\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sofc_8h_af0333727166d523fae1ae98c12e984a9}{sofc\_adjust\_function}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sofc_8h_aaab351d52968159e35ae0e6d5e0e904b}{fuel\_cell}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00078\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sofc_8h_a9efe22aaead3a5e936b5df459de02eba}{initialize}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00079\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a451d91928a1af125668c298835df2b42}{Nernst}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sp\_a[],\ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sp\_c[],}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ P\_a,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ P\_c,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T\_a,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T\_c,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *DNDY);}
+\DoxyCodeLine{00081\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a29f9cd0cad9de8e5aeafbe41520b31a5}{Diffusivity}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sp[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ P,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ j);}
+\DoxyCodeLine{00082\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_adf2dbb003398a0c9d1c97bb720e2e916}{Resistivity}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T);}
+\DoxyCodeLine{00083\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a0aaa3dd66abb67aa62d47bdb58b700c4}{Leakage\_Current\_Density}}\ (\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f\_a,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t\_a,\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f\_c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t\_c);}
+\DoxyCodeLine{00084\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_ab5fb27c015cda713081764b380332ac4}{h2\_co\_split\_func}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c\_an,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t\_an);}
+\DoxyCodeLine{00085\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a2134b4f9c2d2820e4c6c8a72d76fe7a6}{Activation}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Y[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ P,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ i,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ i\_0,}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha\_a,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha\_b,\ \textcolor{keywordtype}{int}\ species,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *dA\_di,}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00088\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sofc_8h_ac036a1e1896d3494763ad6a241bf50e3}{compute\_echem}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00089\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a9f7a60a5b002f7110659cd6fc2e89346}{Calc\_Diffusivity}}(\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ j\ );}
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sofc_8h_a171ed9665086faa7347d8b0bf4954083}{read\_input}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{sofc_8h_a6b50c1c8d6dac04d69c70fc59969cda1}{finite\_electrolyte}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{comment}{/*\ Parallel\ RPVar\ Fix\ */}}
+\DoxyCodeLine{00094\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_ae433f87a4a3a587326bb34afc4d5b525}{pull\_list\_length\_from\_cache}}(\textcolor{keywordtype}{char}\ *rpvar);}
+\DoxyCodeLine{00095\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_ac0457b52c5c57d3c91ef1f0b96bc67f8}{pull\_list\_ref\_int\_from\_cache}}(\textcolor{keywordtype}{char}\ *rpvar,\ \textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00096\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a0391e0f800d7a1de5a0080b604b8db8e}{pull\_list\_ref\_float\_from\_cache}}(\textcolor{keywordtype}{char}\ *rpvar,\ \textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00097\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a6d61ecad40ee8ddd5d16971f94a0a128}{pull\_real\_from\_cache}}(\textcolor{keywordtype}{char}\ *rpvar);}
+\DoxyCodeLine{00098\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sofc_8h_a850e746f661e96d41b91a6aea1a1ea77}{update\_rp\_cache}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{comment}{/***************************/}}
+\DoxyCodeLine{00101\ \textcolor{comment}{/*\ STATIC\ GLOBAL\ VARIABLES\ */}}
+\DoxyCodeLine{00102\ \textcolor{comment}{/***************************/}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#if\ MAIN}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ GLOBALINIT(A,B)\ A\ =\ B;}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ GLOBAL}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ GLOBALINIT(A,B)\ extern\ A;}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ GLOBAL\ extern}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ first\_time,\ 1)}
+\DoxyCodeLine{00113\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ first\_time\_echem,\ 1)}
+\DoxyCodeLine{00114\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ \mbox{\hyperlink{battery_8h_ad06983e7f6e71b233ea7ff3dee1952f2}{initialized}},\ 0)}
+\DoxyCodeLine{00115\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ restart,\ 0)}
+\DoxyCodeLine{00116\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{battery_8h_ab6674e5fcd6008172388f8366a4edc0f}{input\_read}},\ \mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}})}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ last\_eqn,\ -\/100)}
+\DoxyCodeLine{00119\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ first\_eqn,\ -\/100)}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_aa65a874d416bfc0d9c223b74411edb32}{ok\_to\_go}};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Eq\_H2O,\ -\/1)}
+\DoxyCodeLine{00124\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Eq\_H2,\ -\/1)}
+\DoxyCodeLine{00125\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Eq\_O2,\ -\/1)}
+\DoxyCodeLine{00126\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Eq\_CO2,\ -\/1)}
+\DoxyCodeLine{00127\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Eq\_CO,\ -\/1)}
+\DoxyCodeLine{00128\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Eq\_N2,\ -\/1)}
+\DoxyCodeLine{00129\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Eq\_CH4,\ -\/1)}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_aa40d1d680980816c05dede82165c3a37}{MW}}[\mbox{\hyperlink{sofc_8h_ab0fc8f8235e0e69fb30b9e29b1dbcd85}{NO\_OF\_FC\_SPECIES}}];}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_a2b00c011d42e2bde0ba8333bf8d2a914}{no\_of\_faces}},\ \mbox{\hyperlink{sofc_8h_a2fb1cf7ce53f0758a9ddcb48ba7d6b32}{no\_of\_anode\_faces}},\ \mbox{\hyperlink{sofc_8h_a1a4f5c699e373c8b220ac1716a11498f}{no\_of\_cathode\_faces}};}
+\DoxyCodeLine{00134\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_a947c8bb0b861b310904f5fc6586064b1}{g\_no\_of\_anode\_faces}},\ \mbox{\hyperlink{sofc_8h_a6fdc8d58e455146bfd09e7316cec751f}{g\_no\_of\_cathode\_faces}};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ no\_of\_species,\ 0)}
+\DoxyCodeLine{00137\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ no\_of\_electrolytes,\ 0)}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Leakage\_Current\_Density\_const,\ 0)}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Temp\_Dependent\_I\_0,\ 0)}
+\DoxyCodeLine{00142\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ A\_I\_0,\ 1.0)}
+\DoxyCodeLine{00143\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ B\_I\_0,\ 0.0)}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha\_a\_an,\ 0.5)}
+\DoxyCodeLine{00147\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha\_b\_an,\ 0.5)}
+\DoxyCodeLine{00148\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha\_a\_ca,\ 0.5)}
+\DoxyCodeLine{00149\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ alpha\_b\_ca,\ 0.5)}
+\DoxyCodeLine{00150\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ exponent\_h2,\ 0.5)}
+\DoxyCodeLine{00151\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ exponent\_h2o,\ 0.5)}
+\DoxyCodeLine{00152\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ exponent\_o2,\ 0.5)}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Converge\_to\_Voltage,\ 0)}
+\DoxyCodeLine{00156\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ System\_Voltage,\ 0.0)}
+\DoxyCodeLine{00157\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Individual\_BC,\ \mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}})}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{comment}{/***************************/}}
+\DoxyCodeLine{00160\ \textcolor{comment}{/*\ STATIC\ GLOBAL\ CONSTANTS\ */}}
+\DoxyCodeLine{00161\ \textcolor{comment}{/***************************/}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Faraday,\ 96487\ *\ 1000)\ \textcolor{comment}{/*\ C/kmole\ e-\/\ */}}
+\DoxyCodeLine{00164\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Rgas,\ \mbox{\hyperlink{materials_8h_aa46ef2c295eba1af6cb63da0ce0b1de2}{UNIVERSAL\_GAS\_CONSTANT}})}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ curr\_perturb,\ 1e-\/6)\ \ \ \textcolor{comment}{/*\ Percentage\ of\ local\ current\ */}}
+\DoxyCodeLine{00167\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ mass\_perturb,\ 1e-\/6)\ \ \ \textcolor{comment}{/*\ Percentage\ of\ reaction\ mass\ */}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_a72ab4e5e7138d37ddd95313b1c7579a0}{sofc\_on}};}
+\DoxyCodeLine{00170\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_abcb6da53300817c6be81f723ab1504e6}{mem\_con\_on}};}
+\DoxyCodeLine{00171\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_ae8d92eb5f009e3995d21314453d366ec}{actover\_on}};}
+\DoxyCodeLine{00172\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_a75898148d057d952d99db08f2b2a0654}{vol\_energy\_source\_on}};}
+\DoxyCodeLine{00173\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_a82f0d92e00a6979ef273d531f8ec0fe5}{surf\_energy\_source\_on}};}
+\DoxyCodeLine{00174\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ CO\_Disabled,\ 0)}
+\DoxyCodeLine{00175\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ Species\_Source\_On,\ 0)}
+\DoxyCodeLine{00176\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Electrolysis\_Mode,\ \mbox{\hyperlink{sundials__types_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}})}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a6a8e2d85bfda116b812364e30ecc50aa}{MoleF\_ref\_H2}},\ \mbox{\hyperlink{sofc_8h_a7b23df66585bb051ea0f7bad2a08d9ac}{MoleF\_ref\_O2}},\ \mbox{\hyperlink{sofc_8h_ad04ef21f919ce381774d32510b8c0670}{MoleF\_ref\_H2O}};}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_ad3ae6f21d3207cd9735de526783e16ea}{relax\_i}};}
+\DoxyCodeLine{00181\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_aca971b138b2731793254ea3d20dd1450}{relax\_mea\_source}};}
+\DoxyCodeLine{00182\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ diff\_relax,\ 0.5)}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_ad719d701a60f4fb934269f56caaa805a}{total\_current}};}
+\DoxyCodeLine{00185\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ave\_current\_density,\ 0.0)}
+\DoxyCodeLine{00186\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_ac806aa05afc6b4cfb772fcd2519237c3}{cell\_voltage}}[\mbox{\hyperlink{sofc_8h_a1b23afb4da6ceb72251b185a29ae344d}{MAX\_NO\_OF\_CELLS}}];}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_ae7b91c98cfed4c7b25810651c95a9ac4}{number\_of\_porous\_zones}};}
+\DoxyCodeLine{00189\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_ae9826a6e24d0919404795574adef01bb}{porous\_zones}}[100];}
+\DoxyCodeLine{00190\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_aafa219fa677638cd8537783badd310f8}{permeation}}[100];}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a0d901e2a7e5d4b30f652170cd9c7692c}{mea\_thickness}};}
+\DoxyCodeLine{00193\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a8c9a64c55fccedaae0031cc8b0cbb4cb}{membrane\_resistivity}};}
+\DoxyCodeLine{00194\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_aa9859c7748dc9850781cee7fa29a0807}{catalyst\_thick\_c}};}
+\DoxyCodeLine{00195\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a8558f417924a6f8d04b86aeb0dab7be2}{catalyst\_thick\_a}};}
+\DoxyCodeLine{00196\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a571ff326c01a105a02dcf4dd032761d5}{electrolyte\_vf}};}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ i\_0\_a,\ 0.001)}
+\DoxyCodeLine{00199\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ i\_0\_c,\ 0.001)}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ number\_of\_conducting\_zones,\ 0)}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ no\_of\_porous\_zones,\ 0)}
+\DoxyCodeLine{00204\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a0617d81b4a6dfa244757066f8e477623}{porosity}}[4];}
+\DoxyCodeLine{00205\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{sofc_8h_a4b69d06f3ed3782a2a4e480e85634cc7}{permeability}}[4];}
+\DoxyCodeLine{00206\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{sofc_8h_af46001cfc8e65d7f507d0143f8d861c0}{porous\_thread}}[100];}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{comment}{/*\ Variables\ for\ the\ parallel\ rpvar\ fix\ */}}
+\DoxyCodeLine{00210\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *rlist\_vals,\ \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{00211\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ *ilist\_vals,\ \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{00212\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *rvars\_vals,\ \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{00213\ \mbox{\hyperlink{sofc_8h_a8ddc381e90b064280575d09cf1f48ee9}{GLOBALINIT}}\ (\textcolor{keywordtype}{int}\ *list\_len\_vals,\ \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{comment}{/*\ Overload\ some\ RP\ macros\ to\ work\ around\ addon\ problem\ */}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ RP\_Get\_Real\_mtp(rpvar)\ pull\_real\_from\_cache(rpvar)}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ RP\_Get\_Real\_mtp(rpvar)\ RP\_Get\_Real(rpvar)}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ RP\_Get\_List\_Length\_mtp(rpvar)\ pull\_list\_length\_from\_cache(rpvar)}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ RP\_Get\_List\_Length\_mtp(rpvar)\ RP\_Get\_List\_Length(rpvar)}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ RP\_Get\_List\_Ref\_Int\_mtp(rpvar,index)\ \ \(\backslash\)}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\ \ pull\_list\_ref\_int\_from\_cache(rpvar,index)}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ RP\_Get\_List\_Ref\_Int\_mtp(rpvar,index)\ \ \(\backslash\)}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\ \ RP\_Get\_List\_Ref\_Int(rpvar,index)}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ RP\_Get\_List\_Ref\_Float\_mtp(rpvar,index)\ \ \(\backslash\)}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\ \ pull\_list\_ref\_float\_from\_cache(rpvar,index)}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ RP\_Get\_List\_Ref\_Float\_mtp(rpvar,index)\ \ \(\backslash\)}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\ \ RP\_Get\_List\_Ref\_Float(rpvar,index)}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{comment}{/********************/}}
+\DoxyCodeLine{00251\ \textcolor{comment}{/*\ USEFUL\ FUNCTIONS\ */}}
+\DoxyCodeLine{00252\ \textcolor{comment}{/********************/}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ Find\_Thread(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t)}
+\DoxyCodeLine{00255\ \{}
+\DoxyCodeLine{00256\ \ \ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain\ =\ \mbox{\hyperlink{lmain_8h_a2d20c19c92bbf8f4d4f77683e826f49f}{Get\_Domain}}(1);}
+\DoxyCodeLine{00257\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *test;}
+\DoxyCodeLine{00258\ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ =\ -\/1,\ index,\ i;}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *last\_thread;}
+\DoxyCodeLine{00261\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ last\_id,\ count\ =\ -\/1;}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \ \ \textcolor{comment}{/*\ First,\ check\ to\ see\ if\ the\ last\ lookup\ is\ the\ same\ */}}
+\DoxyCodeLine{00265\ \ \ \textcolor{keywordflow}{if}\ (t\ ==\ last\_thread)\ \textcolor{keywordflow}{return}\ last\_id;}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \textcolor{comment}{/*\ Otherwise,\ grind\ through\ the\ whole\ list.\ */}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \textcolor{keywordflow}{if}\ (count\ ==\ -\/1)}
+\DoxyCodeLine{00270\ \ \ \{}
+\DoxyCodeLine{00271\ \ \ \ \ count\ =\ 0;}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0;\ i\ <\ 100000;\ i++)}
+\DoxyCodeLine{00273\ \ \ \ \ \{}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{threads_8h_a7153a18b12eb874346b98f8621ef04be}{Lookup\_Thread}}(domain,\ i)\ !=\ \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ count\ =\ i;}
+\DoxyCodeLine{00276\ \ \ \ \ \}}
+\DoxyCodeLine{00277\ \ \ \ \ \mbox{\hyperlink{cx_8h_ac0d730ac4ed841d78004151ac9a8a065}{CX\_Message}}(\textcolor{stringliteral}{"{}Total\ Thread\ Count:\ \%d\(\backslash\)n"{}},\ count);}
+\DoxyCodeLine{00278\ \ \ \}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \textcolor{keywordflow}{for}\ (index\ =\ 0;\ index\ <=\ count;\ index++)}
+\DoxyCodeLine{00282\ \ \ \{}
+\DoxyCodeLine{00283\ \ \ \ \ test\ =\ \mbox{\hyperlink{threads_8h_a7153a18b12eb874346b98f8621ef04be}{Lookup\_Thread}}(domain,\ index);}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keywordflow}{if}\ (test\ ==\ t)}
+\DoxyCodeLine{00285\ \ \ \ \ \{}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \textcolor{keywordtype}{id}\ =\ index;}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ last\_thread\ =\ test;}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ last\_id\ =\ index;}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ id;}
+\DoxyCodeLine{00290\ \ \ \ \ \}}
+\DoxyCodeLine{00291\ \ \ \}}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \ \ \textcolor{keywordflow}{return}\ id;}
+\DoxyCodeLine{00294\ \}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{comment}{/*\ Loop\ Macros\ */}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_a0b34670059a82ebc2ff2a91ae398aceb}{\_\_i\_\_}};}
+\DoxyCodeLine{00299\ \mbox{\hyperlink{sofc_8h_a3de33738fd3c7e77bffbcfaefc3e7645}{GLOBAL}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sofc_8h_aed5f671a45a0e193657a7f7385451fe6}{\_\_count\_\_}};}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#\ define\ loop\_anode\_threads(\_t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{for(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\ \ \_\_i\_\_=0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\ \ \_\_count\_\_=RP\_Get\_List\_Length\_mtp("{}rp/sofc-\/anode/thread-\/ids"{}),\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\ \ \_t=Lookup\_Thread(domain,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\ \ \ \ RP\_Get\_List\_Ref\_Int\_mtp("{}rp/sofc-\/anode/thread-\/ids"{},0));\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\ \ (\_\_i\_\_<\_\_count\_\_);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\ \ \_\_i\_\_++,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\ \ \_t=(\_\_i\_\_<\_\_count\_\_)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\ \ \ \ ?\ Lookup\_Thread(domain,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\ \ \ \ \ \ RP\_Get\_List\_Ref\_Int\_mtp("{}rp/sofc-\/anode/thread-\/ids"{},\_\_i\_\_))\ \ \(\backslash\)}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\ \ \ \ :\ NULL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\ \ )}}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#\ define\ loop\_cathode\_threads(\_t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{for(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\ \ \_\_i\_\_=0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\ \ \_\_count\_\_=RP\_Get\_List\_Length\_mtp("{}rp/sofc-\/cathode/thread-\/ids"{}),\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\ \ \_t=Lookup\_Thread(domain,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ RP\_Get\_List\_Ref\_Int\_mtp("{}rp/sofc-\/cathode/thread-\/ids"{},0));\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\ \ (\_\_i\_\_<\_\_count\_\_);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\ \ \_\_i\_\_++,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\ \ \_t=(\_\_i\_\_<\_\_count\_\_)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\ \ \ \ ?\ Lookup\_Thread(domain,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\ \ \ \ \ \ RP\_Get\_List\_Ref\_Int\_mtp("{}rp/sofc-\/cathode/thread-\/ids"{},\_\_i\_\_))\(\backslash\)}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\ \ \ \ :\ NULL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\ \ )}}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#if\ (PARALLEL\ \&\&\ 0)}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ mtp\_PRINCIPAL\_FACE\_P(f,t)\ (C\_PART(F\_C0(f,t),t-\/>t0)\ ==\ myid)}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#define\ mtp\_PRINCIPAL\_FACE\_P(f,t)\ PRINCIPAL\_FACE\_P(f,t)}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#if\ (PARALLEL\ \&\&\ 0)}}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \textcolor{comment}{/*\ PARALLEL\ DEBUG\ MACROS\ */}}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ PDEBUG(A)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{FILE\ *para\_file;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{char\ fname[20]\ =\ "{}/tmp/para"{},number[8];\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{sprintf(number,"{}\%d"{},myid);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{strcat(fname,number);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{strcat(fname,"{}.log"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{para\_file\ =\ fopen(fname,"{}a"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{fprintf(para\_file,A);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{fclose\ (para\_file);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#define\ PDEBUG1(A,B)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{FILE\ *para\_file;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{char\ fname[20]\ =\ "{}/tmp/para"{},number[8];\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{sprintf(number,"{}\%d"{},myid);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{strcat(fname,number);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{strcat(fname,"{}.log"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{para\_file\ =\ fopen(fname,"{}a"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{fprintf(para\_file,A,B);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{fclose\ (para\_file);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#define\ PDEBUG2(A,B,C)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{FILE\ *para\_file;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{char\ fname[20]\ =\ "{}/tmp/para"{},number[8];\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{sprintf(number,"{}\%d"{},myid);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{strcat(fname,number);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{strcat(fname,"{}.log"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{para\_file\ =\ fopen(fname,"{}a"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{fprintf(para\_file,A,B,C);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{fclose\ (para\_file);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\#define\ PDEBUG3(A,B,C,D)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{FILE\ *para\_file;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{char\ fname[20]\ =\ "{}/tmp/para"{},number[8];\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{sprintf(number,"{}\%d"{},myid);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{strcat(fname,number);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{strcat(fname,"{}.log"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{para\_file\ =\ fopen(fname,"{}a"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{fprintf(para\_file,A,B,C,D);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{fclose\ (para\_file);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#define\ PDEBUG(A)}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#define\ PDEBUG1(A,B)}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\#define\ PDEBUG2(A,B,C)}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#define\ PDEBUG3(A,B,C,D)}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

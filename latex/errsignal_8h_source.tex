@@ -1,0 +1,83 @@
+\doxysection{errsignal.\+h}
+\hypertarget{errsignal_8h_source}{}\label{errsignal_8h_source}\index{fluent20.1.0/cortex/src/errsignal.h@{fluent20.1.0/cortex/src/errsignal.h}}
+\mbox{\hyperlink{errsignal_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_CX\_ERRSIGNAL\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_CX\_ERRSIGNAL\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <setjmp.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#if\ \_\_alpha}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#\ if\ vms}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{typedef}\ \_\_int64\ *\mbox{\hyperlink{errsignal_8h_a64e8a395ce85082c29e8521675c0a31e}{jmp\_buf\_ptr}};\ \textcolor{comment}{/*\ for\ passing\ around\ pointers\ to\ jmp\_bufs\ */}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ *\mbox{\hyperlink{errsignal_8h_a64e8a395ce85082c29e8521675c0a31e}{jmp\_buf\_ptr}};\ \textcolor{comment}{/*\ for\ passing\ around\ pointers\ to\ jmp\_bufs\ */}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#elif\ defined\ \_MIPS\_ISA\ \&\&\ (\ \_MIPS\_ISA\ ==\ \_MIPS\_ISA\_MIPS3\ ||\ \_MIPS\_ISA\ ==\ \_MIPS\_ISA\_MIPS4\ )}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{typedef}\ \_\_uint64\_t\ *\mbox{\hyperlink{errsignal_8h_a64e8a395ce85082c29e8521675c0a31e}{jmp\_buf\_ptr}};}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#elif\ \_hiux}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ *\mbox{\hyperlink{errsignal_8h_a64e8a395ce85082c29e8521675c0a31e}{jmp\_buf\_ptr}};\ \textcolor{comment}{/*\ for\ passing\ around\ pointers\ to\ jmp\_bufs\ */}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#elif\ \ \_aix51\_64}}
+\DoxyCodeLine{00025\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ *\mbox{\hyperlink{errsignal_8h_a64e8a395ce85082c29e8521675c0a31e}{jmp\_buf\_ptr}};\ \textcolor{comment}{/*\ for\ passing\ around\ pointers\ to\ jmp\_bufs\ */}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{errsignal_8h_a64e8a395ce85082c29e8521675c0a31e}{jmp\_buf\_ptr}};\ \textcolor{comment}{/*\ for\ passing\ around\ pointers\ to\ jmp\_bufs\ */}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *\ For\ cxboolean...}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cx_8h}{cx.h}}"{}}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#if\ !\ CX\_NODE}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{/*\ Signal\ handling\ options\ */}}
+\DoxyCodeLine{00042\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{errsignal_8h_a012177fdc9d75e4abceb09381b10a992}{handleFPE}};\ \textcolor{comment}{/*\ Trap\ floating\ point\ errors\ */}}
+\DoxyCodeLine{00043\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{errsignal_8h_a37f909a541b77e7929d55b5c268e1e1f}{handleAbort}};\ \textcolor{comment}{/*\ Trap\ programming\ errors\ */}}
+\DoxyCodeLine{00044\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{errsignal_8h_ad06d68971e39f59710e56ec981fbaa49}{errjmp\_ok}};}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00050\ \mbox{\hyperlink{errsignal_8h_a23e85745c183724219ab18041325cf1d}{CX\_Signal\_handlers\_old}}(}
+\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{errsignal_8h_a012177fdc9d75e4abceb09381b10a992}{handleFPE}},}
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{errsignal_8h_a37f909a541b77e7929d55b5c268e1e1f}{handleAbort}}}
+\DoxyCodeLine{00053\ );}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ This\ is\ the\ Error()\ function\ called\ by\ the\ user\ to\ report\ errors.}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ This\ is\ a\ simple\ variant\ of\ CX\_Primitive\_Error...}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ All\ that\ the\ processes\ do\ is\ print\ the\ error\ message\ and\ siglongjmp...}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00062\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00063\ \mbox{\hyperlink{errsignal_8h_a25cd5d8d63573b05ca3e2ea016d8a8bb}{CX\_Primitive\_Error2}}(}
+\DoxyCodeLine{00064\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...}
+\DoxyCodeLine{00065\ );}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00070\ \mbox{\hyperlink{errsignal_8h_accb7e3f922ceba917cf0530898a3875e}{CX\_Signal\_handlers}}(}
+\DoxyCodeLine{00071\ \ \ \textcolor{keywordtype}{int}\ oldHandlers}
+\DoxyCodeLine{00072\ );}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_CX\_ERRSIGNAL\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00077\ }
+
+\end{DoxyCode}

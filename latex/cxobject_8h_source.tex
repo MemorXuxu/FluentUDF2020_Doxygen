@@ -1,0 +1,114 @@
+\doxysection{cxobject.\+h}
+\hypertarget{cxobject_8h_source}{}\label{cxobject_8h_source}\index{fluent20.1.0/cortex/src/cxobject.h@{fluent20.1.0/cortex/src/cxobject.h}}
+\mbox{\hyperlink{cxobject_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_CXOBJECT\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_CXOBJECT\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stdarg.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cxconfig_8h}{cxconfig.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cxmacros_8h}{cxmacros.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cxlist_8h}{cxlist.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cxtype_8h}{cxtype.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{cxobject_8h_a114327f5cc00626bf1377162242e8e25}{CXBoolean}};}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ MY\_NEW\ 0}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#if\ MY\_NEW}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#undef\ new}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ new\ ::new}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#undef\ delete}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ delete\ ::delete}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ FREEOBJ(p)\ if\ (p)\ delete\ p;\ p\ =\ NULL}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ CAST(class,\ obj)\ (((obj)\ ?\ (class*)((CxObject*)obj)-\/>as(CLASS(class))\ :\ (class*)0))}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ CLASS(name)\ CAT2(name,::,classID())}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ CLASSID(name)\ char\ CAT2(name,::,\_classID)\ =\ 0;}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ CLASSDEF(myclass,superclass)\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ private:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\ \ static\ char\ \_classID;\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ public:\ \(\backslash\)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ static\ CXPtrAsInt\ classID()\ \{\ return\ (CXPtrAsInt)\&\_classID;\ \}\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\ \ \ \ char*\ className()\ \{\ return\ QUOTE(myclass);\ \}\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\ \ \ \ CXBoolean\ isMemberOf(CXPtrAsInt\ classId)\ \{return\ classId\ ==\ (CXPtrAsInt)\&\_classID;\}\(\backslash\)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ CXBoolean\ isKindOf(CXPtrAsInt\ classId)\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ CXBoolean\ flag\ =\ FALSE;\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (classId\ ==\ myclass::classID())\ flag\ =\ TRUE;\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ else\ if\ (superclass::isKindOf(classId))\ flag\ =\ TRUE;\ \ \(\backslash\)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ flag;\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ void*\ as(CXPtrAsInt\ classId)\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (classId\ ==\ myclass::classID())\ return\ this;\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ superclass::as(classId);\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ \ \ \ \}}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ CLASSDEF2(myclass,superclass1,superclass2)\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ private:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\ \ static\ char\ \_classID;\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ public:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \ static\ CXPtrAsInt\ classID()\ \{\ return\ (CXPtrAsInt)\&\_classID;\ \}\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ char*\ className()\ \{\ return\ QUOTE(myclass);\ \}\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ CXBoolean\ isMemberOf(CXPtrAsInt\ classId)\ \{return\ classId\ ==\ (CXPtrAsInt)\&\_classID;\}\(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ CXBoolean\ isKindOf(CXPtrAsInt\ classId)\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ CXBoolean\ flag\ =\ FALSE;\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (classId\ ==\ myclass::classID())\ flag\ =\ TRUE;\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ else\ if\ (superclass1::isKindOf(classId))\ flag\ =\ TRUE;\ \(\backslash\)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ else\ if\ (superclass2::isKindOf(classId))\ flag\ =\ TRUE;\ \(\backslash\)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ flag;\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ void*\ as(CXPtrAsInt\ classId)\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ \ \ void*\ p;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (classId\ ==\ myclass::classID())\ return\ this;\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (p\ =\ superclass1::as(classId))\ return\ p;\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ superclass2::as(classId);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{cxobject_8h_a2efe6d463d80744789f228f5dc4baa39}{String}};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{cxobject_8h_a2fea1dd34891cdeef465ac9b0dfe2cc4}{FlStrDup}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_cx_object}{CxObject}}}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{//\ DEFINITION:\ base\ class\ for\ all\ Cortex\ objects.}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00085\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \_classID;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00088\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{class_cx_object_a02f2821f3995fd637df8b391d9620008}{iErrorMsg}};}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{class_cx_object_ae59ff58c4007808c5c74160e90016b0c}{iDependents}};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{class_cx_object_a46095e39a2434845f8a1758f8f8f6fa1}{CxObject}}();}
+\DoxyCodeLine{00093\ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_cx_object_a547a6173c99f13a6ef39a7b90e6a7758}{\string~CxObject}}();}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{class_cx_object_a4e1f2aa7a6fb42c7b2e2208ec0406749}{addDependent}}(\mbox{\hyperlink{class_cx_object}{CxObject}}\ *\mbox{\hyperlink{structobj}{obj}});}
+\DoxyCodeLine{00096\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{class_cx_object_acfdf81ed91fcda4560d748a3624edf92}{as}}(\mbox{\hyperlink{cxtype_8h_a3d65debe4ce935daa45ed65fc52e2f49}{CXPtrAsInt}}\ classId);}
+\DoxyCodeLine{00097\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{class_cx_object_a9accdd41d7d215e51c4919d8fbb6e405}{changed}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{dbgmsg_8h_a98858dd5dea59756cfe716f0168de035}{msg}}\ =\ \mbox{\hyperlink{cxlist_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{00098\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{cxtype_8h_a3d65debe4ce935daa45ed65fc52e2f49}{CXPtrAsInt}}\ \mbox{\hyperlink{class_cx_object_a24a420580ae2d53e4fcc4054d7ba223b}{classID}}();}
+\DoxyCodeLine{00099\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{class_cx_object_a2a4e5b7da26ce6dd6b8724afdd1119f8}{className}}();}
+\DoxyCodeLine{00100\ \ \ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{class_cx_object_a98990690fe43701c38bad2cd1ff7d558}{dependsOn}}(\mbox{\hyperlink{class_cx_object}{CxObject}}\ *\mbox{\hyperlink{structobj}{obj}});}
+\DoxyCodeLine{00101\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{class_cx_object_ad39d48dfeaee326d9a2b5768f35a06b5}{error}}(\textcolor{keywordtype}{char}\ *str,\ ...);}
+\DoxyCodeLine{00102\ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{cxobject_8h_a114327f5cc00626bf1377162242e8e25}{CXBoolean}}\ \mbox{\hyperlink{class_cx_object_a9818815fbdab3f512c7b9fced683f71b}{isKindOf}}(\mbox{\hyperlink{cxtype_8h_a3d65debe4ce935daa45ed65fc52e2f49}{CXPtrAsInt}}\ classId);}
+\DoxyCodeLine{00103\ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{cxobject_8h_a114327f5cc00626bf1377162242e8e25}{CXBoolean}}\ \mbox{\hyperlink{class_cx_object_a8f684b360293f083f25d6d7f55546bb8}{isMemberOf}}(\mbox{\hyperlink{cxtype_8h_a3d65debe4ce935daa45ed65fc52e2f49}{CXPtrAsInt}}\ classId);}
+\DoxyCodeLine{00104\ \ \ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{class_cx_object_a68cb8da79ff28083ef98025887184f8c}{removeDependent}}(\mbox{\hyperlink{class_cx_object}{CxObject}}\ *\mbox{\hyperlink{structobj}{obj}});}
+\DoxyCodeLine{00105\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{class_cx_object_ae8da3bf6462f7c0e648094972b572978}{update}}(\mbox{\hyperlink{class_cx_object}{CxObject}}\ *\mbox{\hyperlink{structobj}{obj}},\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{dbgmsg_8h_a98858dd5dea59756cfe716f0168de035}{msg}});}
+\DoxyCodeLine{00106\ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_CXOBJECT\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

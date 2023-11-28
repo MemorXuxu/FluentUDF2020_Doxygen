@@ -1,0 +1,232 @@
+\doxysection{randomkit.\+h}
+\hypertarget{randomkit_8h_source}{}\label{randomkit_8h_source}\index{fluent20.1.0/cortex/pylib/nexus/numpy/random/randomkit.h@{fluent20.1.0/cortex/pylib/nexus/numpy/random/randomkit.h}}
+\mbox{\hyperlink{randomkit_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*\ Random\ kit\ 1.3\ */}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2003-\/2005,\ Jean-\/Sebastien\ Roy\ (js@jeannot.org)}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Permission\ is\ hereby\ granted,\ free\ of\ charge,\ to\ any\ person\ obtaining\ a}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ copy\ of\ this\ software\ and\ associated\ documentation\ files\ (the}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ "{}Software"{}),\ to\ deal\ in\ the\ Software\ without\ restriction,\ including}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ without\ limitation\ the\ rights\ to\ use,\ copy,\ modify,\ merge,\ publish,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ distribute,\ sublicense,\ and/or\ sell\ copies\ of\ the\ Software,\ and\ to}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ permit\ persons\ to\ whom\ the\ Software\ is\ furnished\ to\ do\ so,\ subject\ to}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ the\ following\ conditions:}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ The\ above\ copyright\ notice\ and\ this\ permission\ notice\ shall\ be\ included}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ in\ all\ copies\ or\ substantial\ portions\ of\ the\ Software.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ THE\ SOFTWARE\ IS\ PROVIDED\ "{}AS\ IS"{},\ WITHOUT\ WARRANTY\ OF\ ANY\ KIND,\ EXPRESS}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ OR\ IMPLIED,\ INCLUDING\ BUT\ NOT\ LIMITED\ TO\ THE\ WARRANTIES\ OF}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ MERCHANTABILITY,\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ AND\ NONINFRINGEMENT.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ IN\ NO\ EVENT\ SHALL\ THE\ AUTHORS\ OR\ COPYRIGHT\ HOLDERS\ BE\ LIABLE\ FOR\ ANY}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ CLAIM,\ DAMAGES\ OR\ OTHER\ LIABILITY,\ WHETHER\ IN\ AN\ ACTION\ OF\ CONTRACT,}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ TORT\ OR\ OTHERWISE,\ ARISING\ FROM,\ OUT\ OF\ OR\ IN\ CONNECTION\ WITH\ THE}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ SOFTWARE\ OR\ THE\ USE\ OR\ OTHER\ DEALINGS\ IN\ THE\ SOFTWARE.}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{/*\ @(\#)\ \$Jeannot:\ randomkit.h,v\ 1.24\ 2005/07/21\ 22:14:09\ js\ Exp\ \$\ */}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ Typical\ use:}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ \{}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *\ \ rk\_state\ state;}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *\ \ unsigned\ long\ seed\ =\ 1,\ random\_value;}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ \ rk\_seed(seed,\ \&state);\ //\ Initialize\ the\ RNG}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ \ ...}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ \ random\_value\ =\ rk\_random(\&state);\ //\ Generate\ random\ values\ in\ [0..RK\_MAX]}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ \}}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ Instead\ of\ rk\_seed,\ you\ can\ use\ rk\_randomseed\ which\ will\ get\ a\ random\ seed}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *\ from\ /dev/urandom\ (or\ the\ clock,\ if\ /dev/urandom\ is\ unavailable):}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ \{}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ \ rk\_state\ state;}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ \ unsigned\ long\ random\_value;}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ \ rk\_randomseed(\&state);\ //\ Initialize\ the\ RNG\ with\ a\ random\ seed}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ ...}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ \ random\_value\ =\ rk\_random(\&state);\ //\ Generate\ random\ values\ in\ [0..RK\_MAX]}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ \}}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ Useful\ macro:}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ \ RK\_DEV\_RANDOM:\ the\ device\ used\ for\ random\ seeding.}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ defaults\ to\ "{}/dev/urandom"{}}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#ifndef\ \_RANDOMKIT\_}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ \_RANDOMKIT\_}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{npy__common_8h}{numpy/npy\_common.h}}>}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ RK\_STATE\_LEN\ 624}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structrk__state__}{rk\_state\_}}}
+\DoxyCodeLine{00069\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{structrk__state___a17dcae58b4a4b580ede2545322647ecc}{key}}[\mbox{\hyperlink{randomkit_8h_af9c3528ce59ad17716ae84144c19fe67}{RK\_STATE\_LEN}}];}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structrk__state___a1910d262855b71da353ed0d07a6c7823}{pos}};}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structrk__state___a629587b5f04293ea2b0bf452faa48344}{has\_gauss}};\ \textcolor{comment}{/*\ !=0:\ gauss\ contains\ a\ gaussian\ deviate\ */}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a84e948a0aa303456e29ddecfac6a1e46}{gauss}};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{/*\ The\ rk\_state\ structure\ has\ been\ extended\ to\ store\ the\ following}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ \ \ \ \ *\ information\ for\ the\ binomial\ generator.\ If\ the\ input\ values\ of\ n\ or\ p}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ \ \ \ \ *\ are\ different\ than\ nsave\ and\ psave,\ then\ the\ other\ parameters\ will\ be}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ \ \ \ \ *\ recomputed.\ RTK\ 2005-\/09-\/02\ */}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structrk__state___a421ee57958ea805b806583ba0781f2e7}{has\_binomial}};\ \textcolor{comment}{/*\ !=0:\ following\ parameters\ initialized\ for}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ binomial\ */}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a10dfcc3424a2b24c2f73a05523d39d0f}{psave}};}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{structrk__state___a87c7159c1c4187c1864ff3cc8532b00f}{nsave}};}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a880a49112fedae68e714341a9a082fb6}{r}};}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a5b5e3f03e443adea974601f295136638}{q}};}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a622537283f805148d6b838e9c6e47c20}{fm}};}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{structrk__state___a43b241a5a1d59f034e8af649360c9963}{m}};}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___afe3ec2bbc515ef1c2c03dccf567831f4}{p1}};}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a536e2155082b3f8f671e8565147f31b2}{xm}};}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a9686fbd1dd527770a9a7c7b3451e0990}{xl}};}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___adee66feb0d3e931364a100071211f8e6}{xr}};}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a2c09e929a6ea340fc9653cca414b11d3}{c}};}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a17fdd7ca022831377c47122677bb88f2}{laml}};}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a19fa243f768e1524a6e09672210326e0}{lamr}};}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___afb3d783e05c27da8ea3c53c9d2e17af1}{p2}};}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a4b6291b8db3486489857e91d65f0db16}{p3}};}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structrk__state___a530616d2af4778ddd86f09c1422be4b4}{p4}};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \}}
+\DoxyCodeLine{00100\ \mbox{\hyperlink{randomkit_8h_ae58837e5207221663a3dff490d1f3648}{rk\_state}};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \mbox{\hyperlink{randomkit_8h_a17f52c01368a20c9655f02c0d9afa67caaab2534f6dca7c42590b171b36ebafa8}{RK\_NOERR}}\ =\ 0,\ \textcolor{comment}{/*\ no\ error\ */}}
+\DoxyCodeLine{00104\ \ \ \ \ \mbox{\hyperlink{randomkit_8h_a17f52c01368a20c9655f02c0d9afa67ca52b5e5b56fdecadeabf8db8b496f63ed}{RK\_ENODEV}}\ =\ 1,\ \textcolor{comment}{/*\ no\ RK\_DEV\_RANDOM\ device\ */}}
+\DoxyCodeLine{00105\ \ \ \ \ \mbox{\hyperlink{randomkit_8h_a17f52c01368a20c9655f02c0d9afa67cae0762b3922fa4c33e013ee6366c5630b}{RK\_ERR\_MAX}}\ =\ 2}
+\DoxyCodeLine{00106\ \}\ \mbox{\hyperlink{randomkit_8h_a17f52c01368a20c9655f02c0d9afa67c}{rk\_error}};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{comment}{/*\ error\ strings\ */}}
+\DoxyCodeLine{00109\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{randomkit_8h_adfb6d253534c8e60505ac6a9748b6b7c}{rk\_strerror}}[\mbox{\hyperlink{randomkit_8h_a17f52c01368a20c9655f02c0d9afa67cae0762b3922fa4c33e013ee6366c5630b}{RK\_ERR\_MAX}}];}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{comment}{/*\ Maximum\ generated\ random\ value\ */}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ RK\_MAX\ 0xFFFFFFFFUL}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00115\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ Initialize\ the\ RNG\ state\ using\ the\ given\ seed.}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00121\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{randomkit_8h_acb641076cac5da0a581baf0e338ca1ec}{rk\_seed}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ seed,\ \mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ Initialize\ the\ RNG\ state\ using\ a\ random\ seed.}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ Uses\ /dev/random\ or,\ when\ unavailable,\ the\ clock\ (see\ randomkit.c).}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ Returns\ RK\_NOERR\ when\ no\ errors\ occurs.}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ Returns\ RK\_ENODEV\ when\ the\ use\ of\ RK\_DEV\_RANDOM\ failed\ (for\ example\ because}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ there\ is\ no\ such\ device).\ In\ this\ case,\ the\ RNG\ was\ initialized\ using\ the}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ clock.}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00131\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{randomkit_8h_a17f52c01368a20c9655f02c0d9afa67c}{rk\_error}}\ \mbox{\hyperlink{randomkit_8h_a18897d58aca29357330f3ea78d1f1bcb}{rk\_randomseed}}(\mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *\ Returns\ a\ random\ unsigned\ long\ between\ 0\ and\ RK\_MAX\ inclusive}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00136\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{randomkit_8h_af452426657055bf698fb52826a6b0791}{rk\_random}}(\mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *\ Returns\ a\ random\ long\ between\ 0\ and\ LONG\_MAX\ inclusive}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00141\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{randomkit_8h_aa27dfe35b720d7bff527316b808306c5}{rk\_long}}(\mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ Returns\ a\ random\ unsigned\ long\ between\ 0\ and\ ULONG\_MAX\ inclusive}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00146\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{randomkit_8h_a99ea1d53194cccf4801d8b302aa7d606}{rk\_ulong}}(\mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ Returns\ a\ random\ unsigned\ long\ between\ 0\ and\ max\ inclusive.}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00151\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{randomkit_8h_a2880e1968280d4810c7295151f098aea}{rk\_interval}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ max,\ \mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ *\ Fills\ an\ array\ with\ cnt\ random\ npy\_uint64\ between\ off\ and\ off\ +\ rng}}
+\DoxyCodeLine{00155\ \textcolor{comment}{\ *\ inclusive.\ The\ numbers\ wrap\ if\ rng\ is\ sufficiently\ large.}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00157\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{randomkit_8h_ab776a3559f3a06aec557f68d1b5e4a62}{rk\_random\_uint64}}(npy\_uint64\ off,\ npy\_uint64\ rng,\ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ cnt,}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ npy\_uint64\ *out,\ \mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *\ Fills\ an\ array\ with\ cnt\ random\ npy\_uint32\ between\ off\ and\ off\ +\ rng}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ *\ inclusive.\ The\ numbers\ wrap\ if\ rng\ is\ sufficiently\ large.}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00164\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{randomkit_8h_a1496e9bc811d9dfc78fcb50c9a0ffdcf}{rk\_random\_uint32}}(npy\_uint32\ off,\ npy\_uint32\ rng,\ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ cnt,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ npy\_uint32\ *out,\ \mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ *\ Fills\ an\ array\ with\ cnt\ random\ npy\_uint16\ between\ off\ and\ off\ +\ rng}}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ *\ inclusive.\ The\ numbers\ wrap\ if\ rng\ is\ sufficiently\ large.}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00171\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{randomkit_8h_abb391308a307168c4d9839b89dce0124}{rk\_random\_uint16}}(npy\_uint16\ off,\ npy\_uint16\ rng,\ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ cnt,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ npy\_uint16\ *out,\ \mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ *\ Fills\ an\ array\ with\ cnt\ random\ npy\_uint8\ between\ off\ and\ off\ +\ rng}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ *\ inclusive.\ The\ numbers\ wrap\ if\ rng\ is\ sufficiently\ large.}}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00178\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{randomkit_8h_ab158f7d984d9be016db116c3c2227da2}{rk\_random\_uint8}}(npy\_uint8\ off,\ npy\_uint8\ rng,\ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ cnt,}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ npy\_uint8\ *out,\ \mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ *\ Fills\ an\ array\ with\ cnt\ random\ npy\_bool\ between\ off\ and\ off\ +\ rng}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ *\ inclusive.\ It\ is\ assumed\ tha\ npy\_bool\ as\ the\ same\ size\ as\ npy\_uint8.}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00185\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{randomkit_8h_a3a6e0978388a5741a598f5d13156bf66}{rk\_random\_bool}}(\mbox{\hyperlink{npy__common_8h_a95307a629b2747f357f81b3853c5d1b6}{npy\_bool}}\ off,\ \mbox{\hyperlink{npy__common_8h_a95307a629b2747f357f81b3853c5d1b6}{npy\_bool}}\ rng,\ \mbox{\hyperlink{npy__common_8h_a2d6effc4d5ecb85675ebfcfaa102b483}{npy\_intp}}\ cnt,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{npy__common_8h_a95307a629b2747f357f81b3853c5d1b6}{npy\_bool}}\ *out,\ \mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *\ Returns\ a\ random\ double\ between\ 0.0\ and\ 1.0,\ 1.0\ excluded.}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00191\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{randomkit_8h_a3fdb352606b48cce964029df4f255ce5}{rk\_double}}(\mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00194\ \textcolor{comment}{\ *\ fill\ the\ buffer\ with\ size\ random\ bytes}}
+\DoxyCodeLine{00195\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00196\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{randomkit_8h_a113054c11bba6c9b4f9e7b43091b56de}{rk\_fill}}(\textcolor{keywordtype}{void}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ size,\ \mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ *\ fill\ the\ buffer\ with\ randombytes\ from\ the\ random\ device}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ *\ Returns\ RK\_ENODEV\ if\ the\ device\ is\ unavailable,\ or\ RK\_NOERR\ if\ it\ is}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *\ On\ Unix,\ if\ strong\ is\ defined,\ RK\_DEV\_RANDOM\ is\ used.\ If\ not,\ RK\_DEV\_URANDOM}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ *\ is\ used\ instead.\ This\ parameter\ has\ no\ effect\ on\ Windows.}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ *\ Warning:\ on\ most\ unixes\ RK\_DEV\_RANDOM\ will\ wait\ for\ enough\ entropy\ to\ answer}}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ *\ which\ can\ take\ a\ very\ long\ time\ on\ quiet\ systems.}}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00206\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{randomkit_8h_a17f52c01368a20c9655f02c0d9afa67c}{rk\_error}}\ \mbox{\hyperlink{randomkit_8h_a96d44f6dba563a87b251d1508fa079fe}{rk\_devfill}}(\textcolor{keywordtype}{void}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{int}\ strong);}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *\ fill\ the\ buffer\ using\ rk\_devfill\ if\ the\ random\ device\ is\ available\ and\ using}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *\ rk\_fill\ if\ it\ is\ not}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *\ parameters\ have\ the\ same\ meaning\ as\ rk\_fill\ and\ rk\_devfill}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ *\ Returns\ RK\_ENODEV\ if\ the\ device\ is\ unavailable,\ or\ RK\_NOERR\ if\ it\ is}}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00214\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{randomkit_8h_a17f52c01368a20c9655f02c0d9afa67c}{rk\_error}}\ \mbox{\hyperlink{randomkit_8h_ab54e1d76eddae2fe72a95ad894a219fb}{rk\_altfill}}(\textcolor{keywordtype}{void}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{int}\ strong,}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00218\ \textcolor{comment}{\ *\ return\ a\ random\ gaussian\ deviate\ with\ variance\ unity\ and\ zero\ mean.}}
+\DoxyCodeLine{00219\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00220\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{randomkit_8h_a9795cbd557e9bf76e57959a40b218c66}{rk\_gauss}}(\mbox{\hyperlink{structrk__state__}{rk\_state}}\ *state);}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00223\ \}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_RANDOMKIT\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

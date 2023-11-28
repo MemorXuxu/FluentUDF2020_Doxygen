@@ -1,0 +1,205 @@
+\doxysection{sundials\+\_\+spbcgs.\+h}
+\hypertarget{sundials__spbcgs_8h_source}{}\label{sundials__spbcgs_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_spbcgs.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_spbcgs.h}}
+\mbox{\hyperlink{sundials__spbcgs_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.2\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2006/11/29\ 00:05:07\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer(s):\ Peter\ Brown\ and\ Aaron\ Collier\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2004,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ This\ is\ the\ header\ file\ for\ the\ implementation\ of\ the\ scaled,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ preconditioned\ Bi-\/CGSTAB\ (SPBCG)\ iterative\ linear\ solver.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#ifndef\ \_SPBCG\_H}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ \_SPBCG\_H}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__iterative_8h}{sundials/sundials\_iterative.h}}>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ Types:\ struct\ SpbcgMemRec\ and\ struct\ *SpbcgMem}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ A\ variable\ declaration\ of\ type\ struct\ *SpbcgMem\ denotes\ a\ pointer}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *\ to\ a\ data\ structure\ of\ type\ struct\ SpbcgMemRec.\ The\ SpbcgMemRec}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *\ structure\ contains\ numerous\ fields\ that\ must\ be\ accessed\ by\ the}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ SPBCG\ linear\ solver\ module.}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ \ l\_max\ \ maximum\ Krylov\ subspace\ dimension\ that\ SpbcgSolve\ will}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ be\ permitted\ to\ use}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ \ r\ \ vector\ (type\ N\_Vector)\ which\ holds\ the\ scaled,\ preconditioned}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ \ \ \ \ linear\ system\ residual}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ \ r\_star\ \ vector\ (type\ N\_Vector)\ which\ holds\ the\ initial\ scaled,}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ preconditioned\ linear\ system\ residual}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ \ p,\ q,\ u\ and\ Ap\ \ vectors\ (type\ N\_Vector)\ used\ for\ workspace\ by}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ SPBCG\ algorithm}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ vtemp\ \ scratch\ vector\ (type\ N\_Vector)\ used\ as\ temporary\ vector}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ storage}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_spbcg_mem_rec_a8b26ed13d8014367278ac46adcac60b6}{l\_max}};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_spbcg_mem_rec_aaa57ad1f937c9dbfd06a0a5e9352071f}{r\_star}};}
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_spbcg_mem_rec_a65fe312c2eb39947977578187aa5b3be}{r}};}
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_spbcg_mem_rec_a1c1d10c95378d6d97b9d049eaf7c9e42}{p}};}
+\DoxyCodeLine{00060\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_spbcg_mem_rec_a9483cc9fcc410c3fe5523528c1f98c50}{q}};}
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_spbcg_mem_rec_aac55dd4ebf56c232c6359e063e7d94fb}{u}};}
+\DoxyCodeLine{00062\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_spbcg_mem_rec_af394f992bd01d151c590547168801aea}{Ap}};}
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{struct_spbcg_mem_rec_a7d54a0b3c4a2fcb8a0d75b5de8f7f748}{vtemp}};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \}\ \mbox{\hyperlink{struct_spbcg_mem_rec}{SpbcgMemRec}},\ *\mbox{\hyperlink{sundials__spbcgs_8h_a50050f9a5502f9461391f10025041c42}{SpbcgMem}};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *\ Function\ :\ SpbcgMalloc}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ SpbcgMalloc\ allocates\ additional\ memory\ needed\ by\ the\ SPBCG}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *\ linear\ solver\ module.}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ \ l\_max\ \ maximum\ Krylov\ subspace\ dimension\ that\ SpbcgSolve\ will}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ be\ permitted\ to\ use}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ *\ \ vec\_tmpl\ \ implementation-\/specific\ template\ vector\ (type\ N\_Vector)}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ (created\ using\ either\ N\_VNew\_Serial\ or\ N\_VNew\_Parallel)}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ If\ successful,\ SpbcgMalloc\ returns\ a\ non-\/NULL\ memory\ pointer.\ If}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *\ an\ error\ occurs,\ then\ a\ NULL\ pointer\ is\ returned.}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct_spbcg_mem_rec}{SpbcgMem}}\ \mbox{\hyperlink{sundials__spbcgs_8h_ad8cad3384297ff3208b04a50850c0ef3}{SpbcgMalloc}}(\textcolor{keywordtype}{int}\ l\_max,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ vec\_tmpl);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ Function\ :\ SpbcgSolve}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ SpbcgSolve\ solves\ the\ linear\ system\ Ax\ =\ b\ by\ means\ of\ a\ scaled}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *\ preconditioned\ Bi-\/CGSTAB\ (SPBCG)\ iterative\ method.}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ \ mem\ \ pointer\ to\ an\ internal\ memory\ block\ allocated\ during\ a}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ \ \ \ \ \ \ prior\ call\ to\ SpbcgMalloc}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ \ A\_data\ \ pointer\ to\ a\ data\ structure\ containing\ information}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ about\ the\ coefficient\ matrix\ A\ (passed\ to\ user-\/supplied}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ function\ referenced\ by\ atimes\ (function\ pointer))}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *\ \ x\ \ vector\ (type\ N\_Vector)\ containing\ initial\ guess\ x\_0\ upon}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *\ \ \ \ \ entry,\ but\ which\ upon\ return\ contains\ an\ approximate\ solution}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *\ \ \ \ \ of\ the\ linear\ system\ Ax\ =\ b\ (solution\ only\ valid\ if\ return}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ *\ \ \ \ \ value\ is\ either\ SPBCG\_SUCCESS\ or\ SPBCG\_RES\_REDUCED)}}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ *\ \ b\ \ vector\ (type\ N\_Vector)\ set\ to\ the\ right-\/hand\ side\ vector\ b}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ *\ \ \ \ \ of\ the\ linear\ system\ (undisturbed\ by\ function)}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *\ \ pretype\ \ variable\ (type\ int)\ indicating\ the\ type\ of}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ preconditioning\ to\ be\ used\ (see\ sundials\_iterative.h)}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ \ delta\ \ tolerance\ on\ the\ L2\ norm\ of\ the\ scaled,\ preconditioned}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ residual\ (if\ return\ value\ ==\ SPBCG\_SUCCESS,\ then}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ ||sb*P1\_inv*(b-\/Ax)||\_L2\ <=\ delta)}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ \ P\_data\ \ pointer\ to\ a\ data\ structure\ containing\ preconditioner}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ information\ (passed\ to\ user-\/supplied\ function\ referenced}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ by\ psolve\ (function\ pointer))}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ \ sx\ \ vector\ (type\ N\_Vector)\ containing\ positive\ scaling\ factors}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ \ \ \ \ \ for\ x\ (pass\ sx\ ==\ NULL\ if\ scaling\ NOT\ required)}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ \ sb\ \ vector\ (type\ N\_Vector)\ containing\ positive\ scaling\ factors}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ \ \ \ \ \ for\ b\ (pass\ sb\ ==\ NULL\ if\ scaling\ NOT\ required)}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ \ atimes\ \ user-\/supplied\ routine\ responsible\ for\ computing\ the}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ matrix-\/vector\ product\ Ax\ (see\ sundials\_iterative.h)}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ \ psolve\ \ user-\/supplied\ routine\ responsible\ for\ solving\ the}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ preconditioned\ linear\ system\ Pz\ =\ r\ (ignored\ if}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ pretype\ ==\ PREC\_NONE)\ (see\ sundials\_iterative.h)}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *\ \ res\_norm\ \ pointer\ (type\ realtype*)\ to\ the\ L2\ norm\ of\ the}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ scaled,\ preconditioned\ residual\ (if\ return\ value}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ is\ either\ SPBCG\_SUCCESS\ or\ SPBCG\_RES\_REDUCED,\ then}}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ *res\_norm\ =\ ||sb*P1\_inv*(b-\/Ax)||\_L2,\ where\ x\ is}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ the\ computed\ approximate\ solution,\ sb\ is\ the\ diagonal}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ scaling\ matrix\ for\ the\ right-\/hand\ side\ b,\ and\ P1\_inv}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ is\ the\ inverse\ of\ the\ left-\/preconditioner\ matrix)}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ \ nli\ \ pointer\ (type\ int*)\ to\ the\ total\ number\ of\ linear}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ \ \ \ \ \ \ iterations\ performed}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ \ nps\ \ pointer\ (type\ int*)\ to\ the\ total\ number\ of\ calls\ made}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ \ \ \ \ \ \ to\ the\ psolve\ routine}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__spbcgs_8h_a2ccc389534ae8dd3490dc96d7615268b}{SpbcgSolve}}(\mbox{\hyperlink{struct_spbcg_mem_rec}{SpbcgMem}}\ mem,\ \textcolor{keywordtype}{void}\ *A\_data,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ b,}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pretype,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ delta,\ \textcolor{keywordtype}{void}\ *P\_data,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ sx,}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ sb,\ \mbox{\hyperlink{sundials__iterative_8h_ae6141362b5d76746240c633ccb13f8c2}{ATimesFn}}\ atimes,\ \mbox{\hyperlink{sundials__iterative_8h_aaa4b7052d94440eb63f74dd049b7d563}{PSolveFn}}\ psolve,}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *res\_norm,\ \textcolor{keywordtype}{int}\ *nli,\ \textcolor{keywordtype}{int}\ *nps);}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{comment}{/*\ Return\ values\ for\ SpbcgSolve\ */}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#define\ SPBCG\_SUCCESS\ \ \ \ \ \ \ \ \ \ \ \ 0\ \ }\textcolor{comment}{/*\ SPBCG\ algorithm\ converged\ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ SPBCG\_RES\_REDUCED\ \ \ \ \ \ \ \ 1\ \ }\textcolor{comment}{/*\ SPBCG\ did\ NOT\ converge,\ but\ the}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ residual\ was\ reduced\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ SPBCG\_CONV\_FAIL\ \ \ \ \ \ \ \ \ \ 2\ \ }\textcolor{comment}{/*\ SPBCG\ algorithm\ failed\ to\ converge\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ SPBCG\_PSOLVE\_FAIL\_REC\ \ \ \ 3\ \ }\textcolor{comment}{/*\ psolve\ failed\ recoverably\ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ SPBCG\_ATIMES\_FAIL\_REC\ \ \ \ 4\ \ }\textcolor{comment}{/*\ atimes\ failed\ recoverably\ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ SPBCG\_PSET\_FAIL\_REC\ \ \ \ \ \ 5\ \ }\textcolor{comment}{/*\ pset\ faild\ recoverably\ \ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ SPBCG\_MEM\_NULL\ \ \ \ \ \ \ \ \ \ -\/1\ \ }\textcolor{comment}{/*\ mem\ argument\ is\ NULL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ SPBCG\_ATIMES\_FAIL\_UNREC\ -\/2\ \ }\textcolor{comment}{/*\ atimes\ returned\ failure\ flag\ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ SPBCG\_PSOLVE\_FAIL\_UNREC\ -\/3\ \ }\textcolor{comment}{/*\ psolve\ failed\ unrecoverably\ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ SPBCG\_PSET\_FAIL\_UNREC\ \ \ -\/4\ \ }\textcolor{comment}{/*\ pset\ failed\ unrecoverably\ \ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ *\ Function\ :\ SpbcgFree}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ *\ SpbcgFree\ frees\ the\ memory\ allocated\ by\ a\ call\ to\ SpbcgMalloc.}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ *\ It\ is\ illegal\ to\ use\ the\ pointer\ mem\ after\ a\ call\ to\ SpbcgFree.}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__spbcgs_8h_a6ec1213f1b6cf55791507c3371648c7d}{SpbcgFree}}(\mbox{\hyperlink{struct_spbcg_mem_rec}{SpbcgMem}}\ mem);}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ *\ Macro\ :\ SPBCG\_VTEMP}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ *\ This\ macro\ provides\ access\ to\ the\ vector\ r\ in\ the}}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ *\ memory\ block\ of\ the\ SPBCG\ module.\ The\ argument\ mem\ is\ the}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ *\ memory\ pointer\ returned\ by\ SpbcgMalloc,\ of\ type\ SpbcgMem,}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ *\ and\ the\ macro\ value\ is\ of\ type\ N\_Vector.}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *\ Note:\ Only\ used\ by\ IDA\ (r\ contains\ P\_inverse\ F\ if\ nli\_inc\ ==\ 0).}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ SPBCG\_VTEMP(mem)\ (mem-\/>r)}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00196\ \}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

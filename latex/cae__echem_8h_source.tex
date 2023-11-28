@@ -1,0 +1,241 @@
+\doxysection{cae\+\_\+echem.\+h}
+\hypertarget{cae__echem_8h_source}{}\label{cae__echem_8h_source}\index{fluent20.1.0/addons/msmdbatt/src/cae\_echem.h@{fluent20.1.0/addons/msmdbatt/src/cae\_echem.h}}
+\mbox{\hyperlink{cae__echem_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ \_ECHEM\_H}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ \_ECHEM\_H}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{udf_8h}{udf.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cae__mem_8h}{cae\_mem.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{nvector__serial_8h}{nvector/nvector\_serial.h}}>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{/*\ Battery\ Data\ Setion\ ID\ */}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \ \ \mbox{\hyperlink{cae__echem_8h_a05589fbab0657f08285ebdfe93f5ec9ea0900af0d6b038f40645923708ab2a510}{XF\_BATTERY\_DATA}}\ =\ 900}
+\DoxyCodeLine{00015\ \};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{/*\ Battery\ Data\ Sub-\/section\ ID\ */}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \ \ \mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da5ed25185a708521c903b621b33d67a43}{XF\_BT\_ECHEM\_NTGK}}\ \ \ =\ 10,}
+\DoxyCodeLine{00021\ \ \ \mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4dad04e33a0a12ae6b1eb08d9340c577a90}{XF\_BT\_ECHEM\_ECM}}\ \ \ \ =\ 11,}
+\DoxyCodeLine{00022\ \ \ \mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4dabb51ef3b435c923009469b61cb22650e}{XF\_BT\_ECHEM\_NEWMAN\_CS}}\ \ =\ 12,}
+\DoxyCodeLine{00023\ \ \ \mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da5fb254dde933dc96c74bef7184ebef09}{XF\_BT\_ECHEM\_NEWMAN\_CE}}\ \ =\ 13,}
+\DoxyCodeLine{00024\ \ \ \mbox{\hyperlink{cae__echem_8h_a16af7b253440dadd46a80a4b9fddba4da016d85b6b42c46a6a93e295577d6e333}{XF\_BT\_ECHEM\_USER}}\ \ \ \ \ \ \ =\ 14}
+\DoxyCodeLine{00025\ \};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a126dc231c69e6a7774a558fabe85e711}{ECHEM\_NTGK}}\ =\ 0,}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a4c06d571570b36e8709344ca6de92fef}{ECHEM\_ECM}},}
+\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a6de57e3f71068a2378694b945e81d8e1}{ECHEM\_NEWMAN}},}
+\DoxyCodeLine{00032\ \ \ \mbox{\hyperlink{cae__echem_8h_aba01db17f4a2bfbc3db60dc172972a25a7b39c123fe6e6584e9f5f2cd9db39aa1}{ECHEM\_USER\_DEFINED}}}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__ida__io}{\_ida\_io}}}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__ida__io_aca11bf14250e21c92b34fc20473d5c8d}{echem\_model}};\ \textcolor{comment}{/*\ ecm\ or\ p2d\ */}}
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__ida__io_a85958b47d8d477439448f8557a1f621e}{ida\_mode}};\ \ \ \ \textcolor{comment}{/*\ normal\ run\ (0)\ or\ benchmark\ (1)\ */}}
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__ida__io_a86f62c1b308d0c62b771af8b5991bfbc}{bc\_mode}};\ \ \ \ \ \textcolor{comment}{/*\ specified\ potential\ (0)\ or\ current\ density\ (1)\ */}}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__ida__io_a5fc33a1b111d68d2889fc1effbc254f1}{run\_mode}};\ \ \ \ \textcolor{comment}{/*\ initial\ run\ (0)\ or\ follow-\/up\ run\ (1)\ */}}
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__ida__io_afd4e0d430b4af9ff107be880c872da6d}{sub\_steps}};\ \ \ \textcolor{comment}{/*\ number\ of\ integration\ steps\ */}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__ida__io_af76de3c42c14629b1d8fdbe916e22899}{t\_start}},\ \mbox{\hyperlink{struct__ida__io_a553ab6662a870fa8e9d7576dfbd1407b}{t\_stop}};}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__ida__io_a99cfc0a989f4a8507c7a1a9b075349ef}{V\_p}},\ \mbox{\hyperlink{struct__ida__io_af00c5010038754c9881132a05a506f30}{V\_n}};}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__ida__io_ad0686580efa52e1fe94628c84a75d7a4}{J\_p}},\ \mbox{\hyperlink{struct__ida__io_a47cec8f1caa14f5417fde59f30c2132b}{J\_n}},\ \mbox{\hyperlink{struct__ida__io_aa4a341e740a674c4036090c3a26984b6}{C\_Rate}};}
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__ida__io_a461df151f8dc7992eecfbba0ceabd752}{C\_Temp}};}
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{struct__ida__io_a90e0844b6cf0b56698b1d8f0bdb359ff}{C\_Qj}},\ \mbox{\hyperlink{struct__ida__io_a66d3198247b42293f965e9c3f3beea1f}{C\_Qe}};}
+\DoxyCodeLine{00048\ \}\ \mbox{\hyperlink{cae__echem_8h_a60ec57cc1a93e561e6330f73b37c3086}{IDA\_IO}};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{/*\ EChem\ model\ parameters\ */}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cae__echem_8h_ae887174e150d531e5efd8af1cbcadf35}{btv\_store\_ok}};}
+\DoxyCodeLine{00052\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cae__echem_8h_a51675b0f9785c1605b8566d8202b2470}{ida\_start\_ok}};}
+\DoxyCodeLine{00053\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cae__echem_8h_a0c8e66a609964edbfe6665ae51e93d5b}{ida\_input\_ok}};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_aca11bf14250e21c92b34fc20473d5c8d}{echem\_model}};}
+\DoxyCodeLine{00056\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cae__echem_8h_ab9d9682702afae904eb25890a6b347a4}{if\_use\_simple}};}
+\DoxyCodeLine{00057\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cae__echem_8h_a0ad4a8513733269228148db988bf6b4a}{if\_use\_rom}};}
+\DoxyCodeLine{00058\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cae__echem_8h_a621e171a8ee58dc970a7b89e19ad45dc}{if\_global\_scaling}};}
+\DoxyCodeLine{00059\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_ace2ae6e0677ff8c7c46956e38d42b854}{rom\_substeps}};}
+\DoxyCodeLine{00060\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a90993a43d0d1a7bdb0db680a7d0d050d}{echem\_update\_interval}};}
+\DoxyCodeLine{00061\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a8a4d646934e72bc1f92ff978a3e19e11}{echem\_ida\_sub\_steps}};}
+\DoxyCodeLine{00062\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cae__echem_8h_a12565cdfb180af54775f0fb094d027bc}{echem\_verbosity}};}
+\DoxyCodeLine{00063\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a1f36f599625db15d6388533d2a843069}{number\_unit}};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{/*\ NTGK\ model\ */}}
+\DoxyCodeLine{00066\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a9e63d745453bef75c4325f1223083348}{ntgk\_data\_type}};}
+\DoxyCodeLine{00067\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ad526ee96b2d8ab047fbba9ecd9ffd3a6}{U\_Coef}}[];}
+\DoxyCodeLine{00068\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_adb7e2626492a7cc7f168d41613cb5149}{Y\_Coef}}[];}
+\DoxyCodeLine{00069\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a3d61e533d803c781a3e7de9a3c900f65}{T\_Coef}}[];}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{/*\ ECM\ model\ */}}
+\DoxyCodeLine{00072\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a16145985952110723c0fdcaae5e44c8b}{ECM\_Eqns}};}
+\DoxyCodeLine{00073\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a0aea3a4453dba31626ae0e80eff0f647}{ECM\_SOC\_Init}};}
+\DoxyCodeLine{00074\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a8422e485717463c97c0e3b60bdb0c857}{ecm\_data\_type}};}
+\DoxyCodeLine{00075\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cae__echem_8h_a263135dab62664f72efd894c58d91f77}{ecm\_twosetdata}};}
+\DoxyCodeLine{00076\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_affb12653708362cd5202cf78fd483206}{Rs\_Coef}}[];}
+\DoxyCodeLine{00077\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a0ff6b176395a6f3ac5455ed9026526b7}{R1\_Coef}}[];}
+\DoxyCodeLine{00078\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a9d68e1761422fcf0afd7f529e6352511}{R2\_Coef}}[];}
+\DoxyCodeLine{00079\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a9c53d2544bb4217b825472851d8464e6}{C1\_Coef}}[];}
+\DoxyCodeLine{00080\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a0447024ca81406fb64fbb43bfdf4283b}{C2\_Coef}}[];}
+\DoxyCodeLine{00081\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a1900e9b417345f680a6340a5b1101f3e}{Voc\_Coef}}[];}
+\DoxyCodeLine{00082\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a7b4b01297f53728021a119279cca07b5}{Rs\_Coef\_poly}}[];}
+\DoxyCodeLine{00083\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_af1fbe925712f84ac52cebcaeecb4c8cc}{R1\_Coef\_poly}}[];}
+\DoxyCodeLine{00084\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a3da8847beddca04e53682ce8b381fb43}{R2\_Coef\_poly}}[];}
+\DoxyCodeLine{00085\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_aed768ff5d2242210f70e5ca06fa25f32}{C1\_Coef\_poly}}[];}
+\DoxyCodeLine{00086\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a0b15a2681dd8a04de424c4c2f8afeb1e}{C2\_Coef\_poly}}[];}
+\DoxyCodeLine{00087\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_abaae08fba9e4d7ede62e3198bd033781}{Voc\_Coef\_poly}}[];}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a4c4bc0ec05a02aeaf525c7e43308ed91}{Rs\_Coef\_c}}[];}
+\DoxyCodeLine{00090\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_adf6f02d202f3a3f944fe82a9b73fdd8e}{R1\_Coef\_c}}[];}
+\DoxyCodeLine{00091\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a0c23bd645fccc8cd33022c6eba7357ec}{R2\_Coef\_c}}[];}
+\DoxyCodeLine{00092\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a0b0c6ec063ec4b2f943688702a6f4201}{C1\_Coef\_c}}[];}
+\DoxyCodeLine{00093\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_aa7830ab116d77abb3327290554549bb0}{C2\_Coef\_c}}[];}
+\DoxyCodeLine{00094\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_af608bed75511dd838ac005f48fdc7f73}{Voc\_Coef\_c}}[];}
+\DoxyCodeLine{00095\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a082ba5a33c2c6cf60043a8852ab75ebf}{Rs\_Coef\_poly\_c}}[];}
+\DoxyCodeLine{00096\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a71db6f6fe85cde0882313e85f83b4865}{R1\_Coef\_poly\_c}}[];}
+\DoxyCodeLine{00097\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a62392b2960390c7e2ffa347c959a22a8}{R2\_Coef\_poly\_c}}[];}
+\DoxyCodeLine{00098\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_aab8745dfe583bf39b788ef8c40e3d65f}{C1\_Coef\_poly\_c}}[];}
+\DoxyCodeLine{00099\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ac211e397e2149322d94ecc81c63acc38}{C2\_Coef\_poly\_c}}[];}
+\DoxyCodeLine{00100\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ad6008e6dead7d2c1ac9ac9dee4705cd5}{Voc\_Coef\_poly\_c}}[];}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cae__echem_8h_aba6eb88b777f234a942a73d540e4ca89}{Compute\_ECM\_VOC\_and\_CR}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ soc,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T,\ \textcolor{keywordtype}{int}\ mode,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *Voc,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *RRs,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *RR1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *RR2,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *CC1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *CC2);}
+\DoxyCodeLine{00103\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cae__echem_8h_a40c110a9d9539e8511dc345ee220adda}{Compute\_VOC\_and\_CR\_standard}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ soc,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T,\ \textcolor{keywordtype}{int}\ mode,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *Voc,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *RRs,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *RR1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *RR2,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *CC1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *CC2);}
+\DoxyCodeLine{00104\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a1a8a91d44c67a28505e02d61f6b0bc22}{Compute\_entropy\_heat}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ soc);}
+\DoxyCodeLine{00105\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cae__echem_8h_acf2c3ad8e1dba6cf98373777093cb3c6}{user\_defined\_echem\_model}}(\textcolor{keywordtype}{int}\ zero\_start,\ \textcolor{keywordtype}{int}\ mode,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ temperature,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ voltage,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ current,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dtime,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *j\_tmp,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *Qe\_tmp,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *voltage\_end);}
+\DoxyCodeLine{00107\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cae__echem_8h_ad0ddf0bf5ab8dcc10ed336ef3a157ca8}{get\_cluster\_info}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \textcolor{keywordtype}{int}\ *cluster,\ \textcolor{keywordtype}{int}\ *total\_cell\_in\_cluster,\ \mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ cell\_list[]);}
+\DoxyCodeLine{00108\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cae__echem_8h_ae5d8930457d304f8b9f49eeb9b066162}{Get\_p2d\_Postprocessing\_Info}}(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ T,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Vp,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Vn);}
+\DoxyCodeLine{00109\ \textcolor{comment}{/*\ NEWNAM\ model\ */}}
+\DoxyCodeLine{00110\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_ad4704850c5194ff7b3b63e2ed68fb8e5}{n\_RP}};}
+\DoxyCodeLine{00111\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_ac133e0262c9267c64c564d28454b5ab8}{n\_RN}};}
+\DoxyCodeLine{00112\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a147e925efb38ca4b00d1faa903603666}{n\_XP}};}
+\DoxyCodeLine{00113\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_aaf9fe0e87f687abb62b09fe3087e5cd4}{n\_XS}};}
+\DoxyCodeLine{00114\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_adbd3da5fa2cc161202a9852970e9dedb}{n\_XN}};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ac108db95d5a05d7ad4e4b545d2843bf1}{gr\_RP}};}
+\DoxyCodeLine{00117\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a89fc8096bf90e33ded8f79319ff11651}{gr\_RN}};}
+\DoxyCodeLine{00118\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a2a5d4ad26f3a1b1e38d01c69be897615}{gr\_XP}};}
+\DoxyCodeLine{00119\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a8295a3926a1c64223ff0f9e6c7ea00a3}{gr\_XN}};}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_af1c49c9ab729159390e9bc942c514a35}{R\_RP}};}
+\DoxyCodeLine{00122\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a9794a960189823e2f98e8415d91cd132}{R\_RN}};}
+\DoxyCodeLine{00123\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ac41e326e2e37d458ac8d6e4a735c9e90}{L\_XP}};}
+\DoxyCodeLine{00124\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a62cbb045ea93436a658d02d67e3d3c89}{L\_XS}};}
+\DoxyCodeLine{00125\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ada07fc651777cb92d37bf56b31b476e4}{L\_XN}};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a993749cc9b530214028f409bc2a3e4c2}{E\_P}};}
+\DoxyCodeLine{00128\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a59e3e8ef0132f24f5df2af0831ade36b}{E\_S}};}
+\DoxyCodeLine{00129\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a04b51aec3ca0cb68b6ff75c2c6782c67}{E\_N}};}
+\DoxyCodeLine{00130\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a2a2e6196ad6d304835da4fa47a8ddcde}{Ef\_P}};}
+\DoxyCodeLine{00131\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a76db0e3f3884cdb567a2634729e43962}{Ef\_N}};}
+\DoxyCodeLine{00132\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_af8c47d3e283c4e361f135f6799add472}{Ds\_P}};}
+\DoxyCodeLine{00133\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a989dc089665e89f635fec6f1ee5cb301}{Ds\_N}};}
+\DoxyCodeLine{00134\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a129e43d97ec754679a0b06246e7f03ef}{Ds\_P\_Act}};}
+\DoxyCodeLine{00135\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ab3c04f08a3e9362b5fbfd783b8bb923c}{Ds\_N\_Act}};}
+\DoxyCodeLine{00136\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ac014dadc9f084c583478e2ad3aacd823}{Br\_P}};}
+\DoxyCodeLine{00137\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a201450398416c091a490ad663cfd0bc2}{Br\_S}};}
+\DoxyCodeLine{00138\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a170862a33f10adfc49fb3fb66e5af7ea}{Br\_N}};}
+\DoxyCodeLine{00139\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_af456dfcc1feed55540eaa8e25fda584f}{De\_X}};}
+\DoxyCodeLine{00140\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a973e5e680b3ca00db46a0e4fc2febe08}{T\_Plus}};}
+\DoxyCodeLine{00141\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a7609a34e9e17d16d7d4c9b78ac9a9686}{Sm\_P}};}
+\DoxyCodeLine{00142\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_afb6bf526ce1da29f7239a9ebd0830ca4}{Sm\_N}};}
+\DoxyCodeLine{00143\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a433128da902bac4ce3fefd5b274dcb80}{K0\_P}};}
+\DoxyCodeLine{00144\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a92ff037597f8bb42cdb9047469bc1e87}{K0\_N}};}
+\DoxyCodeLine{00145\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a91080369e0a4ab760f4d577cd872c5f2}{K0\_P\_Act}};}
+\DoxyCodeLine{00146\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a81a69934a5db4e2cb63f21142915001a}{K0\_N\_Act}};}
+\DoxyCodeLine{00147\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a1792400381e5dbaa465bc940e4c6cc6f}{Aa\_P}};}
+\DoxyCodeLine{00148\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a4c4822a70558ce56aaf1e7169443bba7}{Ac\_P}};}
+\DoxyCodeLine{00149\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a635d3849eae3f6d813629d6c70cf795c}{Aa\_N}};}
+\DoxyCodeLine{00150\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a9c622f53b2eda7a122777f84df551800}{Ac\_N}};}
+\DoxyCodeLine{00151\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_abba13f5b9d84af83ce74979962fd6e96}{Cs\_P\_Init}};}
+\DoxyCodeLine{00152\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a1034ec19da72a002a70b507a7f39e7c6}{Cs\_P\_Maxi}};}
+\DoxyCodeLine{00153\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a4765238584b242a7243e9e57d42a803f}{Cs\_N\_Init}};}
+\DoxyCodeLine{00154\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ac95a521802de85f9238fbfda75c5ecc1}{Cs\_N\_Maxi}};}
+\DoxyCodeLine{00155\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a7a455b0016d7643a56f83fc37b4800fc}{Ce\_P\_Init}};}
+\DoxyCodeLine{00156\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_ac28b0b9df4d92f7846f7a8e1821de489}{Ce\_S\_Init}};}
+\DoxyCodeLine{00157\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_a01e831247dafbcf7969b29992ffafdb8}{Ce\_N\_Init}};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cae__echem_8h_ad6cfb747ba63cee244cb9cfb2d6a5448}{NM\_Analytical\_Cs}};}
+\DoxyCodeLine{00160\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_af059ed0b3957729707832361914c6101}{n\_IGen}};}
+\DoxyCodeLine{00161\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{cae__echem_8h_acb94e50bd9c350ca3b119c1fabd6c52e}{T\_ref}};}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{comment}{/*\ Macros\ for\ Cs,\ Ce\ data\ storage\ */}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ N\_CS\_P\ (n\_RP*n\_XP)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ N\_CS\_N\ (n\_RN*n\_XN)}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ N\_CE\_X\ (n\_XP\ +\ n\_XS\ +\ n\_XN)}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ N\_VAR\_TOTAL\ (N\_CS\_P\ +\ N\_CE\_X\ +\ N\_CS\_N)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ N\_ECM\_Y\ (ECM\_Eqns)\ }\textcolor{comment}{/*\ n\_tot\_Eqn\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{comment}{/*\ via\ additional\ thread\ vars\ */}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ C\_CS\_P(c,\ t,\ i,\ j)\ BC\_STORAGE\_R\_XV(c,\ B\_THREAD(t),\ BV\_CS,\ ((i)*n\_RP\ +\ (j)))}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ C\_CS\_N(c,\ t,\ i,\ j)\ BC\_STORAGE\_R\_XV(c,\ B\_THREAD(t),\ BV\_CS,\ (N\_CS\_P\ +\ (i)*n\_RN\ +\ (j)))}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ C\_CE\_P(c,\ t,\ i)\ \ \ \ BC\_STORAGE\_R\_XV(c,\ B\_THREAD(t),\ BV\_CE,\ (i))}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#define\ C\_CE\_S(c,\ t,\ i)\ \ \ \ BC\_STORAGE\_R\_XV(c,\ B\_THREAD(t),\ BV\_CE,\ (n\_XP\ +\ (i)))}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ C\_CE\_N(c,\ t,\ i)\ \ \ \ BC\_STORAGE\_R\_XV(c,\ B\_THREAD(t),\ BV\_CE,\ (n\_XP\ +\ n\_XS\ +\ (i)))}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ C\_ECM\_Y(c,\ t,\ i)\ \ \ \ \ \ \ \ \ \ BC\_STORAGE\_R\_XV(c,\ B\_THREAD(t),\ BV\_ECM,\ (i))}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ C\_USER\_DEFINED(c,\ t,\ i)\ \ \ BC\_STORAGE\_R\_XV(c,\ B\_THREAD(t),\ BV\_USER\_DEFINED,\ (i))}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ C\_CELL\_u(c,\ t)\ \ \ \ \ \ \ \ \ \ \ \ BC\_STORAGE\_R\_XV(c,\ B\_THREAD(t),\ BV\_UDM,\ 0)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ C\_CELL\_r(c,\ t)\ \ \ \ \ \ \ \ \ \ \ \ BC\_STORAGE\_R\_XV(c,\ B\_THREAD(t),\ BV\_UDM,\ 1)}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{comment}{/*\ \ via\ UDMs\ */}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#define\ CS\_P\_OFFSET\ NO\_OF\_UDMS}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#define\ CE\_X\_OFFSET\ (CS\_P\_OFFSET\ +\ N\_CS\_P)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ CS\_N\_OFFSET\ (CE\_X\_OFFSET\ +\ N\_CE\_X)}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ N\_UDM\_TOTAL\ (NO\_OF\_UDMS\ +\ N\_VAR\_TOTAL)}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#define\ \_C\_CS\_P(c,\ t,\ i,\ j)\ C\_UDMI(c,\ t,\ (CS\_P\_OFFSET\ +\ (i)*n\_RP\ +\ (j)))}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#define\ \_C\_CS\_N(c,\ t,\ i,\ j)\ C\_UDMI(c,\ t,\ (CS\_N\_OFFSET\ +\ (i)*n\_RN\ +\ (j)))}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#define\ \_C\_CE\_P(c,\ t,\ i)\ \ \ \ C\_UDMI(c,\ t,\ (CE\_X\_OFFSET\ +\ (i)))}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#define\ \_C\_CE\_S(c,\ t,\ i)\ \ \ \ C\_UDMI(c,\ t,\ (CE\_X\_OFFSET\ +\ n\_XP\ +\ (i)))}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ \_C\_CE\_N(c,\ t,\ i)\ \ \ \ C\_UDMI(c,\ t,\ (CE\_X\_OFFSET\ +\ n\_XP\ +\ n\_XS\ +\ (i)))}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{comment}{/*\ Macros\ for\ accessing\ Cs,\ Ce\ directly\ from\ IDA\ solution\ vector\ */}}
+\DoxyCodeLine{00196\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_ab753fd45a7e47e5c172f6c432c9a515b}{begin\_NE\_Domain}},\ \mbox{\hyperlink{cae__echem_8h_aa6de34fe4c1b67670961377fdf09255a}{begin\_SP\_Domain}},\ \mbox{\hyperlink{cae__echem_8h_abc14c7fea95557b64efd49b2356d0593}{begin\_PE\_Domain}};}
+\DoxyCodeLine{00197\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a1399f3c184b0b28eaa0e559f8fd838bc}{n\_eqn\_per\_x\_NE}},\ \ \mbox{\hyperlink{cae__echem_8h_a8d76f4df9dacca28a7c327ced3f2f440}{n\_eqn\_per\_x\_SP}},\ \ \mbox{\hyperlink{cae__echem_8h_a6e7774dc69f101ccd3a3c5d703eda0e2}{n\_eqn\_per\_x\_PE}};}
+\DoxyCodeLine{00198\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a279c778f0a76ea6add0ffd502178c603}{n\_tot\_Eqn}};}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a0ed70d7038f19733f5e8bb08bb55f51e}{Ce\_NE\_Index}};}
+\DoxyCodeLine{00201\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a2cfbaf3105dfe826c4dc83895209bf16}{Ce\_SP\_Index}};}
+\DoxyCodeLine{00202\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a268d29a7faea0672ec79267fc48a4f3a}{Ce\_PE\_Index}};}
+\DoxyCodeLine{00203\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_aa25038f959df59c2477a7fa78873d09c}{Begin\_Cs\_NE\_Index}};}
+\DoxyCodeLine{00204\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a54f09baff93d7a397e9dcce1b4d02325}{Begin\_Cs\_PE\_Index}};}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}};}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ Ce\_N(i)\ \ \ (NV\_Ith\_S(yy,\ \ (begin\_NE\_Domain\ +\ (i)*n\_eqn\_per\_x\_NE\ +\ Ce\_NE\_Index)))}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ Ce\_S(i)\ \ \ (NV\_Ith\_S(yy,\ \ (begin\_SP\_Domain\ +\ (i)*n\_eqn\_per\_x\_SP\ +\ Ce\_SP\_Index)))}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ Ce\_P(i)\ \ \ (NV\_Ith\_S(yy,\ \ (begin\_PE\_Domain\ +\ (i)*n\_eqn\_per\_x\_PE\ +\ Ce\_PE\_Index)))}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ Cs\_N\_p(i)\ (\&NV\_Ith\_S(yy,\ (begin\_NE\_Domain\ +\ (i)*n\_eqn\_per\_x\_NE\ +\ Begin\_Cs\_NE\_Index)))}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ Cs\_P\_p(i)\ (\&NV\_Ith\_S(yy,\ (begin\_PE\_Domain\ +\ (i)*n\_eqn\_per\_x\_PE\ +\ Begin\_Cs\_PE\_Index)))}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ ECM\_Y(i)\ \ (NV\_Ith\_S(yy,\ (i)))}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ NTGK\_Y(i)\ (NV\_Ith\_S(yy,\ (i)))}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \textcolor{comment}{/*\ Particle-\/Electrode\ Model\ Functions\ */}}
+\DoxyCodeLine{00218\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a59214dc2363cac4be9c47a990f8e7a50}{IDA\_Startup}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00219\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_ad5524b44eec5a4b4a85b58dfe0222de5}{IDA\_Cleanup}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00220\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a9eca31afdc7df661342919a06e0a733e}{IDA\_EChem\_Parameters}}(\textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_aca11bf14250e21c92b34fc20473d5c8d}{echem\_model}});}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a75b905b0882a84c202aafce990f5b341}{ecm\_p2d}}(\mbox{\hyperlink{struct__ida__io}{IDA\_IO}}\ *ida\_args);}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00225\ \{}
+\DoxyCodeLine{00226\ \ \ \mbox{\hyperlink{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fceac1d9c85b6d0b5f0c3a86103d0026663b}{CURR}}\ =\ 0,}
+\DoxyCodeLine{00227\ \ \ \mbox{\hyperlink{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea9889316c6fd4ad6218289003f5d63291}{VOLTAGE}},}
+\DoxyCodeLine{00228\ \ \ \mbox{\hyperlink{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea316771101d4b4b1dea7d7e2a82ef1658}{POWER}},}
+\DoxyCodeLine{00229\ \ \ \mbox{\hyperlink{cae__echem_8h_aaf105ae5beaca1dee30ae54530691fcea5fe5d33bd0fbe032cd2abdf6f895e887}{RESISTANCE}}}
+\DoxyCodeLine{00230\ \};}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cae__echem_8h_a00d7d81b02b851ba879790e6fdd87718}{Control\_Mode}};}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_ECHEM\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

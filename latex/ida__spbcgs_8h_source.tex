@@ -1,0 +1,65 @@
+\doxysection{ida\+\_\+spbcgs.\+h}
+\hypertarget{ida__spbcgs_8h_source}{}\label{ida__spbcgs_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_spbcgs.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_spbcgs.h}}
+\mbox{\hyperlink{ida__spbcgs_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.2\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2006/11/29\ 00:05:06\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer(s):\ Aaron\ Collier\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2004,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ This\ is\ the\ public\ header\ file\ for\ the\ IDA\ scaled\ preconditioned}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ Bi-\/CGSTAB\ linear\ solver\ module,\ IDASPBCG.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#ifndef\ \_IDASPBCG\_H}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ \_IDASPBCG\_H}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{ida__spils_8h}{ida/ida\_spils.h}}>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__spbcgs_8h}{sundials/sundials\_spbcgs.h}}>}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ Function\ :\ IDASpbcg}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *\ A\ call\ to\ the\ IDASpbcg\ function\ links\ the\ main\ integrator\ with}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *\ the\ IDASPBCG\ linear\ solver\ module.\ Its\ parameters\ are\ as}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ follows:}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ IDA\_mem\ \ \ is\ the\ pointer\ to\ memory\ block\ returned\ by\ IDACreate.}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ maxl\ \ \ \ \ \ is\ the\ maximum\ Krylov\ subspace\ dimension,\ an}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ optional\ input.\ Pass\ 0\ to\ use\ the\ default\ value.}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Otherwise\ pass\ a\ positive\ integer.}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ The\ return\ values\ of\ IDASpbcg\ are:}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_SUCCESS\ \ \ \ if\ successful}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_MEM\_NULL\ \ \ if\ the\ ida\ memory\ was\ NULL}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_MEM\_FAIL\ \ \ if\ there\ was\ a\ memory\ allocation\ failure}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ \ \ \ IDASPILS\_ILL\_INPUT\ \ if\ there\ was\ illegal\ input.}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ The\ above\ constants\ are\ defined\ in\ ida\_spils.h}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__spbcgs_8h_ab32eac654314d23fa0ffde92241bbfc5}{IDASpbcg}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{int}\ maxl);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00056\ \}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,1799 @@
+\doxysection{mpmonitor.\+h}
+\hypertarget{mpmonitor_8h_source}{}\label{mpmonitor_8h_source}\index{fluent20.1.0/multiport/src/mpmonitor.h@{fluent20.1.0/multiport/src/mpmonitor.h}}
+\mbox{\hyperlink{mpmonitor_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_MULTIPORT\_MPMONITOR\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_MULTIPORT\_MPMONITOR\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)}}
+\DoxyCodeLine{00009\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ MPT\_MONITOR\_DURATION\_INFINITE\ \ \ -\/1}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ 10\ milliseconds\ will\ be\ the\ time\ between\ communicating\ the}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ heartbeats.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ MPT\_MONITOR\_KEEPALIVE\_DEFAULT\ \ \ 10}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ The\ opaque\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}};}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ MPT\_MONITOR\_NULL\ \ -\/1}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *\ The\ commands\ recognized\ by\ the\ Monitor\ System.}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ At\ any\ point\ in\ time,\ only\ one\ of\ these\ commands}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ will\ be\ active\ in\ the\ monitor\ system.}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00037\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00038\ \{}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea38a2ce91e55be8dfc0708170efa7577d}{MPT\_MONITOR\_COMMAND\_MIN}}\ =\ -\/1,}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \textcolor{comment}{/*\ Normal\ state\ of\ affairs\ in\ the\ monitor\ system\ */}}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea50d1448013c6f17125caee18aa418af7}{NORMAL}}\ =\ 0,}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \textcolor{comment}{/*\ Used\ for\ normal\ termination\ of\ the\ monitor\ system\ */}}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea3b5b9843649b0f629ecb6eabc837acc7}{NORMAL\_EXITING}},}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \textcolor{comment}{/*\ Fatal\ error\ encountered.\ Monitor\ system\ to\ be\ gracefully\ terminated.\ */}}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eab688f39139474a306dfce8ebf0a93518}{CLEANUP\_EXITING}},}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ \ \ *\ Non-\/fatal\ error\ (SIGFPE,\ Error,...)\ occurred.}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ \ \ *\ All\ the\ processes\ in\ the\ monitor\ system\ must\ interrupt\ processing}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ \ \ *\ and\ synchronize.}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea7bf859ff46184194a806496e5c41793c}{INTERRUPT\_AND\_SYNC}},}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ \ \ *\ After\ INTERRUPT\_AND\_SYNC,\ monitor\ thread\ will\ be\ destroyed}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ \ \ *\ and\ recreated\ since\ all\ the\ processes\ synchronize.}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ \ \ *\ More\ like\ a\ fresh\ start.}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ \ \ *\ USED\ FOR\ INTERNAL\ PURPOSES...}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea6e30b387abd047d0d88e0eb9ee894f46}{RECREATE\_MONITOR\_THREAD}},}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ \ \ *\ If\ Monitor\ system\ of\ one\ process\ times\ out,}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ \ \ *\ then\ this\ command\ is\ used\ to\ tell\ the\ other\ processes.}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ \ \ *\ USED\ FOR\ INTERNAL\ PURPOSES...}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736ea5309de8b5eca46346e05eb35ecb9b80c}{MONITOR\_TIMED\_OUT}},}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ \ \ *\ Command\ for\ barrier\ synchronization}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ \ \ *\ USED\ FOR\ INTERNAL\ PURPOSES...}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ \ \ */}}
+\DoxyCodeLine{00076\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eaef10b8804992b6a16960332346c21493}{BARRIER}},}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736eaf3b2fee54f403246ea2cd747b55db31e}{MPT\_MONITOR\_COMMAND\_MAX}}}
+\DoxyCodeLine{00079\ \}\ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\_Monitor\_command}};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *\ Get/Set\ the\ verbosity\ of\ the\ system.}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00086\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00087\ \mbox{\hyperlink{mpmonitor_8h_a8f574d16f98442f81d05a9cd9bff3950}{MPT\_Monitor\_system\_set\_verbosity}}(}
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00089\ \ \ \textcolor{keywordtype}{int}\ verbosity}
+\DoxyCodeLine{00090\ );}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00093\ \mbox{\hyperlink{mpmonitor_8h_a5cad46cf24a930605d874c599647c04d}{MPT\_Monitor\_system\_get\_verbosity}}(}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00095\ );}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmpt__monitor__process__connection__info__t}{mpt\_monitor\_process\_connection\_info\_t}}}
+\DoxyCodeLine{00100\ \{}
+\DoxyCodeLine{00101\ \ \ \textcolor{comment}{/*\ Remote\ connection\ protocol\ to\ use\ to\ connect\ to\ this\ endpoint\ */}}
+\DoxyCodeLine{00102\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmpt__monitor__process__connection__info__t_a15be9653ea9e10b7fb31b9fc4dd5f250}{ssh}};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \textcolor{comment}{/*\ The\ hostname\ of\ the\ endpoint\ */}}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structmpt__monitor__process__connection__info__t_af203df082d5c6dcaa0c88b07cf86466d}{hostname}};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \textcolor{comment}{/*\ The\ PID\ of\ the\ endpoint\ */}}
+\DoxyCodeLine{00108\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmpt__monitor__process__connection__info__t_af500917c052066b40cf47f96b43c607b}{pid}};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \textcolor{comment}{/*\ The\ listening\ port\ of\ the\ endpoint\ */}}
+\DoxyCodeLine{00111\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmpt__monitor__process__connection__info__t_a63c89c04d1feae07ca35558055155ffb}{port}};}
+\DoxyCodeLine{00112\ \}\ \mbox{\hyperlink{mpmonitor_8h_a1abd20db914aad839490789328494748}{MPT\_Monitor\_Process\_Connection\_Info}};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *\ These\ functions\ form\ the\ core\ interface\ of\ Monitor\ System\ Management.}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ Shown\ below\ is\ the\ typical\ usage\ of\ the\ monitor\ system.}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ \ \ \ \ MPT\_MonitorID\ mptMonitorID;}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ \ \ \ \ int\ rc\ =\ MPT\_Monitor\_system\_create(}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&mptMonitorID,}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Infinite\ Duration}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Keepalive\ Interval\ between\ heartbeats}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ VERBOSE}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpi\_global\_comm\ \ \ \ \ \ //\ MPI\ communicator}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ \ \ \ \ );\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ (MPI\_COMM\_NULL\ for\ controller)}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *\ \ \ \ \ //\ check\ for\ return\ code}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *\ \ \ \ \ rc\ =\ MPT\_Monitor\_system\_start(mptMonitorID);}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ *\ \ \ \ \ //\ check\ for\ return\ code}}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ *\ \ \ \ \ rc\ =\ MPT\_Monitor\_system\_stop(mptMonitorID);}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *\ \ \ \ \ //\ check\ for\ return\ code}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ \ \ \ \ rc\ =\ MPT\_Monitor\_system\_start(mptMonitorID);}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *\ \ \ \ \ //\ check\ for\ return\ code}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ \ \ \ \ rc\ =\ MPT\_Monitor\_system\_stop(mptMonitorID);}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *\ \ \ \ \ //\ You\ can\ start\ and\ stop\ the\ monitor\ system\ as\ many\ times\ as}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ \ \ \ \ //\ you\ like\ before\ destroying.}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *\ \ \ \ \ rc\ =\ MPT\_Monitor\_system\_destroy(mptMonitorID);}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ *\ \ \ \ \ //\ check\ for\ return\ code}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ *-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ Creates\ the\ memory\ for\ the\ Monitor\ System.}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ *\ mptMonitorID\ (OUT)\ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ *\ duration\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ Duration\ (in\ seconds)\ of\ the\ monitor\ system.}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ *\ keepaliveInterval\ (IN)\ \ \ Interval\ (in\ milliseconds)\ between\ heartbeats.}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ *\ verbosity\ (IN)\ \ \ \ \ \ \ \ \ \ \ Verbosity\ of\ the\ diagnostics\ in\ Monitor\ System.}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ *\ mpiComm\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ The\ MPI\ communicator\ for\ the\ group\ of\ compute\ processes}}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in\ monitor\ system.}}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ *\ All\ the\ compute\ processes\ and\ host/controller\ must\ call\ this\ function.}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00176\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00177\ \mbox{\hyperlink{mpmonitor_8h_a555c8f4f775a2b9b450a69c841e58713}{MPT\_Monitor\_system\_create}}(}
+\DoxyCodeLine{00178\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ *mptMonitorID,}
+\DoxyCodeLine{00179\ \ \ \textcolor{keywordtype}{long}\ duration,}
+\DoxyCodeLine{00180\ \ \ \textcolor{keywordtype}{int}\ keepaliveInterval,}
+\DoxyCodeLine{00181\ \ \ \textcolor{keywordtype}{int}\ verbosity,}
+\DoxyCodeLine{00182\ \ \ \textcolor{keywordtype}{void}\ *mpiComm}
+\DoxyCodeLine{00183\ );}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ *\ These\ two\ callbacks\ should\ be\ integrated\ into\ the\ Callback\ Interface.}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00188\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{mpmonitor_8h_a99a3012266eda253878d30952af55927}{MPT\_Monitor\_Exit\_Callback}})}
+\DoxyCodeLine{00189\ (}
+\DoxyCodeLine{00190\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ id}
+\DoxyCodeLine{00191\ );}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{mpmonitor_8h_ae4e23760d6bd2d98ffd2e6303d61beb4}{MPT\_Monitor\_Status\_Callback}})}
+\DoxyCodeLine{00194\ (}
+\DoxyCodeLine{00195\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\_Monitor\_command}}\ command,}
+\DoxyCodeLine{00196\ \ \ \textcolor{keywordtype}{int}\ msgLen,}
+\DoxyCodeLine{00197\ \ \ \textcolor{keywordtype}{char}\ *message}
+\DoxyCodeLine{00198\ );}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00201\ \{}
+\DoxyCodeLine{00202\ \ \ \mbox{\hyperlink{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a792a408687b0d4e5ccca7bee6aed7541}{MPT\_CART}}\ =\ 0,}
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a6007ce8ca871aebc2a0fe6e934547c30}{MPT\_TREE}},}
+\DoxyCodeLine{00204\ \ \ \mbox{\hyperlink{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1a7c65ca5371d112ffacfa6a6b2846ee3a}{MPT\_GRAPH}}}
+\DoxyCodeLine{00205\ \}\ \mbox{\hyperlink{mpmonitor_8h_a5039d81be3e9349feb57ba520a1fcbc1}{MPT\_Monitor\_Connection\_Topotype}};}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *\ Register\ callback\ that\ would\ be\ called\ to\ exit\ during\ fatal\ errors.}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ *\ id\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00214\ \textcolor{comment}{\ *\ callback\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pointer\ for\ callback\ function.}}
+\DoxyCodeLine{00215\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00216\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00217\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00218\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00219\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00221\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{00222\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00223\ \mbox{\hyperlink{mpmonitor_8h_a4603635480f85b2761f904e25e5656c9}{MPT\_Monitor\_register\_exit\_callback}}(}
+\DoxyCodeLine{00224\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00225\ \ \ \mbox{\hyperlink{mpmonitor_8h_a99a3012266eda253878d30952af55927}{MPT\_Monitor\_Exit\_Callback}}\ callback}
+\DoxyCodeLine{00226\ );}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00229\ \textcolor{comment}{\ *\ Unregister\ exit\ callback.}}
+\DoxyCodeLine{00230\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ id\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00235\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00239\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00240\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{00241\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00242\ \mbox{\hyperlink{mpmonitor_8h_a84bf29fb5bce925de0d7e56c7bac6367}{MPT\_Monitor\_unregister\_exit\_callback}}(}
+\DoxyCodeLine{00243\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00244\ );}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00247\ \textcolor{comment}{\ *\ Register\ status\ callback\ that\ would\ be\ called\ at\ the\ end\ of\ each\ set\ of\ heartbeats.}}
+\DoxyCodeLine{00248\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00249\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00250\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ *\ id\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00252\ \textcolor{comment}{\ *\ callback\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pointer\ for\ callback\ function.}}
+\DoxyCodeLine{00253\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00254\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00255\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00256\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00257\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00258\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00259\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{00260\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00261\ \mbox{\hyperlink{mpmonitor_8h_a219127c2959ffc273f0eaad5c152aeb2}{MPT\_Monitor\_register\_status\_callback}}(}
+\DoxyCodeLine{00262\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00263\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae4e23760d6bd2d98ffd2e6303d61beb4}{MPT\_Monitor\_Status\_Callback}}\ callback}
+\DoxyCodeLine{00264\ );}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00267\ \textcolor{comment}{\ *\ Unregister\ status\ callback.}}
+\DoxyCodeLine{00268\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00269\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00270\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00271\ \textcolor{comment}{\ *\ id\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00273\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00274\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00275\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00276\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00277\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00278\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{00279\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00280\ \mbox{\hyperlink{mpmonitor_8h_af6ce9aa9b13b47cb55115f73711de6b2}{MPT\_Monitor\_unregister\_status\_callback}}(}
+\DoxyCodeLine{00281\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00282\ );}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00285\ \textcolor{comment}{\ *\ For\ topology\ type\ MPT\_TREE,}}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ *\ 'topology'\ will\ contain\ the\ height/degree\ of\ the\ tree.}}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ *\ For\ MPT\_CART,}}
+\DoxyCodeLine{00289\ \textcolor{comment}{\ *\ <ndims>\ <dims[0]\ dims[1]...>}}
+\DoxyCodeLine{00290\ \textcolor{comment}{\ *\ where\ the\ first\ datum\ 'ndims'\ is\ the\ number\ of\ dimensions\ of\ the\ cartesian}}
+\DoxyCodeLine{00291\ \textcolor{comment}{\ *\ grid\ and\ the\ respective\ dimensions\ are\ in\ the\ array\ of\ 'dims'.}}
+\DoxyCodeLine{00292\ \textcolor{comment}{\ *\ For\ example:}}
+\DoxyCodeLine{00293\ \textcolor{comment}{\ *\ 3\ 4\ 4\ 4}}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ *\ would\ mean\ a\ 3D\ cartesian\ grid\ of\ 64\ processes,\ 4\ in\ each\ dimension.}}
+\DoxyCodeLine{00295\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00296\ \textcolor{comment}{\ *\ For\ MPT\_GRAPH,}}
+\DoxyCodeLine{00297\ \textcolor{comment}{\ *\ <nnodes>\ <index[0]\ index[1]...>\ <edges[0]\ edges[1]...>}}
+\DoxyCodeLine{00298\ \textcolor{comment}{\ *\ where\ 'nnodes'\ is\ number\ of\ nodes\ in\ graph}}
+\DoxyCodeLine{00299\ \textcolor{comment}{\ *\ 'index[0]\ index[1]...'\ array\ of\ integers\ describing\ node\ degrees}}
+\DoxyCodeLine{00300\ \textcolor{comment}{\ *\ 'edges[0]\ edges[1]...'\ array\ of\ integers\ describing\ graph\ edges}}
+\DoxyCodeLine{00301\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00302\ \textcolor{comment}{\ *\ index[0]\ is\ the\ degree\ of\ node\ zero,\ and\ index[i]\ -\/\ index[i-\/1]}}
+\DoxyCodeLine{00303\ \textcolor{comment}{\ *\ is\ the\ degree\ of\ node\ i,\ i=1,\ ...,\ nnodes-\/1;}}
+\DoxyCodeLine{00304\ \textcolor{comment}{\ *\ the\ list\ of\ neighbors\ of\ node\ zero\ is\ stored\ in\ edges[j],\ for\ 1\ <=\ j\ <=\ index[1]}}
+\DoxyCodeLine{00305\ \textcolor{comment}{\ *\ and\ the\ list\ of\ neighbors\ of\ node\ i,\ i\ >\ 0,\ is\ stored\ in}}
+\DoxyCodeLine{00306\ \textcolor{comment}{\ *\ edges[j],\ index[i]\ +\ 1\ <=\ j\ <=\ index[i+1].}}
+\DoxyCodeLine{00307\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00308\ \textcolor{comment}{\ *\ The\ topology\ specification\ follows\ MPI\ topology\ interface...}}
+\DoxyCodeLine{00309\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00310\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmpt__monitor__connection__topology__info__t}{mpt\_monitor\_connection\_topology\_info\_t}}}
+\DoxyCodeLine{00311\ \{}
+\DoxyCodeLine{00312\ \ \ \textcolor{comment}{/*\ Type\ of\ topology\ */}}
+\DoxyCodeLine{00313\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmpt__monitor__connection__topology__info__t_a15ab00b48dfe1c3adb4f3e44a6e66ff9}{topoType}};}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \textcolor{comment}{/*\ The\ topology\ information\ specifying\ how\ the\ processes\ are\ connected\ */}}
+\DoxyCodeLine{00316\ \ \ \textcolor{comment}{/*\ The\ length\ of\ the\ information\ */}}
+\DoxyCodeLine{00317\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structmpt__monitor__connection__topology__info__t_afed088663f8704004425cdae2120b9b3}{len}};}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \textcolor{comment}{/*\ The\ actual\ topology\ structural\ information\ */}}
+\DoxyCodeLine{00320\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structmpt__monitor__connection__topology__info__t_a408127f49a1c7ac8035dd35918204070}{topology}};}
+\DoxyCodeLine{00321\ \}\ \mbox{\hyperlink{mpmonitor_8h_a71c35373e871ad0152517982ebbc7b34}{MPT\_Monitor\_Topology\_Info}};}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00324\ \textcolor{comment}{\ *\ Starts\ the\ monitor\ System.}}
+\DoxyCodeLine{00325\ \textcolor{comment}{\ *\ The\ connection\ topology\ is\ created.}}
+\DoxyCodeLine{00326\ \textcolor{comment}{\ *\ Monitor\ threads\ are\ created\ and\ they\ start\ sending/receiving}}
+\DoxyCodeLine{00327\ \textcolor{comment}{\ *\ the\ heartbeats.}}
+\DoxyCodeLine{00328\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00329\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00330\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00331\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00332\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00333\ \textcolor{comment}{\ *\ connectionTopology\ (IN)\ \ \ \ \ The\ connection\ topology\ of\ the\ processes.}}
+\DoxyCodeLine{00334\ \textcolor{comment}{\ *\ mptControllerInfo\ (IN)\ \ \ \ \ \ Used\ for\ creating\ the\ cleanup\ scripts.}}
+\DoxyCodeLine{00335\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (for\ backward\ compatibility)}}
+\DoxyCodeLine{00336\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00337\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00338\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00339\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00340\ \textcolor{comment}{\ *\ All\ the\ compute\ processes\ and\ host/controller\ must\ call\ this\ function.}}
+\DoxyCodeLine{00341\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00342\ \textcolor{comment}{\ *\ if\ 'exitHandler'\ is\ specified\ NULL,\ the\ action\ of\ the\ monitor\ system}}
+\DoxyCodeLine{00343\ \textcolor{comment}{\ *\ exit\ handler\ is\ to\ terminate\ the\ process.}}
+\DoxyCodeLine{00344\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00345\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00346\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00347\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00348\ \textcolor{comment}{\ *\ The\ steps\ in\ the\ startup\ of\ Monitor\ System\ are\ as\ follows:}}
+\DoxyCodeLine{00349\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00350\ \textcolor{comment}{\ *\ \ \ \ \ Description\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ State}}
+\DoxyCodeLine{00351\ \textcolor{comment}{\ *\ \ \ \ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00352\ \textcolor{comment}{\ *\ 1).\ Connection\ tree\ is\ built.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CONN\_TREE\_BUILT}}
+\DoxyCodeLine{00353\ \textcolor{comment}{\ *\ \ \ \ \ Here\ each\ process\ knows\ which}}
+\DoxyCodeLine{00354\ \textcolor{comment}{\ *\ \ \ \ \ other\ processes\ it\ is\ connected\ to.}}
+\DoxyCodeLine{00355\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00356\ \textcolor{comment}{\ *\ 2).\ Socket\ connections\ are\ created\ between\ \ \ \ \ SOCKS\_CREATED}}
+\DoxyCodeLine{00357\ \textcolor{comment}{\ *\ \ \ \ \ the\ processes.}}
+\DoxyCodeLine{00358\ \textcolor{comment}{\ *\ \ \ \ \ So,\ now\ the\ connection\ topology\ is\ \ \ \ \ \ \ \ \ CONNS\_CREATED}}
+\DoxyCodeLine{00359\ \textcolor{comment}{\ *\ \ \ \ \ completely\ built.}}
+\DoxyCodeLine{00360\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00361\ \textcolor{comment}{\ *\ 3).\ Each\ process\ creates\ a\ monitor\ thread\ \ \ \ \ \ THREADS\_CREATED}}
+\DoxyCodeLine{00362\ \textcolor{comment}{\ *\ \ \ \ \ and\ a\ server\ thread.}}
+\DoxyCodeLine{00363\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00364\ \textcolor{comment}{\ *\ 4).\ Cleanup\ scripts\ are\ created.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ THREADS\_DESTROYED}}
+\DoxyCodeLine{00365\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00366\ \textcolor{comment}{\ *\ 5).\ Now,\ the\ monitor\ system\ is\ active.\ \ \ \ \ \ \ \ \ STARTED}}
+\DoxyCodeLine{00367\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00368\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00369\ \mbox{\hyperlink{mpmonitor_8h_aa99e1d26d41b2f0cc5a1128f4fe3217a}{MPT\_Monitor\_system\_start}}(}
+\DoxyCodeLine{00370\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00371\ \ \ \mbox{\hyperlink{structmpt__monitor__connection__topology__info__t}{MPT\_Monitor\_Topology\_Info}}\ connectionTopology,}
+\DoxyCodeLine{00372\ \ \ \mbox{\hyperlink{structmpt__monitor__process__connection__info__t}{MPT\_Monitor\_Process\_Connection\_Info}}\ *mptControllerInfo,}
+\DoxyCodeLine{00373\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *procName}
+\DoxyCodeLine{00374\ );}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00377\ \textcolor{comment}{\ *\ Stops\ the\ monitor\ System.}}
+\DoxyCodeLine{00378\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00379\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00380\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00381\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00382\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00383\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00384\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00385\ \mbox{\hyperlink{mpmonitor_8h_a41092dd20826eedfc9093438e586ea78}{MPT\_Monitor\_system\_stop}}(}
+\DoxyCodeLine{00386\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00387\ );}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00390\ \textcolor{comment}{\ *\ Returns\ yes/no\ if\ monitor\ system\ is\ alive...}}
+\DoxyCodeLine{00391\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00392\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00393\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00394\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}}
+\DoxyCodeLine{00395\ \mbox{\hyperlink{mpmonitor_8h_a859360020c782ccd7031f5a9e24fd37b}{MPT\_Monitor\_system\_is\_alive}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00398\ \textcolor{comment}{\ *\ Returns\ the\ monitor\ ID\ of\ the\ current\ monitor\ System.}}
+\DoxyCodeLine{00399\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00400\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00401\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00402\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00403\ \mbox{\hyperlink{mpmonitor_8h_a0db866d50f35bbbd54099e6a7c8fbd96}{MPT\_Monitor\_system\_get\_current}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ FILE\ *}
+\DoxyCodeLine{00406\ \mbox{\hyperlink{mpmonitor_8h_a61e70fafd2f8e0b7df6be008022fa0cd}{MPT\_Monitor\_system\_backtrace\_file}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00407\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ FILE\ *}
+\DoxyCodeLine{00408\ \mbox{\hyperlink{mpmonitor_8h_a2c5bcdd72acbbb7c38681e6b3cb6e73c}{MPT\_Monitor\_system\_open\_btrace\_file}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00412\ \textcolor{comment}{\ *\ Returns\ my\ ID\ in\ the\ monitor\ system}}
+\DoxyCodeLine{00413\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00414\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00415\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00416\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00417\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00418\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00419\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00420\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00421\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00422\ \mbox{\hyperlink{mpmonitor_8h_ab9e3471e8725382e8e1e5644d1b4ff0b}{MPT\_Monitor\_system\_myid}}(}
+\DoxyCodeLine{00423\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00424\ );}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00427\ \textcolor{comment}{\ *\ Returns\ Host/Controller\ ID\ in\ the\ monitor\ system}}
+\DoxyCodeLine{00428\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00429\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00430\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00431\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00432\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00433\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00434\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00435\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00436\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00437\ \mbox{\hyperlink{mpmonitor_8h_a6a90af976b47a1600ba3fe96a084966e}{MPT\_Monitor\_system\_controller}}(}
+\DoxyCodeLine{00438\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00439\ );}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00442\ \textcolor{comment}{\ *\ Returns\ a\ flag\ to\ tell\ if\ the\ monitor\ threads\ are\ exiting\ in\ the}}
+\DoxyCodeLine{00443\ \textcolor{comment}{\ *\ case\ of\ CLEANUP\_EXITING.}}
+\DoxyCodeLine{00444\ \textcolor{comment}{\ *\ To\ be\ used\ in\ signal\ handler...}}
+\DoxyCodeLine{00445\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00446\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00447\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00448\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00449\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00450\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00451\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00452\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00453\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}}
+\DoxyCodeLine{00454\ \mbox{\hyperlink{mpmonitor_8h_ae013c290c66575584c3c6e305b01d384}{MPT\_Monitor\_system\_is\_exiting}}(}
+\DoxyCodeLine{00455\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00456\ );}
+\DoxyCodeLine{00457\ }
+\DoxyCodeLine{00458\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00459\ \textcolor{comment}{\ *\ Sleep\ for\ a\ specified\ number\ milliseconds.}}
+\DoxyCodeLine{00460\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00461\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00462\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00463\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00464\ \textcolor{comment}{\ *\ t\ (IN)\ \ \ \ \ \ \ Number\ of\ milliseconds\ to\ sleep.}}
+\DoxyCodeLine{00465\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00466\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00467\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00468\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00469\ \mbox{\hyperlink{mpmonitor_8h_a543b95482915522b64d50ad6bb8bf4a7}{MPT\_Monitor\_system\_sleep}}(}
+\DoxyCodeLine{00470\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ milliseconds}
+\DoxyCodeLine{00471\ );}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00474\ \textcolor{comment}{\ *\ Destroys\ the\ monitor\ System.}}
+\DoxyCodeLine{00475\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00476\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00477\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00478\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00479\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00480\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00481\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00482\ \mbox{\hyperlink{mpmonitor_8h_a15a45be17a74ca9c05d1996fd08b181e}{MPT\_Monitor\_system\_destroy}}(}
+\DoxyCodeLine{00483\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00484\ );}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00487\ \textcolor{comment}{\ *\ Returns\ a\ stringified\ command.}}
+\DoxyCodeLine{00488\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00489\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00490\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00491\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00492\ \textcolor{comment}{\ *\ command\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ Monitor\ system\ command.}}
+\DoxyCodeLine{00493\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00494\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00495\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00496\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{char}\ *}
+\DoxyCodeLine{00497\ \mbox{\hyperlink{mpmonitor_8h_ad5678dc96dbcaea2e6f78ac61db7910a}{MPT\_Monitor\_system\_command\_stringify}}(}
+\DoxyCodeLine{00498\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\_Monitor\_command}}\ command}
+\DoxyCodeLine{00499\ );}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00502\ \textcolor{comment}{\ *\ Returns\ a\ description\ of\ the\ signal.}}
+\DoxyCodeLine{00503\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00504\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00505\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00506\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00507\ \textcolor{comment}{\ *\ signum\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ The\ signal\ number.}}
+\DoxyCodeLine{00508\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00509\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00510\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00511\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *}
+\DoxyCodeLine{00512\ \mbox{\hyperlink{mpmonitor_8h_a09ad848a30a3fc3765ad533f2b46fdf7}{MPT\_Monitor\_system\_signal\_description}}(}
+\DoxyCodeLine{00513\ \ \ \textcolor{keywordtype}{int}\ signum}
+\DoxyCodeLine{00514\ );}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00517\ \textcolor{comment}{\ *\ Returns\ a\ stringified\ title\ of\ the\ signal.}}
+\DoxyCodeLine{00518\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00519\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00520\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00521\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00522\ \textcolor{comment}{\ *\ signum\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ The\ signal\ number.}}
+\DoxyCodeLine{00523\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00524\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00525\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00526\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *}
+\DoxyCodeLine{00527\ \mbox{\hyperlink{mpmonitor_8h_adfa9cef6632a32315522f77d8be3371d}{MPT\_Monitor\_system\_signal\_stringify}}(}
+\DoxyCodeLine{00528\ \ \ \textcolor{keywordtype}{int}\ signum}
+\DoxyCodeLine{00529\ );}
+\DoxyCodeLine{00530\ }
+\DoxyCodeLine{00531\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00532\ \textcolor{comment}{\ *\ Is\ the\ system\ 'cleanup\ exiting'?}}
+\DoxyCodeLine{00533\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00534\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00535\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00536\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00537\ \textcolor{comment}{\ *\ command\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ Monitor\ system\ command.}}
+\DoxyCodeLine{00538\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00539\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00540\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00541\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00542\ \textcolor{comment}{\ *\ Yes\ if\ command\ ==\ CLEANUP\_EXITING}}
+\DoxyCodeLine{00543\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00544\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00545\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00546\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}}
+\DoxyCodeLine{00547\ \mbox{\hyperlink{mpmonitor_8h_a9cebdfb61d345ea369700fb06a6998d0}{MPT\_Monitor\_system\_cleanup\_exiting}}(}
+\DoxyCodeLine{00548\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\_Monitor\_command}}\ command}
+\DoxyCodeLine{00549\ );}
+\DoxyCodeLine{00550\ }
+\DoxyCodeLine{00551\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00552\ \textcolor{comment}{\ *\ Is\ the\ system\ 'normal\ exiting'?}}
+\DoxyCodeLine{00553\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00554\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00555\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00556\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00557\ \textcolor{comment}{\ *\ command\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ Monitor\ system\ command.}}
+\DoxyCodeLine{00558\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00559\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00560\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00561\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00562\ \textcolor{comment}{\ *\ Yes\ if\ command\ ==\ NORMAL\_EXITING}}
+\DoxyCodeLine{00563\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00564\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00565\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00566\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}}
+\DoxyCodeLine{00567\ \mbox{\hyperlink{mpmonitor_8h_a90323726827a7b9f3e1f5df3afed3d7c}{MPT\_Monitor\_system\_normal\_exiting}}(}
+\DoxyCodeLine{00568\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\_Monitor\_command}}\ command}
+\DoxyCodeLine{00569\ );}
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00572\ \textcolor{comment}{\ *\ Returns\ the\ command/heartbeat\ active\ in\ the\ Monitor\ System.}}
+\DoxyCodeLine{00573\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00574\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00575\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00576\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00577\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00578\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00579\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00580\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00581\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\_Monitor\_command}}}
+\DoxyCodeLine{00582\ \mbox{\hyperlink{mpmonitor_8h_afeca63a5e82eb472d2fbaf3e9d8e0dd8}{MPT\_Monitor\_system\_query\_command}}(}
+\DoxyCodeLine{00583\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00584\ );}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00587\ \textcolor{comment}{\ *\ Returns\ the\ lifetime\ of\ the\ Monitor\ System.}}
+\DoxyCodeLine{00588\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00589\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00590\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00591\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00592\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00593\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00594\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00595\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00596\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00597\ \textcolor{comment}{\ *\ Makes\ sense\ only\ to\ call\ after\ the\ monitor\ system\ is\ stopped}}
+\DoxyCodeLine{00598\ \textcolor{comment}{\ *\ but\ later\ than\ when\ it\ is\ destroyed.}}
+\DoxyCodeLine{00599\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00600\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00601\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00602\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{double}}
+\DoxyCodeLine{00603\ \mbox{\hyperlink{mpmonitor_8h_a2964a05b1d61dc23df34f8e80e0c48b2}{MPT\_Monitor\_system\_lifetime}}(}
+\DoxyCodeLine{00604\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00605\ );}
+\DoxyCodeLine{00606\ }
+\DoxyCodeLine{00607\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/COLLECTIVE\ OPERATIONS-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00608\ }
+\DoxyCodeLine{00609\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00610\ \textcolor{comment}{\ *\ Gather\ data\ (at\ root\ process)\ from\ all\ processes\ in\ the}}
+\DoxyCodeLine{00611\ \textcolor{comment}{\ *\ monitor\ system.}}
+\DoxyCodeLine{00612\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00613\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00614\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00615\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00616\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00617\ \textcolor{comment}{\ *\ root\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ Rank\ (ID)\ of\ the\ root\ process\ at\ which}}
+\DoxyCodeLine{00618\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data\ is\ gathered.}}
+\DoxyCodeLine{00619\ \textcolor{comment}{\ *\ nflags\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ Number\ of\ unsigned\ chars\ gathered.}}
+\DoxyCodeLine{00620\ \textcolor{comment}{\ *\ iFlag\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ The\ data\ sent\ by\ processes\ that\ is\ gathered\ at\ root.}}
+\DoxyCodeLine{00621\ \textcolor{comment}{\ *\ rFlag\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ data\ gathered\ at\ root.}}
+\DoxyCodeLine{00622\ \textcolor{comment}{\ *\ (OUT)\ at\ root}}
+\DoxyCodeLine{00623\ \textcolor{comment}{\ *\ Not\ referenced\ for\ other\ processes}}
+\DoxyCodeLine{00624\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00625\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00626\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00627\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00628\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00629\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00630\ \mbox{\hyperlink{mpmonitor_8h_a15d63f0d0b9df8a6ef9e70edd9cff107}{MPT\_Monitor\_system\_gather}}(}
+\DoxyCodeLine{00631\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00632\ \ \ \textcolor{keywordtype}{int}\ root,}
+\DoxyCodeLine{00633\ \ \ \textcolor{keywordtype}{int}\ nflags,}
+\DoxyCodeLine{00634\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *iFlag,}
+\DoxyCodeLine{00635\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *rFlag}
+\DoxyCodeLine{00636\ );}
+\DoxyCodeLine{00637\ }
+\DoxyCodeLine{00638\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00639\ \textcolor{comment}{\ *\ Broadcast\ data\ from\ root\ process\ to\ all\ processes\ in\ the}}
+\DoxyCodeLine{00640\ \textcolor{comment}{\ *\ monitor\ system.}}
+\DoxyCodeLine{00641\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00642\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00643\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00644\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00645\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00646\ \textcolor{comment}{\ *\ root\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ Rank\ (ID)\ of\ the\ root\ process.}}
+\DoxyCodeLine{00647\ \textcolor{comment}{\ *\ nflags\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ Number\ of\ unsigned\ chars\ to\ broadcast.}}
+\DoxyCodeLine{00648\ \textcolor{comment}{\ *\ flags\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ data\ to\ broadcast.}}
+\DoxyCodeLine{00649\ \textcolor{comment}{\ *\ (IN)\ at\ root}}
+\DoxyCodeLine{00650\ \textcolor{comment}{\ *\ (OUT)\ at\ other\ processes}}
+\DoxyCodeLine{00651\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00652\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00653\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00654\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00655\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00656\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00657\ \mbox{\hyperlink{mpmonitor_8h_a7ea15a634acd2a759a10035aeebff70d}{MPT\_Monitor\_system\_bcast}}(}
+\DoxyCodeLine{00658\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00659\ \ \ \textcolor{keywordtype}{int}\ root,}
+\DoxyCodeLine{00660\ \ \ \textcolor{keywordtype}{int}\ nflags,}
+\DoxyCodeLine{00661\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *flags}
+\DoxyCodeLine{00662\ );}
+\DoxyCodeLine{00663\ }
+\DoxyCodeLine{00664\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00665\ \textcolor{comment}{\ *\ Barrier\ for\ all\ processes\ in\ the\ monitor\ system.}}
+\DoxyCodeLine{00666\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00667\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00668\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00669\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00670\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00671\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00672\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00673\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00674\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00675\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00676\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00677\ \mbox{\hyperlink{mpmonitor_8h_a055d14bf0e7e14e30636e650e43c7773}{MPT\_Monitor\_system\_barrier}}(}
+\DoxyCodeLine{00678\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{00679\ );}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00683\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00684\ \textcolor{comment}{\ *\ This\ function\ is\ ideally\ called\ from\ the\ signal\ handler.}}
+\DoxyCodeLine{00685\ \textcolor{comment}{\ *\ It\ is\ used\ to\ send\ an\ error/informational\ message\ to\ the\ server\ thread.}}
+\DoxyCodeLine{00686\ \textcolor{comment}{\ *\ The\ error\ message\ is\ printed\ by\ the\ server\ thread\ in}}
+\DoxyCodeLine{00687\ \textcolor{comment}{\ *\ async-\/signal-\/safe\ manner.}}
+\DoxyCodeLine{00688\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00689\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00690\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00691\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00692\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00693\ \textcolor{comment}{\ *\ signal\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ signal\ whose\ signal\ handler\ this\ function\ is\ called.}}
+\DoxyCodeLine{00694\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (Give\ MPT\_MONITOR\_SIGNAL\_NULL\ for\ other\ purposes)}}
+\DoxyCodeLine{00695\ \textcolor{comment}{\ *\ errorMsgLen\ (IN)\ \ \ \ \ \ \ \ \ The\ length\ of\ the\ error\ message\ to\ be\ printed.}}
+\DoxyCodeLine{00696\ \textcolor{comment}{\ *\ errorMessage\ (IN)\ \ \ \ \ \ \ \ The\ error\ message\ to\ be\ printed.}}
+\DoxyCodeLine{00697\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00698\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00699\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00700\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00701\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00702\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00703\ \textcolor{comment}{\ *\ Every\ process,\ which\ is\ a\ member\ of\ the\ monitor\ system\ can\ call\ this}}
+\DoxyCodeLine{00704\ \textcolor{comment}{\ *\ function\ to\ print\ an\ error\ message.}}
+\DoxyCodeLine{00705\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00706\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00707\ \mbox{\hyperlink{mpmonitor_8h_a82c3e48c0d25ad8a789352ec11758a07}{MPT\_Monitor\_system\_asyncsafe\_print\_error}}(}
+\DoxyCodeLine{00708\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00709\ \ \ \textcolor{keywordtype}{int}\ signal,}
+\DoxyCodeLine{00710\ \ \ \textcolor{keywordtype}{int}\ errorMsgLen,}
+\DoxyCodeLine{00711\ \ \ \textcolor{keywordtype}{char}\ *errorMessage}
+\DoxyCodeLine{00712\ );}
+\DoxyCodeLine{00713\ }
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\#define\ MPT\_MONITOR\_SIGNAL\_NULL\ \ -\/1}}
+\DoxyCodeLine{00715\ }
+\DoxyCodeLine{00716\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00717\ }
+\DoxyCodeLine{00718\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{mpmonitor_8h_a168129f98b986cc6da49d8e652e5f090}{MPT\_Monitor\_main\_thread\_interrupt\_fp}})}
+\DoxyCodeLine{00719\ (}
+\DoxyCodeLine{00720\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ id}
+\DoxyCodeLine{00721\ );}
+\DoxyCodeLine{00722\ }
+\DoxyCodeLine{00723\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00724\ \textcolor{comment}{\ *\ Register\ a\ main\ thread\ interrupt\ function.}}
+\DoxyCodeLine{00725\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00726\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00727\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00728\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00729\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00730\ \textcolor{comment}{\ *\ mainThreadInterrupt(IN)\ \ \ \ \ \ Register\ a\ main\ thread\ interrupt\ function.}}
+\DoxyCodeLine{00731\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ This\ function\ interrupts\ the\ main\ thread.}}
+\DoxyCodeLine{00732\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00733\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00734\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00735\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00736\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00737\ \mbox{\hyperlink{mpmonitor_8h_ad9064ed8544c692fffbcc78a55e916b0}{MPT\_Monitor\_system\_register\_main\_thread\_interrupt\_function}}(}
+\DoxyCodeLine{00738\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00739\ \ \ \mbox{\hyperlink{mpmonitor_8h_a168129f98b986cc6da49d8e652e5f090}{MPT\_Monitor\_main\_thread\_interrupt\_fp}}\ mainThreadInterrupt}
+\DoxyCodeLine{00740\ );}
+\DoxyCodeLine{00741\ }
+\DoxyCodeLine{00742\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00743\ \textcolor{comment}{\ *\ Retrieve\ the\ main\ thread\ interrupt\ flag.}}
+\DoxyCodeLine{00744\ \textcolor{comment}{\ *\ These\ calls\ are\ issued\ from\ the\ signal\ handlers.}}
+\DoxyCodeLine{00745\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00746\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00747\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00748\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00749\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00750\ \textcolor{comment}{\ *\ mainThreadInterrupted(OUT)\ \ \ The\ flag\ telling\ if\ main\ thread}}
+\DoxyCodeLine{00751\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ has\ been\ interrupted\ or\ not.}}
+\DoxyCodeLine{00752\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00753\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00754\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00755\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00756\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00757\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00758\ \textcolor{comment}{\ *\ Since\ these\ are\ mainly\ called\ from\ signal\ handlers,\ they\ will/should\ contain}}
+\DoxyCodeLine{00759\ \textcolor{comment}{\ *\ only\ async\ signal\ safe\ functions.}}
+\DoxyCodeLine{00760\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00761\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00762\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00763\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00764\ \mbox{\hyperlink{mpmonitor_8h_a79b443bcab08a822bafea044db4d7b6b}{MPT\_Monitor\_system\_get\_main\_interrupt\_flag}}(}
+\DoxyCodeLine{00765\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00766\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *mainThreadInterrupted}
+\DoxyCodeLine{00767\ );}
+\DoxyCodeLine{00768\ }
+\DoxyCodeLine{00769\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00770\ \textcolor{comment}{\ *\ Set\ the\ main\ thread\ interrupt\ flag.}}
+\DoxyCodeLine{00771\ \textcolor{comment}{\ *\ These\ calls\ are\ issued\ from\ the\ signal\ handlers.}}
+\DoxyCodeLine{00772\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00773\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00774\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00775\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00776\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00777\ \textcolor{comment}{\ *\ mainThreadInterrupted(IN)\ \ \ \ The\ flag\ telling\ if\ main\ thread}}
+\DoxyCodeLine{00778\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ has\ been\ interrupted\ or\ not.}}
+\DoxyCodeLine{00779\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00780\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00781\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00782\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00783\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00784\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00785\ \textcolor{comment}{\ *\ Since\ these\ are\ mainly\ called\ from\ signal\ handlers,\ they\ will/should\ contain}}
+\DoxyCodeLine{00786\ \textcolor{comment}{\ *\ only\ async\ signal\ safe\ functions.}}
+\DoxyCodeLine{00787\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00788\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00789\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00790\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00791\ \mbox{\hyperlink{mpmonitor_8h_a7eb4810647f88c96ab74a1094e7b4d89}{MPT\_Monitor\_system\_set\_main\_interrupt\_flag}}(}
+\DoxyCodeLine{00792\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00793\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ mainThreadInterrupted}
+\DoxyCodeLine{00794\ );}
+\DoxyCodeLine{00795\ }
+\DoxyCodeLine{00796\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00797\ }
+\DoxyCodeLine{00798\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00799\ \textcolor{comment}{\ *\ Set\ functions\ to\ set\ the\ flags\ which\ will\ tell\ if\ the\ main\ thread\ has\ called}}
+\DoxyCodeLine{00800\ \textcolor{comment}{\ *\ signal\ handlers.}}
+\DoxyCodeLine{00801\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00802\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00803\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00804\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00805\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00806\ \textcolor{comment}{\ *\ inSignalHandler(IN)\ \ \ \ \ \ \ \ \ \ The\ flag\ telling\ if\ main\ thread}}
+\DoxyCodeLine{00807\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\ in\ signal\ handler\ or\ not.}}
+\DoxyCodeLine{00808\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00809\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00810\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00811\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00812\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00813\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00814\ \textcolor{comment}{\ *\ Since\ these\ are\ mainly\ called\ from\ signal\ handlers,\ they\ will/should\ contain}}
+\DoxyCodeLine{00815\ \textcolor{comment}{\ *\ only\ async\ signal\ safe\ functions.}}
+\DoxyCodeLine{00816\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00817\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00818\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00819\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00820\ \mbox{\hyperlink{mpmonitor_8h_a4e8d72750f86c69e7d6642f03a4b8701}{MPT\_Monitor\_system\_set\_signal\_handler\_flag}}(}
+\DoxyCodeLine{00821\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00822\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ signalHandlerFlag}
+\DoxyCodeLine{00823\ );}
+\DoxyCodeLine{00824\ }
+\DoxyCodeLine{00825\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00826\ \textcolor{comment}{\ *\ Set\ functions\ to\ set\ the\ flags\ which\ will\ tell\ if\ the\ main\ thread\ has\ called}}
+\DoxyCodeLine{00827\ \textcolor{comment}{\ *\ the\ Error()\ function.}}
+\DoxyCodeLine{00828\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00829\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00830\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00831\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00832\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00833\ \textcolor{comment}{\ *\ inErrorFunction(IN)\ \ \ \ \ \ \ \ \ \ The\ flag\ telling\ if\ main\ thread}}
+\DoxyCodeLine{00834\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\ in\ Error()\ function\ or\ not.}}
+\DoxyCodeLine{00835\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00836\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00837\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00838\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00839\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00840\ \mbox{\hyperlink{mpmonitor_8h_aa4c2afa3de8fe4b8b86b9c7d8667b732}{MPT\_Monitor\_system\_set\_error\_function\_flag}}(}
+\DoxyCodeLine{00841\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00842\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ errorFunctionFlag}
+\DoxyCodeLine{00843\ );}
+\DoxyCodeLine{00844\ }
+\DoxyCodeLine{00845\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00846\ }
+\DoxyCodeLine{00847\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00848\ \textcolor{comment}{\ *\ This\ function\ is\ used\ to\ propagate\ a\ command\ in\ the\ Monitor\ system.}}
+\DoxyCodeLine{00849\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00850\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00851\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00852\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00853\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00854\ \textcolor{comment}{\ *\ command\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ The\ command\ to\ be\ propagated.}}
+\DoxyCodeLine{00855\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00856\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00857\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00858\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00859\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00860\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00861\ \textcolor{comment}{\ *\ Every\ process,\ which\ is\ a\ member\ of\ the\ monitor\ system\ can\ call\ this}}
+\DoxyCodeLine{00862\ \textcolor{comment}{\ *\ function\ to\ propagate\ a\ command.}}
+\DoxyCodeLine{00863\ \textcolor{comment}{\ *\ Note\ that\ this\ will\ set\ the\ command\ in\ the\ Monitor\ System.\ However,\ it\ does}}
+\DoxyCodeLine{00864\ \textcolor{comment}{\ *\ not\ wait\ for\ the\ current\ command\ to\ finish\ its\ propagation.\ For\ this,\ one\ can}}
+\DoxyCodeLine{00865\ \textcolor{comment}{\ *\ use\ MPT\_Monitor\_wait\_command\_propagation.}}
+\DoxyCodeLine{00866\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00867\ \textcolor{comment}{\ *\ Since\ this\ is\ mainly\ called\ from\ signal\ handlers,\ they\ will/should\ contain}}
+\DoxyCodeLine{00868\ \textcolor{comment}{\ *\ only\ async\ signal\ safe\ functions.}}
+\DoxyCodeLine{00869\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00870\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00871\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00872\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00873\ \mbox{\hyperlink{mpmonitor_8h_a2836b9901504d10980bd8d66ce923d98}{MPT\_Monitor\_system\_inject\_command}}(}
+\DoxyCodeLine{00874\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00875\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\_Monitor\_command}}\ command}
+\DoxyCodeLine{00876\ );}
+\DoxyCodeLine{00877\ }
+\DoxyCodeLine{00878\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00879\ }
+\DoxyCodeLine{00880\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00881\ \textcolor{comment}{\ *\ This\ function\ is\ used\ to\ signal\ that\ a\ command\ has\ been\ propagated}}
+\DoxyCodeLine{00882\ \textcolor{comment}{\ *\ in\ the\ Monitor\ system.}}
+\DoxyCodeLine{00883\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00884\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00885\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00886\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00887\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00888\ \textcolor{comment}{\ *\ commandPropagationComplete\ (IN)\ \ 0/1\ (propagated\ or\ not\ propagated)}}
+\DoxyCodeLine{00889\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00890\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00891\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00892\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00893\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ UNSAFE}}
+\DoxyCodeLine{00894\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00895\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00896\ \mbox{\hyperlink{mpmonitor_8h_abf9e578169150a9517b42b6ef4bb732e}{MPT\_Monitor\_signal\_command\_propagation}}(}
+\DoxyCodeLine{00897\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00898\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ commandPropagationComplete}
+\DoxyCodeLine{00899\ );}
+\DoxyCodeLine{00900\ }
+\DoxyCodeLine{00901\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00902\ }
+\DoxyCodeLine{00903\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00904\ \textcolor{comment}{\ *\ This\ function\ ensures\ that\ the\ current\ command\ has\ been\ propagated}}
+\DoxyCodeLine{00905\ \textcolor{comment}{\ *\ completely\ in\ the\ Monitor\ system\ before\ setting\ the\ new\ command.}}
+\DoxyCodeLine{00906\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00907\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00908\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00909\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00910\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00911\ \textcolor{comment}{\ *\ command\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ new\ command\ to\ be\ used\ in\ the}}
+\DoxyCodeLine{00912\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Monitor\ System.}}
+\DoxyCodeLine{00913\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00914\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00915\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00916\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00917\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ UNSAFE}}
+\DoxyCodeLine{00918\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00919\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00920\ \mbox{\hyperlink{mpmonitor_8h_a9f5b2726a95042e3325b4451b750a490}{MPT\_Monitor\_wait\_command\_propagation}}(}
+\DoxyCodeLine{00921\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{00922\ \ \ \mbox{\hyperlink{mpmonitor_8h_ad914d34f9be5c4edb180bd14959c736e}{MPT\_Monitor\_command}}\ command}
+\DoxyCodeLine{00923\ );}
+\DoxyCodeLine{00924\ }
+\DoxyCodeLine{00925\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00926\ }
+\DoxyCodeLine{00927\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00928\ \textcolor{comment}{\ *\ Returns\ the\ listener\ port\ information\ of\ the\ server\ thread\ in\ the}}
+\DoxyCodeLine{00929\ \textcolor{comment}{\ *\ monitor\ system.}}
+\DoxyCodeLine{00930\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00931\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00932\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00933\ \textcolor{comment}{\ *\ hostname\ (OUT)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ hostname\ of\ the\ process,\ which\ is}}
+\DoxyCodeLine{00934\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ executing\ the\ server\ thread.}}
+\DoxyCodeLine{00935\ \textcolor{comment}{\ *\ monitorServerThreadPort\ (OUT)\ The\ port\ of\ the\ listener\ socket\ in\ the}}
+\DoxyCodeLine{00936\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ server\ thread.}}
+\DoxyCodeLine{00937\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00938\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00939\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00940\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00941\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00942\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00943\ \textcolor{comment}{\ *\ The\ user\ must\ allocate\ the\ memory\ of\ the\ input\ 'hostname'.}}
+\DoxyCodeLine{00944\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00945\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{00946\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00947\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00948\ \mbox{\hyperlink{mpmonitor_8h_a231eb1b5acaaefd278fe32ca0b77d4eb}{MPT\_Monitor\_system\_get\_listener\_info}}(}
+\DoxyCodeLine{00949\ \ \ \textcolor{keywordtype}{char}\ *hostname,}
+\DoxyCodeLine{00950\ \ \ \textcolor{keywordtype}{int}\ *monitorServerThreadPort}
+\DoxyCodeLine{00951\ );}
+\DoxyCodeLine{00952\ }
+\DoxyCodeLine{00953\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00954\ }
+\DoxyCodeLine{00955\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00956\ \textcolor{comment}{\ *\ A\ process\ calls\ this\ function\ to\ connect\ to\ the\ monitor\ system\ and}}
+\DoxyCodeLine{00957\ \textcolor{comment}{\ *\ become\ a\ member\ of\ the\ ring.}}
+\DoxyCodeLine{00958\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00959\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00960\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00961\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00962\ \textcolor{comment}{\ *\ mptMonitorID\ (INOUT)\ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{00963\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ connecting\ process\ will\ initialize\ this\ to}}
+\DoxyCodeLine{00964\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_MONITOR\_NULL\ before\ passing.}}
+\DoxyCodeLine{00965\ \textcolor{comment}{\ *\ controllerID\ (IN)\ \ \ \ \ \ \ \ The\ ID\ of\ the\ controller.}}
+\DoxyCodeLine{00966\ \textcolor{comment}{\ *\ connectingProcessID(IN)\ \ The\ ID\ of\ the\ connecting\ process.}}
+\DoxyCodeLine{00967\ \textcolor{comment}{\ *\ mptRemoteConnector(IN)\ \ \ Remote\ connector\ used\ by\ the\ controller/host}}
+\DoxyCodeLine{00968\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ to\ connect\ to\ the\ connecting\ process.}}
+\DoxyCodeLine{00969\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (Not\ used\ in\ 'connecting\ process')}}
+\DoxyCodeLine{00970\ \textcolor{comment}{\ *\ hostInfo\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ The\ host\ endpoint\ information\ required\ for\ connection.}}
+\DoxyCodeLine{00971\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (Not\ used\ in\ Host/Controller)}}
+\DoxyCodeLine{00972\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00973\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{00974\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{00975\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00976\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{00977\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{00978\ \textcolor{comment}{\ *\ Only\ the\ process\ and\ the\ controller\ of\ the\ monitor\ system\ must\ participate}}
+\DoxyCodeLine{00979\ \textcolor{comment}{\ *\ in\ the\ call.}}
+\DoxyCodeLine{00980\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00981\ \textcolor{comment}{\ *\ LIMITATION}}
+\DoxyCodeLine{00982\ \textcolor{comment}{\ *\ ==========}}
+\DoxyCodeLine{00983\ \textcolor{comment}{\ *\ 1).\ The\ process\ gets\ connected\ to\ the\ controller.}}
+\DoxyCodeLine{00984\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00985\ \textcolor{comment}{\ *\ 2).\ Also\ the\ process\ must\ have\ ID,\ which\ is\ greater\ than\ the\ maximum\ ID\ in}}
+\DoxyCodeLine{00986\ \textcolor{comment}{\ *\ monitor\ system.\ Since\ the\ controller's\ ID\ is\ the\ maximum\ (999999),\ the}}
+\DoxyCodeLine{00987\ \textcolor{comment}{\ *\ process\ should\ have\ ID,\ which\ is\ atleast\ (controllerID\ +\ 1).}}
+\DoxyCodeLine{00988\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00989\ \textcolor{comment}{\ *\ 3).\ The\ connecting\ process\ ID\ must\ pass\ MPT\_MONITOR\_NULL\ as\ input\ for\ mptMonitorID.}}
+\DoxyCodeLine{00990\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00991\ \textcolor{comment}{\ *\ This\ function\ at\ the\ moment\ is\ highly\ tailored\ to\ add\ Cortex...\ Requires\ further}}
+\DoxyCodeLine{00992\ \textcolor{comment}{\ *\ redesign\ work...}}
+\DoxyCodeLine{00993\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00994\ \textcolor{comment}{\ *\ Shown\ below\ is\ the\ typical\ usage\ of\ this\ interface\ function:}}
+\DoxyCodeLine{00995\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00996\ \textcolor{comment}{\ *\ if\ (MPT\_Monitor\_system\_myid(mptMonitorID)}}
+\DoxyCodeLine{00997\ \textcolor{comment}{\ *\ \ \ \ \ ==\ MPT\_Monitor\_system\_controller(mptMonitorID)}}
+\DoxyCodeLine{00998\ \textcolor{comment}{\ *\ \{}}
+\DoxyCodeLine{00999\ \textcolor{comment}{\ *\ \ \ \ \ MPT\_Monitor\_system\_connect(}}
+\DoxyCodeLine{01000\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \&monitorID,}}
+\DoxyCodeLine{01001\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ MPID\_HOST,}}
+\DoxyCodeLine{01002\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ (MPID\_HOST\ +\ 2),}}
+\DoxyCodeLine{01003\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ cortex\_connector,}}
+\DoxyCodeLine{01004\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ NULL}}
+\DoxyCodeLine{01005\ \textcolor{comment}{\ *\ \ \ \ \ );}}
+\DoxyCodeLine{01006\ \textcolor{comment}{\ *\ \}}}
+\DoxyCodeLine{01007\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01008\ \textcolor{comment}{\ *\ //\ If\ connecting\ process...}}
+\DoxyCodeLine{01009\ \textcolor{comment}{\ *\ MPT\_Monitor\_system\_connect(}}
+\DoxyCodeLine{01010\ \textcolor{comment}{\ *\ \ \ \ \&mptMonitorID,}}
+\DoxyCodeLine{01011\ \textcolor{comment}{\ *\ \ \ \ MPID\_HOST,}}
+\DoxyCodeLine{01012\ \textcolor{comment}{\ *\ \ \ \ (MPID\_HOST\ +\ 2),}}
+\DoxyCodeLine{01013\ \textcolor{comment}{\ *\ \ \ \ NULL,}}
+\DoxyCodeLine{01014\ \textcolor{comment}{\ *\ \ \ \ \&controllerInfo}}
+\DoxyCodeLine{01015\ \textcolor{comment}{\ *\ );}}
+\DoxyCodeLine{01016\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01017\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01018\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{mpmonitor_8h_af6349e7974fc46771eb42c165ea06a7a}{MPT\_Monitor\_Remote\_Connector}})(}
+\DoxyCodeLine{01019\ \ \ \textcolor{keywordtype}{int}\ listenerPort,}
+\DoxyCodeLine{01020\ \ \ \textcolor{keywordtype}{char}\ *address}
+\DoxyCodeLine{01021\ );}
+\DoxyCodeLine{01022\ }
+\DoxyCodeLine{01023\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01024\ \mbox{\hyperlink{mpmonitor_8h_ab6d0080e42a388f306d73b714cdc4fdb}{MPT\_Monitor\_system\_connect}}(}
+\DoxyCodeLine{01025\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ *mptMonitorID,}
+\DoxyCodeLine{01026\ \ \ \textcolor{keywordtype}{int}\ controllerID,}
+\DoxyCodeLine{01027\ \ \ \textcolor{keywordtype}{int}\ connectingProcessID,}
+\DoxyCodeLine{01028\ \ \ \mbox{\hyperlink{mpmonitor_8h_af6349e7974fc46771eb42c165ea06a7a}{MPT\_Monitor\_Remote\_Connector}}\ mptRemoteConnector,}
+\DoxyCodeLine{01029\ \ \ \mbox{\hyperlink{structmpt__monitor__process__connection__info__t}{MPT\_Monitor\_Process\_Connection\_Info}}\ *hostInfo}
+\DoxyCodeLine{01030\ );}
+\DoxyCodeLine{01031\ }
+\DoxyCodeLine{01032\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{01033\ }
+\DoxyCodeLine{01034\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01035\ \textcolor{comment}{\ *\ MPT\ Monitor\ callback\ interface\ (needs\ further\ work)}}
+\DoxyCodeLine{01036\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01037\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{01038\ \{}
+\DoxyCodeLine{01039\ }
+\DoxyCodeLine{01040\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24ca0e964199c78af2d94ae458be132196ae}{MPT\_MONITOR\_CALLBACK\_MIN}}\ =\ -\/1,}
+\DoxyCodeLine{01041\ }
+\DoxyCodeLine{01042\ \ \ \textcolor{comment}{/*\ For\ any\ errors\ (socket,\ ...)\ in\ multiport\ */}}
+\DoxyCodeLine{01043\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa6160da3d147c897d800efe3a69c941e}{INTERNAL\_ERROR}}\ =\ 0,}
+\DoxyCodeLine{01044\ }
+\DoxyCodeLine{01045\ \ \ \textcolor{comment}{/*\ Used\ for\ status\ of\ monitor\ system\ */}}
+\DoxyCodeLine{01046\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caadf2c0630d7e5d68d469575843b17e54}{MONITOR\_STATUS}},}
+\DoxyCodeLine{01047\ }
+\DoxyCodeLine{01048\ \ \ \textcolor{comment}{/*\ Used\ to\ repair/recreate\ communicators\ */}}
+\DoxyCodeLine{01049\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa2ccb134a0887021df0b51d2b48226c0}{RECREATE\_COMMS}},}
+\DoxyCodeLine{01050\ }
+\DoxyCodeLine{01051\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24caa63821ed533a9e8723fc728b87521bc1}{MPT\_MONITOR\_CALLBACK\_MAX}}}
+\DoxyCodeLine{01052\ }
+\DoxyCodeLine{01053\ \}\ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\_Monitor\_callback\_type}};}
+\DoxyCodeLine{01054\ }
+\DoxyCodeLine{01055\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\_Monitor\_callback}})}
+\DoxyCodeLine{01056\ (}
+\DoxyCodeLine{01057\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ id,}
+\DoxyCodeLine{01058\ \ \ \textcolor{keywordtype}{int}\ msgLen,}
+\DoxyCodeLine{01059\ \ \ \textcolor{keywordtype}{char}\ *message}
+\DoxyCodeLine{01060\ );}
+\DoxyCodeLine{01061\ }
+\DoxyCodeLine{01062\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01063\ \textcolor{comment}{\ *\ Register\ callbacks\ in\ Monitor\ System.}}
+\DoxyCodeLine{01064\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01065\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01066\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01067\ \textcolor{comment}{\ *\ id\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01068\ \textcolor{comment}{\ *\ ncallbacks(IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Number\ of\ callback\ functions\ to\ register.}}
+\DoxyCodeLine{01069\ \textcolor{comment}{\ *\ callbackTypes\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ Types\ of\ events\ for\ whom\ the\ callbacks\ must\ be}}
+\DoxyCodeLine{01070\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ invoked.}}
+\DoxyCodeLine{01071\ \textcolor{comment}{\ *\ callbacks\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pointers\ for\ callback\ functions.}}
+\DoxyCodeLine{01072\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01073\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{01074\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{01075\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01076\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ UNSAFE}}
+\DoxyCodeLine{01077\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01078\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01079\ \mbox{\hyperlink{mpmonitor_8h_a5df2d6ed47b3b02c377b144e94f5b392}{MPT\_Monitor\_register\_callbacks}}(}
+\DoxyCodeLine{01080\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ \textcolor{keywordtype}{id},}
+\DoxyCodeLine{01081\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ncallbacks,}
+\DoxyCodeLine{01082\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\_Monitor\_callback\_type}}\ *callbackTypes,}
+\DoxyCodeLine{01083\ \ \ \mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\_Monitor\_callback}}\ *callbacks}
+\DoxyCodeLine{01084\ );}
+\DoxyCodeLine{01085\ }
+\DoxyCodeLine{01086\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01087\ \textcolor{comment}{\ *\ Unregister\ a\ callback\ in\ Monitor\ System.}}
+\DoxyCodeLine{01088\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01089\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01090\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01091\ \textcolor{comment}{\ *\ id\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01092\ \textcolor{comment}{\ *\ callbackType\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ The\ callback\ type\ for\ which\ the\ callback\ must\ be}}
+\DoxyCodeLine{01093\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ removed.}}
+\DoxyCodeLine{01094\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01095\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{01096\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{01097\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01098\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{01099\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{01100\ \textcolor{comment}{\ *\ All\ the\ callbacks\ whose\ type\ is\ 'callbackType'\ are\ removed.}}
+\DoxyCodeLine{01101\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01102\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01103\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01104\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01105\ \mbox{\hyperlink{mpmonitor_8h_adaf9ced54dca91210dfad85ba14db93a}{MPT\_Monitor\_unregister\_callback}}(}
+\DoxyCodeLine{01106\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ \textcolor{keywordtype}{id},}
+\DoxyCodeLine{01107\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\_Monitor\_callback\_type}}\ callbackType}
+\DoxyCodeLine{01108\ );}
+\DoxyCodeLine{01109\ }
+\DoxyCodeLine{01110\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01111\ \textcolor{comment}{\ *\ Register\ callback\ that\ would\ be\ used\ to\ free\ and\ recreate\ communicators.}}
+\DoxyCodeLine{01112\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01113\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01114\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01115\ \textcolor{comment}{\ *\ id\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01116\ \textcolor{comment}{\ *\ callback\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pointer\ for\ callback\ function.}}
+\DoxyCodeLine{01117\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01118\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{01119\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{01120\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01121\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{01122\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{01123\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01124\ \textcolor{comment}{\ *\ The\ callback\ function\ that\ is\ registerd\ is\ invoked\ after}}
+\DoxyCodeLine{01125\ \textcolor{comment}{\ *\ the\ global\ communicator\ is\ repaired\ in\ the\ "{}repair\ communicator"{}}}
+\DoxyCodeLine{01126\ \textcolor{comment}{\ *\ function.\ This\ allows\ (for\ example,\ TGrid)\ to\ free\ and\ recreate\ their}}
+\DoxyCodeLine{01127\ \textcolor{comment}{\ *\ sub-\/communicators\ from\ the\ global\ universal\ communicator.}}
+\DoxyCodeLine{01128\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01129\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ UNSAFE}}
+\DoxyCodeLine{01130\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01131\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01132\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01133\ \mbox{\hyperlink{mpmonitor_8h_a354702502edce709b7964e5a57b5a78b}{MPT\_Monitor\_register\_repair\_comm\_callback}}(}
+\DoxyCodeLine{01134\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{01135\ \ \ \mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\_Monitor\_callback}}\ *callback}
+\DoxyCodeLine{01136\ );}
+\DoxyCodeLine{01137\ }
+\DoxyCodeLine{01138\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01139\ \textcolor{comment}{\ *\ Unregister\ callback\ that\ would\ be\ used\ to\ free\ and\ recreate\ communicators.}}
+\DoxyCodeLine{01140\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01141\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01142\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01143\ \textcolor{comment}{\ *\ id\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01144\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01145\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{01146\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{01147\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01148\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01149\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01150\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01151\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01152\ \mbox{\hyperlink{mpmonitor_8h_ab08e352afbb6a1649fe3eae75ac80306}{MPT\_Monitor\_unregister\_repair\_comm\_callback}}(}
+\DoxyCodeLine{01153\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID}
+\DoxyCodeLine{01154\ );}
+\DoxyCodeLine{01155\ }
+\DoxyCodeLine{01156\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01157\ \textcolor{comment}{\ *\ Return\ stringified\ form\ of\ the\ callback.}}
+\DoxyCodeLine{01158\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01159\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01160\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01161\ \textcolor{comment}{\ *\ callbackType\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ The\ type\ of\ callback.}}
+\DoxyCodeLine{01162\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01163\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01164\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01165\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01166\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *}
+\DoxyCodeLine{01167\ \mbox{\hyperlink{mpmonitor_8h_ae143f115176fc03461dbcafd56099920}{MPT\_Monitor\_callback\_type\_stringify}}(}
+\DoxyCodeLine{01168\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\_Monitor\_callback\_type}}\ callbackType}
+\DoxyCodeLine{01169\ );}
+\DoxyCodeLine{01170\ }
+\DoxyCodeLine{01171\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01172\ \textcolor{comment}{\ *\ This\ function\ returns\ the\ registered\ callback.}}
+\DoxyCodeLine{01173\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01174\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01175\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01176\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01177\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01178\ \textcolor{comment}{\ *\ callbackType(IN)\ \ \ \ \ \ \ \ \ The\ callback\ type\ for\ which\ the\ callback\ is}}
+\DoxyCodeLine{01179\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ invoked.}}
+\DoxyCodeLine{01180\ \textcolor{comment}{\ *\ callback\ (OUT)\ \ \ \ \ \ \ \ \ \ \ The\ callback\ registered.}}
+\DoxyCodeLine{01181\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01182\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{01183\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{01184\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01185\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE\ (assuming\ the\ callback\ registered\ is\ also\ async\ signal\ safe)}}
+\DoxyCodeLine{01186\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01187\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01188\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01189\ \mbox{\hyperlink{mpmonitor_8h_afd2272e23c5a331ae5a1e2c7246a52c1}{MPT\_Monitor\_get\_callback}}(}
+\DoxyCodeLine{01190\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{01191\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\_Monitor\_callback\_type}}\ callbackType,}
+\DoxyCodeLine{01192\ \ \ \mbox{\hyperlink{mpmonitor_8h_aff957bbb743603138b230da68475f9a3}{MPT\_Monitor\_callback}}\ *callback}
+\DoxyCodeLine{01193\ );}
+\DoxyCodeLine{01194\ }
+\DoxyCodeLine{01195\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01196\ \textcolor{comment}{\ *\ This\ function\ is\ used\ to\ invoke\ a\ registered\ callback.}}
+\DoxyCodeLine{01197\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01198\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01199\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01200\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01201\ \textcolor{comment}{\ *\ mptMonitorID\ (IN)\ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01202\ \textcolor{comment}{\ *\ callbackType(IN)\ \ \ \ \ \ \ \ \ The\ callback\ type\ for\ which\ the\ callback\ is}}
+\DoxyCodeLine{01203\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ invoked.}}
+\DoxyCodeLine{01204\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01205\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success;\ a\ negative\ error\ code}}
+\DoxyCodeLine{01206\ \textcolor{comment}{\ *\ on\ failure.}}
+\DoxyCodeLine{01207\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01208\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE\ (assuming\ the\ callback\ registered\ is\ also\ async\ signal\ safe)}}
+\DoxyCodeLine{01209\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01210\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01211\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01212\ \mbox{\hyperlink{mpmonitor_8h_a511acc7f94467bfe7a32008d2c746739}{MPT\_Monitor\_invoke\_callback}}(}
+\DoxyCodeLine{01213\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ mptMonitorID,}
+\DoxyCodeLine{01214\ \ \ \mbox{\hyperlink{mpmonitor_8h_ae1549f6a3c8b107e70889552d206b24c}{MPT\_Monitor\_callback\_type}}\ callbackType,}
+\DoxyCodeLine{01215\ \ \ \textcolor{keywordtype}{int}\ msgLen,}
+\DoxyCodeLine{01216\ \ \ \textcolor{keywordtype}{char}\ *message}
+\DoxyCodeLine{01217\ );}
+\DoxyCodeLine{01218\ }
+\DoxyCodeLine{01219\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/\ INTERACTION\ OF\ SIGNALS/ERROR\ FUNCTION\ WITH\ MONITOR\ SYSTEM\ -\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{01220\ }
+\DoxyCodeLine{01221\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01222\ \textcolor{comment}{\ *\ Typical\ interaction\ with\ the\ monitor\ system\ follows:}}
+\DoxyCodeLine{01223\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01224\ \textcolor{comment}{\ *\ static\ setjmp\_buf\ senv;}}
+\DoxyCodeLine{01225\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01226\ \textcolor{comment}{\ *\ static\ void}}
+\DoxyCodeLine{01227\ \textcolor{comment}{\ *\ segvHandler(int\ sig)}}
+\DoxyCodeLine{01228\ \textcolor{comment}{\ *\ \{}}
+\DoxyCodeLine{01229\ \textcolor{comment}{\ *\ \ \ \ int\ rc\ =\ MPT\_Monitor\_system\_error\_recovery(}}
+\DoxyCodeLine{01230\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ monitorID,\ 1,\ 0}}
+\DoxyCodeLine{01231\ \textcolor{comment}{\ *\ \ \ \ );}}
+\DoxyCodeLine{01232\ \textcolor{comment}{\ *\ \ \ \ //\ Check\ for\ return\ error\ code}}
+\DoxyCodeLine{01233\ \textcolor{comment}{\ *\ \}}}
+\DoxyCodeLine{01234\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01235\ \textcolor{comment}{\ *\ int\ TypicalErrorHandler()}}
+\DoxyCodeLine{01236\ \textcolor{comment}{\ *\ \{}}
+\DoxyCodeLine{01237\ \textcolor{comment}{\ *\ \ \ \ int\ rc;}}
+\DoxyCodeLine{01238\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01239\ \textcolor{comment}{\ *\ \ \ \ //}}
+\DoxyCodeLine{01240\ \textcolor{comment}{\ *\ \ \ \ //\ Setup\ signal\ handlers...}}
+\DoxyCodeLine{01241\ \textcolor{comment}{\ *\ \ \ \ //\ Assume\ 'handler'\ is\ setup\ for\ SIGSEGV.}}
+\DoxyCodeLine{01242\ \textcolor{comment}{\ *\ \ \ \ //}}
+\DoxyCodeLine{01243\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01244\ \textcolor{comment}{\ *\ \ \ \ switch\ (sigsetjmp(senv))}}
+\DoxyCodeLine{01245\ \textcolor{comment}{\ *\ \ \ \ \{}}
+\DoxyCodeLine{01246\ \textcolor{comment}{\ *\ \ \ \ \ \ case\ 0:}}
+\DoxyCodeLine{01247\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ //}}
+\DoxyCodeLine{01248\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ //\ Save\ the\ current\ process\ environment\ in\ the\ Monitor\ System}}
+\DoxyCodeLine{01249\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ //}}
+\DoxyCodeLine{01250\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ rc\ =\ MPT\_Monitor\_system\_setup\_error\_recovery(}}
+\DoxyCodeLine{01251\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ monitorID,\ \&senv,\ 1}}
+\DoxyCodeLine{01252\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ );}}
+\DoxyCodeLine{01253\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ break;}}
+\DoxyCodeLine{01254\ \textcolor{comment}{\ *\ \ \ \ \ \ case\ 1:}}
+\DoxyCodeLine{01255\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ //}}
+\DoxyCodeLine{01256\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ //\ All\ the\ compute\ processes\ +\ host\ must\ come\ here}}
+\DoxyCodeLine{01257\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ //\ to\ collectively\ repair\ the\ communicator.}}
+\DoxyCodeLine{01258\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ //}}
+\DoxyCodeLine{01259\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ rc\ =\ MPT\_Monitor\_system\_repair\_communicator(monitorID);}}
+\DoxyCodeLine{01260\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ break;}}
+\DoxyCodeLine{01261\ \textcolor{comment}{\ *\ \ \ \ \}}}
+\DoxyCodeLine{01262\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01263\ \textcolor{comment}{\ *\ \ \ \ //}}
+\DoxyCodeLine{01264\ \textcolor{comment}{\ *\ \ \ \ //\ Now\ assume\ SIGSEGV\ happens\ somewhere\ now...}}
+\DoxyCodeLine{01265\ \textcolor{comment}{\ \ \ \ \ \ //\ All\ the\ processes\ will\ longjmp\ to\ switch\ case\ 1}}
+\DoxyCodeLine{01266\ \textcolor{comment}{\ *\ \ \ \ //}}
+\DoxyCodeLine{01267\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01268\ \textcolor{comment}{\ *\ \ \ \ //\ Now\ all\ the\ processes\ return\ to\ the\ command\ prompt.}}
+\DoxyCodeLine{01269\ \textcolor{comment}{\ *\ \}}}
+\DoxyCodeLine{01270\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01271\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01272\ }
+\DoxyCodeLine{01273\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01274\ \textcolor{comment}{\ *\ Headers\ for\ signals\ are\ creating\ trouble\ for\ interpreted\ UDFs.}}
+\DoxyCodeLine{01275\ \textcolor{comment}{\ *\ So,\ we\ disable\ this\ interface\ for\ UDFs.}}
+\DoxyCodeLine{01276\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01277\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{01278\ }
+\DoxyCodeLine{01279\ \textcolor{preprocessor}{\#include\ <setjmp.h>}}
+\DoxyCodeLine{01280\ }
+\DoxyCodeLine{01281\ \textcolor{preprocessor}{\#if\ \_NT}}
+\DoxyCodeLine{01282\ \textcolor{preprocessor}{\#define\ MPTJMPBUF\ jmp\_buf}}
+\DoxyCodeLine{01283\ \textcolor{preprocessor}{\#elif\ \_POSIX\_C\_SOURCE\ >=\ 1\ ||\ \_XOPEN\_SOURCE\ ||\ \_POSIX\_C\_SOURCE}}
+\DoxyCodeLine{01284\ \textcolor{preprocessor}{\#define\ MPTJMPBUF\ sigjmp\_buf}}
+\DoxyCodeLine{01285\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01286\ \textcolor{preprocessor}{\#define\ MPTJMPBUF\ int*}}
+\DoxyCodeLine{01287\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01288\ }
+\DoxyCodeLine{01289\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01290\ \textcolor{comment}{\ *\ This\ function\ records\ the\ setjmp\ location\ in\ Monitor\ system.}}
+\DoxyCodeLine{01291\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01292\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01293\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01294\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01295\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01296\ \textcolor{comment}{\ *\ setjmpenv\ (IN)\ \ \ \ \ \ \ \ \ \ \ Current\ process\ environment\ (for\ unwinding\ the\ stack).}}
+\DoxyCodeLine{01297\ \textcolor{comment}{\ *\ setjmpval\ (IN)\ \ \ \ \ \ \ \ \ \ \ Value\ of\ second\ argument\ in\ setjmp/sigsetjmp.}}
+\DoxyCodeLine{01298\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01299\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success}}
+\DoxyCodeLine{01300\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01301\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01302\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01303\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01304\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01305\ \mbox{\hyperlink{mpmonitor_8h_ad92e29899b43fc2265e422afcdcc2437}{MPT\_Monitor\_system\_setjmp}}(}
+\DoxyCodeLine{01306\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID,}
+\DoxyCodeLine{01307\ \ \ \mbox{\hyperlink{mpmonitor_8h_aa045f6c3e51702a5c8fa6750d14f91af}{MPTJMPBUF}}\ *setjmpenv,}
+\DoxyCodeLine{01308\ \ \ \textcolor{keywordtype}{int}\ setjmpval}
+\DoxyCodeLine{01309\ );}
+\DoxyCodeLine{01310\ }
+\DoxyCodeLine{01311\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01312\ \textcolor{comment}{\ *\ This\ function\ jumps\ to\ the\ setjmp\ location\ recorded\ in}}
+\DoxyCodeLine{01313\ \textcolor{comment}{\ *\ the\ Monitor\ system.}}
+\DoxyCodeLine{01314\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01315\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01316\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01317\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01318\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01319\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01320\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success.}}
+\DoxyCodeLine{01321\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01322\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01323\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01324\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01325\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01326\ \mbox{\hyperlink{mpmonitor_8h_a8e80a37b954e33f0a82d6fb680de0eae}{MPT\_Monitor\_system\_longjmp}}(}
+\DoxyCodeLine{01327\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID}
+\DoxyCodeLine{01328\ );}
+\DoxyCodeLine{01329\ }
+\DoxyCodeLine{01330\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01331\ \textcolor{comment}{\ *\ This\ function\ sets\ up\ state\ for\ error\ recovery\ later.}}
+\DoxyCodeLine{01332\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01333\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01334\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01335\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01336\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01337\ \textcolor{comment}{\ *\ setjmpenv\ (IN)\ \ \ \ \ \ \ \ \ \ \ Current\ process\ environment\ (for\ unwinding\ the\ stack).}}
+\DoxyCodeLine{01338\ \textcolor{comment}{\ *\ setjmpval\ (IN)\ \ \ \ \ \ \ \ \ \ \ Value\ of\ second\ argument\ in\ setjmp/sigsetjmp.}}
+\DoxyCodeLine{01339\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01340\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success.}}
+\DoxyCodeLine{01341\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01342\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01343\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01344\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01345\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01346\ \mbox{\hyperlink{mpmonitor_8h_a87aae61c3d331be1eb03984dee13cfd0}{MPT\_Monitor\_system\_setup\_error\_recovery}}(}
+\DoxyCodeLine{01347\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID,}
+\DoxyCodeLine{01348\ \ \ \mbox{\hyperlink{mpmonitor_8h_aa045f6c3e51702a5c8fa6750d14f91af}{MPTJMPBUF}}\ *setjmpenv,}
+\DoxyCodeLine{01349\ \ \ \textcolor{keywordtype}{int}\ setjmpval}
+\DoxyCodeLine{01350\ );}
+\DoxyCodeLine{01351\ }
+\DoxyCodeLine{01352\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01353\ \textcolor{comment}{\ *\ This\ function\ initiates\ the\ error\ recovery.}}
+\DoxyCodeLine{01354\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01355\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01356\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01357\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01358\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01359\ \textcolor{comment}{\ *\ signalHandler\ (IN)\ \ \ \ \ \ \ 1\ when\ called\ from\ a\ signal\ handler.}}
+\DoxyCodeLine{01360\ \textcolor{comment}{\ *\ errorFunction\ (IN)\ \ \ \ \ \ \ 1\ when\ called\ from\ Error()\ function.}}
+\DoxyCodeLine{01361\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01362\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success.}}
+\DoxyCodeLine{01363\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01364\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01365\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01366\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01367\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01368\ \mbox{\hyperlink{mpmonitor_8h_a7858fade1d694451683a13514cd423c2}{MPT\_Monitor\_system\_error\_recovery}}(}
+\DoxyCodeLine{01369\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID,}
+\DoxyCodeLine{01370\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ signalHandler,}
+\DoxyCodeLine{01371\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ errorFunction}
+\DoxyCodeLine{01372\ );}
+\DoxyCodeLine{01373\ }
+\DoxyCodeLine{01374\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01375\ }
+\DoxyCodeLine{01376\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01377\ \textcolor{comment}{\ *\ This\ function\ sets\ the\ backtrace\ data\ in\ the\ Monitor\ System.}}
+\DoxyCodeLine{01378\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01379\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01380\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01381\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01382\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01383\ \textcolor{comment}{\ *\ signum\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ signal\ number\ for\ which\ the\ backtrace\ data\ is\ set.}}
+\DoxyCodeLine{01384\ \textcolor{comment}{\ *\ size\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ number\ of\ backtrace\ function\ calls.}}
+\DoxyCodeLine{01385\ \textcolor{comment}{\ *\ strings\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ The\ backtrace\ function\ calls.}}
+\DoxyCodeLine{01386\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01387\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success.}}
+\DoxyCodeLine{01388\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01389\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ UNSAFE}}
+\DoxyCodeLine{01390\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01391\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01392\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01393\ \mbox{\hyperlink{mpmonitor_8h_a211881af19bbd27fe9d7d427b406984a}{MPT\_Monitor\_system\_set\_backtrace\_data}}(}
+\DoxyCodeLine{01394\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID,}
+\DoxyCodeLine{01395\ \ \ \textcolor{keywordtype}{int}\ signum,}
+\DoxyCodeLine{01396\ \ \ \textcolor{keywordtype}{size\_t}\ size,}
+\DoxyCodeLine{01397\ \ \ \textcolor{keywordtype}{char}\ **strings}
+\DoxyCodeLine{01398\ );}
+\DoxyCodeLine{01399\ }
+\DoxyCodeLine{01400\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01401\ \textcolor{comment}{\ *\ This\ function\ prints\ the\ backtrace\ data.}}
+\DoxyCodeLine{01402\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01403\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01404\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01405\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01406\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01407\ \textcolor{comment}{\ *\ fp\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ stream\ to\ which\ the\ function\ calls\ are\ printed.}}
+\DoxyCodeLine{01408\ \textcolor{comment}{\ *\ printSupportMessage\ (IN)\ Print\ helpdesk\ message\ (yes/no)}}
+\DoxyCodeLine{01409\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01410\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success.}}
+\DoxyCodeLine{01411\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01412\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ UNSAFE}}
+\DoxyCodeLine{01413\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01414\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01415\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01416\ \mbox{\hyperlink{mpmonitor_8h_a10f14559300c7a689de84bc201653c41}{MPT\_Monitor\_system\_print\_backtrace\_data}}(}
+\DoxyCodeLine{01417\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID,}
+\DoxyCodeLine{01418\ \ \ FILE\ *fp,}
+\DoxyCodeLine{01419\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ printSupportMessage}
+\DoxyCodeLine{01420\ );}
+\DoxyCodeLine{01421\ }
+\DoxyCodeLine{01422\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01423\ \textcolor{comment}{\ *\ This\ function\ sets\ the\ async-\/signal-\/unsafe\ functions\ usage\ flag.}}
+\DoxyCodeLine{01424\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01425\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01426\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01427\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01428\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01429\ \textcolor{comment}{\ *\ useAsyncSignalUnsafeFunctions\ (IN)\ \ \ Are\ use\ of\ async-\/signal-\/unsafe}}
+\DoxyCodeLine{01430\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ functions\ allowed?}}
+\DoxyCodeLine{01431\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01432\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success.}}
+\DoxyCodeLine{01433\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01434\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{01435\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{01436\ \textcolor{comment}{\ *\ User\ sets\ this\ in\ Fluent\ using\ the\ RP\ variable.}}
+\DoxyCodeLine{01437\ \textcolor{comment}{\ *\ errorhandling/use-\/async-\/signal-\/unsafe-\/functions?}}
+\DoxyCodeLine{01438\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01439\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01440\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01441\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01442\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01443\ \mbox{\hyperlink{mpmonitor_8h_a35e6edf51b5e922e8d898658c1601ef5}{MPT\_Monitor\_system\_set\_async\_signal\_safe\_flag}}(}
+\DoxyCodeLine{01444\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID,}
+\DoxyCodeLine{01445\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ useAsyncSignalUnsafeFunctions}
+\DoxyCodeLine{01446\ );}
+\DoxyCodeLine{01447\ }
+\DoxyCodeLine{01448\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01449\ \textcolor{comment}{\ *\ This\ function\ returns\ if\ async-\/signal-\/unsafe\ functions\ in\ signal}}
+\DoxyCodeLine{01450\ \textcolor{comment}{\ *\ handlers\ are\ allowed\ to\ be\ used.}}
+\DoxyCodeLine{01451\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01452\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01453\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01454\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01455\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01456\ \textcolor{comment}{\ *\ useAsyncSignalUnsafeFunctions\ (OUT)\ \ Are\ use\ of\ async-\/signal-\/unsafe}}
+\DoxyCodeLine{01457\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ functions\ allowed?}}
+\DoxyCodeLine{01458\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01459\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success.}}
+\DoxyCodeLine{01460\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01461\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01462\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01463\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01464\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01465\ \mbox{\hyperlink{mpmonitor_8h_ae77eb8955c0a26e73908355b69ce55d5}{MPT\_Monitor\_system\_get\_async\_signal\_safe\_flag}}(}
+\DoxyCodeLine{01466\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID,}
+\DoxyCodeLine{01467\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *useAsyncSignalUnsafeFunctions}
+\DoxyCodeLine{01468\ );}
+\DoxyCodeLine{01469\ }
+\DoxyCodeLine{01470\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01471\ \textcolor{comment}{\ *\ In\ Fluent,\ signals\ are\ classified\ into\ two\ categories:}}
+\DoxyCodeLine{01472\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01473\ \textcolor{comment}{\ *\ Fatal\ signals:\ SIGSEGV,\ SIGBUS,\ SIGILL,\ SIGTERM,\ SIGABRT...}}
+\DoxyCodeLine{01474\ \textcolor{comment}{\ *\ Non-\/fatal\ signals:\ SIGFPE,\ SIGINT,\ SIGUSR1,\ SIGUSR2}}
+\DoxyCodeLine{01475\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01476\ \textcolor{comment}{\ *\ For\ Windows,\ SIGUSR1\ and\ SIGUSR2\ are\ not\ available.}}
+\DoxyCodeLine{01477\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01478\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01479\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01480\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01481\ \textcolor{comment}{\ *\ signum\ (IN)\ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ signal\ number.}}
+\DoxyCodeLine{01482\ \textcolor{comment}{\ *\ isFatalOrNot\ (OUT)\ \ \ \ \ \ \ Is\ signal\ fatal\ or\ not?}}
+\DoxyCodeLine{01483\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01484\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success.}}
+\DoxyCodeLine{01485\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_ERR\_SIGNAL\ on\ failure.}}
+\DoxyCodeLine{01486\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01487\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01488\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01489\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01490\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01491\ \mbox{\hyperlink{mpmonitor_8h_a6e13922e4e814dc14942f0952db2a940}{MPT\_Monitor\_system\_is\_fatal\_signal}}(}
+\DoxyCodeLine{01492\ \ \ \textcolor{keywordtype}{int}\ signum,}
+\DoxyCodeLine{01493\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *isFatalOrNot}
+\DoxyCodeLine{01494\ );}
+\DoxyCodeLine{01495\ }
+\DoxyCodeLine{01496\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01497\ \textcolor{comment}{\ *\ Has\ the\ process\ received\ a\ fatal\ signal?}}
+\DoxyCodeLine{01498\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01499\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01500\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01501\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01502\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01503\ \textcolor{comment}{\ *\ isFatalOrNot\ (OUT)\ \ \ \ \ \ \ Is\ fatal\ signal\ received.}}
+\DoxyCodeLine{01504\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01505\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success.}}
+\DoxyCodeLine{01506\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01507\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ SAFE}}
+\DoxyCodeLine{01508\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01509\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01510\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01511\ \mbox{\hyperlink{mpmonitor_8h_a01dde51805b6b816ed0c31d6a188b6cc}{MPT\_Monitor\_system\_fatal\_signal\_received}}(}
+\DoxyCodeLine{01512\ \ \ \textcolor{keywordtype}{int}\ signum,}
+\DoxyCodeLine{01513\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *isFatalOrNot}
+\DoxyCodeLine{01514\ );}
+\DoxyCodeLine{01515\ }
+\DoxyCodeLine{01516\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{01517\ }
+\DoxyCodeLine{01518\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01519\ \textcolor{comment}{\ *\ Repairs\ the\ communicators\ between\ MPI\ processes\ and\ between}}
+\DoxyCodeLine{01520\ \textcolor{comment}{\ *\ host\ and\ node\ 0.}}
+\DoxyCodeLine{01521\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01522\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01523\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01524\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01525\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01526\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01527\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success}}
+\DoxyCodeLine{01528\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01529\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{01530\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{01531\ \textcolor{comment}{\ *\ Messages\ in\ transit\ between\ host\ and\ Node\ 0\ will\ be\ discarded.}}
+\DoxyCodeLine{01532\ \textcolor{comment}{\ *\ Messages\ in\ transit\ between\ MPI\ compute\ processes\ will\ be\ discarded.}}
+\DoxyCodeLine{01533\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01534\ \textcolor{comment}{\ *\ Global\ communicator\ will\ be\ re-\/created.}}
+\DoxyCodeLine{01535\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01536\ \textcolor{comment}{\ *\ Note\ that\ only\ messages\ sent\ using\ point-\/to-\/point\ communications\ are}}
+\DoxyCodeLine{01537\ \textcolor{comment}{\ *\ removed\ using\ MPI\_Iprobe.}}
+\DoxyCodeLine{01538\ \textcolor{comment}{\ *\ From\ the\ definition\ of\ MPI\_Iprobe\ in\ the\ standard,}}
+\DoxyCodeLine{01539\ \textcolor{comment}{\ *\ "{}The\ call\ matches\ the\ same\ message\ that\ would\ have\ been\ received\ by}}
+\DoxyCodeLine{01540\ \textcolor{comment}{\ *\ a\ call\ to\ MPI\_RECV(...,\ source,\ tag,\ comm,\ status)}}
+\DoxyCodeLine{01541\ \textcolor{comment}{\ *\ executed\ at\ the\ same\ point\ in\ the\ program"{}}}
+\DoxyCodeLine{01542\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01543\ \textcolor{comment}{\ *\ If\ the\ processes\ are\ interrupted\ from\ collective\ communications,\ there\ is\ no}}
+\DoxyCodeLine{01544\ \textcolor{comment}{\ *\ MPI-\/defined\ way\ to\ remove\ the\ messages.}}
+\DoxyCodeLine{01545\ \textcolor{comment}{\ *\ Different\ MPIs\ may\ behave\ differently\ here...}}
+\DoxyCodeLine{01546\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01547\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ UNSAFE}}
+\DoxyCodeLine{01548\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01549\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01550\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01551\ \mbox{\hyperlink{mpmonitor_8h_a5a25ba53b4cd1a03048dc809cebfdf31}{MPT\_Monitor\_system\_repair\_communicator}}(}
+\DoxyCodeLine{01552\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID}
+\DoxyCodeLine{01553\ );}
+\DoxyCodeLine{01554\ }
+\DoxyCodeLine{01555\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{01556\ }
+\DoxyCodeLine{01557\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01558\ \textcolor{comment}{\ *\ Removes\ the\ messages\ between\ processes\ that\ are\ members\ of\ the\ communicator.}}
+\DoxyCodeLine{01559\ \textcolor{comment}{\ *\ Frees\ the\ communicator.}}
+\DoxyCodeLine{01560\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01561\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01562\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01563\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01564\ \textcolor{comment}{\ *\ verbosity\ (IN)\ \ \ \ \ \ \ \ \ \ \ Verbosity\ of\ the\ diagnostics\ in\ Monitor\ System.}}
+\DoxyCodeLine{01565\ \textcolor{comment}{\ *\ communicator\ (INOUT)\ \ \ \ \ The\ MPI\ communicator.}}
+\DoxyCodeLine{01566\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01567\ \textcolor{comment}{\ *\ A\ return\ code\ of\ MPT\_MONITOR\_SUCCESS\ on\ success}}
+\DoxyCodeLine{01568\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01569\ \textcolor{comment}{\ *\ FURTHER\ DETAILS}}
+\DoxyCodeLine{01570\ \textcolor{comment}{\ *\ ===============}}
+\DoxyCodeLine{01571\ \textcolor{comment}{\ *\ Messages\ in\ transit\ between\ processes\ that\ are\ members\ of\ the\ communicator}}
+\DoxyCodeLine{01572\ \textcolor{comment}{\ *\ will\ be\ discarded.}}
+\DoxyCodeLine{01573\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01574\ \textcolor{comment}{\ *\ Note\ that\ the\ communicator\ passed\ is\ destroyed.}}
+\DoxyCodeLine{01575\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01576\ \textcolor{comment}{\ *\ Note\ that\ only\ messages\ sent\ using\ point-\/to-\/point\ communications\ are}}
+\DoxyCodeLine{01577\ \textcolor{comment}{\ *\ removed\ using\ MPI\_Iprobe.}}
+\DoxyCodeLine{01578\ \textcolor{comment}{\ *\ From\ the\ definition\ of\ MPI\_Iprobe\ in\ the\ standard,}}
+\DoxyCodeLine{01579\ \textcolor{comment}{\ *\ "{}The\ call\ matches\ the\ same\ message\ that\ would\ have\ been\ received\ by}}
+\DoxyCodeLine{01580\ \textcolor{comment}{\ *\ a\ call\ to\ MPI\_RECV(...,\ source,\ tag,\ comm,\ status)}}
+\DoxyCodeLine{01581\ \textcolor{comment}{\ *\ executed\ at\ the\ same\ point\ in\ the\ program"{}}}
+\DoxyCodeLine{01582\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01583\ \textcolor{comment}{\ *\ If\ the\ processes\ are\ interrupted\ from\ collective\ communications,\ there\ is\ no}}
+\DoxyCodeLine{01584\ \textcolor{comment}{\ *\ MPI-\/defined\ way\ to\ remove\ the\ messages.}}
+\DoxyCodeLine{01585\ \textcolor{comment}{\ *\ Different\ MPIs\ may\ behave\ differently\ here...}}
+\DoxyCodeLine{01586\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01587\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ UNSAFE}}
+\DoxyCodeLine{01588\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01589\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{01590\ }
+\DoxyCodeLine{01591\ \textcolor{preprocessor}{\#if\ MPT\_MPI}}
+\DoxyCodeLine{01592\ }
+\DoxyCodeLine{01593\ \textcolor{preprocessor}{\#include\ "{}mpi\_wrapper.h"{}}}
+\DoxyCodeLine{01594\ }
+\DoxyCodeLine{01595\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01596\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{01597\ MPT\_repair\_communicator(}
+\DoxyCodeLine{01598\ \ \ \textcolor{keywordtype}{int}\ verbosity,}
+\DoxyCodeLine{01599\ \ \ \mbox{\hyperlink{multiport_2mpi__wrapper_2src_2mpi__wrapper_8h_a689148a7cb531ad0a03e81adc7c57be9}{MPI\_Comm}}\ *mpiComm}
+\DoxyCodeLine{01600\ );}
+\DoxyCodeLine{01601\ }
+\DoxyCodeLine{01602\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01603\ }
+\DoxyCodeLine{01604\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01605\ }
+\DoxyCodeLine{01606\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{01607\ }
+\DoxyCodeLine{01608\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01609\ \textcolor{comment}{\ *\ Returns\ the\ communicator\ between\ MPI\ processes.}}
+\DoxyCodeLine{01610\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01611\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{01612\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{01613\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01614\ \textcolor{comment}{\ *\ monitorID\ (IN)\ \ \ \ \ \ \ \ \ \ \ The\ handle\ to\ the\ monitor\ system.}}
+\DoxyCodeLine{01615\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01616\ \textcolor{comment}{\ *\ On\ SUCCESS,\ global\ communicator\ is\ returned\ (must\ be\ cast\ to\ MPI\_Comm*).}}
+\DoxyCodeLine{01617\ \textcolor{comment}{\ *\ On\ failure,\ NULL\ is\ returned.}}
+\DoxyCodeLine{01618\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{01619\ \textcolor{comment}{\ *\ ASYNC\ SIGNAL\ UNSAFE}}
+\DoxyCodeLine{01620\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01621\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}}
+\DoxyCodeLine{01622\ \textcolor{keywordtype}{void}\ *}
+\DoxyCodeLine{01623\ \mbox{\hyperlink{mpmonitor_8h_af9bfff078fccc4e266d1a9e77c5d0af1}{MPT\_Monitor\_system\_get\_communicator}}(}
+\DoxyCodeLine{01624\ \ \ \mbox{\hyperlink{mpmonitor_8h_a82912a19c2e561f2da16c8839db180d6}{MPT\_MonitorID}}\ monitorID}
+\DoxyCodeLine{01625\ );}
+\DoxyCodeLine{01626\ }
+\DoxyCodeLine{01627\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{01628\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01629\ \textcolor{comment}{\ *\ Routines\ to\ lock\ and\ unlock\ mutex\ variables}}
+\DoxyCodeLine{01630\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01631\ }
+\DoxyCodeLine{01632\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{01633\ }
+\DoxyCodeLine{01634\ \textcolor{preprocessor}{\#if\ WIN64\ ||\ \_WIN32\ ||\ \_NT}}
+\DoxyCodeLine{01635\ \textcolor{preprocessor}{\#define\ MUTEX\_T\ void*}}
+\DoxyCodeLine{01636\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01637\ \textcolor{preprocessor}{\#include\ <pthread.h>}}
+\DoxyCodeLine{01638\ \textcolor{preprocessor}{\#define\ MUTEX\_T\ pthread\_mutex\_t}}
+\DoxyCodeLine{01639\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01640\ }
+\DoxyCodeLine{01641\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_a471c58e703f910e9d6f934899d4872dc}{MPT\_Monitor\_create\_mutex}}(\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\_T}}\ *mutex);}
+\DoxyCodeLine{01642\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_af1aae024ed6d60da0b074dcaed9cbc58}{MPT\_Monitor\_destroy\_mutex}}(\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\_T}}\ *mutex);}
+\DoxyCodeLine{01643\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_af3a758d18498bb24b019855fdf5d3611}{MPT\_Monitor\_start\_mutex}}(\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\_T}}\ *mutex);}
+\DoxyCodeLine{01644\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_aaf1d12e1c195f91b1fd373f2d9870fdb}{MPT\_Monitor\_stop\_mutex}}(\mbox{\hyperlink{mpmonitor_8h_ac3afeb6b453120426137f5955f237fe3}{MUTEX\_T}}\ *mutex);}
+\DoxyCodeLine{01645\ }
+\DoxyCodeLine{01646\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01647\ }
+\DoxyCodeLine{01648\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{01649\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01650\ \textcolor{comment}{\ *\ Errors\ in\ the\ Monitor\ System.}}
+\DoxyCodeLine{01651\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{01652\ }
+\DoxyCodeLine{01653\ \textcolor{comment}{/*\ SUCCESS\ */}}
+\DoxyCodeLine{01654\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_SUCCESS\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{01655\ }
+\DoxyCodeLine{01656\ \textcolor{comment}{/*\ Error\ finding\ monitor\ object\ given\ monitor\ handle\ */}}
+\DoxyCodeLine{01657\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_LOOKUP\ \ \ \ \ \ \ \ \ \ -\/1}}
+\DoxyCodeLine{01658\ }
+\DoxyCodeLine{01659\ \textcolor{comment}{/*\ Error\ creating/destroying\ thread\ */}}
+\DoxyCodeLine{01660\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_THREAD\ \ \ \ \ \ \ \ \ \ -\/2}}
+\DoxyCodeLine{01661\ }
+\DoxyCodeLine{01662\ \textcolor{comment}{/*\ Error\ creating/destroying\ Mutex\ */}}
+\DoxyCodeLine{01663\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_MUTEX\ \ \ \ \ \ \ \ \ \ \ -\/3}}
+\DoxyCodeLine{01664\ }
+\DoxyCodeLine{01665\ \textcolor{comment}{/*\ Error\ creating/deleting\ cleanup\ file\ */}}
+\DoxyCodeLine{01666\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_CLEANUP\ \ \ \ \ \ \ \ \ -\/4}}
+\DoxyCodeLine{01667\ }
+\DoxyCodeLine{01668\ \textcolor{comment}{/*\ Error\ socket\ initialization\ */}}
+\DoxyCodeLine{01669\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_SOCK\_INITIALIZE\ -\/5}}
+\DoxyCodeLine{01670\ }
+\DoxyCodeLine{01671\ \textcolor{comment}{/*\ Error\ socket\ finalization\ */}}
+\DoxyCodeLine{01672\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_SOCK\_CLEANUP\ \ \ \ -\/6}}
+\DoxyCodeLine{01673\ }
+\DoxyCodeLine{01674\ \textcolor{comment}{/*\ Monitor\ system\ object\ is\ NULL\ */}}
+\DoxyCodeLine{01675\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_NULL\ \ \ \ \ \ \ \ \ \ \ \ -\/7}}
+\DoxyCodeLine{01676\ }
+\DoxyCodeLine{01677\ \textcolor{comment}{/*\ Invalid\ Monitor\ system\ state\ */}}
+\DoxyCodeLine{01678\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_STATE\ \ \ \ \ \ \ \ \ \ \ -\/8}}
+\DoxyCodeLine{01679\ }
+\DoxyCodeLine{01680\ \textcolor{comment}{/*\ Memory\ allocation\ error\ */}}
+\DoxyCodeLine{01681\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_NOMEM\ \ \ \ \ \ \ \ \ \ \ -\/9}}
+\DoxyCodeLine{01682\ }
+\DoxyCodeLine{01683\ \textcolor{comment}{/*\ MPI\ error\ */}}
+\DoxyCodeLine{01684\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_MPI\ \ \ \ \ \ \ \ \ \ \ \ \ -\/10}}
+\DoxyCodeLine{01685\ }
+\DoxyCodeLine{01686\ \textcolor{comment}{/*\ Error\ creating\ socket\ */}}
+\DoxyCodeLine{01687\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_SOCK\_CREATE\ \ \ \ \ -\/11}}
+\DoxyCodeLine{01688\ }
+\DoxyCodeLine{01689\ \textcolor{comment}{/*\ Error\ accepting\ connection\ */}}
+\DoxyCodeLine{01690\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_SOCK\_ACCEPT\ \ \ \ \ -\/12}}
+\DoxyCodeLine{01691\ }
+\DoxyCodeLine{01692\ \textcolor{comment}{/*\ Error\ connecting\ to\ socket\ */}}
+\DoxyCodeLine{01693\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_SOCK\_CONNECT\ \ \ \ -\/13}}
+\DoxyCodeLine{01694\ }
+\DoxyCodeLine{01695\ \textcolor{comment}{/*\ Error\ closing\ socket\ */}}
+\DoxyCodeLine{01696\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_SOCK\_CLOSE\ \ \ \ \ \ -\/14}}
+\DoxyCodeLine{01697\ }
+\DoxyCodeLine{01698\ \textcolor{comment}{/*\ Socket\ at\ other\ endpoint\ is\ closed,\ not\ an\ error\ */}}
+\DoxyCodeLine{01699\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_SOCK\_CLOSED\ \ \ \ \ \ \ \ \ -\/15}}
+\DoxyCodeLine{01700\ }
+\DoxyCodeLine{01701\ \textcolor{comment}{/*\ Error\ writing\ to\ socket\ */}}
+\DoxyCodeLine{01702\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_SOCK\_SEND\ \ \ \ \ \ \ -\/16}}
+\DoxyCodeLine{01703\ }
+\DoxyCodeLine{01704\ \textcolor{comment}{/*\ Error\ reading\ from\ socket\ */}}
+\DoxyCodeLine{01705\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_SOCK\_RECV\ \ \ \ \ \ \ -\/17}}
+\DoxyCodeLine{01706\ }
+\DoxyCodeLine{01707\ \textcolor{comment}{/*\ Error\ parsing\ user\ command\ to\ the\ server\ thread's\ socket\ */}}
+\DoxyCodeLine{01708\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_CMD\_PARSE\ \ \ \ \ \ \ -\/18}}
+\DoxyCodeLine{01709\ }
+\DoxyCodeLine{01710\ \textcolor{comment}{/*\ Invalid\ Monitor\ command\ */}}
+\DoxyCodeLine{01711\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_COMMAND\ \ \ \ \ \ \ \ \ -\/19}}
+\DoxyCodeLine{01712\ }
+\DoxyCodeLine{01713\ \textcolor{comment}{/*\ gethostbyname\ error\ */}}
+\DoxyCodeLine{01714\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_HOSTENT\ \ \ \ \ \ \ \ \ -\/20}}
+\DoxyCodeLine{01715\ }
+\DoxyCodeLine{01716\ \textcolor{comment}{/*\ Erroneous\ function\ arguments\ */}}
+\DoxyCodeLine{01717\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_ARGS\ \ \ \ \ \ \ \ \ \ \ \ -\/21}}
+\DoxyCodeLine{01718\ }
+\DoxyCodeLine{01719\ \textcolor{comment}{/*\ Error\ creating/destroying\ condition\ variable\ */}}
+\DoxyCodeLine{01720\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_CONDVAR\ \ \ \ \ \ \ \ \ -\/22}}
+\DoxyCodeLine{01721\ }
+\DoxyCodeLine{01722\ \textcolor{comment}{/*\ Error\ creating/deleting\ critical\ section\ */}}
+\DoxyCodeLine{01723\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_CRITSECTION\ \ \ \ \ -\/23}}
+\DoxyCodeLine{01724\ }
+\DoxyCodeLine{01725\ \textcolor{comment}{/*\ Errors\ interrupting\ main\ thread\ */}}
+\DoxyCodeLine{01726\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_INTERRUPT\ \ \ \ \ \ \ -\/24}}
+\DoxyCodeLine{01727\ }
+\DoxyCodeLine{01728\ \textcolor{comment}{/*\ Errors\ during\ topology\ creation\ */}}
+\DoxyCodeLine{01729\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_TOPO\_NULL\ \ \ \ \ \ \ \ \ \ \ -\/25}}
+\DoxyCodeLine{01730\ }
+\DoxyCodeLine{01731\ \textcolor{comment}{/*\ Errors\ getpeername\ */}}
+\DoxyCodeLine{01732\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_GETPEERNAME\ \ \ \ \ -\/26}}
+\DoxyCodeLine{01733\ }
+\DoxyCodeLine{01734\ \textcolor{comment}{/*\ Errors\ in\ signals\ */}}
+\DoxyCodeLine{01735\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_SIGNAL\ \ \ \ \ \ \ \ \ \ -\/27}}
+\DoxyCodeLine{01736\ }
+\DoxyCodeLine{01737\ \textcolor{comment}{/*\ Errors\ in\ create\ sockets\ */}}
+\DoxyCodeLine{01738\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_CREATE\_SOCKETS\ \ -\/28}}
+\DoxyCodeLine{01739\ }
+\DoxyCodeLine{01740\ \textcolor{comment}{/*\ Errors\ in\ gather\ operation\ */}}
+\DoxyCodeLine{01741\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_GATHER\ \ \ \ \ \ \ \ \ \ -\/29}}
+\DoxyCodeLine{01742\ }
+\DoxyCodeLine{01743\ \textcolor{comment}{/*\ Errors\ in\ broadcast\ operation\ */}}
+\DoxyCodeLine{01744\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_BCAST\ \ \ \ \ \ \ \ \ \ \ -\/30}}
+\DoxyCodeLine{01745\ }
+\DoxyCodeLine{01746\ \textcolor{comment}{/*\ Errors\ in\ barrier\ operation\ */}}
+\DoxyCodeLine{01747\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_BARRIER\ \ \ \ \ \ \ \ \ -\/31}}
+\DoxyCodeLine{01748\ }
+\DoxyCodeLine{01749\ \textcolor{comment}{/*\ Callback\ type\ is\ invalid\ */}}
+\DoxyCodeLine{01750\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_CALLBACK\_TYPE\ \ \ -\/32}}
+\DoxyCodeLine{01751\ }
+\DoxyCodeLine{01752\ \textcolor{comment}{/*\ Callback\ function\ pointer\ is\ NULL\ */}}
+\DoxyCodeLine{01753\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_CALLBACK\_NULL\ \ \ -\/33}}
+\DoxyCodeLine{01754\ }
+\DoxyCodeLine{01755\ \textcolor{comment}{/*\ ALl\ other\ internal\ error\ s*/}}
+\DoxyCodeLine{01756\ \textcolor{preprocessor}{\#define\ \ \ \ MPT\_MONITOR\_ERR\_INTERNAL\ \ \ \ \ \ \ \ -\/34}}
+\DoxyCodeLine{01757\ }
+\DoxyCodeLine{01758\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{01759\ }
+\DoxyCodeLine{01760\ \textcolor{comment}{/****************************/}}
+\DoxyCodeLine{01761\ \textcolor{comment}{/*\ socket\ based\ polled\ wait\ */}}
+\DoxyCodeLine{01762\ \textcolor{comment}{/****************************/}}
+\DoxyCodeLine{01763\ }
+\DoxyCodeLine{01764\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_a71e04c6f4986ae06722af85fdf8a01f3}{MPT\_Create\_Wait\_Sock}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ allnodes);}
+\DoxyCodeLine{01765\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_aaf99f107ae31146c4ed9a53dd1b927dc}{MPT\_Destroy\_Wait\_Sock}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01766\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_aff4aaea1c72557c314487be5c0350055}{MPT\_Sock\_Wait}}(\textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ allnodes);}
+\DoxyCodeLine{01767\ }
+\DoxyCodeLine{01768\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{01769\ }
+\DoxyCodeLine{01770\ \textcolor{comment}{/*To\ use\ this\ function\ inside\ "{}mpsystem.c"{}*/}}
+\DoxyCodeLine{01771\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_a7806c91d575269eabf34b1316e548ca4}{MPT\_Monitor\_system\_sock\_read}}(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{01772\ }
+\DoxyCodeLine{01773\ }
+\DoxyCodeLine{01774\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01775\ \textcolor{comment}{*\ Adds\ a\ line\ to\ the\ clean\ up\ file\ to\ kill\ the\ specified\ process\ at\ shutdown}}
+\DoxyCodeLine{01776\ \textcolor{comment}{*}}
+\DoxyCodeLine{01777\ \textcolor{comment}{*\ ARGUMENTS}}
+\DoxyCodeLine{01778\ \textcolor{comment}{*\ =========}}
+\DoxyCodeLine{01779\ \textcolor{comment}{*}}
+\DoxyCodeLine{01780\ \textcolor{comment}{*\ host\ (IN)\ \ \ \ \ \ \ The\ hostname\ where\ the\ process\ is\ running.}}
+\DoxyCodeLine{01781\ \textcolor{comment}{*\ pid\ (IN)\ \ \ \ \ \ \ \ The\ process\ ID.}}
+\DoxyCodeLine{01782\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01783\ \mbox{\hyperlink{mportdll_8h_a7aa9b3932fca13cc602cf6a176453c98}{MPORT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{mpmonitor_8h_a16ddead8e12c5f970557ecbc796c6b4d}{MPT\_monitor\_add\_process\_to\_cleanup\_file}}(}
+\DoxyCodeLine{01784\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *host,}
+\DoxyCodeLine{01785\ \ \ \textcolor{keywordtype}{int}\ pid);}
+\DoxyCodeLine{01786\ }
+\DoxyCodeLine{01787\ }
+\DoxyCodeLine{01788\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)}}
+\DoxyCodeLine{01789\ \}}
+\DoxyCodeLine{01790\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01791\ }
+\DoxyCodeLine{01792\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_MULTIPORT\_MPMONITOR\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01793\ }
+
+\end{DoxyCode}

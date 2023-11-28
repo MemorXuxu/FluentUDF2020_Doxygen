@@ -1,0 +1,232 @@
+\doxysection{cfx\+\_\+fproto.\+h}
+\hypertarget{cfx__fproto_8h_source}{}\label{cfx__fproto_8h_source}\index{fluent20.1.0/src/ht/cfx\_fproto.h@{fluent20.1.0/src/ht/cfx\_fproto.h}}
+\mbox{\hyperlink{cfx__fproto_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{*\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00004\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ cfx\_fproto.h}}
+\DoxyCodeLine{00006\ \textcolor{comment}{}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ This\ file\ declares\ the\ following\ symbols,\ for\ use\ mainly\ in\ porting}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ \ to\ Windows\ NT\ but\ hopefully\ more\ generally\ useful:}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ STDCALL\ \ \ \ \ A\ C\ declaration\ for\ a\ Fortran-\/callable\ function.\ Use\ as}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ void\ STDCALL\ FUNC(void).}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ FortranSubPtr}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ A\ pointer\ to\ a\ subroutine.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ PROTOTYPE\ \ \ Preprocessor\ symbol,\ defined\ if\ we\ want\ function}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ prototypes.}}
+\DoxyCodeLine{00018\ \textcolor{comment}{}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ UNDERSCORE\ \ Preprocessor\ symbol,\ defined\ if\ fortran\ functions\ should}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ have\ underscores\ appended.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ \ UNDERSCORE\_DBL}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ Preprocessor\ symbol,\ defined\ if\ Fortran\ functions}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ containing\ an\ underscore\ already\ should\ have\ two}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ underscores\ appended,\ in\ the\ Linux\ g77\ style.\ \ Functions}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ not\ containing\ an\ underscore\ still\ have\ just\ a\ single}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ underscore\ appended,\ and\ UNDERSCORE\ will\ always\ be}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ defined\ whenever\ UNDERSCORE\_DBL\ is.}}
+\DoxyCodeLine{00029\ \textcolor{comment}{}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ NT\_DECL\ \ \ \ \ Preprocessor\ symbol,\ defined\ if\ the\ NT\ style\ of}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ declaring\ Fortran-\/callable\ functions\ from\ C\ is}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ \ \ \ \ \ \ \ needed.\ Ie,\ the\ name\ should\ be\ in\ uppercase,\ and\ the}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ \ \ \ \ \ arguments\ giving\ the\ lengths\ of\ strings\ follow\ the}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ \ \ \ \ \ \ \ string\ they\ reference,\ rather\ than\ being\ collected\ at}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ \ \ \ \ \ \ \ the\ end.}}
+\DoxyCodeLine{00036\ \textcolor{comment}{}}
+\DoxyCodeLine{00037\ \textcolor{comment}{}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ C\ types\ for\ default\ fortran\ intrinsic\ types:}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ \ F\_CHAR\_T\ \ \ \ \ \ CHARACTER}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ \ F\_INTEGER\_T\ \ \ INTEGER}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ \ F\_LOGICAL\_T\ \ \ LOGICAL}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ \ F\_REAL\_T\ \ \ \ \ \ REAL}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ \ F\_DOUBLE\_T\ \ \ \ DOUBLE}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ C\ types\ for\ special\ fortran\ types:}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ \ F\_LENGTH\_T\ \ \ \ Fortran\ hidden\ string\ lengths}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ \ F\_POINTER\_T\ \ \ Fortran\ stack\ pointers}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ \ F\_CRAY\_PTR\_T\ \ Fortran\ Cray\ pointers}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ \ F\_PTR64\_T\ \ \ \ \ Use\ 64-\/bit\ integer\ to\ store\ cray/C\ pointers}}
+\DoxyCodeLine{00049\ \textcolor{comment}{}}
+\DoxyCodeLine{00050\ \textcolor{comment}{}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ \ It\ relies\ on\ the\ preprocessor\ symbol\ WINDOWS\_NT\ being\ defined\ on\ NT}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ \ by\ the\ caller.}}
+\DoxyCodeLine{00053\ \textcolor{comment}{}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ \ Example\ usage\ is\ as\ follows,\ if\ the\ function\ in\ question\ doesn't}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ \ take\ any\ difficult\ (ie,\ string)\ parameters:}}
+\DoxyCodeLine{00056\ \textcolor{comment}{}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ \ \ \ \#if\ defined\ NT\_DECL}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ \ \ \ \#\ \ define\ USER\_ABORT\ \ USER\_ABORT}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ \ \ \ \#elif\ defined\ UNDERSCORE\_DBL}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ \ \ \ \#\ \ define\ USER\_ABORT\ \ user\_abort\_\_}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ \ \ \ \#elif\ defined\ UNDERSCORE}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ \ \ \ \#\ \ define\ USER\_ABORT\ \ user\_abort\_}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ \ \ \ \#else}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ \ \ \ \#\ \ define\ USER\_ABORT\ \ \ user\_abort}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00066\ \textcolor{comment}{}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ \ Note\ that\ the\ UNDERSCORE\_DBL\ test\ comes\ before\ that\ for\ UNDERSCORE.}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ \ If\ it\ does\ take\ string\ parameters,\ the\ need\ to\ reorder\ them\ is\ also}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ \ signalled\ by\ the\ NT\_DECL\ define.}}
+\DoxyCodeLine{00070\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#ifndef\ \_CFX\_FPROTO\_H}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ \_CFX\_FPROTO\_H}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#if\ (defined(\_WIN32)\ ||\ defined(WIN64))\ \&\&\ !defined(MAINWIN)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#ifndef\ \_NT}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#error\ \_WIN32\ defined\ without\ \_NT.\ Fix\ cfx\_proto.h.}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#if\ defined\ \_\_STDC\_\_\ ||\ defined\ \_NT}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ PROTOTYPE}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#if\ defined\ (\_WIN32)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ STDCALL\ \_\_cdecl}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#elif\ defined\ (WIN64)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ STDCALL\ \_\_stdcall}}
+\DoxyCodeLine{00089\ \textcolor{comment}{/*\#if\ defined\ \_NT}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\#\ \ define\ STDCALL\ \_\_stdcall}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\#\ \ define\ NT\_DECL*/}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#elif\ defined\ \_AIX}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#\ \ define\ STDCALL}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#elif\ defined\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#\ \ define\ STDCALL}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#elif\ defined(\_\_linux)\ \&\&\ defined(\_\_powerpc\_\_)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#\ \ define\ STDCALL}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#elif\ defined(\_\_blrts\_\_)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#\ \ define\ STDCALL}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#elif\ defined\ \_\_hpux}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#\ \ define\ STDCALL}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#\ \ if\ defined\ \_\_ia64\ ||\ defined\ \_LP64}}
+\DoxyCodeLine{00103\ \textcolor{comment}{/*\ the\ IA64\ (or\ 64-\/bit\ HP-\/UX\ builds,\ when\ we\ get\ there)\ uses\ underscores\ too\ */}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#\ \ \ \ ifndef\ UNDERSCORE}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ UNDERSCORE}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#elif\ defined\ \_\_linux}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#\ \ ifndef\ UNDERSCORE}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#\ \ \ \ define\ UNDERSCORE}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#\ \ define\ STDCALL}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#\ \ ifndef\ \_\_ia64}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#\ \ \ \ if\ !defined\ (LINUXIA32\_SYS)\ \&\&\ !defined\ (LINUXIA64\_SYS)\ \ }\textcolor{comment}{/*\ Not\ Ansys\ LINUX\ 32\ and\ not\ LINUX\ 64*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#\ \ \ \ \ \ define\ UNDERSCORE\_DBL}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#\ \ ifndef\ UNDERSCORE}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#\ \ \ \ define\ UNDERSCORE}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#\ \ define\ STDCALL}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cfx__fproto_8h_a446cf449a6234c9b177309d5ba0852c0}{STDCALL}}\ \mbox{\hyperlink{cfx__fproto_8h_ae2f18231684e7a8b550c4683f06304cc}{FortranSub}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00126\ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{cfx__fproto_8h_ae2f18231684e7a8b550c4683f06304cc}{FortranSub}}\ *\mbox{\hyperlink{cfx__fproto_8h_a2ec2e3a0311c58e295d8119d9466489f}{FortranSubPtr}};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{comment}{/*=======================================================================*/}}
+\DoxyCodeLine{00129\ \textcolor{comment}{/*\ C\ Declarations\ of\ Intrinsic\ Fortran\ Data\ Types\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00130\ \textcolor{comment}{/*=======================================================================*/}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{comment}{/*\ CHARACTER\ */}}
+\DoxyCodeLine{00133\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{char}\ \ \ \mbox{\hyperlink{cfx__fproto_8h_aad8ad2b7b22f2b76425a843a367f7886}{F\_CHAR\_T}};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{comment}{/*\ DOUBLE\ PRECISION\ */}}
+\DoxyCodeLine{00136\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{cfx__fproto_8h_a92828e834779093ab75d4b00b48a7d7c}{F\_DOUBLE\_T}};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{comment}{/*\ INTEGER\ */}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#if\ defined(CFX5\_ATTR\_INT64)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#\ \ if\ defined(\_M\_IX86)\ ||\ defined(\_M\_X64)\ ||\ defined(\_M\_AMD64)}}
+\DoxyCodeLine{00141\ \textcolor{keyword}{typedef}\ \_\_int64\ \mbox{\hyperlink{cfx__fproto_8h_a7e1f50f03dd1bb44f22cae0296e810a4}{F\_INTEGER\_T}};}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00143\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{cfx__fproto_8h_a7e1f50f03dd1bb44f22cae0296e810a4}{F\_INTEGER\_T}};}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00146\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cfx__fproto_8h_a7e1f50f03dd1bb44f22cae0296e810a4}{F\_INTEGER\_T}};}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{comment}{/*\ INTEGER(KIND=8)\ */}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#if\ defined(\_M\_IX86)\ ||\ defined(\_M\_X64)\ ||\ defined(\_M\_AMD64)}}
+\DoxyCodeLine{00151\ \textcolor{keyword}{typedef}\ \_\_int64\ \mbox{\hyperlink{cfx__fproto_8h_ac4210c99d2d82181f292338d8328d807}{F\_INTEGER8\_T}};}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00153\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{cfx__fproto_8h_ac4210c99d2d82181f292338d8328d807}{F\_INTEGER8\_T}};}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{comment}{/*\ LOGICAL\ */}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#if\ defined(CFX5\_ATTR\_INT64)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#\ \ if\ defined(\_M\_IX86)\ ||\ defined(\_M\_X64)\ ||\ defined(\_M\_AMD64)}}
+\DoxyCodeLine{00159\ \textcolor{keyword}{typedef}\ \_\_int64\ \mbox{\hyperlink{cfx__fproto_8h_a8a33deaebca53b0345712ff540bb8067}{F\_LOGICAL\_T}};}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00161\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{cfx__fproto_8h_a8a33deaebca53b0345712ff540bb8067}{F\_LOGICAL\_T}};}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00164\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cfx__fproto_8h_a8a33deaebca53b0345712ff540bb8067}{F\_LOGICAL\_T}};}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{comment}{/*\ REAL\ */}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#if\ defined(CFX5\_ATTR\_DOUBLE)}}
+\DoxyCodeLine{00169\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{cfx__fproto_8h_a7aba8f61f66012a06c5860d06fdac3f1}{F\_REAL\_T}};}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00171\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ \ \mbox{\hyperlink{cfx__fproto_8h_a7aba8f61f66012a06c5860d06fdac3f1}{F\_REAL\_T}};}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{comment}{/*\ Fortran\ Hidden\ String\ Lengths\ */}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#if\ defined(\_\_hpux)}}
+\DoxyCodeLine{00176\ \textcolor{comment}{/*\ HP\ 64-\/bit\ uses\ 64-\/bit\ length\ args\ */}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#\ \ if\ defined\ \_\_ia64\ ||\ defined\ \_LP64}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#\ \ \ \ define\ F\_LENGTH\_T\ long}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#\ \ \ \ define\ F\_LENGTH\_T\ int}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#elif\ defined(\_\_sun)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#\ \ define\ F\_LENGTH\_T\ long}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#elif\ defined(\_\_ia64)\ \&\&\ defined(\_\_linux)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#\ \ define\ F\_LENGTH\_T\ long}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#elif\ defined(\_M\_IX86)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#\ \ define\ F\_LENGTH\_T\ int}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#elif\ defined(\_M\_X64)\ ||\ defined(\_M\_AMD64)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#\ \ define\ F\_LENGTH\_T\ \_\_int64}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#elif\ defined\ (\_\_INTEL\_COMPILER)}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#\ \ define\ F\_LENGTH\_T\ long}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#\ \ define\ F\_LENGTH\_T\ int}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{comment}{/*\ Fortran\ Stack\ Pointers\ */}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#if\ defined(CFX\_MMSPTR64)\ ||\ defined(CFX5\_ATTR\_INT64)}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#\ \ if\ defined(\_M\_IX86)\ ||\ defined(\_M\_X64)\ ||\ defined(\_M\_AMD64)}}
+\DoxyCodeLine{00199\ \textcolor{keyword}{typedef}\ \_\_int64\ \mbox{\hyperlink{cfx__fproto_8h_a4d6ce674ad55d0ea74143d26fc6a5c2a}{F\_POINTER\_T}};}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00201\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{cfx__fproto_8h_a4d6ce674ad55d0ea74143d26fc6a5c2a}{F\_POINTER\_T}};}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00204\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cfx__fproto_8h_a4d6ce674ad55d0ea74143d26fc6a5c2a}{F\_POINTER\_T}};}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{comment}{/*\ Fortran\ Cray\ Pointers:\ Does\ not\ work\ yet\ */}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#if\ defined(CFX\_MMSPTR64)}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#\ \ if\ defined(\_M\_IX86)\ ||\ defined(\_M\_X64)\ ||\ defined(\_M\_AMD64)}}
+\DoxyCodeLine{00210\ \textcolor{keyword}{typedef}\ \_\_int64\ \mbox{\hyperlink{cfx__fproto_8h_ae1090026cfa1d76e787a61b1df0d235e}{F\_CRAY\_PTR\_T}};}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00212\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{cfx__fproto_8h_ae1090026cfa1d76e787a61b1df0d235e}{F\_CRAY\_PTR\_T}};}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00215\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cfx__fproto_8h_ae1090026cfa1d76e787a61b1df0d235e}{F\_CRAY\_PTR\_T}};}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{comment}{/*\ Fortran\ 64-\/bit\ integers\ for\ Pointers\ */}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#\ \ if\ defined(\_M\_IX86)\ ||\ defined(\_M\_X64)\ ||\ defined(\_M\_AMD64)}}
+\DoxyCodeLine{00221\ \textcolor{keyword}{typedef}\ \_\_int64\ \mbox{\hyperlink{cfx__fproto_8h_aba8b290cd1ceb8ad5d072855415bc47d}{F\_PTR64\_T}};}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00223\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{cfx__fproto_8h_aba8b290cd1ceb8ad5d072855415bc47d}{F\_PTR64\_T}};}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_CFX\_FPROTO\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

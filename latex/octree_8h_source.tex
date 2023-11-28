@@ -1,0 +1,627 @@
+\doxysection{octree.\+h}
+\hypertarget{octree_8h_source}{}\label{octree_8h_source}\index{fluent20.1.0/tgrid/src/octree.h@{fluent20.1.0/tgrid/src/octree.h}}
+\mbox{\hyperlink{octree_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ Octree\_h}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ Octree\_h}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{/*\ [note]\ any\ change\ in\ octant\ struct\ definition\ may\ change\ the\ number\ of\ octs}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ per\ GB\ of\ memory\ which\ is\ hardcoded\ in\ a\ print\ message\ in\ ../lib/vars.scm\ */}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ OCT\_NNODES\ 8}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ OCT\_NFACES\ 6}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ OCT\_NEDGES\ 12}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ OCT\_NCHILDREN\ 8}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{/*\ max\ number\ of\ region:\ 2\string^(16-\/1)-\/2\ */}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ OCT\_MAX\_REGIONS\ 32766}}
+\DoxyCodeLine{00019\ \textcolor{comment}{/*max\ number\ of\ trasversal\ recursion\ (max\_octree\_detpth\ *\ OCT\_NCHILDREN)*/}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ OCT\_MAX\_RECURSIONS\ 160}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ OctFlags\ unsigned\ short}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ OCT\_FLAGS(x)\ \ \ \ \ \ \ \ \ \ \ \ x-\/>flag}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ OCT\_FLAG(s,mask)\ \ \ \ \ \ \ \ (OCT\_FLAGS(s)\ \&\ (mask))}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SET\_OCT\_FLAGS(s,mask)\ \ \ (s)-\/>flag\ |=\ (mask)}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ CLEAR\_OCT\_FLAGS(s,mask)\ (s)-\/>flag\ \&=\ \string~(mask)}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa005e89f17e8fb07b3ef9a5941c7d762a35b87f1d59c0276c65a55d85a1aca10e}{TG\_ISOTROPIC\_OCTREE}}\ =\ 0,}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa005e89f17e8fb07b3ef9a5941c7d762af81d84219eeb1f4350c74a705a29d38b}{TG\_ANISOTROPIC\_OCTREE}}\ =\ 1,}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa005e89f17e8fb07b3ef9a5941c7d762a8302228ae328ec4fc4ea7aa97d8d8b0c}{TG\_BILINEAR\_OCTREE}}\ =\ 2}
+\DoxyCodeLine{00033\ \}\ \mbox{\hyperlink{octree_8h_aa005e89f17e8fb07b3ef9a5941c7d762}{OctreeType}};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{octree_8h_a239d8d99cee08158fef9be7871518b57a4a6d9fdfee7dc7354006c8047eac613e}{OCT\_X\_DIR\_N}}\ =\ 0,\ \mbox{\hyperlink{octree_8h_a239d8d99cee08158fef9be7871518b57a4ac6b6f2f41ed2d9cebe1e87139e8031}{OCT\_X\_DIR\_P}}\ =\ 1,}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{octree_8h_a239d8d99cee08158fef9be7871518b57a17ec78463cb32d63a2262b4bd332b4b3}{OCT\_Y\_DIR\_N}}\ =\ 2,\ \mbox{\hyperlink{octree_8h_a239d8d99cee08158fef9be7871518b57a0dfc95d26c927d8c48fa2b11a465555f}{OCT\_Y\_DIR\_P}}\ =\ 3,}
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{octree_8h_a239d8d99cee08158fef9be7871518b57a990d2a756d4c324ac90a5cb86c3cf202}{OCT\_Z\_DIR\_N}}\ =\ 4,\ \mbox{\hyperlink{octree_8h_a239d8d99cee08158fef9be7871518b57a4d9ddd4d50d1e29f12479eaffd4c07d1}{OCT\_Z\_DIR\_P}}\ =\ 5}
+\DoxyCodeLine{00040\ \}\ \mbox{\hyperlink{octree_8h_a239d8d99cee08158fef9be7871518b57}{OctFaceDir}};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ OCTREE\_HIGH\_RESOLUTION\ 1}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#if\ !OCTREE\_HIGH\_RESOLUTION}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#\ define\ OCT\_NBITS\ \ 16}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#\ define\ OCT\_NBITS0\ 15}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#\ define\ OCT\_NBITS1\ 17}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#\ define\ OCT\_HASH\_BITS\ 21}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#\ define\ OctCoord\ \ \ unsigned\ short}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#\ define\ OCT\_NBITS\ \ 21}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#\ define\ OCT\_NBITS0\ 20\ }\textcolor{comment}{/*\ max\_depth\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#\ define\ OCT\_NBITS1\ 22}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#\ define\ OCT\_HASH\_BITS\ 26}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#\ define\ OctCoord\ \ \ unsigned\ int}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctant__face__struct}{octant\_face\_struct}}}
+\DoxyCodeLine{00060\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structoctant__face__struct_a317e09ffffc9341c0f181d9f5e1fb3db}{octree\_index}};}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ \ \mbox{\hyperlink{structoctant__face__struct_afc966782c25222ee96a1bdd1d4b360f8}{dir}};}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ \ \mbox{\hyperlink{structoctant__face__struct_a841d12dfa12efe3f1f1bdeb6e9fc56ac}{rlevel}};}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{octree_8h_af2341fd906d0e8bb0ae0f39bf80b78a8}{OctCoord}}\ \mbox{\hyperlink{structoctant__face__struct_aaac6c295eddf55f742fd07b049eeefcf}{coord}}[3];}
+\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctant__struct}{octant\_struct}}\ \mbox{\hyperlink{structoctant__struct}{CartOctant}};}
+\DoxyCodeLine{00069\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctant__face__struct}{octant\_face\_struct}}\ \mbox{\hyperlink{structoctant__face__struct}{OctFace}};}
+\DoxyCodeLine{00070\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }oct\_domain\_partition\ \mbox{\hyperlink{octree_8h_aca99a3c9413f8b753d73eae43110bb12}{ODPartition}};}
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }cart\_volume\_marker\ \mbox{\hyperlink{octree_8h_ae376714057633db7ed262cea4fadde48}{CartVolumeMarker}};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ ROBUST\_INTERFACE\_CREATION\ 1}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoct__neighbors}{oct\_neighbors}}}
+\DoxyCodeLine{00076\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{/*\ face\ neighbors\ */}}
+\DoxyCodeLine{00078\ \ \ \ \ \mbox{\hyperlink{structoctant__struct}{CartOctant}}\ *\mbox{\hyperlink{structoct__neighbors_a1d49a1419d336edac9afcef62999c559}{fn}}[\mbox{\hyperlink{octree_8h_ad4e2d907bef381bda7b2736ad34f1302}{OCT\_NFACES}}];}
+\DoxyCodeLine{00079\ \ \ \ \ \mbox{\hyperlink{structoctant__struct}{CartOctant}}\ *\mbox{\hyperlink{structoct__neighbors_aef9cec4dad1f001f93843e4cc9807d74}{en}}[\mbox{\hyperlink{octree_8h_a96d5fdf10945a3ca27e9fe75130b29be}{OCT\_NEDGES}}];}
+\DoxyCodeLine{00080\ \ \ \ \ \mbox{\hyperlink{structoctant__struct}{CartOctant}}\ *\mbox{\hyperlink{structoct__neighbors_a490ab5f0189b5f2b5741da523e6d0448}{vn}}[\mbox{\hyperlink{octree_8h_a210482e777ce198dd0c59f8f79813483}{OCT\_NCHILDREN}}];}
+\DoxyCodeLine{00081\ \}\ \mbox{\hyperlink{octree_8h_a9250b0befbd3501dcd33fb2098012f28}{CartOctNeighbors}};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ OCT\_WITH\_COORDS\ 1}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#if\ OCT\_WITH\_COORDS}}
+\DoxyCodeLine{00085\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctant__struct}{octant\_struct}}}
+\DoxyCodeLine{00086\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctant__struct_ae810de46c17cb381c5d4110461cd6693}{parent}};}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctant__struct_a638ac29f15a242527fa6d2287f9cfeff}{children}};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctant__struct_ae65983b9419c48cac6d5b2340adaa501}{region}};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \mbox{\hyperlink{octree_8h_af2341fd906d0e8bb0ae0f39bf80b78a8}{OctCoord}}\ \mbox{\hyperlink{structoctant__struct_aaac6c295eddf55f742fd07b049eeefcf}{coord}}[3];}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structoctant__struct_a317e09ffffc9341c0f181d9f5e1fb3db}{octree\_index}};}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structoctant__struct_a841d12dfa12efe3f1f1bdeb6e9fc56ac}{rlevel}};}
+\DoxyCodeLine{00096\ \ \ \ \ \mbox{\hyperlink{octree_8h_a17364d908880b737d5700dcbd2b1f090}{OctFlags}}\ \mbox{\hyperlink{structoctant__struct_aa09194c998fd4bed29f7810f0d6e52fb}{flag}};}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structoctant__struct_a3ec00deec53aebdaae2f2114bd659879}{child\_index}};}
+\DoxyCodeLine{00098\ \ \ \ \ \mbox{\hyperlink{structoct__neighbors}{CartOctNeighbors}}\ *\mbox{\hyperlink{structoctant__struct_a7410d73674b61f4f8bcfc22ddbc5f677}{neigh}};}
+\DoxyCodeLine{00099\ \};}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00101\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctant__struct}{octant\_struct}}}
+\DoxyCodeLine{00102\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctant__struct_ae810de46c17cb381c5d4110461cd6693}{parent}};}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctant__struct_a638ac29f15a242527fa6d2287f9cfeff}{children}};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctant__struct_ae65983b9419c48cac6d5b2340adaa501}{region}};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structoctant__struct_a317e09ffffc9341c0f181d9f5e1fb3db}{octree\_index}};}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \mbox{\hyperlink{structoctant__struct_a841d12dfa12efe3f1f1bdeb6e9fc56ac}{rlevel}};}
+\DoxyCodeLine{00110\ \ \ \ \ \mbox{\hyperlink{octree_8h_a17364d908880b737d5700dcbd2b1f090}{OctFlags}}\ \ \mbox{\hyperlink{structoctant__struct_aa09194c998fd4bed29f7810f0d6e52fb}{flag}};}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \mbox{\hyperlink{structoctant__struct_a3ec00deec53aebdaae2f2114bd659879}{child\_index}};}
+\DoxyCodeLine{00112\ \};}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ OCT\_TAG\_FLAG\ \ \ \ \ \ \ 0x1}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ OCT\_MARK\_FLAG\ \ \ \ \ \ 0x2}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ OCT\_INTERSECT\_FLAG\ 0x4\ }\textcolor{comment}{/*\ Octs\ without\ this\ flag\ and\ reg\ 0}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ considered\ as\ leakages\ octs\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ OCT\_TRACE\_FLAG\ \ \ \ \ 0x8}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ OCT\_SETTLED\_FLAG\ \ \ 0x10}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ OCT\_FILL\_FLAG\ \ \ \ \ \ 0x20}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ OCT\_TEMP\_FLAG\ \ \ \ \ \ 0x40}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ OCT\_BOUNDARY\_FLAG\ \ 0x80}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ OCT\_COLLISION\_FLAG\ 0x100}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ OCT\_PERMANENT\_FLAG\ \ OCT\_FILL\_FLAG}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ IS\_LEAF\_OCT(oct)\ (!((oct)-\/>children))}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ IS\_NODE\_OCT(oct)\ ((oct)-\/>children)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ OCT\_REGION(oct)\ (oct)-\/>region}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ OCT\_RLEVEL(oct)\ (oct)-\/>rlevel}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ IS\_VALID\_OCT(oct)\ ((oct)-\/>region<(-\/1))?0:1}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ OD\_MAX\_OCTREES\ 1024}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ OD\_OCTREES(od)\ od-\/>l\_octrees}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ OD\_INTERFACES(od)\ od-\/>l\_region\_interfaces}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ OD\_DOMAIN(od)\ od-\/>domain}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ OD\_REGION\_VOL(od)\ od-\/>regions\_volume}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ OD\_EMPTY(od)\ (od-\/>num\_octs<1)?1:0}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ OD\_GET\_NUM\_OCTREES(od)\ \ \ \ \ \ \ \ \ \ (od-\/>num\_octrees)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ OD\_SET\_NUM\_OCTREES(od,n)\ \ \ \ \ \ \ \ (od-\/>num\_octrees\ =\ n)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ OD\_GET\_OCTREE(od,n)\ \ \ \ \ \ \ \ \ \ \ \ \ (od-\/>octree\_array[n])}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ OD\_GET\_NUM\_REGIONS(od)\ \ \ \ \ \ \ \ \ \ (od-\/>num\_regions)}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ OD\_SET\_NUM\_REGIONS(od,n)\ \ \ \ \ \ \ \ (od-\/>num\_regions\ =\ n)}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ OD\_GET\_NUM\_REGION\_OCTANTS(od,n)\ (od-\/>num\_region\_octs[n])}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ OCTREE\_GET\_NUM\_OCTANTS(octree)\ \ \ \ \ \ (octree-\/>num\_octs)}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ OCTREE\_GET\_XMIN(octree)\ \ \ \ \ \ \ \ \ \ \ \ \ (octree-\/>box\_min)}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ OCTREE\_GET\_XMAX(octree)\ \ \ \ \ \ \ \ \ \ \ \ \ (octree-\/>box\_max)}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ OCTREE\_GET\_XDEL(octree)\ \ \ \ \ \ \ \ \ \ \ \ \ (octree-\/>box\_del)}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctant__region__interface}{octant\_region\_interface}}}
+\DoxyCodeLine{00155\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structoctant__region__interface_a8e03167ce04350be901b028cc4cf1ce1}{name}}[256];}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{structoctant__region__interface_a5d8584955cfd7436ba64837d56b7ac77}{region\_index}};}
+\DoxyCodeLine{00158\ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{structoctant__region__interface_a12d282890abbcd5d8cab8504ba626dfc}{l\_octface\_blocks}};}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctant__region__interface_a31d0b824f7f0e2d884ae37e572268f39}{octface\_count}};}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structoctant__region__interface_a31bacb9e516279e8901461fe83c7a026}{tf}};}
+\DoxyCodeLine{00162\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structoctant__region__interface_ab8fc786e9a2fbbe7c030b8beea346eba}{tv}};}
+\DoxyCodeLine{00163\ \}\ \mbox{\hyperlink{octree_8h_aef4c6a92024100bc8e6c58ea69c8204a}{OctInterface}};}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structleakage__region__struct}{leakage\_region\_struct}}}
+\DoxyCodeLine{00166\ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structleakage__region__struct_a7441ef0865bcb3db9b8064dd7375c1ea}{id}};}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structleakage__region__struct_a79a52e7f54c745dbb1a1f25b85e57001}{on\_path}};}
+\DoxyCodeLine{00169\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structleakage__region__struct_ae4712394bd128c0204c39c9a2458a367}{cen}}[3];}
+\DoxyCodeLine{00170\ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{structleakage__region__struct_a0c59c334ab90a0911e935e2085b62acb}{l\_oct\_list}};}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structleakage__region__struct_a18c582c5f19c093fc06b6b6fcae7ef00}{nadj\_regions}},\ *\mbox{\hyperlink{structleakage__region__struct_a311f9c3664a4461ebb70922976f55bef}{adj\_regions}};}
+\DoxyCodeLine{00172\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structleakage__region__struct_a397b558f3259245ac8f403215dd3a33a}{tf\_patch}};}
+\DoxyCodeLine{00173\ \}\ \mbox{\hyperlink{octree_8h_a8746815a68e0ff800e5926d4a16f557c}{LeakageRegion}};}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__tg__octree__part__info}{\_tg\_octree\_part\_info}}}
+\DoxyCodeLine{00176\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct__tg__octree__part__info_a2f0c5317e4118cebdfcdd9ba68c8e8f3}{cnode\_id}};}
+\DoxyCodeLine{00178\ \}\ \mbox{\hyperlink{octree_8h_a7d7bcc87b8e3fd84902dafc3001ea2f5}{TG\_Octree\_Part\_Info}};}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctree__struct}{octree\_struct}}}
+\DoxyCodeLine{00181\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *\mbox{\hyperlink{structoctree__struct_a1e235a653788e11116e4d876262de9fe}{domain}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ current\ cartesian\ domain\ */}}
+\DoxyCodeLine{00183\ \ \ \ \ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *\mbox{\hyperlink{structoctree__struct_a99aaa034f832ded0c5f2f8ca3aa3f84d}{geom\_domain}};\ \ \textcolor{comment}{/*\ geometry\ domain\ */}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structoctree__struct_a5abc5420a7f15af7410173395b610ea8}{index}};}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctree__struct_a1f5349909fa5582a32b5407fc626f993}{max\_rlevel}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ max\ refinement\ level\ */}}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctree__struct_a935f2f6d3424bb74d3a7a000def6dd55}{min\_rlevel}};}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctree__struct_a7dd746a0ee9adcc43c59c22c0f69d4cd}{cur\_rlevel}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ current\ refinement\ level\ */}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctree__struct_ad0cf3df56a0ca4ad0befae151ced5008}{flag}};}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structoctree__struct_a7c164e70c83f041d9f642bc8ca2d708e}{NV\_VEC}}\ (box\_min);\ \textcolor{comment}{/*\ lower\ corner\ */}}
+\DoxyCodeLine{00194\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structoctree__struct_a7ac220e90a3fd69d88f238b08fddd2d2}{NV\_VEC}}\ (box\_max);\ \textcolor{comment}{/*\ upper\ corner\ */}}
+\DoxyCodeLine{00195\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{global_8h_ad2d0744d62bd67159642f00dd33db15b}{NV\_VEC}}\ (box\_del);}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#if\ ROBUST\_INTERFACE\_CREATION}}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{global_8h_ad2d0744d62bd67159642f00dd33db15b}{NV\_VEC}}\ (box\_min\_int);\ \textcolor{comment}{/*\ lower\ corner\ */}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \mbox{\hyperlink{structoctant__struct}{CartOctant}}\ \ \ *\mbox{\hyperlink{structoctree__struct_a0256f15a4a15362b869cb187e3a732f1}{master\_oct}};}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctree__struct_a2af4f819788939d00d9a67136c8479af}{master\_oct\_id}};}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctree__struct_a2170241ac8d55be24375f111d11aca4e}{num\_octs}};}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctree__struct}{octree\_struct}}\ *\mbox{\hyperlink{structoctree__struct_af1453c0bd07c2c11e07907d481855c1a}{adj\_octrees}}[6];}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \mbox{\hyperlink{struct__tg__octree__part__info}{TG\_Octree\_Part\_Info}}\ *\mbox{\hyperlink{structoctree__struct_a007b8d0405c06dbe05ce0500ea278c02}{part\_info}};}
+\DoxyCodeLine{00207\ \};}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctree__struct}{octree\_struct}}\ \mbox{\hyperlink{structoctree__struct}{CartOctree}};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structoctree__domain}{octree\_domain}}}
+\DoxyCodeLine{00212\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \mbox{\hyperlink{structoctree__domain_a7441ef0865bcb3db9b8064dd7375c1ea}{id}};}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *\mbox{\hyperlink{structoctree__domain_a1e235a653788e11116e4d876262de9fe}{domain}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ current\ cartesian\ domain\ */}}
+\DoxyCodeLine{00216\ \ \ \ \ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *\mbox{\hyperlink{structoctree__domain_a99aaa034f832ded0c5f2f8ca3aa3f84d}{geom\_domain}};\ \ \textcolor{comment}{/*\ geometry\ domain\ */}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ \ \ \ \ \ \ *\mbox{\hyperlink{structoctree__domain_ac9e11cb589f1a5e8814d22bd82f694e3}{l\_octrees}};}
+\DoxyCodeLine{00219\ \ \ \ \ \mbox{\hyperlink{structoctree__struct}{CartOctree}}\ **\mbox{\hyperlink{structoctree__domain_aeea76fd536096e76132c715167b4cd49}{octree\_array}};}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structoctree__domain_a06d2d4bd1fbd1de43433239e95e5c225}{num\_octrees}};}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctree__domain_a2170241ac8d55be24375f111d11aca4e}{num\_octs}};}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctree__domain_ac1285f60d1cbdf4fdd6108969613f86c}{num\_leaf\_octs}};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structoctree__domain_a451189ebdaa50f4968f8f7317f6c4f46}{min\_rlevel}};}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structoctree__domain_ad0cf3df56a0ca4ad0befae151ced5008}{flag}};}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structoctree__domain_a7c164e70c83f041d9f642bc8ca2d708e}{NV\_VEC}}\ (box\_min);\ \textcolor{comment}{/*\ lower\ corner\ */}}
+\DoxyCodeLine{00230\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structoctree__domain_a7ac220e90a3fd69d88f238b08fddd2d2}{NV\_VEC}}\ (box\_max);\ \textcolor{comment}{/*\ upper\ corner\ */}}
+\DoxyCodeLine{00231\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{global_8h_ad2d0744d62bd67159642f00dd33db15b}{NV\_VEC}}\ (box\_del);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{structoctree__domain_aabcae6d888bc4a6d930d7a1cffd28707}{num\_regions}};}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \ *\mbox{\hyperlink{structoctree__domain_aa519165aa62a0d94e614b6a3df4e9ec0}{num\_region\_octs}};}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{structoctree__domain_a1b361e7487df3d1bce35f856255fe410}{l\_region\_interfaces}};}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *\mbox{\hyperlink{structoctree__domain_abc039534a9617493c07bc1be2d7f0216}{regions\_volume}};}
+\DoxyCodeLine{00239\ \}\ \mbox{\hyperlink{octree_8h_af903f53e14fd76bcb49639df038ac4b8}{OctDomain}};}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00242\ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4fea6f4f234e9ee08e8be97e53127944778f}{TG\_OCT\_FOREST\_REFINE\_METHOD\_TARGET\_LEVEL}}\ =\ 0,}
+\DoxyCodeLine{00244\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4fea059be41f3ce64fb42fb91373f736127a}{TG\_OCT\_FOREST\_REFINE\_METHOD\_VOLUMETRIC\_SF}}\ =\ 1,}
+\DoxyCodeLine{00245\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4fea42cb975cd3e2ea08af3cd2ac6f7d6e36}{TG\_OCT\_FOREST\_REFINE\_METHOD\_TARGET\_SIZE}}\ =\ 2,}
+\DoxyCodeLine{00246\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4fea97c4759a40a1f22bc1f0fa454b3cb620}{TG\_OCT\_FOREST\_REFINE\_METHOD\_TARGET\_SIZE\_ON\_THREAD}}\ =\ 3,}
+\DoxyCodeLine{00247\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4feafb9c0345c1d04b046ac0f40470728edb}{TG\_OCT\_FOREST\_REFINE\_METHOD\_REF\_LEVEL\_ON\_THREAD}}\ =\ 4,}
+\DoxyCodeLine{00248\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4fea386a40f897d202596fd8dc7b10e1fbb9}{TG\_OCT\_FOREST\_REFINE\_METHOD\_GEODESIC\_SF}}\ =\ 5,}
+\DoxyCodeLine{00249\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4fea9446329335a9d13b6472ab363a327fad}{TG\_OCT\_FOREST\_REFINE\_METHOD\_ENTITY\_SIZE\_ON\_THREAD}}\ =\ 6,}
+\DoxyCodeLine{00250\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4fea5af4776ad0621b666b0aba41ecfc1887}{TG\_OCT\_FOREST\_REFINE\_METHOD\_BOI\_SIZE}}\ =\ 7,}
+\DoxyCodeLine{00251\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4fead727306c29f94ef91fb45568f5ec07b9}{TG\_OCT\_FOREST\_REFINE\_METHOD\_EOI\_SIZE}}\ =\ 8,}
+\DoxyCodeLine{00252\ \ \ \ \ \mbox{\hyperlink{octree_8h_aa2baea0e4a061cf7eda1c9589fd7c4fea9555ac13419d68ee5ee00cb3e870eb9e}{TG\_OCT\_FOREST\_REFINE\_METHOD\_UNDEFINE}}}
+\DoxyCodeLine{00253\ \};}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00256\ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \mbox{\hyperlink{octree_8h_af6d61abedd58f4942675f955a24a642ba1210b7764f0a27cc7d3c27c34eb3d35e}{TG\_OCT\_FOREST\_REGION\_METHOD\_RESET}}\ =\ 0,}
+\DoxyCodeLine{00258\ \ \ \ \ \mbox{\hyperlink{octree_8h_af6d61abedd58f4942675f955a24a642ba23a15000a04176d025c7d8cf479907ca}{TG\_OCT\_FOREST\_REGION\_METHOD\_GENERATE}}\ =\ 1,}
+\DoxyCodeLine{00259\ \ \ \ \ \mbox{\hyperlink{octree_8h_af6d61abedd58f4942675f955a24a642ba396838a6fa797dc42a0694305567d196}{TG\_OCT\_FOREST\_REGION\_METHOD\_GET}}\ =\ 2,}
+\DoxyCodeLine{00260\ \ \ \ \ \mbox{\hyperlink{octree_8h_af6d61abedd58f4942675f955a24a642ba44fe419043e1973dc5a780e5c8b98ce9}{TG\_OCT\_FOREST\_REGION\_METHOD\_FIND}}\ =\ 3,}
+\DoxyCodeLine{00261\ \ \ \ \ \mbox{\hyperlink{octree_8h_af6d61abedd58f4942675f955a24a642baef797d74d25efb9c141bd49e43811631}{TG\_OCT\_FOREST\_REGION\_METHOD\_UNDEFINE}}}
+\DoxyCodeLine{00262\ \};}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00265\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \mbox{\hyperlink{octree_8h_ad1df9dc2600f2dda7e99d31c00fd73e0a9c2aaa356e5edb90ee48dd38c862dcc0}{TG\_OCT\_FOREST\_INTERSECT\_METHOD\_RESET}}\ =\ 0,}
+\DoxyCodeLine{00267\ \ \ \ \ \mbox{\hyperlink{octree_8h_ad1df9dc2600f2dda7e99d31c00fd73e0a3d1a369c42cf0f8172d3e9a119d397b2}{TG\_OCT\_FOREST\_INTERSECT\_METHOD\_COMPUTE}}\ =\ 1,}
+\DoxyCodeLine{00268\ \ \ \ \ \mbox{\hyperlink{octree_8h_ad1df9dc2600f2dda7e99d31c00fd73e0a99cc87a547a687e1dedb92c1403db924}{TG\_OCT\_FOREST\_INTERSECT\_METHOD\_UNDEFINE}}}
+\DoxyCodeLine{00269\ \};}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00272\ \{}
+\DoxyCodeLine{00273\ \ \ \ \ \mbox{\hyperlink{octree_8h_a4eeeead548222804e141df8f1b205ca8a85302ad74bf70a2e01bbda107993e344}{TG\_OCT\_FOREST\_CONVERT\_METHOD\_HEX}}\ =\ 0,}
+\DoxyCodeLine{00274\ \ \ \ \ \mbox{\hyperlink{octree_8h_a4eeeead548222804e141df8f1b205ca8a4af0a332a80c9d58e383f09f47c6e577}{TG\_OCT\_FOREST\_CONVERT\_METHOD\_POLY\_ALL}}\ =\ 1,}
+\DoxyCodeLine{00275\ \ \ \ \ \mbox{\hyperlink{octree_8h_a4eeeead548222804e141df8f1b205ca8a2a09bc725d3dc3e6d035b1e5ccda4fbd}{TG\_OCT\_FOREST\_CONVERT\_METHOD\_POLY\_ONLY\_TRANSITION}}\ =\ 2,}
+\DoxyCodeLine{00276\ \ \ \ \ \mbox{\hyperlink{octree_8h_a4eeeead548222804e141df8f1b205ca8ae6b750a1cd6f47cc89dc72f23eb94eea}{TG\_OCT\_FOREST\_CONVERT\_METHOD\_POLY\_ONLY\_BOUNDARY}}\ =\ 3,}
+\DoxyCodeLine{00277\ \ \ \ \ \mbox{\hyperlink{octree_8h_a4eeeead548222804e141df8f1b205ca8ad67b1c789aeb7fe28e1db3c7b5ceffa4}{TG\_OCT\_FOREST\_CONVERT\_METHOD\_UNDEFINE}}}
+\DoxyCodeLine{00278\ \};}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00281\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00282\ \{}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{octree_8h_a9fb333aab932017cb51be474b96548f7}{\_TG\_Octdomain\_Collect\_Region\_Octants}}(\textcolor{keywordtype}{int}\ region);}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a3a05236193c7e26f453e42cb2263a6e2}{\_TG\_Oct\_Get\_Face\_Neighbors}}(\mbox{\hyperlink{structoctant__struct}{CartOctant}}\ *oct,\ \textcolor{keywordtype}{int}\ face\_dir,}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *nadj,\ \mbox{\hyperlink{structoctant__struct}{CartOctant}}\ *adj\_octs[4]);}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a9d903138836691ec05483de6ce7c8f3b}{\_TG\_Octface\_Get\_Vertex\_Rcoord}}(\mbox{\hyperlink{structoctree__struct}{CartOctree}}\ *octree,}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structoctant__face__struct}{OctFace}}\ *oface,}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vertex\_idx,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ coord[]);}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_ac620aef9e35fb6a31f04a242a45c96e7}{\_TG\_Oct\_Get\_Vertex\_Fcoord}}(\mbox{\hyperlink{structoctant__struct}{CartOctant}}\ *oct,}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vtx\_idx,}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *coord);}
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_af5fdd67d5cfc18dcac2fea11c84d103a}{\_TG\_Oct\_Get\_Vertex\_Rcoord}}(\mbox{\hyperlink{structoctant__struct}{CartOctant}}\ *oct,\ \textcolor{keywordtype}{int}\ vtx\_idx,}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *coord);}
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_ab0446a8cddd4c5ae45b5b604abe46149}{\_TG\_Oct\_Get\_Face\_Fcoords}}(\mbox{\hyperlink{structoctant__struct}{CartOctant}}\ *oct,}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ face\_idx,}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ coords[][3]);}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a59e011dedfdd01d3e2e0f9cdf8a18ce1}{\_TG\_Clear\_Flags\_Of\_List\_Octants}}(\mbox{\hyperlink{structcons__cell}{List}}\ *,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a889568fd294f496ad441ef20e69d8ec2}{\_TG\_Set\_Flags\_Of\_List\_Octants}}(\mbox{\hyperlink{structcons__cell}{List}}\ *,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a9ee8d793ede9030197232dbdfa9bcbe5}{\_TG\_Set\_Octree\_Hexcore}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_afd82012d1e2118646599d0422ecaefe1}{\_TG\_Reset\_Octree\_Hexcore}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a8dbb88aac38eb1554ad5099cacc7a321}{\_TG\_Init\_Hex\_Octree\_Domain}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ ndiv[3],}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ bmin[3],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ bmax[3]);}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a524fbb72b7606b8884e88f44aa38e1bb}{\_TG\_Init\_Octree\_Domain}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ ndiv[3],}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ expansion\_ratio);}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a686ea5044c7668817faee7ff5df7c3c2}{\_TG\_Octree\_Get\_Type}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a0dce3099f4f698ea9085eb1dc8e703f4}{\_TG\_Oct\_Get\_Grid\_Info}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ **coords,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ **ispans);}
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_aa8025d98469db939bfa21f44fa839787}{\_TG\_Octree\_Collect\_Plane\_Octs}}(\mbox{\hyperlink{structoctant__struct}{CartOctant}}\ *oct,\ \textcolor{keywordtype}{int}\ dir,\ \textcolor{keywordtype}{int}\ icoord,}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ **l\_oct\_list,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *len);}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a96797f723e2b9a6337bd5b1f2310fbb1}{\_TG\_Octree\_Set\_Type}}(\textcolor{keywordtype}{int}\ type);}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a99088b9b28010df2e440d215cb5bccfe}{\_TG\_Octree\_Compute\_Spans}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xmin,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xmax,}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *abs\_margin,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *expansion\_ratio,}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xspan\_min,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xspan\_max);}
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a40ee4d5a116d4acca6a03ebf2177c8c5}{\_TG\_Octree\_Compute\_Optimal\_Division}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xmin,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xmax,}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ref\_size,\ \textcolor{keywordtype}{int}\ n\_division[3],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xdelt[3]);}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a097dd80751ec017bd69993e205ef9c7d}{\_TG\_Octree\_New\_Domain}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a11d6ec6b4d7d544fa8e2eae91ab266de}{\_TG\_Octree\_Set\_Spans}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmin[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmax[]);}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a2b1f736d07195c1a4645501b12f4dedf}{\_TG\_Octree\_Init\_Domain}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ ndiv[]);}
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a030cde335cff34fad1c21f1e2e1420df}{\_TG\_Octree\_Create\_Domain}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmin[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmax[],}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ref\_size,\ \ \textcolor{keywordtype}{int}\ ndiv[]);}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structoctree__domain}{OctDomain}}*\ \mbox{\hyperlink{octree_8h_aa475d4f6fe95d1e4b3141d49dae2efe6}{\_TG\_Get\_Octree\_Domain}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{octree_8h_a8f19c2b68a5f4a753da8dec52d12d972}{\_TG\_Octdomain\_Collect\_Flagged\_Octants}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ flags);}
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{octree_8h_a186ddff1b6cbc277f642b131dd060279}{\_TG\_Octdomain\_Collect\_All\_Leaf\_Octants}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a2b613bbfebab974573b2ffd6a1f07b2f}{\_TG\_Octree\_Domain\_Get\_Extent}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{char}\ *dir,}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xmin,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xmax);}
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a35a6bed93db584454e5eda59a06ea31c}{\_TG\_Octree\_Clear\_All\_Octant\_Flags}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ flags);}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a9d733b6bf725e46aea845dfa7d7fe8d5}{\_TG\_OCTREE\_Delete\_Octants\_Only}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_afff213ba6cce642dfe10885657309e30}{\_TG\_OCTREE\_Delete\_Octree\_Domain}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{octree_8h_a4a4c48d41e9b72f1c525697e40ce87d1}{\_TG\_Mark\_Octants\_To\_Refine}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *method,\ \textcolor{keywordtype}{int}\ max\_level,}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *l\_threads);}
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{octree_8h_aee25bec38365c979c1f2b6817fc34c09}{\_TG\_Refine\_Marked\_Octant}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ **l\_ref\_octs);}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_af7a6f8d6bd9afb7fff83e7c034f2d453}{\_TG\_Refine\_Octree\_Domain}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *method,\ \textcolor{keywordtype}{int}\ max\_level,}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *l\_threads,}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ hole\_detection);}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{octree_8h_a5e5a1b03ff5f03d79fbd80861a10bdfa}{\_TG\_OCTREE\_Get\_Num\_Regions}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00345\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_ad02163234968f73a995c9e6bb53d4391}{\_TG\_List\_Octree\_Regions}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a0872492acaf52262d241bb099fff42ec}{\_TG\_Wrapper\_Nullify\_Regions}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_ab8aa22575019380fa5cba15c195d04dd}{\_TG\_Wrapper\_Reset\_Oct\_Flags}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{octree_8h_a9815452a6880e3ef33d3eff3eca87323}{\_TG\_Generate\_Octree\_Region}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *l\_oct\_list,}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ retain\_old\_region);}
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a045bf1d018a0c23ff0df4ae0c600df73}{\_TG\_Top\_Down\_Regioning\_Generate}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *ltf,\ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00351\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_aef35ecf16cd1002aa49dc7dc10acf38b}{\_TG\_Top\_Down\_Regioning\_Finalize}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *lpatches);}
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{octree_8h_a06ca144f8f16a1bb949ccb88df98ae88}{\_TG\_Top\_Down\_Regioning\_Find\_Holes}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{structcons__cell}{List}}\ *ltf,}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ remove\_faulty\_holes\_p);}
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a55b8be15267438aaf5d400842677fdf3}{\_TG\_Collision\_Table\_Delete}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a59ac1300756c9827cf2d46a97104da08}{\_TG\_Find\_Hexpoly\_Regions\_To\_Keep}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{structcons__cell}{List}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *);}
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a9ace674fe8c678bd3c78fb014b4eb50c}{\_TG\_Find\_Regions\_To\_Keep\_Simplified}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *,\ \textcolor{keywordtype}{int},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *);}
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a85f199b0678f4bbacaeeb1d5c20d2137}{\_TG\_Find\_Regions\_With\_Max\_Count}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *);}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a9a7fb106636e3f5bfa60e260bb1559a1}{\_TG\_Find\_Regions\_With\_Material\_Point}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ [],\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *);}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_ac5de260e4047a560075f21b88960f314}{\_TG\_Find\_Interior\_Regions\_Using\_AIT}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ }
+\DoxyCodeLine{00361\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ *);}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_adfc00c482c3e52adb1a38fdd6bbeb586}{\_TG\_Generate\_Octree\_Buffer\_Layers}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *,}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{octree_8h_a70316744bea428e294bd52d4304ddabd}{\_TG\_Hexcore\_Generate\_Octree\_Region}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a0de90ce9b93706f05764b04c8741d3c8}{\_TG\_OCTREE\_Update\_Region}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *l\_geom\_threads);}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}*\ \mbox{\hyperlink{octree_8h_a457eea94a4e108b48919a67d36c0a4f7}{\_TG\_Region\_Get\_Interfaces}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{octree_8h_a070f0eff779491a727cf6b338f4b5342}{\_TG\_Region\_Get\_Last\_Interface\_ID}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a8aaef2a3cd73a03299825d5c0ebb2700}{\_TG\_Extract\_Region\_Interface}}(\textcolor{keywordtype}{int}\ region);}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\ \mbox{\hyperlink{octree_8h_af9e1fde0766e174b5630de8b7e3d219a}{\_TG\_Convert\_Region\_Interface}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ region);}
+\DoxyCodeLine{00371\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\ \mbox{\hyperlink{octree_8h_ae463f2e0a0f7609ffdc746e15127b3b2}{\_TG\_Create\_Region\_Nodes}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ region);}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a842ee8ebcdf158cf21b0479b1dd2b1b7}{\_TG\_Region\_Delete\_Interface}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ intf\_id);}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a34c58049bf173b2fde7020221469f55f}{\_TG\_Region\_List\_Interfaces}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a72977becc2fc143032d80ad9d1a573de}{\_TG\_Region\_Fill\_Neighbor\_List}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{octree_8h_a6b3d96410586fdbdc9e543956ea91c57}{\_TG\_Region\_Get\_Neighbor\_Regions}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ region\_id);}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a2f6e7ac8c0861ac7b45c22558ac703bc}{\_TG\_OCTREE\_Refine\_Region}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ region\_id);}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a01bcef63fe86f376f02027ff5545a2aa}{\_TG\_OCTREE\_Refine\_Size\_Region}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ max\_rlevel,}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ hole\_detection);}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a875a5e200aa14c55a25fe74fa49589cf}{\_TG\_OCTREE\_Refine\_Region\_By\_Size\_Field}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ region\_id,}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *ltf);}
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a08c99e82e7b37b4557e731a278707b6e}{\_TG\_Region\_Get\_ID\_With\_Position}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos);}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a7fb82fcf4aac3094bcda8f8e61d39d5b}{\_TG\_Region\_Get\_Exterior\_Region\_ID}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00385\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a7b59c8213238473844c24646a2b644d4}{\_TG\_Get\_External\_Trace\_Point}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos);}
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a84cc0357c984e517be873620ea20a5db}{\_TG\_OCTREE\_Merge\_Regions}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_regions,\ \textcolor{keywordtype}{int}\ *region\_ids);}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}*\ \mbox{\hyperlink{octree_8h_adeb12371585f680b51fb6d728529bfa6}{\_TG\_Track\_Leakage\_Between\_Locations}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos1,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos2,}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ **hole\_ids);}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{octree_8h_a03ab3293814b0cbf08e4d23b8d2d6337}{\_TG\_OCTREE\_Hole\_Delete\_All}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{octree_8h_a0ee1dc177b5efbd899c86f1b09b56a29}{\_TG\_OCTREE\_Hole\_Delete}}(\textcolor{keywordtype}{int}\ hole\_id);}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{octree_8h_adcb34279759e1e66654909136f105aa2}{\_TG\_OCTREE\_Hole\_Howmany}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}*\ \mbox{\hyperlink{octree_8h_ab541e967170694aeb2503f5d99de6867}{\_TG\_OCTREE\_Hole\_Get\_All}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structleakage__region__struct}{LeakageRegion}}*\ \mbox{\hyperlink{octree_8h_aa4dba2e98ef9da04c85e63db0a75f5b2}{\_TG\_OCTREE\_Hole\_Get}}(\textcolor{keywordtype}{int}\ hole\_id);}
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a8d1cc92bd7319877427345f3413d4ea8}{\_TG\_Hole\_List\_Leakage\_Regions}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structleakage__region__struct}{LeakageRegion}}\ *\ \mbox{\hyperlink{octree_8h_a9383f10d403fa5c3f24f235af060f9ab}{\_TG\_Hole\_Get\_Leakage\_Region}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{octree_8h_a99b6349a9d7663fe113a82a6249ffbbf}{\_TG\_OCTREE\_Hole\_Print\_Out}}(\mbox{\hyperlink{structcons__cell}{List}}\ *l\_holes);}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{octree_8h_a5a28ac82001099402e2f3e2c47a67471}{\_TG\_OCTREE\_Hole\_Get\_Adjacent\_Regions}}(\textcolor{keywordtype}{int},}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ **);}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{octree_8h_ad46bfea4403941222679d8b23b5a3aee}{\_TG\_OCTREE\_Hole\_With\_Region}}(\textcolor{keywordtype}{int}\ hole\_id,\ \textcolor{keywordtype}{int}\ region\_id);}
+\DoxyCodeLine{00405\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{octree_8h_a733096e80bf0efa16bba97ffe5466cf2}{\_TG\_OCTREE\_Hole\_Min\_Region\_Count}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ hole\_id);}
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}*\ \mbox{\hyperlink{octree_8h_a922b982b0823c373532b6afa3ef4d574}{\_TG\_OCTREE\_Fix\_Holes}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ **l\_hole\_list);}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{octree_8h_a020818f1e4bfdc169ac3ceb4f7996a09}{\_TG\_Reset\_Leak\_Adj\_Regions}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *leak\_regions\_update);}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{octree_8h_a3c84c2eb767aee72646fbfa6fc279c54}{\_TG\_OCTREE\_Open\_Holes}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ **l\_hole\_list,}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *id\_map\_to\_return);}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_abb09757baa3aa27d81b01bfbaa468cb3}{\_TG\_OCTREE\_Open\_Large\_Holes}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ crit\_hole\_size);}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a1b8301b4d4369427735c7ac142cb04bb}{\_TG\_OCTREE\_Delete\_Holes}}(\mbox{\hyperlink{structcons__cell}{List}}\ *l\_hole\_ids);}
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a8330c530f0fec1ed9fdf2a9901b26a5c}{\_TG\_OCTREE\_Seal\_Holes\_At\_Region}}(\mbox{\hyperlink{structcons__cell}{List}}\ *l\_hole\_ids,\ \textcolor{keywordtype}{int}\ reg\_id,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ patch\_p);}
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structleakage__region__struct}{LeakageRegion}}\ *\ \mbox{\hyperlink{octree_8h_ad79ca0760c938f10e2f5caffd05cb14a}{\_TG\_OCTREE\_Hole\_Find\_With\_Location}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos);}
+\DoxyCodeLine{00415\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a32aac9d40f6dcc878dd5c726ca92483d}{\_TG\_OCTREE\_Hole\_Find\_ID\_With\_Location}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos);}
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_aa94beda477e0e9fc24f92792c651d9ec}{\_TG\_OCTREE\_Hole\_Get\_Center}}(\textcolor{keywordtype}{int}\ hole\_id,}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *cen);}
+\DoxyCodeLine{00418\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a9fe37010f6020ef757a19981beb53897}{\_TG\_OCTREE\_Hole\_Get\_Spans}}(\textcolor{keywordtype}{int}\ hole\_id,}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *spans);}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a0d6243647068f6801f23fe7f4ec1b891}{\_TG\_OCTREE\_Connect\_Adjacent\_Octree\_Regions}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ region\_id);}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_ab79af8015f9e45f7460fbadf85554e4b}{\_TG\_OCTREE\_Shrink\_Octree\_Region}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ region,}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_layers);}
+\DoxyCodeLine{00424\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a9e662de3efd53c9d3c6f79364b144124}{\_TG\_Delete\_Edges\_From\_Dead\_Octree\_Region}}(\mbox{\hyperlink{structcons__cell}{List}}\ *tes,\ \textcolor{keywordtype}{int}\ dead\_reg);}
+\DoxyCodeLine{00425\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a1fa194e6d932e8cd24d89f3de7c516fa}{\_TG\_Octree\_Get\_Size\_At}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *msize,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos,\ \textcolor{keywordtype}{void}\ *lscale);}
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a7a868b818c4a234df3094179db0e7fe4}{\_TG\_Octree\_Get\_Size\_At\_Entity}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *msize,\ \mbox{\hyperlink{structentity__struct}{Entity}}\ *s,}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos,\ \textcolor{keywordtype}{void}\ *lscale);}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a0b40d05d10e6fcf8020b35f1e2e3c92f}{\_TG\_Octree\_Get\_Size\_Between\_Nodes}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *msize,\ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *v1,\ \mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *v2,}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ fac,\ \textcolor{keywordtype}{void}\ *lscale);}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}*\ \_TG\_Create\_Octree\_Interface\_Thread(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int}\ region);}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_adeb05f8a0194c7ae6300c1234d40f8d1}{\_TG\_OCTREE\_Partition\_Octrees}}(\textcolor{keywordtype}{int}\ crit\_oct\_count);}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a2dc513f9fd68e5c70feb6e6d3cc68350}{\_TG\_OCTREE\_Convert\_To\_Standard\_Grid}}(\textcolor{keywordtype}{int}\ region\_id);}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a4482ab88394f86f6df5c900efa853f7f}{\_TG\_OCTREE\_Cleanup\_Partition}}(\textcolor{keywordtype}{int}\ region\_id);}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00440\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a60433d8787431164c0f52ec09fe1631a}{\_TG\_Octree\_Region\_Leaves\_to\_Cart}}(\textcolor{keywordtype}{int}*\ regions,\ \textcolor{keywordtype}{int}\ nlayers,}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ single\_cell\_thread\_p,}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ encap\_opt,}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ resolve\_hanging\_node\_faces\_p);}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a00c608a8a78bfdb2b97c3f70e74b44af}{\_TG\_Convert\_Region\_Octs\_To\_Poly}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ reg,\ \textcolor{keywordtype}{int}\ method,}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tvi,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tvb,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tfi,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tb,}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tch,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ **tcp);}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a2207e013c77fc244c5bc46be5f1f3e33}{\_TG\_OCTREE\_Get\_Num\_Volume\_Markers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a308f901a66e46d5bb0d996f6a0024d36}{\_TG\_OCTREE\_Get\_Volume\_Markers\_Regions}}(\textcolor{keywordtype}{int}\ *regions);}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{octree_8h_a5d7ec9ec957414b79c77202c7d44a0f1}{\_TG\_OCTREE\_Get\_Volume\_Markers}}(\textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a0ec95d72afe1175d1e754404514729e1}{\_TG\_OCTREE\_List\_Volume\_Markers}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ print\_out);}
+\DoxyCodeLine{00453\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a4fa43f688d6f66887c595a3fc08fb48a}{\_TG\_OCTREE\_Add\_Volume\_Marker}}(\textcolor{keywordtype}{char}\ *name,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos);}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a89eb2e704c3127a467f39ca33c304e63}{\_TG\_OCTREE\_Clear\_Volume\_Markers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_af68cbc8d326709534909e5c7a6b6644b}{\_TG\_OCTREE\_Delete\_Volume\_Marker}}(\textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_af9f5da7a70b5f0480565ffb628658373}{\_TG\_OCTREE\_Process\_Volume\_Markers}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00457\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\ \mbox{\hyperlink{octree_8h_a91dacee264f01fdeaded59fa5808f963}{\_TG\_Get\_Volume\_Markers\_Of\_Regions}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *reg\_ids);}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a682ebda9b06b450b945233c974f9c866}{\_TG\_Octree\_Compute\_Regions\_Volume}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_af79f91889825ae0e1a23f4c303823bad}{\_TG\_OCTREE\_Test}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{octree_8h_a6c7b2608e38e3d3c5789bee8ac676616}{\_TG\_Quick\_Octree\_Init\_Domain}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xmin,}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *xmax,}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ min\_size,}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ref\_size,}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ expansion\_ratio);}
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_aea617086fc37736909a4b140eb3d72b7}{\_TG\_Oct\_Refine\_Smoothing}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \textcolor{keywordtype}{int}\ max\_rlevel);}
+\DoxyCodeLine{00470\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a17f1365bbad2679d6c77a94b8fe6fa36}{\_TG\_Quick\_Octree\_Refine\_Size\_Function}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ max\_size,}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ min\_size,\ \textcolor{keywordtype}{int}\ max\_rlevel,}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ find\_holes,}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ aggressive);}
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{octree_8h_a8c2030a6a6f7c0644aefe4220dea1a45}{oct\_priority}}(\mbox{\hyperlink{structentity__struct}{Entity}}\ *);}
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_aef251abea0f15fb61677d16fc75bc30f}{oct\_pos}}(\mbox{\hyperlink{structentity__struct}{Entity}}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00477\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}}
+\DoxyCodeLine{00478\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a54942a4c3465dcca8da27dd53c8a6dd8}{\_TG\_Oct\_Diffuse\_Sizes}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *ltfs,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ growth\_rate);}
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}}
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a6b5ca19a4e14b60fef1c205280f78c1f}{\_TG\_OCTREE\_Refine\_Using\_Nodal\_Sizes}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *lts,}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ min\_size,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ max\_size,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ growth\_rate,}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ find\_holes\_p,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ oct\_hexcore\_p);}
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}}
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a5f5300cbbc2aa0882a1ea783b2324f02}{\_TG\_OCTREE\_Refine\_Contact\_Prevention}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *ltfs\_src,\ \mbox{\hyperlink{structcons__cell}{List}}\ *ltfs\_tgt,}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ min\_size,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ max\_size,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ growth\_rate,}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ find\_holes\_p);}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}}
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a325d000d57f1aedf87d978cd5002b441}{\_TG\_OCTREE\_BOI\_Direct\_Refinement}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *lts\_boi,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ size);}
+\DoxyCodeLine{00489\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}}
+\DoxyCodeLine{00490\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_adf2bf9538498f3743dc5b7cdea4539c8}{\_TG\_Octree\_Refine\_Intersecting\_Octants\_To\_Size}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *lthreads,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ max\_size);}
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00492\ \ \ \ \ \mbox{\hyperlink{octree_8h_a83a5615498b4399128e9d06768d6d4ca}{\_TG\_Octree\_Refine\_Intersecting\_Octants}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *lthreads,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ sf\_scale\_factor);}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}}
+\DoxyCodeLine{00495\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a686369fef7e70952503e2b86e81a8133}{\_TG\_Just\_Octree\_Threads\_Intersect}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,\ \mbox{\hyperlink{structcons__cell}{List}}\ *lthreads);}
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a86902fbef8836911c919c9d6ef29966e}{\_TG\_Quick\_Octree\_Intersect}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ create\_regions\_p);}
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a766a4c2aec5331cce356684e74783208}{\_TG\_Quick\_Octree\_Threads\_Intersect}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *lthreads,}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ update\_p,}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ create\_regions\_p,}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ top\_down\_p);}
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_aebb6a097a0bf978532692bcd5d871429}{\_TG\_Octree\_Offset\_Intersect}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *ltf,}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ rel\_offset\_dist,}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ option,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_ae0c340aad19b241fd11305bf4ce926ea}{\_TG\_Octree\_Config\_List\_Saved}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_abdd1c7dc3d1bf190aedfcb6de9688a8c}{\_TG\_Octree\_Config\_Recover\_Saved}}(\textcolor{keywordtype}{int}\ id\_config);}
+\DoxyCodeLine{00509\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a0a460720c0c0028f1b8f1e4804310e56}{\_TG\_Octree\_Config\_Save\_Current}}(\mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od);}
+\DoxyCodeLine{00510\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_af722189f2150e2ba8675255993c947fa}{\_TG\_Box\_Is\_Intersecting\_UnitTest}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}*\ \mbox{\hyperlink{octree_8h_ad03a8d7e5581a210e0b33d3c760a19aa}{\_TG\_WrapV2\_Extract\_Interfaces}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00513\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a82d741c33603605e77fe909c08800040}{\_TG\_Shrink\_Wrap\_Thin\_Cut}}(\textcolor{keywordtype}{int}\ reg\_id);}
+\DoxyCodeLine{00514\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a5d45be36330e509552a13d6cc9f11df6}{\_TG\_Resolve\_Checkerboard\_Config}}(\textcolor{keywordtype}{int}\ reg\_id);}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a6a9588372e19ed4a6846708fd023f01a}{\_TG\_Print\_Pure\_Edge\_Neighbors\_Of\_Oct\_At\_Location}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ p[],}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ edge);}
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a78329840d3fbfb0a53d1e81930cb93a9}{\_TG\_Get\_Pure\_Edge\_Neighbors\_Unittest}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a0c11ee0bb30e9d3cd690a4faa96ade92}{\_TG\_Leaves\_Around\_Point\_To\_Cart}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *pos,\ \textcolor{keywordtype}{int}\ nlayers);}
+\DoxyCodeLine{00521\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a0eab0bcb18ea18fa0a84c8cca91208fb}{\_TG\_Shrink\_Wrap\_Extract\_Region\_Interface}}(\mbox{\hyperlink{structdomain__struct}{Domain}}*,\ \mbox{\hyperlink{structcons__cell}{List}}*,\ \textcolor{keywordtype}{int},}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \textcolor{keywordtype}{double}*,\ \textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{octree_8h_a349c9a52caab1ad2adf22349f637b109}{\_TG\_Asm\_Init\_And\_Refine\_Octree}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *,\ \textcolor{keywordtype}{int},}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00527\ \textcolor{comment}{\ \ \ \ \ *\ OCTREE\ APIS}}
+\DoxyCodeLine{00528\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_ac1b758d3d6f00d1b892ab4e911240f40}{\_TG\_Oct\_Forest\_New}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmin[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmax[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ref\_size);}
+\DoxyCodeLine{00531\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_ac2a171202d565fa9912a6021950721b5}{\_TG\_Oct\_Forest\_Delete}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00532\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{octree_8h_a5ea7daca369c090693cc5dbbc45d5cfd}{\_TG\_Oct\_Forest\_Print}}(\textcolor{keywordtype}{int}\ oct\_forest\_id);}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00535\ \ \ \ \ \mbox{\hyperlink{octree_8h_a0cf15e5dcd028632eac35ac0a9d95936}{\_TG\_Oct\_Forest\_Refine}}(}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ refine\_method,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ refinement\ method\ */}}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nregions,\ \textcolor{keywordtype}{int}\ iregions[],\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ regions\ to\ refine\ */}}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ incomplete\_p,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ incomplete\ octree\ */}}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ refine\_smooth\_method,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ refine\_crit\_count,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ refine\_iterations,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ gauss\_pt\_eval\_p,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ oct\_size\_multiplier,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ volumetric\_sf\_id,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ min\_oct\_size,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ max\_oct\_size,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ oct\_rlevel\_tgt,\ \textcolor{keywordtype}{int}\ oct\_rlevel\_add,\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ growth\_rate,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *lts,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nent\_of\_influence,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}*\ xent\_of\_influnce\ \ \ \textcolor{comment}{/*\ kiran?\ */}}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00552\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00553\ \ \ \ \ \mbox{\hyperlink{octree_8h_a09b9faa51caa964243620cc13ca1120c}{\_TG\_Oct\_Forest\_Region}}(}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ region\_method,\ \ \ \ \ \ \textcolor{comment}{/*\ region\ method\ */}}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_island\_octs,\ \ \ \ \textcolor{comment}{/*\ max\ oct\ counts\ in\ a\ region\ to\ switch\ to\ intersecting\ octs\ */}}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_exposed\_sides,\ \ \textcolor{comment}{/*\ max\ side\ count\ of\ an\ octant\ to\ switch\ to\ an\ inters.\ oct\ */}}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmpt[],\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ coord\ of\ a\ point\ to\ find\ the\ enclosing\ region\ */}}
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *nregions,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ region,\ 0\ if\ there\ is\ no\ region\ */}}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ **iregions\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ octants\ in\ regions.\ 0\ is\ the\ intersecting\ region\ */}}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00562\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00563\ \ \ \ \ \mbox{\hyperlink{octree_8h_a03befa9da981979e65408d00633fcf35}{\_TG\_Oct\_Forest\_Intersect}}(}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ intersect\_method,}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *lts,}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ npeel\_layers,}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ rel\_offset\_dist}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00569\ }
+\DoxyCodeLine{00570\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00571\ \ \ \ \ \mbox{\hyperlink{octree_8h_ac652c269258916ee887d61f3efe7afd5}{\_TG\_Oct\_Forest\_Partition}}(}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *part\_method,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ partition\ method,\ "{}metis"{}\ is\ the\ only\ option\ now\ */}}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_parts\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ partitions\ */}}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00575\ }
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00577\ \ \ \ \ \mbox{\hyperlink{octree_8h_a36ff68e2106903fee2ee7f4cc9c6387e}{\_TG\_Oct\_Forest\_Report\_Summary}}(}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ oct\_forest\_id,}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *noctrees,}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ **octree\_stats,}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ **noctree\_octs,}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *nregions,}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ **nregion\_octs}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00587\ \ \ \ \ \mbox{\hyperlink{octree_8h_a369e08c5216f24506aa45cfbbfa23961}{\_TG\_Oct\_Forest\_Report\_Octree}}(}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ oct\_forest\_id,}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ioctree,}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *octree\_stats,}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *noctree\_octs,}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmin[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmax[],}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *cnode\_owner,}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *nlive\_octs,}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *ndead\_octs,}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *nghost\_octs}
+\DoxyCodeLine{00597\ \ \ \ \ );}
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00599\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00600\ \ \ \ \ \mbox{\hyperlink{octree_8h_a1be9ce9c27e6da8205eab042704a446b}{\_TG\_Oct\_Domain\_Create\_Dummy}}(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmin[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xmax[],\ \textcolor{keywordtype}{int}\ ndiv[]);}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00603\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00604\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00605\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structthread__struct}{Thread}}*\ }
+\DoxyCodeLine{00606\ \ \ \ \ \mbox{\hyperlink{octree_8h_a2be52650590f4f2d1acd6b0658ea8899}{\_TG\_OctCurve\_Extract\_Edge\_Network}}(}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ reg\_id}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00610\ }
+\DoxyCodeLine{00611\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}}
+\DoxyCodeLine{00612\ \ \ \ \ \mbox{\hyperlink{octree_8h_ae850c894705f92139feef93bf553ee47}{\_TG\_OctCurve\_Thin\_Network}}(}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structoctree__domain}{OctDomain}}\ *od,}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *te}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00616\ }
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00618\ \}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

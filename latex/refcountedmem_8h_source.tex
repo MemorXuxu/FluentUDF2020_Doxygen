@@ -1,0 +1,66 @@
+\doxysection{refcountedmem.\+h}
+\hypertarget{refcountedmem_8h_source}{}\label{refcountedmem_8h_source}\index{fluent20.1.0/src/storage/refcountedmem.h@{fluent20.1.0/src/storage/refcountedmem.h}}
+\mbox{\hyperlink{refcountedmem_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ \_REFCOUNTEDMEM\_}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ \_REFCOUNTEDMEM\_}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ FIXED\_PROFILE\_NAME\_LENGTH\ 0}}
+\DoxyCodeLine{00013\ \textcolor{comment}{/*\ Use\ Alloc\_Ref\_Counted\_Memory\ to\ allocate\ memory.\ The\ user\ needs\ to}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ provide\ some\ owner\ for\ the\ memory\ being\ allocated.\ When\ the\ owner\ is}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ copied,\ Ref\_Counted\_Memory\_Copied\ should\ be\ called.\ This\ will}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ increase\ the\ reference\ counts\ for\ all\ memories\ that\ the\ owner\ (src)}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ holds.}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ e.g:\ Lets\ say\ we\ have\ a\ container}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ typedef\ struct\ bag\_struct\ \{}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ \ \ \ char\ *name;}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ \ \ \ char\ *values;}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ \}\ Bag;}}
+\DoxyCodeLine{00023\ \textcolor{comment}{}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ //\ We\ want\ to\ allow\ shallow\ copy\ as\ well\ as\ deep\ copy\ of\ Bag.}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ //\ The\ following\ function\ does\ it\ one\ by\ one.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ void\ func()}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ \{}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ \ \ \ Bag\ A;}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ \ \ A.name\ =\ Alloc\_Ref\_Counted\_Memory(\&A,\ 10);\ //\ owner\ is\ A\ and\ size\ 10}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ \ \ A.values\ =\ Alloc\_Ref\_Counted\_Memory(\&A,\ 100);}}
+\DoxyCodeLine{00032\ \textcolor{comment}{}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ \ Bag\ B\ =\ A;\ //\ shallow\ copy\ A\ into\ B.}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ \ \ \ //\ inform\ the\ system\ that\ A\ is\ now\ copied\ to\ B}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ \ \ \ Ref\_Counted\_Memory\_Copied(\&A,\ \&B);}}
+\DoxyCodeLine{00036\ \textcolor{comment}{}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ \ \ \ //\ Now\ let\ us\ create\ different\ memory\ into\ B.}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ \ \ \ Free\_Ref\_Counted\_Memory(\&B,\ B.name);}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ \ \ \ Free\_Ref\_Counted\_Memory(\&B,\ B.values);}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ \ \ \ B.name\ =\ Alloc\_Ref\_Counted\_Memory(\&B,\ 15);\ //\ Now\ B\ gets\ its\ own\ memory}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ \ \ \ B.values\ =\ Alloc\_Ref\_Counted\_Memory(\&B,\ 20);\ //\ B\ values\ are\ its\ own\ too.}}
+\DoxyCodeLine{00042\ \textcolor{comment}{}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ \ \ \ //\ Before\ A\ \&\ B\ go\ out\ of\ context.\ Inform\ the\ system\ to\ free\ up\ the}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ \ \ \ //\ memories}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ \ \ \ Free\_Ref\_Counted\_Memory(\&A,\ NULL);\ //\ all\ memory\ contained\ in\ A\ should\ be\ freed}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ \ \ \ Free\_Ref\_Counted\_Memory(\&B,\ NULL);\ //\ all\ memory\ contained\ in\ B\ should\ be\ freed}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ \}}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00049\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{refcountedmem_8h_a3c26107990fc173ab0bdacc3ce6311d7}{Alloc\_Ref\_Counted\_Memory}}(\textcolor{keywordtype}{void}\ *owner,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00050\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{refcountedmem_8h_afd175ee69f08857fd2dd8990b716b28e}{Ref\_Counted\_Memory\_Copied}}(\textcolor{keywordtype}{void}\ *src,\ \textcolor{keywordtype}{void}\ *dest);}
+\DoxyCodeLine{00051\ \textcolor{comment}{/*\ If\ ptr\ is\ a\ ref\ counted\ memory,\ its\ ref\ count\ will\ be\ reduced.}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ \ \ If\ ptr\ is\ null,\ all\ ref\ counted\ memory\ in\ the\ owner\ will\ be\ reduced\ ref-\/count.}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ \ \ If\ owner\ doesn't\ own\ any\ ref\ counted\ memory,\ this\ won't\ do\ anything.}}
+\DoxyCodeLine{00054\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00055\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{refcountedmem_8h_a5ec8967bcaf56a0a84888ad3ac21887f}{Free\_Ref\_Counted\_Memory}}(\textcolor{keywordtype}{void}\ *owner,\ \textcolor{keywordtype}{void}\ *ptr);}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

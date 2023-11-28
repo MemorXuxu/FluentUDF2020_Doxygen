@@ -1,0 +1,87 @@
+\doxysection{dpm\+\_\+dem\+\_\+wall.\+h}
+\hypertarget{dpm__dem__wall_8h_source}{}\label{dpm__dem__wall_8h_source}\index{fluent20.1.0/src/dpm/dpm\_dem\_wall.h@{fluent20.1.0/src/dpm/dpm\_dem\_wall.h}}
+\mbox{\hyperlink{dpm__dem__wall_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_DPM\_DEM\_WALL\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_DPM\_DEM\_WALL\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ Construct\ collision\ faces\ as\ triangles\ from\ the}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ outset\ instead\ splitting\ the\ true\ mesh\ faces\ into\ triangles}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ at\ a\ later\ time,\ i.e.,\ in\ compute\_detailed\_distance2\_to\_face.}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ So\ all\ collision\ faces\ are\ triangles.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__collision__face}{dpm\_collision\_face}}}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{group__dpm_ga667f83cc6f369aacfa1daa4e8eeb5a61}{t}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ need\ the\ collision\ partner!\ \ \ \ ....\ anything\ else?\ */}}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ \mbox{\hyperlink{group__dpm_ga857d9bfff2233ee7949d4d6c764da316}{f}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ face\ index\ of\ boundary\ thread\ face\ needed\ to\ store\ dem\ wall\ collision\ forces\ on\ boundary\ thread\ face\ SVar\ */}}
+\DoxyCodeLine{00031\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm_ga36ff0c70d5dd69cb6ea28f28174db79d}{neighbor\_idx}};\ \ \ \textcolor{comment}{/*\ index\ of\ home\ partition\ the\ collision\ face\ orginates\ from\ */}}
+\DoxyCodeLine{00032\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_gadec6b74025db4fa73a39db94dd403b48}{pfcoll\_idx}};\ \textcolor{comment}{/*\ index\ in\ cartesian\_mesh-\/>bcoll-\/>pfcoll\ array\ */}}
+\DoxyCodeLine{00033\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_gac742ff402ecda10c31cde700a49e68af}{pfd}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ point-\/face\ distance\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00034\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_ga7bf87b16be69711d845a448984945b52}{NV\_VEC}}(pof);\ \ \ \textcolor{comment}{/*\ point-\/on-\/face:\ the\ point\ on\ the\ face\ used\ for\ pfd\ */}}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_gaa2318b757fb4e4aba2ad7e0bb2a20740}{weight}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ collision\ force\ weight\ */}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \textcolor{comment}{/*\ Geometry\ data:\ Only\ triangles\ !!\ */}}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_gab676e737ad3288632e9263538434d605}{A}}[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ face\ normal\ */}}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_ga8d8cfd25b7c849d838a690607700dc03}{C}}[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ face\ centroid\ */}}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_ga816c074a6afc9139afff24dfc0761177}{vx}}[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}][\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];\ \textcolor{comment}{/*\ face\ node\ coordinates\ of\ an\ edge\ in\ 2D\ or\ a\ triangle\ in\ 3D\ */}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_gafde62886056b0e5085e2557bcc1e7f57}{wall\_collision\_force}}[3];\ \textcolor{comment}{/*\ collision\ force\ on\ wall\ caused\ by\ DEM\ particles\ */}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_gaa159ec2b5eeda6efe932c7f0ad772e5b}{u\_wall}}[3];\ \ \ \textcolor{comment}{/*\ explicit(!)\ components\ of\ wall\ velocity\ from\ BCs\ */}}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{group__dpm_gafe9c1b104fe9ddda272815d2ff6e43e5}{T}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ wall\ temperature\ */}}
+\DoxyCodeLine{00046\ \}\ \mbox{\hyperlink{group__dpm_gaaa5cb52b8be6debc4c39e56ebf35fdbd}{dpm\_collision\_face\_t}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ F\_DATA\_THREAD(pface\_data)\ \ \ \ \ \ \ \ \ ((pface\_data)-\/>t)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ F\_DATA\_FACE(pface\_data)\ \ \ \ \ \ \ \ \ \ \ ((pface\_data)-\/>f)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ F\_DATA\_NEIGHBOR\_IDX(pface\_data)\ \ \ ((pface\_data)-\/>neighbor\_idx)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ F\_DATA\_PFD(pface\_data)\ \ \ \ \ \ \ \ \ \ \ \ ((pface\_data)-\/>pfd)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ F\_DATA\_WEIGHT(pface\_data)\ \ \ \ \ \ \ \ \ ((pface\_data)-\/>weight)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ F\_DATA\_POF(pof\_,pface\_data)\ \ \ \ \ \ \ NV\_V((pof\_),\ =,\ (pface\_data)-\/>pof)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ F\_DATA\_POF\_CACHE(pface\_data)\ \ \ \ \ \ ((pface\_data)-\/>pof)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ F\_DATA\_AREA(A\_,pface\_data)\ \ \ \ \ \ \ \ NV\_V((A\_)\ \ ,\ =,\ (pface\_data)-\/>A)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ F\_DATA\_AREA\_CACHE(pface\_data)\ \ \ \ \ ((pface\_data)-\/>A)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ F\_DATA\_CENTROID(C\_,pface\_data)\ \ \ \ NV\_V((C\_)\ \ ,\ =,\ (pface\_data)-\/>C)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ F\_DATA\_CENTROID\_CACHE(pface\_data)\ ((pface\_data)-\/>C)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ F\_DATA\_NODE\_COORD(pface\_data)\ \ \ \ \ ((pface\_data)-\/>vx)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ F\_DATA\_WALL\_COLLISION\_FORCE\_CACHE(pface\_data)\ \ \ ((pface\_data)-\/>wall\_collision\_force)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ F\_DATA\_UWALL3\_CACHE(pface\_data)\ \ \ ((pface\_data)-\/>u\_wall)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ F\_DATA\_TEMPERATURE(pface\_data)\ \ \ \ ((pface\_data)-\/>T)}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{/*\ ATTENTION:\ int64\_t\ is\ not\ accepted\ by\ the\ udf\ interpreter.\ Must\ guard\ by\ \ "{}!UDF\_COMPILER"{}}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{00068\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__collision__bcc__struct}{dpm\_collision\_bcc\_struct}}}
+\DoxyCodeLine{00069\ \{}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_gac2fad57180ee75ff68fe8d64e23ae194}{cellno}};\ \ \textcolor{comment}{/*\ serial\ index\ of\ a\ boundary\ cartesian\ cell;}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ \ \ \ \ \ \ \ *\ i.e.,\ a\ cartesian\ cell\ in\ the\ vicinity\ of\ a\ face\ of\ a\ reflecting\ boundary\ */}}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_ga53b43d5812bc61bf42f2d0976d3273ef}{ifcoll}};\ \textcolor{comment}{/*\ that\ boundary\ face:\ index\ into\ the\ array\ pfcoll\ */}}
+\DoxyCodeLine{00073\ \}\ \mbox{\hyperlink{group__dpm_ga3cc93ce0ccc0eb4bbe79abcbcc467124}{dpm\_collision\_bcc\_t}};}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdpm__collision__wall}{dpm\_collision\_wall}}}
+\DoxyCodeLine{00077\ \{}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{structdpm__collision__bcc__struct}{dpm\_collision\_bcc\_t}}\ *\mbox{\hyperlink{group__dpm_gaac639895b4ad96de7824e9105660fc1f}{bcc}};\ \textcolor{comment}{/*\ array(!)\ of\ boundary\ collision\ cells;}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ *\ i.e.,\ collision\ cells\ in\ the\ vicinity\ of\ a\ reflecting\ boundary\ */}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_gaa570201bd5ee891069fc37b9fc7dd7ea}{n\_bcc}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ boundary\ collision\ cells\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_gad5d66ac33c818a3a0992dd6b71f4630b}{n\_bcc\_alloc}};\ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ boundary\ collision\ cells\ allocated\ */}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \mbox{\hyperlink{structdpm__collision__face}{dpm\_collision\_face\_t}}\ *\mbox{\hyperlink{group__dpm_gae4122588f39e3c5dba16d04da9a40d98}{pfcoll}};\ \textcolor{comment}{/*\ the\ array\ of\ collision\ faces\ */}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#if\ !UDF\_COMPILER}}
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_gacd708c9233ef80a47b32036e6a4d2122}{n\_pfcoll}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ collision\ faces\ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{cx_8h_a996e72f71b11a5bb8b3b7b6936b1516d}{int64\_t}}\ \mbox{\hyperlink{group__dpm_ga7538642090be3a5444e4cadf71da4410}{n\_pfcoll\_alloc}};\ \ \ \textcolor{comment}{/*\ number\ of\ collision\ faces\ allocated\ */}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00091\ \}\ \mbox{\hyperlink{group__dpm_ga8c2edf81a6c62e9aa2fe679280c75bfe}{dpm\_collision\_wall\_t}};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__dpm_ga70d611b3852f13d6567bbfa5cdb44b89}{get\_boundary\_face\_node\_coords}}(\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tf,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ vcoord[][3]);}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_DPM\_DEM\_WALL\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,1040 @@
+\doxysection{prf.\+h}
+\hypertarget{prf_8h_source}{}\label{prf_8h_source}\index{fluent20.1.0/src/main/prf.h@{fluent20.1.0/src/main/prf.h}}
+\mbox{\hyperlink{prf_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_INCLUDED\_PRF\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#\ define\ \_INCLUDED\_PRF\_H}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_PRF\_H}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ \_FLUENT\_PRF\_H}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND1\_WITH\_HOST\ MPT\_GLAND1\_WITH\_HOST}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR1\_WITH\_HOST\ MPT\_GLOR1\_WITH\_HOST}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH1\_WITH\_HOST\ MPT\_GIHIGH1\_WITH\_HOST}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH1\_WITH\_HOST\ MPT\_GLHIGH1\_WITH\_HOST}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64HIGH1\_WITH\_HOST\ prf\_gi64high1\_with\_host}}
+\DoxyCodeLine{00019\ \textcolor{comment}{/*\ Since\ cx.h\ now\ verifies\ that\ sizeof(int64\_t)\ ==\ sizeof(long\ long),}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ we\ could\ now\ replace\ prf\_gi64high1\_with\_host\ by\ MPT\_GLLHIGH1\_WITH\_HOST}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ (*double*\ 'L'..!\ -\/-\/-\/\ yet\ to\ be\ implemented\ properly\ in\ multiport...).}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ define\ PRF\_GSYNC\_WITH\_HOST()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\ \ \ \ \ static\ int\ \_id\ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\ \ \ \ \ unsigned\ char\ if\_use\_profile\ =\ MPT\_get\_profile\_flag();\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\ \ \ \ \ double\ \_f\ =\ if\_use\_profile?MPT\_wall\_time():0.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\ \ \ \ \ MPT\_GSYNC\_WITH\_HOST();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\ \ \ \ \ if(if\_use\_profile)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ log\_time\_used(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ 0,\ \&\_id,\ \_f,\ MPT\_wall\_time(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ "{}PRF\_GSYNC\_WITH\_HOST"{},\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_LINE\_\_,\ TRUE);\ \ \(\backslash\)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#\ define\ PRF\_ANYONE(arg,with\_host)\ ((with\_host)\ ?\ PRF\_GLOR1\_WITH\_HOST(arg)\ :\ PRF\_GLOR1(arg))}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#\ define\ PRF\_EVERYONE(arg,with\_host)\ ((with\_host)\ ?\ PRF\_GLAND1\_WITH\_HOST(arg)\ :\ PRF\_GLAND1(arg))}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_BOOLEAN(a,b,c,d)\ MPT\_CSEND\_INT(a,(int\ *)(b),c,d)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_BOOLEAN(a,b,c,d)\ MPT\_CRECV\_INT(a,(int\ *)(b),c,d)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_CHAR\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_CSEND\_CHAR}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_CHAR\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_CRECV\_CHAR}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_INT\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_CSEND\_INT}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_INT\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_CRECV\_INT}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_LONG\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_CSEND\_LONG}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_LONG\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_CRECV\_LONG}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_LONG\_LONG\ \ \ \ \ \ \ \ MPT\_CSEND\_LONG\_LONG}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_LONG\_LONG\ \ \ \ \ \ \ \ MPT\_CRECV\_LONG\_LONG}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_FLOAT\ \ \ \ \ \ \ \ \ \ \ \ MPT\_CSEND\_FLOAT}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_FLOAT\ \ \ \ \ \ \ \ \ \ \ \ MPT\_CRECV\_FLOAT}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_DOUBLE\ \ \ \ \ \ \ \ \ \ \ MPT\_CSEND\_DOUBLE}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_DOUBLE\ \ \ \ \ \ \ \ \ \ \ MPT\_CRECV\_DOUBLE}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_SIZE\_T\ \ \ \ \ \ \ \ \ \ \ MPT\_CSEND\_SIZE\_T}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_SIZE\_T\ \ \ \ \ \ \ \ \ \ \ MPT\_CRECV\_SIZE\_T}}
+\DoxyCodeLine{00055\ \textcolor{comment}{/*\ A\ static\ assertion\ (STATIC\_ASSERT(...,\ ...))}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ in\ cx.h\ ensures\ the\ following\ equivalences:\ */}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_INT64(i,d,n,t)\ \ \ PRF\_CSEND\_LONG\_LONG(i,((long\ long\ *)(d)),n,t)\ \ }\textcolor{comment}{/*\ prf\_csend\_int64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_INT64(i,d,n,t)\ \ \ PRF\_CRECV\_LONG\_LONG(i,((long\ long\ *)(d)),n,t)\ \ }\textcolor{comment}{/*\ prf\_crecv\_int64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{/*\ Assume\ that\ sending\ 1000\ (or\ what\ number\ should\ we\ use??)\ INTs\ takes\ hardly\ any\ longer\ than\ sending\ one\ INT:\ */}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#\ define\ PRF\_CSR\_N\_INT\_N\ \ 1000}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_N\_INT(i,\ n,\ d,\ t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\ \ \ \ int\ todo\ =\ *(n);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\ \ \ \ int\ mybuff[PRF\_CSR\_N\_INT\_N\ +\ 1];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ *mybuff\ =\ todo;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\ \ \ \ if\ (todo\ >\ PRF\_CSR\_N\_INT\_N)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ \ \ todo\ =\ PRF\_CSR\_N\_INT\_N;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ if\ (0\ <\ todo)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\ \ \ \ \ \ memcpy(mybuff\ +\ 1,\ (d),\ todo\ *\ sizeof(int));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\ \ \ \ if\ (todo\ <\ PRF\_CSR\_N\_INT\_N)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\ \ \ \ \ \ memset((char\ *)((int\ *)mybuff\ +\ 1\ +\ todo),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ 0,\ (PRF\_CSR\_N\_INT\_N\ -\/\ todo)\ *\ sizeof\ (int));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ \ \ PRF\_CSEND\_INT((i),\ mybuff,\ PRF\_CSR\_N\_INT\_N\ +\ 1,\ (t));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\ \ \ \ if\ (*(n)\ >\ PRF\_CSR\_N\_INT\_N)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ \ \ \ \ PRF\_CSEND\_INT((i),\ (d)\ +\ PRF\_CSR\_N\_INT\_N,\ *(n)\ -\/\ PRF\_CSR\_N\_INT\_N,\ (t));\ \(\backslash\)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ PRF\_CRECV\_N\_INT(i,\ n,\ d,\ t)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\ \ \ \ int\ todo;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\ \ \ \ int\ mybuff[PRF\_CSR\_N\_INT\_N\ +\ 1];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\ \ \ \ PRF\_CRECV\_INT((i),\ mybuff,\ PRF\_CSR\_N\_INT\_N\ +\ 1,\ (t));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\ \ \ \ *(n)\ =\ *mybuff;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\ \ \ \ (d)\ =\ CX\_Realloc((d),\ sizeof(int)\ *\ *mybuff);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\ \ \ \ todo\ =\ *mybuff;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\ \ \ \ if\ (todo\ >\ PRF\_CSR\_N\_INT\_N)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\ \ \ \ \ \ todo\ =\ PRF\_CSR\_N\_INT\_N;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\ \ \ \ if\ (0\ <\ todo)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\ \ \ \ \ \ memcpy((d),\ mybuff\ +\ 1,\ todo\ *\ sizeof(int));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\ \ \ \ if\ (*mybuff\ >\ PRF\_CSR\_N\_INT\_N)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\ \ \ \ \ \ PRF\_CRECV\_INT((i),\ (d)\ +\ PRF\_CSR\_N\_INT\_N,\ *mybuff\ -\/\ PRF\_CSR\_N\_INT\_N,\ (t));\ \ \(\backslash\)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_BOOLEAN(a,b,c,d)\ MPT\_ISEND\_INT(a,(int\ *)(b),c,d)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_BOOLEAN(a,b,c,d)\ MPT\_IRECV\_INT(a,(int\ *)(b),c,d)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_CHAR\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_ISEND\_CHAR}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_CHAR\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_IRECV\_CHAR}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_SHORT\ \ \ \ \ \ \ \ \ \ \ \ MPT\_ISEND\_SHORT}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_SHORT\ \ \ \ \ \ \ \ \ \ \ \ MPT\_IRECV\_SHORT}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_INT\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_ISEND\_INT}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_INT\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_IRECV\_INT}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_LONG\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_ISEND\_LONG}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_LONG\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_IRECV\_LONG}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_LONG\_LONG\ \ \ \ \ \ \ \ MPT\_ISEND\_LONG\_LONG}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_LONG\_LONG\ \ \ \ \ \ \ \ MPT\_IRECV\_LONG\_LONG}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_FLOAT\ \ \ \ \ \ \ \ \ \ \ \ MPT\_ISEND\_FLOAT}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_FLOAT\ \ \ \ \ \ \ \ \ \ \ \ MPT\_IRECV\_FLOAT}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_DOUBLE\ \ \ \ \ \ \ \ \ \ \ MPT\_ISEND\_DOUBLE}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_DOUBLE\ \ \ \ \ \ \ \ \ \ \ MPT\_IRECV\_DOUBLE}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_SIZE\_T\ \ \ \ \ \ \ \ \ \ \ MPT\_ISEND\_SIZE\_T}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_SIZE\_T\ \ \ \ \ \ \ \ \ \ \ MPT\_IRECV\_SIZE\_T}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#if\ RP\_HOST}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#\ define\ PRF\_WAIT\_ALL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_Waitall}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#\ define\ PRF\_WAIT\_ALL()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\ \ \ \ \ static\ int\ \_id\ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\ \ \ \ \ unsigned\ char\ if\_use\_profile\ =\ MPT\_get\_profile\_flag();\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\ \ \ \ \ double\ \_f\ =\ if\_use\_profile?MPT\_wall\_time():0.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\ \ \ \ \ MPT\_Waitall();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\ \ \ \ \ if(if\_use\_profile)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ log\_time\_used(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ 0,\ \&\_id,\ \_f,\ MPT\_wall\_time(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ "{}PRF\_WAIT\_ALL"{},\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_LINE\_\_,\ TRUE);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_STATUS\ \ \ \ \ \ \ \ \ \ \ \ MPT\_Send\_Status}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_STATUS\ \ \ \ \ \ \ \ \ \ \ \ MPT\_Recv\_Status}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#\ define\ PRF\_WAIT\_SEND\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_Wait\_Send}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#\ define\ PRF\_WAIT\_RECV\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_Wait\_Recv}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ MPT\_SEND(a,b,c,d,e)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)MPT\_Isend(a,b,c,d,e);\ \(\backslash\)}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\ \ else\ MPT\_Csend(a,b,c,d,e);}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_CHAR(a,b,c,d)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_ISEND\_CHAR(a,b,c,d);\ \ \(\backslash\)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\ \ else\ PRF\_CSEND\_CHAR(a,b,c,d);}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_INT(a,b,c,d)\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_ISEND\_INT(a,b,c,d);\ \(\backslash\)}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\ \ else\ PRF\_CSEND\_INT(a,b,c,d);}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_LONG(a,b,c,d)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_ISEND\_LONG(a,b,c,d);\ \ \(\backslash\)}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\ \ else\ PRF\_CSEND\_LONG(a,b,c,d);}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_LONG\_LONG(a,b,c,d)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_ISEND\_LONG\_LONG(a,b,c,d);\ \(\backslash\)}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\ \ else\ PRF\_CSEND\_LONG\_LONG(a,b,c,d);}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_FLOAT(a,b,c,d)\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_ISEND\_FLOAT(a,b,c,d);\ \(\backslash\)}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\ \ else\ PRF\_CSEND\_FLOAT(a,b,c,d);}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_DOUBLE(a,b,c,d)\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_ISEND\_DOUBLE(a,b,c,d);\ \ \(\backslash\)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\ \ else\ PRF\_CSEND\_DOUBLE(a,b,c,d);}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_SIZE\_T(a,b,c,d)\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_ISEND\_SIZE\_T(a,b,c,d);\ \ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ else\ PRF\_CSEND\_SIZE\_T(a,b,c,d);}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ MPT\_RECV(a,b,c,d,e)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)MPT\_Irecv(a,b,c,d,e);\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\ \ else\ MPT\_Crecv(a,b,c,d,e);}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_CHAR(a,b,c,d)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_IRECV\_CHAR(a,b,c,d);\ \ \(\backslash\)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\ \ else\ PRF\_CRECV\_CHAR(a,b,c,d);}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_INT(a,b,c,d)\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_IRECV\_INT(a,b,c,d);\ \(\backslash\)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ else\ PRF\_CRECV\_INT(a,b,c,d);}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_LONG(a,b,c,d)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_IRECV\_LONG(a,b,c,d);\ \ \(\backslash\)}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\ \ else\ PRF\_CRECV\_LONG(a,b,c,d);}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_LONG\_LONG(a,b,c,d)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_IRECV\_LONG\_LONG(a,b,c,d);\ \(\backslash\)}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\ \ else\ PRF\_CRECV\_LONG\_LONG(a,b,c,d);}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_FLOAT(a,b,c,d)\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_IRECV\_FLOAT(a,b,c,d);\ \(\backslash\)}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\ \ else\ PRF\_CRECV\_FLOAT(a,b,c,d);}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_DOUBLE(a,b,c,d)\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_IRECV\_DOUBLE(a,b,c,d);\ \ \(\backslash\)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\ \ else\ PRF\_CRECV\_DOUBLE(a,b,c,d);}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_SIZE\_T(a,b,c,d)\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\ \ if(0<parallel.comm\_type)PRF\_IRECV\_SIZE\_T(a,b,c,d);\ \ \(\backslash\)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\ \ else\ PRF\_CRECV\_SIZE\_T(a,b,c,d);}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#\ define\ PRF\_CPASS\_STRUCT\_INT\ \ \ \ \ \ \ MPT\_CPASS\_STRUCT\_INT}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#\ define\ PRF\_CPASS\_STRUCT\_LONG\ \ \ \ \ \ MPT\_CPASS\_STRUCT\_LONG}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#\ define\ PRF\_CPASS\_STRUCT\_LONG\_LONG\ MPT\_CPASS\_STRUCT\_LONG\_LONG}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#\ define\ PRF\_CPASS\_STRUCT\_FLOAT\ \ \ \ \ MPT\_CPASS\_STRUCT\_FLOAT}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#\ define\ PRF\_IPROBE\ \ \ \ \ \ \ MPT\_IPROBE}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#\ define\ PRF\_RESET\_COMM\ \ \ \ \ \ \ MPT\_RESET\_COMM}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#\ define\ PRF\_CPASS\_STRUCT\_DOUBLE\ \ \ \ MPT\_CPASS\_STRUCT\_DOUBLE}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_STRUCT\_INT\ \ \ \ \ \ \ MPT\_CSEND\_STRUCT\_INT}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_STRUCT\_LONG\ \ \ \ \ \ MPT\_CSEND\_STRUCT\_LONG}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_STRUCT\_LONG\_LONG\ MPT\_CSEND\_STRUCT\_LONG\_LONG}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_STRUCT\_FLOAT\ \ \ \ \ MPT\_CSEND\_STRUCT\_FLOAT}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_STRUCT\_DOUBLE\ \ \ \ MPT\_CSEND\_STRUCT\_DOUBLE}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_STRUCT\_INT\ \ \ \ \ \ \ MPT\_CRECV\_STRUCT\_INT}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_STRUCT\_LONG\ \ \ \ \ \ MPT\_CRECV\_STRUCT\_LONG}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_STRUCT\_LONG\_LONG\ MPT\_CRECV\_STRUCT\_LONG\_LONG}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_STRUCT\_FLOAT\ \ \ \ \ MPT\_CRECV\_STRUCT\_FLOAT}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_STRUCT\_DOUBLE\ \ \ \ MPT\_CRECV\_STRUCT\_DOUBLE}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#\ define\ PRF\_swap\_int\ \ \ \ \ \ \ \ \ \ MPT\_swap\_int}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#\ define\ PRF\_swap\_struct\_int\ \ \ \ \ MPT\_swap\_struct\_int}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#\ define\ PRF\_swap\_float\ \ \ \ \ \ \ \ \ \ MPT\_swap\_float}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#\ define\ PRF\_swap\_struct\_float\ \ \ MPT\_swap\_struct\_float}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#\ define\ PRF\_swap\_double\ \ \ \ \ \ \ \ \ MPT\_swap\_double}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#\ define\ PRF\_swap\_struct\_double\ \ MPT\_swap\_struct\_double}}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#\ if\ RP\_DOUBLE}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#\ \ define\ PRF\_swap\_real\ \ \ \ \ \ \ \ \ \ MPT\_swap\_double}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#\ \ define\ PRF\_swap\_struct\_real\ \ \ MPT\_swap\_struct\_double}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CPASS\_STRUCT\_REAL\ \ MPT\_CPASS\_STRUCT\_DOUBLE}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CSEND\_STRUCT\_REAL\ \ MPT\_CSEND\_STRUCT\_DOUBLE}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CRECV\_STRUCT\_REAL\ \ MPT\_CRECV\_STRUCT\_DOUBLE}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#\ \ define\ MPT\_PACK\_REAL\ \ \ \ \ \ \ \ \ \ MPT\_PACK\_DOUBLE}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CRECV\_REAL\ \ \ PRF\_CRECV\_DOUBLE}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CSEND\_REAL\ \ \ PRF\_CSEND\_DOUBLE}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#\ \ define\ PRF\_IRECV\_REAL\ \ \ PRF\_IRECV\_DOUBLE}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#\ \ define\ PRF\_ISEND\_REAL\ \ \ PRF\_ISEND\_DOUBLE}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#\ \ define\ PRF\_RECV\_REAL\ \ \ \ \ \ \ \ \ \ PRF\_RECV\_DOUBLE}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#\ \ define\ PRF\_SEND\_REAL\ \ \ \ \ \ \ \ \ \ PRF\_SEND\_DOUBLE}}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#\ \ define\ PRF\_S\_CRECV\_REAL\ \ \ PRF\_S\_CRECV\_DOUBLE}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#\ \ define\ PRF\_S\_CSEND\_REAL\ \ \ PRF\_S\_CSEND\_DOUBLE}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#\ \ define\ PRF\_S\_IRECV\_REAL\ \ \ PRF\_S\_IRECV\_DOUBLE}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#\ \ define\ PRF\_S\_ISEND\_REAL\ \ \ PRF\_S\_ISEND\_DOUBLE}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#\ \ define\ PRF\_swap\_real\ \ \ \ \ \ \ \ \ \ MPT\_swap\_float}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#\ \ define\ PRF\_swap\_struct\_real\ \ \ MPT\_swap\_struct\_float}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CPASS\_STRUCT\_REAL\ \ MPT\_CPASS\_STRUCT\_FLOAT}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CSEND\_STRUCT\_REAL\ \ MPT\_CSEND\_STRUCT\_FLOAT}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CRECV\_STRUCT\_REAL\ \ MPT\_CRECV\_STRUCT\_FLOAT}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#\ \ define\ MPT\_PACK\_REAL\ \ \ \ \ \ \ \ \ \ MPT\_PACK\_FLOAT}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CRECV\_REAL\ \ \ PRF\_CRECV\_FLOAT}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#\ \ define\ PRF\_CSEND\_REAL\ \ \ PRF\_CSEND\_FLOAT}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#\ \ define\ PRF\_IRECV\_REAL\ \ \ PRF\_IRECV\_FLOAT}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#\ \ define\ PRF\_ISEND\_REAL\ \ \ PRF\_ISEND\_FLOAT}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#\ \ define\ PRF\_RECV\_REAL\ \ \ \ \ \ \ \ \ \ PRF\_RECV\_FLOAT}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#\ \ define\ PRF\_SEND\_REAL\ \ \ \ \ \ \ \ \ \ PRF\_SEND\_FLOAT}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#\ \ define\ PRF\_S\_CRECV\_REAL\ \ \ PRF\_S\_CRECV\_FLOAT}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#\ \ define\ PRF\_S\_CSEND\_REAL\ \ \ PRF\_S\_CSEND\_FLOAT}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#\ \ define\ PRF\_S\_IRECV\_REAL\ \ \ PRF\_S\_IRECV\_FLOAT}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#\ \ define\ PRF\_S\_ISEND\_REAL\ \ \ PRF\_S\_ISEND\_FLOAT}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#\ endif\ }\textcolor{comment}{/*\ RP\_DOUBLE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_UCHAR\ \ \ \ \ \ \ PRF\_CSEND\_CHAR}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_UCHAR\ \ \ \ \ \ \ PRF\_CRECV\_CHAR}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_UCHAR\ \ \ \ \ \ \ PRF\_ISEND\_CHAR}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_UCHAR\ \ \ \ \ \ \ PRF\_IRECV\_CHAR}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_UCHAR\ \ \ \ \ \ \ \ PRF\_SEND\_CHAR}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_UCHAR\ \ \ \ \ \ \ \ PRF\_RECV\_CHAR}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00265\ \textcolor{comment}{/*\ !PARALLEL\ */}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND1\_WITH\_HOST(thunk)\ (thunk)}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR1\_WITH\_HOST(thunk)\ (thunk)}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#\ define\ PRF\_GSYNC\_WITH\_HOST()}}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#\ define\ PRF\_ANYONE(thunk,with\_host)\ (thunk)}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#\ define\ PRF\_EVERYONE(thunk,with\_host)\ (thunk)}}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ PARALLEL\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#\ define\ PRF\_GSYNC()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\ \ \ \ \ static\ int\ \_id\ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\ \ \ \ \ unsigned\ char\ if\_use\_profile\ =\ MPT\_get\_profile\_flag();\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\ \ \ \ \ double\ \_f\ =\ if\_use\_profile?MPT\_wall\_time():0.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\ \ \ \ \ MPT\_GSYNC();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\ \ \ \ \ if(if\_use\_profile)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ log\_time\_used(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ 0,\ \&\_id,\ \_f,\ MPT\_wall\_time(),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ "{}PRF\_GSYNC"{},\ \_\_FILE\_\_,\ \_\_LINE\_\_,\ \_\_LINE\_\_,\ TRUE);\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND1(a)\ \ \ \ \ \ \ \ \ \ \ ((cxboolean)MPT\_GLAND1((int)(a)))}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR1(a)\ \ \ \ \ \ \ \ \ \ \ \ ((cxboolean)MPT\_GLOR1((int)(a)))}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLAND1(a)\ \ \ \ \ \ \ \ \ \ ((cxboolean)MPT\_GLLAND1((int)(a)))}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOR1(a)\ \ \ \ \ \ \ \ \ \ \ ((cxboolean)MPT\_GLLOR1((int)(a)))}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GIHIGH1}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GILOW1}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GISUM1}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM1\_0\ \ \ \ \ \ \ \ \ \ \ \ MPT\_GISUM1\_0}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#\ define\ PRF\_PISUM1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_PISUM1}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLHIGH1}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLLOW1}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLSUM1}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH1\ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLLHIGH1}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLLLOW1}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLLSUM1}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GTHIGH1}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#\ define\ PRF\_GTLOW1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GTLOW1}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#\ define\ PRF\_GTSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GTSUM1}}
+\DoxyCodeLine{00310\ \textcolor{comment}{/*\ A\ static\ assertion\ (STATIC\_ASSERT(...,\ ...))}}
+\DoxyCodeLine{00311\ \textcolor{comment}{\ *\ in\ cx.h\ ensures\ the\ following\ equivalences:\ */}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64HIGH1(a)\ \ \ \ \ \ \ \ ((long\ long)\ PRF\_GLLHIGH1((long\ long)(a)))}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64LOW1(a)\ \ \ \ \ \ \ \ \ ((long\ long)\ PRF\_GLLLOW1((long\ long)(a)))}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64SUM1(a)\ \ \ \ \ \ \ \ \ ((long\ long)\ PRF\_GLLSUM1((long\ long)(a)))\ \ }\textcolor{comment}{/*\ prf\_gi64sum1\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\#\ define\ PRF\_PLSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_PLSUM1}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#\ define\ PRF\_PLLSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_PLLSUM1}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#\ define\ PRF\_PTSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_PTSUM1}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#\ define\ PRF\_GDHIGH1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GDHIGH1}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#\ define\ PRF\_GDLOW1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GDLOW1}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#\ define\ PRF\_GDSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GDSUM1}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#\ define\ PRF\_GSHIGH1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GSHIGH1}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#\ define\ PRF\_GSLOW1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GSLOW1}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\#\ define\ PRF\_GSSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GSSUM1}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH\ \ \ \ \ \ \ \ \ \ MPT\_GIHIGH}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW\ \ \ \ \ \ \ \ \ \ \ MPT\_GILOW}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM\ \ \ \ \ \ \ \ \ \ \ MPT\_GISUM}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLHIGH}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLLOW}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLSUM}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLLHIGH}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLLLOW}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLLSUM}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GTHIGH}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#\ define\ PRF\_GTLOW\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GTLOW}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#\ define\ PRF\_GTSUM\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GTSUM}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#\ define\ PRF\_PTSUM\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_PTSUM}}
+\DoxyCodeLine{00337\ \textcolor{comment}{/*\ A\ static\ assertion\ (STATIC\_ASSERT(...,\ ...))}}
+\DoxyCodeLine{00338\ \textcolor{comment}{\ *\ in\ cx.h\ ensures\ the\ following\ equivalences:\ */}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64HIGH(x,n,w)\ \ \ \ \ PRF\_GLLHIGH((long\ long\ *)(x),\ n,\ (long\ long\ *)(x))}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64LOW(x,n,w)\ \ \ \ \ \ PRF\_GLLLOW((long\ long\ *)(x),\ n,\ (long\ long\ *)(x))}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64SUM(x,n,w)\ \ \ \ \ \ PRF\_GLLSUM((long\ long\ *)(x),\ n,\ (long\ long\ *)(x))}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#\ define\ PRF\_GSHIGH\ \ \ \ \ \ \ \ \ \ MPT\_GSHIGH}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#\ define\ PRF\_GSLOW\ \ \ \ \ \ \ \ \ \ \ MPT\_GSLOW}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#\ define\ PRF\_GSSUM\ \ \ \ \ \ \ \ \ \ \ MPT\_GSSUM}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#\ define\ PRF\_GDHIGH\ \ \ \ \ \ \ \ \ \ MPT\_GDHIGH}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#\ define\ PRF\_GDLOW\ \ \ \ \ \ \ \ \ \ \ MPT\_GDLOW}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#\ define\ PRF\_GDSUM\ \ \ \ \ \ \ \ \ \ \ MPT\_GDSUM}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLOR}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GLLOR}}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#\ define\ PRF\_BCAST\_INT(x,n,r)\ \ \ \ MPT\_REDUCE(x,n,NULL,MPT\_INT,MPT\_BCAST,r)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#\ define\ PRF\_BCAST\_SIZE\_T(x,n,r)\ MPT\_REDUCE(x,n,NULL,MPT\_SIZE\_T,MPT\_BCAST,r)}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_INT\ \ \ \ \ \ \ \ MPT\_ALLTOALL\_INT}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_SIZE\_T\ \ \ \ \ MPT\_ALLTOALL\_SIZE\_T}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_INDEX\ \ \ \ \ \ MPT\_ALLTOALL\_INDEX}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_FLOAT\ \ \ \ \ \ MPT\_ALLTOALL\_FLOAT}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_DOUBLE\ \ \ \ \ MPT\_ALLTOALL\_DOUBLE}}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_INT\ \ \ \ \ \ \ MPT\_ALLTOALLV\_INT}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_LONG\ \ \ \ \ \ MPT\_ALLTOALLV\_LONG}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_LONG\_LONG\ MPT\_ALLTOALLV\_LONG\_LONG}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_FLOAT\ \ \ \ \ MPT\_ALLTOALLV\_FLOAT}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_DOUBLE\ \ \ \ MPT\_ALLTOALLV\_DOUBLE}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_INDEX\ \ \ \ \ MPT\_ALLTOALLV\_INDEX}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_SIZE\_T\ \ \ \ MPT\_ALLTOALLV\_SIZE\_T}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_CHAR\ \ \ \ \ \ MPT\_ALLTOALLV\_CHAR}}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#\ if\ RP\_DOUBLE}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRHIGH\ \ \ \ \ \ \ \ \ \ \ MPT\_GDHIGH}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRLOW\ \ \ \ \ \ \ \ \ \ MPT\_GDLOW}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRSUM\ \ \ \ \ \ \ \ \ \ MPT\_GDSUM}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRHIGH1\ \ \ \ \ \ \ \ \ \ \ \ MPT\_GDHIGH1}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRLOW1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GDLOW1}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GDSUM1}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\#\ \ define\ PRF\_ALLTOALL\_REAL\ \ \ \ \ \ MPT\_ALLTOALL\_DOUBLE}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#\ \ define\ PRF\_ALLTOALLV\_REAL\ \ \ \ \ MPT\_ALLTOALLV\_DOUBLE}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\#\ \ define\ PRF\_BCAST\_REAL(x,n,r)\ \ MPT\_REDUCE(x,n,NULL,MPT\_DOUBLE,MPT\_BCAST,r)}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRHIGH\ \ \ \ \ \ \ \ \ \ \ MPT\_GSHIGH}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRLOW\ \ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GSLOW}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRSUM\ \ \ \ \ \ \ \ \ \ MPT\_GSSUM}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRHIGH1\ \ \ \ \ \ \ \ \ \ \ \ MPT\_GSHIGH1}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRLOW1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GSLOW1}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\#\ \ define\ PRF\_GRSUM1\ \ \ \ \ \ \ \ \ \ \ \ \ MPT\_GSSUM1}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#\ \ define\ PRF\_ALLTOALL\_REAL\ \ \ \ \ \ MPT\_ALLTOALL\_FLOAT}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#\ \ define\ PRF\_ALLTOALLV\_REAL\ \ \ \ \ MPT\_ALLTOALLV\_FLOAT}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#\ \ define\ PRF\_BCAST\_REAL(x,n,r)\ \ MPT\_REDUCE(x,n,NULL,MPT\_FLOAT,MPT\_BCAST,r)}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM2\ MPT\_GISUM2}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM3\ MPT\_GISUM3}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM4\ MPT\_GISUM4}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM5\ MPT\_GISUM5}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM6\ MPT\_GISUM6}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM7\ MPT\_GISUM7}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM8\ MPT\_GISUM8}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW2\ MPT\_GILOW2}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW3\ MPT\_GILOW3}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW4\ MPT\_GILOW4}}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH2\ MPT\_GIHIGH2}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH3\ MPT\_GIHIGH3}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH4\ MPT\_GIHIGH4}}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#\ define\ PRF\_GDSUM2\ MPT\_GDSUM2}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#\ define\ PRF\_GDSUM3\ MPT\_GDSUM3}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\#\ define\ PRF\_GSSUM2\ MPT\_GSSUM2}}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\#\ define\ PRF\_GDHIGH2\ MPT\_GDHIGH2}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\#\ define\ PRF\_GSHIGH2\ MPT\_GSHIGH2}}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\#\ define\ PRF\_GDLOW2\ MPT\_GDLOW2}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\#\ define\ PRF\_GSLOW2\ MPT\_GSLOW2}}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\#\ define\ PRF\_GDHIGH3\ MPT\_GDHIGH3}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#\ define\ PRF\_GSHIGH3\ MPT\_GSHIGH3}}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\#\ define\ PRF\_GDLOW3\ MPT\_GDLOW3}}
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#\ define\ PRF\_GSLOW3\ MPT\_GSLOW3}}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#\ if\ RP\_DOUBLE}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM2\ MPT\_GDSUM2}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM3\ MPT\_GDSUM3}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM4\ MPT\_GDSUM4}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM5\ MPT\_GDSUM5}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM6\ MPT\_GDSUM6}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM7\ MPT\_GDSUM7}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM8\ MPT\_GDSUM8}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW2\ MPT\_GDLOW2}}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW3\ MPT\_GDLOW3}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW4\ MPT\_GDLOW4}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW5\ MPT\_GDLOW5}}
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW6\ MPT\_GDLOW6}}
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW7\ MPT\_GDLOW7}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW8\ MPT\_GDLOW8}}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH2\ MPT\_GDHIGH2}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH3\ MPT\_GDHIGH3}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH4\ MPT\_GDHIGH4}}
+\DoxyCodeLine{00441\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH5\ MPT\_GDHIGH5}}
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH6\ MPT\_GDHIGH6}}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH7\ MPT\_GDHIGH7}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH8\ MPT\_GDHIGH8}}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM\_ND\ MPT\_GDSUM\_ND}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH\_ND\ MPT\_GDHIGH\_ND}}
+\DoxyCodeLine{00447\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW\_ND\ MPT\_GDLOW\_ND}}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00449\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM2\ MPT\_GSSUM2}}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM3\ MPT\_GSSUM3}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM4\ MPT\_GSSUM4}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM5\ MPT\_GSSUM5}}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM6\ MPT\_GSSUM6}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM7\ MPT\_GSSUM7}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM8\ MPT\_GSSUM8}}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW2\ MPT\_GSLOW2}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW3\ MPT\_GSLOW3}}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW4\ MPT\_GSLOW4}}
+\DoxyCodeLine{00459\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW5\ MPT\_GSLOW5}}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW6\ MPT\_GSLOW6}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW7\ MPT\_GSLOW7}}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW8\ MPT\_GSLOW8}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH2\ MPT\_GSHIGH2}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH3\ MPT\_GSHIGH3}}
+\DoxyCodeLine{00465\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH4\ MPT\_GSHIGH4}}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH5\ MPT\_GSHIGH5}}
+\DoxyCodeLine{00467\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH6\ MPT\_GSHIGH6}}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH7\ MPT\_GSHIGH7}}
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH8\ MPT\_GSHIGH8}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM\_ND\ MPT\_GSSUM\_ND}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH\_ND\ MPT\_GSHIGH\_ND}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW\_ND\ MPT\_GSLOW\_ND}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR2\ MPT\_GLOR2}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR3\ MPT\_GLOR3}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR4\ MPT\_GLOR4}}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND2\ MPT\_GLAND2}}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND3\ MPT\_GLAND3}}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND4\ MPT\_GLAND4}}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM2\ MPT\_GLSUM2}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM3\ MPT\_GLSUM3}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM4\ MPT\_GLSUM4}}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW2\ MPT\_GLLOW2}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW3\ MPT\_GLLOW3}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW4\ MPT\_GLLOW4}}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH2\ MPT\_GLHIGH2}}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH3\ MPT\_GLHIGH3}}
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH4\ MPT\_GLHIGH4}}
+\DoxyCodeLine{00494\ }
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM2\ MPT\_GLLSUM2}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM3\ MPT\_GLLSUM3}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM4\ MPT\_GLLSUM4}}
+\DoxyCodeLine{00498\ }
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW2\ MPT\_GLLLOW2}}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW3\ MPT\_GLLLOW3}}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW4\ MPT\_GLLLOW4}}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH2\ MPT\_GLLHIGH2}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH3\ MPT\_GLLHIGH3}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH4\ MPT\_GLLHIGH4}}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\#\ define\ PRF\_GTSUM2\ MPT\_GTSUM2}}
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\#\ define\ PRF\_GTSUM3\ MPT\_GTSUM3}}
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\#\ define\ PRF\_GTSUM4\ MPT\_GTSUM4}}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\#\ define\ PRF\_GTLOW2\ MPT\_GTLOW2}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#\ define\ PRF\_GTLOW3\ MPT\_GTLOW3}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\#\ define\ PRF\_GTLOW4\ MPT\_GTLOW4}}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH2\ MPT\_GTHIGH2}}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH3\ MPT\_GTHIGH3}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH4\ MPT\_GTHIGH4}}
+\DoxyCodeLine{00518\ }
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\#\ define\ PRF\_SISUM2\ MPT\_SISUM2}}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00521\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00522\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00523\ \textcolor{comment}{\ *\ Point\ to\ point\ MPI\ calls\ that\ take\ communicator\ handle}}
+\DoxyCodeLine{00524\ \textcolor{comment}{\ *\ as\ an\ argument\ are\ differentiated\ by\ "{}\_S"{}}}
+\DoxyCodeLine{00525\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00526\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_CHAR\ \ \ \ \ \ \ MPT\_S\_CSEND\_CHAR}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_CHAR\ \ \ \ \ \ \ MPT\_S\_CRECV\_CHAR}}
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_INT\ \ \ \ \ \ \ \ MPT\_S\_CSEND\_INT}}
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_INT\ \ \ \ \ \ \ \ MPT\_S\_CRECV\_INT}}
+\DoxyCodeLine{00531\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_LONG\ \ \ \ \ \ \ MPT\_S\_CSEND\_LONG}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_LONG\ \ \ \ \ \ \ MPT\_S\_CRECV\_LONG}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_FLOAT\ \ \ \ \ \ MPT\_S\_CSEND\_FLOAT}}
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_FLOAT\ \ \ \ \ \ MPT\_S\_CRECV\_FLOAT}}
+\DoxyCodeLine{00535\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_DOUBLE\ \ \ \ \ MPT\_S\_CSEND\_DOUBLE}}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_DOUBLE\ \ \ \ \ MPT\_S\_CRECV\_DOUBLE}}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_SIZE\_T\ \ \ \ \ MPT\_S\_CSEND\_SIZE\_T}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_SIZE\_T\ \ \ \ \ MPT\_S\_CRECV\_SIZE\_T}}
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_SHORT\ \ \ \ \ \ MPT\_S\_CSEND\_SHORT}}
+\DoxyCodeLine{00540\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_SHORT\ \ \ \ \ \ MPT\_S\_CRECV\_SHORT}}
+\DoxyCodeLine{00541\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_LONG\_LONG\ \ MPT\_S\_CSEND\_LONG\_LONG}}
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_LONG\_LONG\ \ MPT\_S\_CRECV\_LONG\_LONG}}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_CHAR\ \ \ \ \ \ \ MPT\_S\_ISEND\_CHAR}}
+\DoxyCodeLine{00545\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_CHAR\ \ \ \ \ \ \ MPT\_S\_IRECV\_CHAR}}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_INT\ \ \ \ \ \ \ \ MPT\_S\_ISEND\_INT}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_INT\ \ \ \ \ \ \ \ MPT\_S\_IRECV\_INT}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_LONG\ \ \ \ \ \ \ MPT\_S\_ISEND\_LONG}}
+\DoxyCodeLine{00549\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_LONG\ \ \ \ \ \ \ MPT\_S\_IRECV\_LONG}}
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_FLOAT\ \ \ \ \ \ MPT\_S\_ISEND\_FLOAT}}
+\DoxyCodeLine{00551\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_FLOAT\ \ \ \ \ \ MPT\_S\_IRECV\_FLOAT}}
+\DoxyCodeLine{00552\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_DOUBLE\ \ \ \ \ MPT\_S\_ISEND\_DOUBLE}}
+\DoxyCodeLine{00553\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_DOUBLE\ \ \ \ \ MPT\_S\_IRECV\_DOUBLE}}
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_SIZE\_T\ \ \ \ \ MPT\_S\_ISEND\_SIZE\_T}}
+\DoxyCodeLine{00555\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_SIZE\_T\ \ \ \ \ MPT\_S\_IRECV\_SIZE\_T}}
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_SHORT\ \ \ \ \ \ MPT\_S\_ISEND\_SHORT}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_SHORT\ \ \ \ \ \ MPT\_S\_IRECV\_SHORT}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_LONG\_LONG\ \ MPT\_S\_ISEND\_LONG\_LONG}}
+\DoxyCodeLine{00559\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_LONG\_LONG\ \ MPT\_S\_IRECV\_LONG\_LONG}}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00561\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00562\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00563\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00564\ }
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00566\ \textcolor{comment}{/*\ !RP\_NODE\ */}}
+\DoxyCodeLine{00567\ }
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\#\ define\ PRF\_GSYNC()}}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND1(thunk)\ (thunk)}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR1(thunk)\ (thunk)}}
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLAND1(thunk)\ (thunk)}}
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOR1(thunk)\ (thunk)}}
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH1(thunk)\ thunk}}
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW1(thunk)\ thunk}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM1(thunk)\ thunk}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM1\_0(thunk)\ thunk}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM2(v0,v1)}}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM3(v0,v1,v2)}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM4(v0,v1,v2,v3)}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM5(v0,v1,v2,v3,v4)}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM6(v0,v1,v2,v3,v4,v5)}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM7(v0,v1,v2,v3,v4,v5,v6)}}
+\DoxyCodeLine{00589\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM8(v0,v1,v2,v3,v4,v5,v6,v7)}}
+\DoxyCodeLine{00590\ \textcolor{preprocessor}{\#\ define\ PRF\_PISUM1(thunk)\ thunk}}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH1(thunk)\ thunk}}
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00593\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00594\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH1(thunk)\ thunk}}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00598\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH1(thunk)\ thunk}}
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00603\ \textcolor{preprocessor}{\#\ define\ PRF\_GTLOW1(thunk)\ thunk}}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\#\ define\ PRF\_GTLOW2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\#\ define\ PRF\_GTLOW3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\#\ define\ PRF\_GTLOW4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\#\ define\ PRF\_GTSUM1(thunk)\ thunk}}
+\DoxyCodeLine{00608\ \textcolor{preprocessor}{\#\ define\ PRF\_GTSUM2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00609\ \textcolor{preprocessor}{\#\ define\ PRF\_GTSUM3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00610\ \textcolor{preprocessor}{\#\ define\ PRF\_GTSUM4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00611\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64HIGH1(thunk)\ thunk}}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64HIGH2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64HIGH3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64HIGH4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW1(thunk)\ thunk}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW1(thunk)\ thunk}}
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64LOW1(thunk)\ thunk}}
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64LOW2(v0,v1)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64LOW3(v0,v1,v2)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00626\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64LOW4(v0,v1,v2,v3)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM1(thunk)\ thunk}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM1(thunk)\ thunk}}
+\DoxyCodeLine{00629\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64SUM1(thunk)\ thunk}}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR2(v0,v1)}}
+\DoxyCodeLine{00631\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR3(v0,v1,v2)}}
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR4(v0,v1,v2,v3)}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND2(v0,v1)}}
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND3(v0,v1,v2)}}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#\ define\ PRF\_GLAND4(v0,v1,v2,v3)}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM2(v0,v1)}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM3(v0,v1,v2)}}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM4(v0,v1,v2,v3)}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM2(v0,v1)}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM3(v0,v1,v2)}}
+\DoxyCodeLine{00641\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM4(v0,v1,v2,v3)}}
+\DoxyCodeLine{00642\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64SUM2(v0,v1)}}
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64SUM3(v0,v1,v2)}}
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64SUM4(v0,v1,v2,v3)}}
+\DoxyCodeLine{00645\ \textcolor{preprocessor}{\#\ define\ PRF\_PLSUM1(thunk)\ thunk}}
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\#\ define\ PRF\_PLLSUM1(thunk)\ thunk}}
+\DoxyCodeLine{00647\ \textcolor{preprocessor}{\#\ define\ PRF\_PTSUM1(think)\ think}}
+\DoxyCodeLine{00648\ \textcolor{preprocessor}{\#\ define\ PRF\_PTSUM(v0,v1,v2,v3,v4,v5)\ thunk}}
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\#\ define\ PRF\_GDHIGH1(thunk)\ thunk}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\#\ define\ PRF\_GDHIGH2(v0,v1)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00651\ \textcolor{preprocessor}{\#\ define\ PRF\_GDLOW1(thunk)\ thunk}}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\#\ define\ PRF\_GDLOW2(v0,v1)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{\#\ define\ PRF\_GDSUM1(thunk)\ thunk}}
+\DoxyCodeLine{00654\ \textcolor{preprocessor}{\#\ define\ PRF\_GDSUM2(v0,v1)}}
+\DoxyCodeLine{00655\ \textcolor{preprocessor}{\#\ define\ PRF\_GDSUM3(v0,v1,v2)}}
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\#\ define\ PRF\_GSHIGH1(thunk)\ thunk}}
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\#\ define\ PRF\_GSHIGH2(v0,v1)}}
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\#\ define\ PRF\_GSLOW1(thunk)\ thunk}}
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\#\ define\ PRF\_GSLOW2(v0,v1)}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{\#\ define\ PRF\_GSSUM1(thunk)\ thunk}}
+\DoxyCodeLine{00661\ \textcolor{preprocessor}{\#\ define\ PRF\_GSSUM2(v0,v1)}}
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\#\ define\ PRF\_GIHIGH(vx,vy,vz)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00663\ \textcolor{preprocessor}{\#\ define\ PRF\_GILOW(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\#\ define\ PRF\_GISUM(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00665\ \textcolor{preprocessor}{\#\ define\ PRF\_GLHIGH(vx,vy,vz)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOW(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\#\ define\ PRF\_GLSUM(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00668\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLHIGH(vx,vy,vz)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00669\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLLOW(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLSUM(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\#\ define\ PRF\_GTHIGH(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64HIGH(vx,vy,vz)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64LOW(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00674\ \textcolor{preprocessor}{\#\ define\ PRF\_GI64SUM(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\#\ define\ PRF\_GSHIGH(vx,vy,vz)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\#\ define\ PRF\_GSLOW(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\#\ define\ PRF\_GSSUM(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00678\ \textcolor{preprocessor}{\#\ define\ PRF\_GDHIGH(vx,vy,vz)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\#\ define\ PRF\_GDLOW(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00680\ \textcolor{preprocessor}{\#\ define\ PRF\_GDSUM(vx,vy,vz)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00681\ \textcolor{preprocessor}{\#\ define\ PRF\_GLOR(vx,vy,vz)\ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\#\ define\ PRF\_GLLOR(vx,vy,vz)\ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00683\ }
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\#\ define\ PRF\_BCAST\_INT(x,n,r)\ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00685\ \textcolor{preprocessor}{\#\ define\ PRF\_BCAST\_SIZE\_T(x,n,r)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_INT(s,r,c)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_SIZE\_T(s,r,c)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_INDEX(s,r,c)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_FLOAT(s,r,c)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_DOUBLE(s,r,c)\ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALL\_REAL(s,r,c)\ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00693\ }
+\DoxyCodeLine{00694\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_INT(s,sc,sd,r,rc,rd)\ \ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_LONG(s,sc,sd,r,rc,rd)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_LONG\_LONG(s,sc,sd,r,rc,rd)}\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_FLOAT(s,sc,sd,r,rc,rd)\ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_DOUBLE(s,sc,sd,r,rc,rd)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_INDEX(s,sc,sd,r,rc,rd)\ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_SIZE\_T(s,sc,sd,r,rc,rd)\ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\#\ define\ PRF\_ALLTOALLV\_CHAR(s,sc,sd,r,rc,rd)\ \ \ \ \ }\textcolor{comment}{/*\ nothing\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#\ define\ PRF\_BCAST\_REAL(x,n,r)}}
+\DoxyCodeLine{00704\ }
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH1(thunk)\ thunk}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH2(v0,v1)}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH3(v0,v1,v2)}}
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH4(v0,v1,v2,v3)}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH5(v0,v1,v2,v3,v4)}}
+\DoxyCodeLine{00710\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH6(v0,v1,v2,v3,v4,v5)}}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH7(v0,v1,v2,v3,v4,v5,v6)}}
+\DoxyCodeLine{00712\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH8(v0,v1,v2,v3,v4,v5,v6,v7)}}
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW1(thunk)\ thunk}}
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW2(v0,v1)}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW3(v0,v1,v2)}}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW4(v0,v1,v2,v3)}}
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW5(v0,v1,v2,v3,v4)}}
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW6(v0,v1,v2,v3,v4,v5)}}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW7(v0,v1,v2,v3,v4,v5,v6)}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW8(v0,v1,v2,v3,v4,v5,v6,v7)}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM1(thunk)\ thunk}}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM2(v0,v1)}}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM3(v0,v1,v2)}}
+\DoxyCodeLine{00724\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM4(v0,v1,v2,v3)}}
+\DoxyCodeLine{00725\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM5(v0,v1,v2,v3,v4)}}
+\DoxyCodeLine{00726\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM6(v0,v1,v2,v3,v4,v5)}}
+\DoxyCodeLine{00727\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM7(v0,v1,v2,v3,v4,v5,v6)}}
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM8(v0,v1,v2,v3,v4,v5,v6,v7)}}
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM(v0,v1,v2)}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM\_ND(vx,vy,vz)}}
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH(vx,vy,vz)}}
+\DoxyCodeLine{00732\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH\_ND(vx,vy,vz)}}
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW(vx,vy,vz)}}
+\DoxyCodeLine{00734\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW\_ND(vx,vy,vz)}}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#\ define\ PRF\_SISUM2(v0,v1)}}
+\DoxyCodeLine{00736\ }
+\DoxyCodeLine{00737\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00738\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00739\ \textcolor{comment}{\ *\ Point\ to\ point\ MPI\ calls\ that\ take\ communicator\ handle}}
+\DoxyCodeLine{00740\ \textcolor{comment}{\ *\ as\ an\ argument\ are\ differentiated\ by\ "{}\_S"{}}}
+\DoxyCodeLine{00741\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00742\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_CHAR}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_CHAR}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_INT}}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_INT}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_LONG}}
+\DoxyCodeLine{00748\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_LONG}}
+\DoxyCodeLine{00749\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_FLOAT}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_FLOAT}}
+\DoxyCodeLine{00751\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_DOUBLE}}
+\DoxyCodeLine{00752\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_DOUBLE}}
+\DoxyCodeLine{00753\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_SIZE\_T}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_SIZE\_T}}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_SHORT}}
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_SHORT}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\#define\ PRF\_S\_CSEND\_LONG\_LONG}}
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\#define\ PRF\_S\_CRECV\_LONG\_LONG}}
+\DoxyCodeLine{00759\ }
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_CHAR}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_CHAR}}
+\DoxyCodeLine{00762\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_INT}}
+\DoxyCodeLine{00763\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_INT}}
+\DoxyCodeLine{00764\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_LONG}}
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_LONG}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_FLOAT}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_FLOAT}}
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_DOUBLE}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_DOUBLE}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_SIZE\_T}}
+\DoxyCodeLine{00771\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_SIZE\_T}}
+\DoxyCodeLine{00772\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_SHORT}}
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_SHORT}}
+\DoxyCodeLine{00774\ \textcolor{preprocessor}{\#define\ PRF\_S\_ISEND\_LONG\_LONG}}
+\DoxyCodeLine{00775\ \textcolor{preprocessor}{\#define\ PRF\_S\_IRECV\_LONG\_LONG}}
+\DoxyCodeLine{00776\ }
+\DoxyCodeLine{00777\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_NODE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00778\ }
+\DoxyCodeLine{00779\ \textcolor{preprocessor}{\#\ define\ PRF\_GRSUM\_NV(v)\ \ PRF\_GRSUM\_ND((v[0]),(v[1]),(v[2]))}}
+\DoxyCodeLine{00780\ \textcolor{preprocessor}{\#\ define\ PRF\_GRHIGH\_NV(v)\ PRF\_GRHIGH\_ND((v[0]),(v[1]),(v[2]))}}
+\DoxyCodeLine{00781\ \textcolor{preprocessor}{\#\ define\ PRF\_GRLOW\_NV(v)\ \ PRF\_GRLOW\_ND((v[0]),(v[1]),(v[2]))}}
+\DoxyCodeLine{00782\ }
+\DoxyCodeLine{00783\ \textcolor{preprocessor}{\#\ if\ USE\_INT64}}
+\DoxyCodeLine{00784\ \textcolor{preprocessor}{\#if\ \_NT}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_CSEND\_LONG\_LONG}}
+\DoxyCodeLine{00786\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_CRECV\_LONG\_LONG}}
+\DoxyCodeLine{00787\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_ISEND\_LONG\_LONG}}
+\DoxyCodeLine{00788\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_IRECV\_LONG\_LONG}}
+\DoxyCodeLine{00789\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ \ PRF\_SEND\_LONG\_LONG}}
+\DoxyCodeLine{00790\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ \ PRF\_RECV\_LONG\_LONG}}
+\DoxyCodeLine{00791\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_CSEND\_INDEX\ \ \ \ \ \ \ \ \ \ PRF\_S\_CSEND\_LONG\_LONG}}
+\DoxyCodeLine{00792\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_CRECV\_INDEX\ \ \ \ \ \ \ \ \ \ PRF\_S\_CRECV\_LONG\_LONG}}
+\DoxyCodeLine{00793\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_ISEND\_INDEX\ \ \ \ \ \ \ \ \ \ PRF\_S\_ISEND\_LONG\_LONG}}
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_IRECV\_INDEX\ \ \ \ \ \ \ \ \ \ PRF\_S\_IRECV\_LONG\_LONG}}
+\DoxyCodeLine{00795\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_SEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ PRF\_S\_SEND\_LONG\_LONG}}
+\DoxyCodeLine{00796\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_RECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ PRF\_S\_RECV\_LONG\_LONG}}
+\DoxyCodeLine{00797\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH1\ PRF\_GLLHIGH1}}
+\DoxyCodeLine{00798\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH2\ PRF\_GLLHIGH2}}
+\DoxyCodeLine{00799\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH3\ PRF\_GLLHIGH3}}
+\DoxyCodeLine{00800\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH4\ PRF\_GLLHIGH4}}
+\DoxyCodeLine{00801\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW1\ \ PRF\_GLLLOW1}}
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW2\ \ PRF\_GLLLOW2}}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW3\ \ PRF\_GLLLOW3}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW4\ \ PRF\_GLLLOW4}}
+\DoxyCodeLine{00805\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM1\ \ PRF\_GLLSUM1}}
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM2\ \ PRF\_GLLSUM2}}
+\DoxyCodeLine{00807\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM3\ \ PRF\_GLLSUM3}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM4\ \ PRF\_GLLSUM4}}
+\DoxyCodeLine{00809\ \textcolor{preprocessor}{\#\ define\ PRF\_PXSUM1\ \ PRF\_PLLSUM1}}
+\DoxyCodeLine{00810\ }
+\DoxyCodeLine{00811\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH\ PRF\_GLLHIGH}}
+\DoxyCodeLine{00812\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW\ \ PRF\_GLLLOW}}
+\DoxyCodeLine{00813\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM\ \ PRF\_GLLSUM}}
+\DoxyCodeLine{00814\ \textcolor{preprocessor}{\#\ define\ PRF\_PXSUM\ \ PRF\_PLLSUM}}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\#\ define\ MPT\_PACK\_INDEX\ MPT\_PACK\_LONG\_LONG}}
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\#\ define\ PRF\_CPASS\_STRUCT\_INDEX\ \ \ \ \ \ \ PRF\_CPASS\_STRUCT\_LONG\_LONG}}
+\DoxyCodeLine{00817\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_STRUCT\_INDEX\ \ \ \ \ \ \ PRF\_CSEND\_STRUCT\_LONG\_LONG}}
+\DoxyCodeLine{00818\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_STRUCT\_INDEX\ \ \ \ \ \ \ PRF\_CRECV\_STRUCT\_LONG\_LONG}}
+\DoxyCodeLine{00819\ \textcolor{preprocessor}{\#\ define\ MPT\_serialize\_cxindex\ MPT\_serialize\_long\_long}}
+\DoxyCodeLine{00820\ \textcolor{preprocessor}{\#\ define\ MPT\_unpack\_cxindex\ MPT\_unpack\_long\_long}}
+\DoxyCodeLine{00821\ \textcolor{preprocessor}{\#\ define\ MPT\_Array\_copy\_cxindex\ \ \ MPT\_Array\_copy\_long\_long}}
+\DoxyCodeLine{00822\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00823\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_CSEND\_LONG}}
+\DoxyCodeLine{00824\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_CRECV\_LONG}}
+\DoxyCodeLine{00825\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_ISEND\_LONG}}
+\DoxyCodeLine{00826\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_IRECV\_LONG}}
+\DoxyCodeLine{00827\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ \ PRF\_SEND\_LONG}}
+\DoxyCodeLine{00828\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ \ PRF\_RECV\_LONG}}
+\DoxyCodeLine{00829\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_CSEND\_INDEX\ \ \ \ \ \ \ \ \ \ PRF\_S\_CSEND\_LONG}}
+\DoxyCodeLine{00830\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_CRECV\_INDEX\ \ \ \ \ \ \ \ \ \ PRF\_S\_CRECV\_LONG}}
+\DoxyCodeLine{00831\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_ISEND\_INDEX\ \ \ \ \ \ \ \ \ \ PRF\_S\_ISEND\_LONG}}
+\DoxyCodeLine{00832\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_IRECV\_INDEX\ \ \ \ \ \ \ \ \ \ PRF\_S\_IRECV\_LONG}}
+\DoxyCodeLine{00833\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_SEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ PRF\_S\_SEND\_LONG}}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\#\ define\ PRF\_S\_RECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ PRF\_S\_RECV\_LONG}}
+\DoxyCodeLine{00835\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH1\ PRF\_GLHIGH1}}
+\DoxyCodeLine{00836\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH2\ PRF\_GLHIGH2}}
+\DoxyCodeLine{00837\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH3\ PRF\_GLHIGH3}}
+\DoxyCodeLine{00838\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH4\ PRF\_GLHIGH4}}
+\DoxyCodeLine{00839\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW1\ \ PRF\_GLLOW1}}
+\DoxyCodeLine{00840\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW2\ \ PRF\_GLLOW2}}
+\DoxyCodeLine{00841\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW3\ \ PRF\_GLLOW3}}
+\DoxyCodeLine{00842\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW4\ \ PRF\_GLLOW4}}
+\DoxyCodeLine{00843\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM1\ \ PRF\_GLSUM1}}
+\DoxyCodeLine{00844\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM2\ \ PRF\_GLSUM2}}
+\DoxyCodeLine{00845\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM3\ \ PRF\_GLSUM3}}
+\DoxyCodeLine{00846\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM4\ \ PRF\_GLSUM4}}
+\DoxyCodeLine{00847\ \textcolor{preprocessor}{\#\ define\ PRF\_PXSUM1\ \ PRF\_PLSUM1}}
+\DoxyCodeLine{00848\ }
+\DoxyCodeLine{00849\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH\ PRF\_GLHIGH}}
+\DoxyCodeLine{00850\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW\ \ PRF\_GLLOW}}
+\DoxyCodeLine{00851\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM\ \ PRF\_GLSUM}}
+\DoxyCodeLine{00852\ \textcolor{preprocessor}{\#\ define\ PRF\_PXSUM\ \ PRF\_PLSUM}}
+\DoxyCodeLine{00853\ \textcolor{preprocessor}{\#\ define\ MPT\_PACK\_INDEX\ MPT\_PACK\_LONG}}
+\DoxyCodeLine{00854\ \textcolor{preprocessor}{\#\ define\ PRF\_CPASS\_STRUCT\_INDEX\ \ \ \ \ \ \ PRF\_CPASS\_STRUCT\_LONG}}
+\DoxyCodeLine{00855\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_STRUCT\_INDEX\ \ \ \ \ \ \ PRF\_CSEND\_STRUCT\_LONG}}
+\DoxyCodeLine{00856\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_STRUCT\_INDEX\ \ \ \ \ \ \ PRF\_CRECV\_STRUCT\_LONG}}
+\DoxyCodeLine{00857\ \textcolor{preprocessor}{\#\ define\ MPT\_serialize\_cxindex\ MPT\_serialize\_long}}
+\DoxyCodeLine{00858\ \textcolor{preprocessor}{\#\ define\ MPT\_unpack\_cxindex\ MPT\_unpack\_long}}
+\DoxyCodeLine{00859\ \textcolor{preprocessor}{\#\ define\ MPT\_Array\_copy\_cxindex\ \ \ MPT\_Array\_copy\_long}}
+\DoxyCodeLine{00860\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00861\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00862\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_CSEND\_INT}}
+\DoxyCodeLine{00863\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_CRECV\_INT}}
+\DoxyCodeLine{00864\ \textcolor{preprocessor}{\#\ define\ PRF\_ISEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_ISEND\_INT}}
+\DoxyCodeLine{00865\ \textcolor{preprocessor}{\#\ define\ PRF\_IRECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ PRF\_IRECV\_INT}}
+\DoxyCodeLine{00866\ \textcolor{preprocessor}{\#\ define\ PRF\_SEND\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ \ PRF\_SEND\_INT}}
+\DoxyCodeLine{00867\ \textcolor{preprocessor}{\#\ define\ PRF\_RECV\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ \ PRF\_RECV\_INT}}
+\DoxyCodeLine{00868\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH1\ PRF\_GIHIGH1}}
+\DoxyCodeLine{00869\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH2\ PRF\_GIHIGH2}}
+\DoxyCodeLine{00870\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH3\ PRF\_GIHIGH3}}
+\DoxyCodeLine{00871\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH4\ PRF\_GIHIGH4}}
+\DoxyCodeLine{00872\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW1\ \ PRF\_GILOW1}}
+\DoxyCodeLine{00873\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW2\ \ PRF\_GILOW2}}
+\DoxyCodeLine{00874\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW3\ \ PRF\_GILOW3}}
+\DoxyCodeLine{00875\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW4\ \ PRF\_GILOW4}}
+\DoxyCodeLine{00876\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM1\ \ PRF\_GISUM1}}
+\DoxyCodeLine{00877\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM2\ \ PRF\_GISUM2}}
+\DoxyCodeLine{00878\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM3\ \ PRF\_GISUM3}}
+\DoxyCodeLine{00879\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM4\ \ PRF\_GISUM4}}
+\DoxyCodeLine{00880\ \textcolor{preprocessor}{\#\ define\ PRF\_PXSUM1\ \ PRF\_PISUM1}}
+\DoxyCodeLine{00881\ }
+\DoxyCodeLine{00882\ \textcolor{preprocessor}{\#\ define\ PRF\_GXHIGH\ PRF\_GIHIGH}}
+\DoxyCodeLine{00883\ \textcolor{preprocessor}{\#\ define\ PRF\_GXLOW\ \ PRF\_GILOW}}
+\DoxyCodeLine{00884\ \textcolor{preprocessor}{\#\ define\ PRF\_GXSUM\ \ PRF\_GISUM}}
+\DoxyCodeLine{00885\ \textcolor{preprocessor}{\#\ define\ PRF\_PXSUM\ \ PRF\_PISUM}}
+\DoxyCodeLine{00886\ }
+\DoxyCodeLine{00887\ \textcolor{preprocessor}{\#\ define\ MPT\_PACK\_INDEX\ MPT\_PACK\_INT}}
+\DoxyCodeLine{00888\ \textcolor{preprocessor}{\#\ define\ PRF\_CPASS\_STRUCT\_INDEX\ \ \ \ \ \ \ PRF\_CPASS\_STRUCT\_INT}}
+\DoxyCodeLine{00889\ \textcolor{preprocessor}{\#\ define\ PRF\_CSEND\_STRUCT\_INDEX\ \ \ \ \ \ \ PRF\_CSEND\_STRUCT\_INT}}
+\DoxyCodeLine{00890\ \textcolor{preprocessor}{\#\ define\ PRF\_CRECV\_STRUCT\_INDEX\ \ \ \ \ \ \ PRF\_CRECV\_STRUCT\_INT}}
+\DoxyCodeLine{00891\ \textcolor{preprocessor}{\#\ define\ MPT\_serialize\_cxindex\ MPT\_serialize\_int}}
+\DoxyCodeLine{00892\ \textcolor{preprocessor}{\#\ define\ MPT\_unpack\_cxindex\ MPT\_unpack\_int}}
+\DoxyCodeLine{00893\ \textcolor{preprocessor}{\#\ define\ MPT\_Array\_copy\_cxindex\ \ \ MPT\_Array\_copy\_int}}
+\DoxyCodeLine{00894\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00895\ \textcolor{preprocessor}{\#\ define\ PRF\_PACK\_INDEX\ MPT\_PACK\_INDEX}}
+\DoxyCodeLine{00896\ }
+\DoxyCodeLine{00897\ \textcolor{preprocessor}{\#if\ !PARALLEL}}
+\DoxyCodeLine{00898\ \textcolor{comment}{/*\ keep\ same\ order\ as\ in\ mport.h\ */}}
+\DoxyCodeLine{00899\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00900\ \{}
+\DoxyCodeLine{00901\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619ada917734a27dfe9c1ae5992f3015457e31}{MPT\_DATATYPE\_NULL}}\ \ =\ 0,}
+\DoxyCodeLine{00902\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619ada8a0b113c6d6836599039b97c4fcc8969}{MPT\_CHAR}}\ \ \ \ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00903\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619ada0ed0553f9c9702afa8c1b3033561be1c}{MPT\_SHORT}}\ \ \ \ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00904\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619adabd6d97f9f1df78f7181a6b7193c80c69}{MPT\_INT}}\ \ \ \ \ \ \ \ \ \ \ \ =\ 3,}
+\DoxyCodeLine{00905\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619adaff496677038da91a882b92a8e5a4eca7}{MPT\_LONG}}\ \ \ \ \ \ \ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00906\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619adadb4eef17ceefa689c9988d6b723c0e30}{MPT\_FLOAT}}\ \ \ \ \ \ \ \ \ \ =\ 5,}
+\DoxyCodeLine{00907\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619ada9493af666732e8fca3c337eb855fe029}{MPT\_DOUBLE}}\ \ \ \ \ \ \ \ \ =\ 6,}
+\DoxyCodeLine{00908\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619ada5f29fded718a5a50e2ae8ffa6b158a9e}{MPT\_SIZE\_T}}\ \ \ \ \ \ \ \ \ =\ 7,}
+\DoxyCodeLine{00909\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619ada8adf398ab46fe05c73dfed27a815e30f}{MPT\_LONG\_LONG}}\ \ \ \ \ \ =\ 8,}
+\DoxyCodeLine{00910\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619ada619379f3d3856e76ea942e36f3b56d10}{MPT\_UNSIGNED\_CHAR}}\ \ =\ 9,}
+\DoxyCodeLine{00911\ \ \ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619ada5b0c4117f0e83c33b061be1015352dfd}{MPT\_DATATYPE\_MAX}}}
+\DoxyCodeLine{00912\ \}\ \mbox{\hyperlink{prf_8h_a9c4374b821c06f13ec8d5c02b84619ad}{MPT\_Datatype}};}
+\DoxyCodeLine{00913\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !PARALLEL\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00914\ }
+\DoxyCodeLine{00915\ \textcolor{preprocessor}{\#\ if\ USE\_INT64}}
+\DoxyCodeLine{00916\ \textcolor{preprocessor}{\#if\ \_NT}}
+\DoxyCodeLine{00917\ \textcolor{preprocessor}{\#define\ MPT\_INDEX\ MPT\_LONG\_LONG}}
+\DoxyCodeLine{00918\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00919\ \textcolor{preprocessor}{\#define\ MPT\_INDEX\ MPT\_LONG}}
+\DoxyCodeLine{00920\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00921\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00922\ \textcolor{preprocessor}{\#define\ MPT\_INDEX\ MPT\_INT}}
+\DoxyCodeLine{00923\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ USE\_INT64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00924\ }
+\DoxyCodeLine{00925\ \textcolor{preprocessor}{\#\ if\ RP\_DOUBLE}}
+\DoxyCodeLine{00926\ \textcolor{preprocessor}{\#define\ MPT\_REAL\ MPT\_DOUBLE}}
+\DoxyCodeLine{00927\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00928\ \textcolor{preprocessor}{\#define\ MPT\_REAL\ MPT\_FLOAT}}
+\DoxyCodeLine{00929\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_DOUBLE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00930\ }
+\DoxyCodeLine{00931\ }
+\DoxyCodeLine{00932\ \textcolor{comment}{/*\ START:\ Scalar\ reductions\ using\ subcommunicator\ */}}
+\DoxyCodeLine{00933\ \textcolor{preprocessor}{\#define\ PRF\_SIHIGH1\_ALL\ MPT\_SIHIGH1\_ALL}}
+\DoxyCodeLine{00934\ \textcolor{preprocessor}{\#define\ PRF\_SLHIGH1\_ALL\ MPT\_SLHIGH1\_ALL}}
+\DoxyCodeLine{00935\ \textcolor{preprocessor}{\#define\ PRF\_SSHIGH1\_ALL\ MPT\_SSHIGH1\_ALL}}
+\DoxyCodeLine{00936\ \textcolor{preprocessor}{\#define\ PRF\_SDHIGH1\_ALL\ MPT\_SDHIGH1\_ALL}}
+\DoxyCodeLine{00937\ \textcolor{preprocessor}{\#define\ PRF\_SILOW1\_ALL\ \ MPT\_SILOW1\_ALL}}
+\DoxyCodeLine{00938\ \textcolor{preprocessor}{\#define\ PRF\_SLLOW1\_ALL\ \ MPT\_SLLOW1\_ALL}}
+\DoxyCodeLine{00939\ \textcolor{preprocessor}{\#define\ PRF\_SSLOW1\_ALL\ \ MPT\_SSLOW1\_ALL}}
+\DoxyCodeLine{00940\ \textcolor{preprocessor}{\#define\ PRF\_SDLOW1\_ALL\ \ MPT\_SDLOW1\_ALL}}
+\DoxyCodeLine{00941\ \textcolor{preprocessor}{\#define\ PRF\_SISUM1\_ALL\ \ MPT\_SISUM1\_ALL}}
+\DoxyCodeLine{00942\ \textcolor{preprocessor}{\#define\ PRF\_SLSUM1\_ALL\ \ MPT\_SLSUM1\_ALL}}
+\DoxyCodeLine{00943\ \textcolor{preprocessor}{\#define\ PRF\_SSSUM1\_ALL\ \ MPT\_SSSUM1\_ALL}}
+\DoxyCodeLine{00944\ \textcolor{preprocessor}{\#define\ PRF\_SDSUM1\_ALL\ \ MPT\_SDSUM1\_ALL}}
+\DoxyCodeLine{00945\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00946\ \textcolor{preprocessor}{\#define\ PRF\_SRHIGH1\_ALL\ MPT\_SDHIGH1\_ALL}}
+\DoxyCodeLine{00947\ \textcolor{preprocessor}{\#define\ PRF\_SRLOW1\_ALL\ \ MPT\_SDLOW1\_ALL}}
+\DoxyCodeLine{00948\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM1\_ALL\ \ MPT\_SDSUM1\_ALL}}
+\DoxyCodeLine{00949\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00950\ \textcolor{preprocessor}{\#define\ PRF\_SRHIGH1\_ALL\ MPT\_SSHIGH1\_ALL}}
+\DoxyCodeLine{00951\ \textcolor{preprocessor}{\#define\ PRF\_SRLOW1\_ALL\ \ MPT\_SSLOW1\_ALL}}
+\DoxyCodeLine{00952\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM1\_ALL\ \ MPT\_SSSUM1\_ALL}}
+\DoxyCodeLine{00953\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00954\ \textcolor{preprocessor}{\#if\ USE\_INT64}}
+\DoxyCodeLine{00955\ \textcolor{preprocessor}{\#define\ PRF\_SXHIGH1\_ALL\ MPT\_SLHIGH1\_ALL}}
+\DoxyCodeLine{00956\ \textcolor{preprocessor}{\#define\ PRF\_SXLOW1\_ALL\ \ MPT\_SLLOW1\_ALL}}
+\DoxyCodeLine{00957\ \textcolor{preprocessor}{\#define\ PRF\_SXSUM1\_ALL\ \ MPT\_SLSUM1\_ALL}}
+\DoxyCodeLine{00958\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00959\ \textcolor{preprocessor}{\#define\ PRF\_SXHIGH1\_ALL\ MPT\_SIHIGH1\_ALL}}
+\DoxyCodeLine{00960\ \textcolor{preprocessor}{\#define\ PRF\_SXLOW1\_ALL\ \ MPT\_SILOW1\_ALL}}
+\DoxyCodeLine{00961\ \textcolor{preprocessor}{\#define\ PRF\_SXSUM1\_ALL\ \ MPT\_SISUM1\_ALL}}
+\DoxyCodeLine{00962\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00963\ }
+\DoxyCodeLine{00964\ \textcolor{preprocessor}{\#define\ PRF\_SIHIGH1\ \ \ \ \ MPT\_SIHIGH1}}
+\DoxyCodeLine{00965\ \textcolor{preprocessor}{\#define\ PRF\_SLHIGH1\ \ \ \ \ MPT\_SLHIGH1}}
+\DoxyCodeLine{00966\ \textcolor{preprocessor}{\#define\ PRF\_SSHIGH1\ \ \ \ \ MPT\_SSHIGH1}}
+\DoxyCodeLine{00967\ \textcolor{preprocessor}{\#define\ PRF\_SDHIGH1\ \ \ \ \ MPT\_SDHIGH1}}
+\DoxyCodeLine{00968\ \textcolor{preprocessor}{\#define\ PRF\_SILOW1\ \ \ \ \ \ MPT\_SILOW1}}
+\DoxyCodeLine{00969\ \textcolor{preprocessor}{\#define\ PRF\_SLLOW1\ \ \ \ \ \ MPT\_SLLOW1}}
+\DoxyCodeLine{00970\ \textcolor{preprocessor}{\#define\ PRF\_SSLOW1\ \ \ \ \ \ MPT\_SSLOW1}}
+\DoxyCodeLine{00971\ \textcolor{preprocessor}{\#define\ PRF\_SDLOW1\ \ \ \ \ \ MPT\_SDLOW1}}
+\DoxyCodeLine{00972\ \textcolor{preprocessor}{\#define\ PRF\_SISUM1\ \ \ \ \ \ MPT\_SISUM1}}
+\DoxyCodeLine{00973\ \textcolor{preprocessor}{\#define\ PRF\_SLSUM1\ \ \ \ \ \ MPT\_SLSUM1}}
+\DoxyCodeLine{00974\ \textcolor{preprocessor}{\#define\ PRF\_SSSUM1\ \ \ \ \ \ MPT\_SSSUM1}}
+\DoxyCodeLine{00975\ \textcolor{preprocessor}{\#define\ PRF\_SDSUM1\ \ \ \ \ \ MPT\_SDSUM1}}
+\DoxyCodeLine{00976\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00977\ \textcolor{preprocessor}{\#define\ PRF\_SRHIGH1\ \ \ \ \ MPT\_SDHIGH1}}
+\DoxyCodeLine{00978\ \textcolor{preprocessor}{\#define\ PRF\_SRLOW1\ \ \ \ \ \ MPT\_SDLOW1}}
+\DoxyCodeLine{00979\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM1\ \ \ \ \ \ MPT\_SDSUM1}}
+\DoxyCodeLine{00980\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM2\ \ \ \ \ \ MPT\_SDSUM2}}
+\DoxyCodeLine{00981\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM\ \ \ \ \ \ \ MPT\_SDSUM}}
+\DoxyCodeLine{00982\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00983\ \textcolor{preprocessor}{\#define\ PRF\_SRHIGH1\ \ \ \ \ MPT\_SSHIGH1}}
+\DoxyCodeLine{00984\ \textcolor{preprocessor}{\#define\ PRF\_SRLOW1\ \ \ \ \ \ MPT\_SSLOW1}}
+\DoxyCodeLine{00985\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM1\ \ \ \ \ \ MPT\_SSSUM1}}
+\DoxyCodeLine{00986\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM2\ \ \ \ \ \ MPT\_SSSUM2}}
+\DoxyCodeLine{00987\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM\ \ \ \ \ \ \ MPT\_SSSUM}}
+\DoxyCodeLine{00988\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00989\ \textcolor{preprocessor}{\#if\ USE\_INT64}}
+\DoxyCodeLine{00990\ \textcolor{preprocessor}{\#define\ PRF\_SXHIGH1\ \ \ \ \ MPT\_SLHIGH1}}
+\DoxyCodeLine{00991\ \textcolor{preprocessor}{\#define\ PRF\_SXLOW1\ \ \ \ \ \ MPT\_SLLOW1}}
+\DoxyCodeLine{00992\ \textcolor{preprocessor}{\#define\ PRF\_SXSUM1\ \ \ \ \ \ MPT\_SLSUM1}}
+\DoxyCodeLine{00993\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00994\ \textcolor{preprocessor}{\#define\ PRF\_SXHIGH1\ \ \ \ \ MPT\_SIHIGH1}}
+\DoxyCodeLine{00995\ \textcolor{preprocessor}{\#define\ PRF\_SXLOW1\ \ \ \ \ \ MPT\_SILOW1}}
+\DoxyCodeLine{00996\ \textcolor{preprocessor}{\#define\ PRF\_SXSUM1\ \ \ \ \ \ MPT\_SISUM1}}
+\DoxyCodeLine{00997\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00998\ }
+\DoxyCodeLine{00999\ \textcolor{preprocessor}{\#define\ PRF\_SIHIGH1\_0\ \ \ MPT\_SIHIGH1\_0}}
+\DoxyCodeLine{01000\ \textcolor{preprocessor}{\#define\ PRF\_SLHIGH1\_0\ \ \ MPT\_SLHIGH1\_0}}
+\DoxyCodeLine{01001\ \textcolor{preprocessor}{\#define\ PRF\_SSHIGH1\_0\ \ \ MPT\_SSHIGH1\_0}}
+\DoxyCodeLine{01002\ \textcolor{preprocessor}{\#define\ PRF\_SDHIGH1\_0\ \ \ MPT\_SDHIGH1\_0}}
+\DoxyCodeLine{01003\ \textcolor{preprocessor}{\#define\ PRF\_SILOW1\_0\ \ \ \ MPT\_SILOW1\_0}}
+\DoxyCodeLine{01004\ \textcolor{preprocessor}{\#define\ PRF\_SLLOW1\_0\ \ \ \ MPT\_SLLOW1\_0}}
+\DoxyCodeLine{01005\ \textcolor{preprocessor}{\#define\ PRF\_SSLOW1\_0\ \ \ \ MPT\_SSLOW1\_0}}
+\DoxyCodeLine{01006\ \textcolor{preprocessor}{\#define\ PRF\_SDLOW1\_0\ \ \ \ MPT\_SDLOW1\_0}}
+\DoxyCodeLine{01007\ \textcolor{preprocessor}{\#define\ PRF\_SISUM1\_0\ \ \ \ MPT\_SISUM1\_0}}
+\DoxyCodeLine{01008\ \textcolor{preprocessor}{\#define\ PRF\_SLSUM1\_0\ \ \ \ MPT\_SLSUM1\_0}}
+\DoxyCodeLine{01009\ \textcolor{preprocessor}{\#define\ PRF\_SSSUM1\_0\ \ \ \ MPT\_SSSUM1\_0}}
+\DoxyCodeLine{01010\ \textcolor{preprocessor}{\#define\ PRF\_SDSUM1\_0\ \ \ \ MPT\_SDSUM1\_0}}
+\DoxyCodeLine{01011\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{01012\ \textcolor{preprocessor}{\#define\ PRF\_SRHIGH1\_0\ \ \ MPT\_SDHIGH1\_0}}
+\DoxyCodeLine{01013\ \textcolor{preprocessor}{\#define\ PRF\_SRLOW1\_0\ \ \ \ MPT\_SDLOW1\_0}}
+\DoxyCodeLine{01014\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM1\_0\ \ \ \ MPT\_SDSUM1\_0}}
+\DoxyCodeLine{01015\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01016\ \textcolor{preprocessor}{\#define\ PRF\_SRHIGH1\_0\ \ \ MPT\_SSHIGH1\_0}}
+\DoxyCodeLine{01017\ \textcolor{preprocessor}{\#define\ PRF\_SRLOW1\_0\ \ \ \ MPT\_SSLOW1\_0}}
+\DoxyCodeLine{01018\ \textcolor{preprocessor}{\#define\ PRF\_SRSUM1\_0\ \ \ \ MPT\_SSSUM1\_0}}
+\DoxyCodeLine{01019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01020\ \textcolor{preprocessor}{\#if\ USE\_INT64}}
+\DoxyCodeLine{01021\ \textcolor{preprocessor}{\#define\ PRF\_SXHIGH1\_0\ \ \ MPT\_SLHIGH1\_0}}
+\DoxyCodeLine{01022\ \textcolor{preprocessor}{\#define\ PRF\_SXLOW1\_0\ \ \ \ MPT\_SLLOW1\_0}}
+\DoxyCodeLine{01023\ \textcolor{preprocessor}{\#define\ PRF\_SXSUM1\_0\ \ \ \ MPT\_SLSUM1\_0}}
+\DoxyCodeLine{01024\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01025\ \textcolor{preprocessor}{\#define\ PRF\_SXHIGH1\_0\ \ \ MPT\_SIHIGH1\_0}}
+\DoxyCodeLine{01026\ \textcolor{preprocessor}{\#define\ PRF\_SXLOW1\_0\ \ \ \ MPT\_SILOW1\_0}}
+\DoxyCodeLine{01027\ \textcolor{preprocessor}{\#define\ PRF\_SXSUM1\_0\ \ \ \ MPT\_SISUM1\_0}}
+\DoxyCodeLine{01028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01029\ \textcolor{comment}{/*\ END\ \ :\ Scalar\ reductions\ using\ subcommunicator\ */}}
+\DoxyCodeLine{01030\ }
+\DoxyCodeLine{01031\ }
+\DoxyCodeLine{01032\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_INCLUDED\_PRF\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01033\ }
+\DoxyCodeLine{01034\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_PRF\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

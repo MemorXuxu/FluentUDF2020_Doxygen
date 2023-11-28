@@ -1,0 +1,281 @@
+\doxysection{ida\+\_\+bbdpre.\+h}
+\hypertarget{ida__bbdpre_8h_source}{}\label{ida__bbdpre_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_bbdpre.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/ida/ida\_bbdpre.h}}
+\mbox{\hyperlink{ida__bbdpre_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.8\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2010/12/01\ 22:14:08\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer(s):\ Alan\ C.\ Hindmarsh,\ Radu\ Serban\ and}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Aaron\ Collier\ @\ LLNL}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2002,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ This\ is\ the\ header\ file\ for\ the\ IDABBDPRE\ module,\ for\ a}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ band-\/block-\/diagonal\ preconditioner,\ i.e.\ a\ block-\/diagonal}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ matrix\ with\ banded\ blocks,\ for\ use\ with\ IDA\ and}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ IDASPGMR/IDASPBCG/IDASPTFQMR.}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ Summary:}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ These\ routines\ provide\ a\ preconditioner\ matrix\ that\ is}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ block-\/diagonal\ with\ banded\ blocks.\ The\ blocking\ corresponds}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ to\ the\ distribution\ of\ the\ dependent\ variable\ vector\ y\ among}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ the\ processors.\ Each\ preconditioner\ block\ is\ generated\ from}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ the\ Jacobian\ of\ the\ local\ part\ (on\ the\ current\ processor)\ of\ a}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *\ given\ function\ G(t,y,y')\ approximating\ F(t,y,y').\ The\ blocks}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ *\ are\ generated\ by\ a\ difference\ quotient\ scheme\ on\ each\ processor}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ independently.\ This\ scheme\ utilizes\ an\ assumed\ banded\ structure}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ with\ given\ half-\/bandwidths,\ mudq\ and\ mldq.\ However,\ the\ banded}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ Jacobian\ block\ kept\ by\ the\ scheme\ has\ half-\/bandwiths\ mukeep\ and}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ mlkeep,\ which\ may\ be\ smaller.}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *\ The\ user's\ calling\ program\ should\ have\ the\ following\ form:}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ \ \ \#include\ <ida/ida\_bbdpre.h>}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ \ \ \#include\ <nvector\_parallel.h>}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ \ \ ...}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ \ \ y0\ \ =\ N\_VNew\_Parallel(...);}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ \ \ yp0\ =\ N\_VNew\_Parallel(...);}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ \ \ ...}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *\ \ \ ida\_mem\ =\ IDACreate(...);}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ \ \ ier\ =\ IDAInit(...);}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ \ \ ...}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ \ \ flag\ =\ IDASptfqmr(ida\_mem,\ maxl);}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ \ \ \ \ \ \ -\/or-\/}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ \ \ flag\ =\ IDASpgmr(ida\_mem,\ maxl);}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ \ \ \ \ \ \ -\/or-\/}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ \ flag\ =\ IDASpbcg(ida\_mem,\ maxl);}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ \ \ ...}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ \ \ flag\ =\ IDABBDPrecInit(ida\_mem,\ Nlocal,\ mudq,\ mldq,}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mukeep,\ mlkeep,\ dq\_rel\_yy,\ Gres,\ Gcomm);}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ \ \ ...}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ \ \ ier\ =\ IDASolve(...);}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ \ \ ...}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ \ \ IDAFree(\&ida\_mem);}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ \ \ N\_VDestroy(y0);}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ \ \ N\_VDestroy(yp0);}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ The\ user-\/supplied\ routines\ required\ are:}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ \ \ res\ \ is\ the\ function\ F(t,y,y')\ defining\ the\ DAE\ system\ to}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ \ \ be\ solved:\ \ F(t,y,y')\ =\ 0.}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ \ \ Gres\ \ is\ the\ function\ defining\ a\ local\ approximation}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ \ \ G(t,y,y')\ to\ F,\ for\ the\ purposes\ of\ the\ preconditioner.}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ \ \ Gcomm\ \ is\ the\ function\ performing\ communication\ needed}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *\ \ \ for\ Glocal.}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ Notes:}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ 1)\ This\ header\ file\ is\ included\ by\ the\ user\ for\ the\ definition}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ \ \ \ of\ the\ IBBDPrecData\ type\ and\ for\ needed\ function\ prototypes.}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *\ 2)\ The\ IDABBDPrecInit\ call\ includes\ half-\/bandwidths\ mudq\ and}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ *\ \ \ \ mldq\ to\ be\ used\ in\ the\ approximate\ Jacobian.\ They\ need}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *\ \ \ \ not\ be\ the\ true\ half-\/bandwidths\ of\ the\ Jacobian\ of\ the}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *\ \ \ \ local\ block\ of\ G,\ when\ smaller\ values\ may\ provide\ a\ greater}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ \ \ \ efficiency.\ Similarly,\ mukeep\ and\ mlkeep,\ specifying\ the}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *\ \ \ \ bandwidth\ kept\ for\ the\ approximate\ Jacobian,\ need\ not\ be}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ \ \ \ the\ true\ half-\/bandwidths.\ Also,\ mukeep,\ mlkeep,\ mudq,\ and}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ \ \ \ mldq\ need\ not\ be\ the\ same\ on\ every\ processor.}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ 3)\ The\ actual\ name\ of\ the\ user's\ res\ function\ is\ passed\ to}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ \ \ \ IDAInit,\ and\ the\ names\ of\ the\ user's\ Gres\ and\ Gcomm}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ \ \ \ functions\ are\ passed\ to\ IDABBDPrecInit.\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ 4)\ The\ pointer\ to\ the\ user-\/defined\ data\ block\ user\_data,\ which}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ \ \ \ is\ set\ through\ IDASetUserData\ is\ also\ available\ to\ the\ user}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ \ \ \ in\ glocal\ and\ gcomm.}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ 5)\ Optional\ outputs\ specific\ to\ this\ module\ are\ available\ by}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ \ \ \ way\ of\ routines\ listed\ below.\ These\ include\ work\ space\ sizes}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ \ \ \ and\ the\ cumulative\ number\ of\ glocal\ calls.\ The\ costs}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ \ \ \ associated\ with\ this\ module\ also\ include\ nsetups\ banded\ LU}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ \ \ \ factorizations,\ nsetups\ gcomm\ calls,\ and\ nps\ banded}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ \ \ \ backsolve\ calls,\ where\ nsetups\ and\ nps\ are\ integrator}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *\ \ \ \ optional\ outputs.}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#ifndef\ \_IDABBDPRE\_H}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ \_IDABBDPRE\_H}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ \ \ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00107\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__nvector_8h}{sundials/sundials\_nvector.h}}>}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ Type\ :\ IDABBDLocalFn}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ The\ user\ must\ supply\ a\ function\ G(t,y,y')\ which\ approximates}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *\ the\ function\ F\ for\ the\ system\ F(t,y,y')\ =\ 0,\ and\ which\ is}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ computed\ locally\ (without\ interprocess\ communication).}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ (The\ case\ where\ G\ is\ mathematically\ identical\ to\ F\ is\ allowed.)}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ The\ implementation\ of\ this\ function\ must\ have\ type\ IDABBDLocalFn.}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *\ This\ function\ takes\ as\ input\ the\ independent\ variable\ value\ tt,}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ the\ current\ solution\ vector\ yy,\ the\ current\ solution}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ derivative\ vector\ yp,\ and\ a\ pointer\ to\ the\ user-\/defined\ data}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ block\ user\_data.\ It\ is\ to\ compute\ the\ local\ part\ of\ G(t,y,y')}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ and\ store\ it\ in\ the\ vector\ gval.\ (Providing\ memory\ for\ yy\ and}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ gval\ is\ handled\ within\ this\ preconditioner\ module.)\ It\ is}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ expected\ that\ this\ routine\ will\ save\ communicated\ data\ in\ work}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ space\ defined\ by\ the\ user,\ and\ made\ available\ to\ the}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ preconditioner\ function\ for\ the\ problem.\ The\ user\_data}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *\ parameter\ is\ the\ same\ as\ that\ passed\ by\ the\ user\ to\ the}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *\ IDASetRdata\ routine.}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *\ An\ IDABBDLocalFn\ Gres\ is\ to\ return\ an\ int,\ defined\ in\ the\ same}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ *\ way\ as\ for\ the\ residual\ function:\ 0\ (success),\ +1\ or\ -\/1\ (fail).}}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{ida__bbdpre_8h_a22ae8a0782cdfc33ea1125b76eb7ba65}{IDABBDLocalFn}})(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ Nlocal,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ tt,}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ yp,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ gval,}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *user\_data);}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ Type\ :\ IDABBDCommFn}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *\ The\ user\ may\ supply\ a\ function\ of\ type\ IDABBDCommFn\ which}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ performs\ all\ interprocess\ communication\ necessary\ to}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ evaluate\ the\ approximate\ system\ function\ described\ above.}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *\ This\ function\ takes\ as\ input\ the\ solution\ vectors\ yy\ and\ yp,}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ *\ and\ a\ pointer\ to\ the\ user-\/defined\ data\ block\ user\_data.\ The}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ *\ user\_data\ parameter\ is\ the\ same\ as\ that\ passed\ by\ the\ user\ to}}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ *\ the\ IDASetUserData\ routine.}}
+\DoxyCodeLine{00155\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *\ The\ IDABBDCommFn\ Gcomm\ is\ expected\ to\ save\ communicated\ data\ in}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ space\ defined\ with\ the\ structure\ *user\_data.}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *\ A\ IDABBDCommFn\ Gcomm\ returns\ an\ int\ value\ equal\ to\ 0\ (success),}}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ *\ >\ 0\ (recoverable\ error),\ or\ <\ 0\ (unrecoverable\ error).}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ *\ Each\ call\ to\ the\ IDABBDCommFn\ is\ preceded\ by\ a\ call\ to\ the\ system}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ *\ function\ res\ with\ the\ same\ vectors\ yy\ and\ yp.\ Thus\ the}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ *\ IDABBDCommFn\ gcomm\ can\ omit\ any\ communications\ done\ by\ res\ if}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ *\ relevant\ to\ the\ evaluation\ of\ the\ local\ function\ glocal.}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ *\ A\ NULL\ communication\ function\ can\ be\ passed\ to\ IDABBDPrecInit}}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ *\ if\ all\ necessary\ communication\ was\ done\ by\ res.}}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{ida__bbdpre_8h_a230bda7a3495bdec118312af57e9570e}{IDABBDCommFn}})(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ Nlocal,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ tt,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{cae__echem_8h_a68e983772ff4be472efcf322afbb0362}{yy}},\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ yp,}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *user\_data);}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ *\ Function\ :\ IDABBDPrecInit}}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ *\ IDABBDPrecInit\ allocates\ and\ initializes\ the\ BBD\ preconditioner.}}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ *\ The\ parameters\ of\ IDABBDPrecInit\ are\ as\ follows:}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ *\ ida\_mem\ \ is\ a\ pointer\ to\ the\ memory\ blockreturned\ by\ IDACreate.}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ *\ Nlocal\ \ is\ the\ length\ of\ the\ local\ block\ of\ the\ vectors\ yy\ etc.}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ on\ the\ current\ processor.}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ *\ mudq,\ mldq\ \ are\ the\ upper\ and\ lower\ half-\/bandwidths\ to\ be\ used}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ in\ the\ computation\ of\ the\ local\ Jacobian\ blocks.}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ *\ mukeep,\ mlkeep\ are\ the\ upper\ and\ lower\ half-\/bandwidths\ to\ be}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ used\ in\ saving\ the\ Jacobian\ elements\ in\ the\ local}}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\ of\ the\ preconditioner\ matrix\ PP.}}
+\DoxyCodeLine{00194\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00195\ \textcolor{comment}{\ *\ dq\_rel\_yy\ is\ an\ optional\ input.\ It\ is\ the\ relative\ increment}}
+\DoxyCodeLine{00196\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ to\ be\ used\ in\ the\ difference\ quotient\ routine\ for}}
+\DoxyCodeLine{00197\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ Jacobian\ calculation\ in\ the\ preconditioner.\ The}}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ default\ is\ sqrt(unit\ roundoff),\ and\ specified\ by}}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ passing\ dq\_rel\_yy\ =\ 0.}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *\ Gres\ \ \ \ is\ the\ name\ of\ the\ user-\/supplied\ function\ G(t,y,y')}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ that\ approximates\ F\ and\ whose\ local\ Jacobian\ blocks}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ are\ to\ form\ the\ preconditioner.}}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ *\ Gcomm\ \ \ is\ the\ name\ of\ the\ user-\/defined\ function\ that\ performs}}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ necessary\ interprocess\ communication\ for\ the}}
+\DoxyCodeLine{00207\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ execution\ of\ glocal.}}
+\DoxyCodeLine{00208\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *\ The\ return\ value\ of\ IDABBDPrecInit\ is\ one\ of:}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *\ \ \ IDASPILS\_SUCCESS\ if\ no\ errors\ occurred}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *\ \ \ IDASPILS\_MEM\_NULL\ if\ the\ integrator\ memory\ is\ NULL}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ *\ \ \ IDASPILS\_LMEM\_NULL\ if\ the\ linear\ solver\ memory\ is\ NULL}}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ *\ \ \ IDASPILS\_ILL\_INPUT\ if\ an\ input\ has\ an\ illegal\ value}}
+\DoxyCodeLine{00214\ \textcolor{comment}{\ *\ \ \ IDASPILS\_MEM\_FAIL\ if\ a\ memory\ allocation\ request\ failed}}
+\DoxyCodeLine{00215\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00216\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__bbdpre_8h_adff48cba7d50adc854d21938f1222f5f}{IDABBDPrecInit}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ Nlocal,}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mudq,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mldq,}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mukeep,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mlkeep,}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ dq\_rel\_yy,}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{ida__bbdpre_8h_a22ae8a0782cdfc33ea1125b76eb7ba65}{IDABBDLocalFn}}\ Gres,\ \mbox{\hyperlink{ida__bbdpre_8h_a230bda7a3495bdec118312af57e9570e}{IDABBDCommFn}}\ Gcomm);}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00226\ \textcolor{comment}{\ *\ Function\ :\ IDABBDPrecReInit}}
+\DoxyCodeLine{00227\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00228\ \textcolor{comment}{\ *\ IDABBDPrecReInit\ reinitializes\ the\ IDABBDPRE\ module\ when}}
+\DoxyCodeLine{00229\ \textcolor{comment}{\ *\ solving\ a\ sequence\ of\ problems\ of\ the\ same\ size\ with}}
+\DoxyCodeLine{00230\ \textcolor{comment}{\ *\ IDASPGMR/IDABBDPRE,\ IDASPBCG/IDABBDPRE,\ or\ IDASPTFQMR/IDABBDPRE}}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ *\ provided\ there\ is\ no\ change\ in\ Nlocal,\ mukeep,\ or\ mlkeep.\ After}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ solving\ one\ problem,\ and\ after\ calling\ IDAReInit\ to\ reinitialize}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ the\ integrator\ for\ a\ subsequent\ problem,\ call\ IDABBDPrecReInit.}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00235\ \textcolor{comment}{\ *\ All\ arguments\ have\ the\ same\ names\ and\ meanings\ as\ those}}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ *\ of\ IDABBDPrecInit.}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ *\ The\ return\ value\ of\ IDABBDPrecReInit\ is\ one\ of:}}
+\DoxyCodeLine{00239\ \textcolor{comment}{\ *\ \ \ IDASPILS\_SUCCESS\ if\ no\ errors\ occurred}}
+\DoxyCodeLine{00240\ \textcolor{comment}{\ *\ \ \ IDASPILS\_MEM\_NULL\ if\ the\ integrator\ memory\ is\ NULL}}
+\DoxyCodeLine{00241\ \textcolor{comment}{\ *\ \ \ IDASPILS\_LMEM\_NULL\ if\ the\ linear\ solver\ memory\ is\ NULL}}
+\DoxyCodeLine{00242\ \textcolor{comment}{\ *\ \ \ IDASPILS\_PMEM\_NULL\ if\ the\ preconditioner\ memory\ is\ NULL}}
+\DoxyCodeLine{00243\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00244\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__bbdpre_8h_ac64d718b695723638e170a29f0982264}{IDABBDPrecReInit}}(\textcolor{keywordtype}{void}\ *ida\_mem,}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mudq,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mldq,}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ dq\_rel\_yy);}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00252\ \textcolor{comment}{\ *\ Optional\ outputs\ for\ IDABBDPRE}}
+\DoxyCodeLine{00253\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00254\ \textcolor{comment}{\ *\ IDABBDPrecGetWorkSpace\ returns\ the\ real\ and\ integer\ work\ space}}
+\DoxyCodeLine{00255\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ for\ IDABBDPRE.}}
+\DoxyCodeLine{00256\ \textcolor{comment}{\ *\ IDABBDPrecGetNumGfnEvals\ returns\ the\ number\ of\ calls\ to\ the}}
+\DoxyCodeLine{00257\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ user\ Gres\ function.}}
+\DoxyCodeLine{00258\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00259\ \textcolor{comment}{\ *\ The\ return\ value\ of\ IDABBDPrecGet*\ is\ one\ of:}}
+\DoxyCodeLine{00260\ \textcolor{comment}{\ *\ \ \ IDASPILS\_SUCCESS\ if\ no\ errors\ occurred}}
+\DoxyCodeLine{00261\ \textcolor{comment}{\ *\ \ \ IDASPILS\_MEM\_NULL\ if\ the\ integrator\ memory\ is\ NULL}}
+\DoxyCodeLine{00262\ \textcolor{comment}{\ *\ \ \ IDASPILS\_LMEM\_NULL\ if\ the\ linear\ solver\ memory\ is\ NULL}}
+\DoxyCodeLine{00263\ \textcolor{comment}{\ *\ \ \ IDASPILS\_PMEM\_NULL\ if\ the\ preconditioner\ memory\ is\ NULL}}
+\DoxyCodeLine{00264\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00265\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__bbdpre_8h_a92c2858aac64209a8a1618f6b0f273c1}{IDABBDPrecGetWorkSpace}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ }
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *lenrwBBDP,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *leniwBBDP);}
+\DoxyCodeLine{00269\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{ida__bbdpre_8h_af5c8bb2d595fae8c261d92fde59b8e77}{IDABBDPrecGetNumGfnEvals}}(\textcolor{keywordtype}{void}\ *ida\_mem,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *ngevalsBBDP);}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00272\ \}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

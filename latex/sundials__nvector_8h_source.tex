@@ -1,0 +1,379 @@
+\doxysection{sundials\+\_\+nvector.\+h}
+\hypertarget{sundials__nvector_8h_source}{}\label{sundials__nvector_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_nvector.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_nvector.h}}
+\mbox{\hyperlink{sundials__nvector_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.2\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2006/11/29\ 00:05:07\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer(s):\ Radu\ Serban\ and\ Aaron\ Collier\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2002,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ This\ is\ the\ header\ file\ for\ a\ generic\ NVECTOR\ package.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ It\ defines\ the\ N\_Vector\ structure\ (\_generic\_N\_Vector)\ which}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ contains\ the\ following\ fields:}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ \ \ -\/\ an\ implementation-\/dependent\ 'content'\ field\ which\ contains}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ \ \ \ \ the\ description\ and\ actual\ data\ of\ the\ vector}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ \ \ -\/\ an\ 'ops'\ filed\ which\ contains\ a\ structure\ listing\ operations}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ \ \ \ \ acting\ on\ such\ vectors}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ Part\ I\ of\ this\ file\ contains\ type\ declarations\ for\ the}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ \_generic\_N\_Vector\ and\ \_generic\_N\_Vector\_Ops\ structures,\ as\ well}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ as\ references\ to\ pointers\ to\ such\ structures\ (N\_Vector).}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ Part\ II\ of\ this\ file\ contains\ the\ prototypes\ for\ the\ vector}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *\ functions\ which\ operate\ on\ N\_Vector.}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ At\ a\ minimum,\ a\ particular\ implementation\ of\ an\ NVECTOR\ must}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ do\ the\ following:}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ \ -\/\ specify\ the\ 'content'\ field\ of\ N\_Vector,}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ \ -\/\ implement\ the\ operations\ on\ those\ N\_Vectors,}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *\ \ -\/\ provide\ a\ constructor\ routine\ for\ new\ vectors}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ Additionally,\ an\ NVECTOR\ implementation\ may\ provide\ the\ following:}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ \ -\/\ macros\ to\ access\ the\ underlying\ N\_Vector\ data}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ \ -\/\ a\ constructor\ for\ an\ array\ of\ N\_Vectors}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ \ -\/\ a\ constructor\ for\ an\ empty\ N\_Vector\ (i.e.,\ a\ new\ N\_Vector\ with}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ \ \ \ a\ NULL\ data\ pointer).}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ \ -\/\ a\ routine\ to\ print\ the\ content\ of\ an\ N\_Vector}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#ifndef\ \_NVECTOR\_H}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ \_NVECTOR\_H}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__types_8h}{sundials/sundials\_types.h}}>}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ Generic\ definition\ of\ N\_Vector}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{/*\ Forward\ reference\ for\ pointer\ to\ N\_Vector\_Ops\ object\ */}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__generic___n___vector___ops}{\_generic\_N\_Vector\_Ops}}\ *\mbox{\hyperlink{sundials__nvector_8h_a3cab72b455ccbab9833323eb6de6a157}{N\_Vector\_Ops}};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{/*\ Forward\ reference\ for\ pointer\ to\ N\_Vector\ object\ */}}
+\DoxyCodeLine{00062\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__generic___n___vector}{\_generic\_N\_Vector}}\ *\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{comment}{/*\ Define\ array\ of\ N\_Vectors\ */}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *\mbox{\hyperlink{sundials__nvector_8h_a680519bdd449e0ec4288c85e09c621d4}{N\_Vector\_S}};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{/*\ Structure\ containing\ function\ pointers\ to\ vector\ operations\ \ */}\ \ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__generic___n___vector___ops}{\_generic\_N\_Vector\_Ops}}\ \{}
+\DoxyCodeLine{00069\ \ \ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a7a7f2d9098cdfbd726ab880fc5c0d7aa}{nvclone}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_abd025c162680299c3e983dbf2e00abcc}{nvcloneempty}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00071\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a6e5d004acbf9fa83d6f669b8a1d3e61e}{nvdestroy}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00072\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a1f15aad26f3e8b8e830ef967a452b8f0}{nvspace}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00073\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}*\ \ \ (*nvgetarraypointer)(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00074\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a3c0512d107841b9e059005bec1bcbaad}{nvsetarraypointer}})(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *,\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00075\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a3aa583d3ff1bfca6b127d255128486b9}{nvlinearsum}})(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});\ }
+\DoxyCodeLine{00076\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a161ea215bba328c29fee1f4b627cdfca}{nvconst}})(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00077\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a03630cd93726211ec982aa2aadaed962}{nvprod}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00078\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_aab6e6799a79a5ae840a8834cd2a32833}{nvdiv}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00079\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_ab6fe0a7f6324b28f17f41244446963ac}{nvscale}})(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00080\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a14eafd15f722fbba2b78d0f033495b36}{nvabs}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00081\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a1ae792ff3ffb594140cf39d19036f34c}{nvinv}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00082\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_ad81944a032dcc8dd99c72d896dd95a42}{nvaddconst}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00083\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_ae39a7a4660de0b2e2a12af8bbb4d7be9}{nvdotprod}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00084\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a4417c010366ed8eeca12076aebaeb52e}{nvmaxnorm}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00085\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_accd6ee2fbc5b8d298b4091995066f364}{nvwrmsnorm}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00086\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_acd67febf8ae36378410095577febe7f9}{nvwrmsnormmask}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00087\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_af0f03fee54958ddb201e8c0e2c3be058}{nvmin}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a6824c7c273e80295ca41aba9d62c8ef7}{nvwl2norm}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00089\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_aa8c3b6ffe43094b2e802af335d422490}{nvl1norm}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00090\ \ \ void\ \ \ \ \ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_af80bda9fd9969ae20ce67c90f64f38e4}{nvcompare}})(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a5a051773b05d1dbf683b7dc1200aebf5}{nvinvtest}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a6ffc937a41afeb413b7e968bc744e68e}{nvconstrmask}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \ \ \ (*\mbox{\hyperlink{struct__generic___n___vector___ops_a0dd47a9e3a16a492117590e16da9759a}{nvminquotient}})(\mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}},\ \mbox{\hyperlink{sundials__nvector_8h_a8a91260811ab3718acff6bc5bd55d374}{N\_Vector}});}
+\DoxyCodeLine{00094\ \};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ A\ vector\ is\ a\ structure\ with\ an\ implementation-\/dependent}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *\ 'content'\ field,\ and\ a\ pointer\ to\ a\ structure\ of\ vector}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *\ operations\ corresponding\ to\ that\ implementation.}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__generic___n___vector}{\_generic\_N\_Vector}}\ \{}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{struct__generic___n___vector_a3d6d14728fec84498eff595a3e31d15a}{content}};}
+\DoxyCodeLine{00106\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__generic___n___vector___ops}{\_generic\_N\_Vector\_Ops}}\ *\mbox{\hyperlink{struct__generic___n___vector_a19c70e80465c4cfa36604caae69516fd}{ops}};}
+\DoxyCodeLine{00107\ \};}
+\DoxyCodeLine{00108\ \ \ }
+\DoxyCodeLine{00109\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *\ Functions\ exported\ by\ NVECTOR\ module}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *\ N\_VClone}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ \ \ Creates\ a\ new\ vector\ of\ the\ same\ type\ as\ an\ existing\ vector.}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ \ \ It\ does\ not\ copy\ the\ vector,\ but\ rather\ allocates\ storage\ for}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ \ \ the\ new\ vector.}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *\ N\_VCloneEmpty}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ \ \ Creates\ a\ new\ vector\ of\ the\ same\ type\ as\ an\ existing\ vector,}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ \ \ but\ does\ not\ allocate\ storage.}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ N\_VDestroy}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ \ \ Destroys\ a\ vector\ created\ with\ N\_VClone.}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ N\_VSpace}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ \ \ Returns\ space\ requirements\ for\ one\ N\_Vector\ (type\ 'realtype'\ in}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *\ \ \ lrw\ and\ type\ 'long\ int'\ in\ liw).}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *\ N\_VGetArrayPointer}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *\ \ \ Returns\ a\ pointer\ to\ the\ data\ component\ of\ the\ given\ N\_Vector.}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ *\ \ \ NOTE:\ This\ function\ assumes\ that\ the\ internal\ data\ is\ stored}}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ *\ \ \ as\ a\ contiguous\ 'realtype'\ array.\ This\ routine\ is\ only\ used\ in}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ *\ \ \ the\ solver-\/specific\ interfaces\ to\ the\ dense\ and\ banded\ linear}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *\ \ \ solvers,\ as\ well\ as\ the\ interfaces\ to\ \ the\ banded\ preconditioners}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *\ \ \ distributed\ with\ SUNDIALS.}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *\ \ \ }}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ N\_VSetArrayPointer}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ \ \ Overwrites\ the\ data\ field\ in\ the\ given\ N\_Vector\ with\ a\ user-\/supplied}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *\ \ \ array\ of\ type\ 'realtype'.}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ \ \ NOTE:\ This\ function\ assumes\ that\ the\ internal\ data\ is\ stored}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ \ \ as\ a\ contiguous\ 'realtype'\ array.\ This\ routine\ is\ only\ used\ in}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *\ \ \ the\ interfaces\ to\ the\ dense\ linear\ solver.}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ N\_VLinearSum}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ z\ =\ a*x\ +\ b*y}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *\ N\_VConst}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ z[i]\ =\ c\ for\ i\ =\ 0,\ 1,\ ...,\ N-\/1}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ *\ N\_VProd}}
+\DoxyCodeLine{00155\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ z[i]\ =\ x[i]*y[i]\ for\ i\ =\ 0,\ 1,\ ...,\ N-\/1}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ N\_VDiv}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ z[i]\ =\ x[i]/y[i]\ for\ i\ =\ 0,\ 1,\ ...,\ N-\/1}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ *\ N\_VScale}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ z\ =\ c*x}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ *\ N\_VAbs}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ z[i]\ =\ |x[i]|\ for\ i\ =\ 0,\ 1,\ ...,\ N-\/1}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ *\ N\_VInv}}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ z[i]\ =\ 1/x[i]\ for\ i\ =\ 0,\ 1,\ ...,\ N-\/1}}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ *\ \ \ This\ routine\ does\ not\ check\ for\ division\ by\ 0.\ It\ should\ be}}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ *\ \ \ called\ only\ with\ an\ N\_Vector\ x\ which\ is\ guaranteed\ to\ have}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ *\ \ \ all\ non-\/zero\ components.}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ *\ N\_VAddConst}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ z[i]\ =\ x[i]\ +\ b\ \ \ for\ i\ =\ 0,\ 1,\ ...,\ N-\/1}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ *\ N\_VDotProd}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ *\ \ \ Returns\ the\ dot\ product\ of\ two\ vectors:}}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ sum\ (i\ =\ 0\ to\ N-\/1)\ \{x[i]*y[i]\}}}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ *\ N\_VMaxNorm}}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ *\ \ \ Returns\ the\ maximum\ norm\ of\ x:}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ max\ (i\ =\ 0\ to\ N-\/1)\ ABS(x[i])}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ *\ N\_VWrmsNorm}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ *\ \ \ Returns\ the\ weighted\ root\ mean\ square\ norm\ of\ x\ with\ weight\ }}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ *\ \ \ vector\ w:}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ sqrt\ [(sum\ (i\ =\ 0\ to\ N-\/1)\ \{(x[i]*w[i])\string^2\})/N]}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ *\ N\_VWrmsNormMask}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *\ \ \ Returns\ the\ weighted\ root\ mean\ square\ norm\ of\ x\ with\ weight}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ *\ \ \ vector\ w,\ masked\ by\ the\ elements\ of\ id:}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ sqrt\ [(sum\ (i\ =\ 0\ to\ N-\/1)\ \{(x[i]*w[i]*msk[i])\string^2\})/N]}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ *\ \ \ where\ msk[i]\ =\ 1.0\ if\ id[i]\ >\ 0\ and}}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ msk[i]\ =\ 0.0\ if\ id[i]\ <\ 0}}
+\DoxyCodeLine{00194\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00195\ \textcolor{comment}{\ *\ N\_VMin}}
+\DoxyCodeLine{00196\ \textcolor{comment}{\ *\ \ \ Returns\ the\ smallest\ element\ of\ x:}}
+\DoxyCodeLine{00197\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ min\ (i\ =\ 0\ to\ N-\/1)\ x[i]}}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ *\ N\_VWL2Norm}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ *\ \ \ Returns\ the\ weighted\ Euclidean\ L2\ norm\ of\ x\ with\ weight\ }}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *\ \ \ vector\ w:}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ sqrt\ [(sum\ (i\ =\ 0\ to\ N-\/1)\ \{(x[i]*w[i])\string^2\})]}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ *\ N\_VL1Norm}}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ *\ \ \ Returns\ the\ L1\ norm\ of\ x:}}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ sum\ (i\ =\ 0\ to\ N-\/1)\ \{ABS(x[i])\}}}
+\DoxyCodeLine{00207\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00208\ \textcolor{comment}{\ *\ N\_VCompare}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ z[i]\ =\ 1.0\ if\ ABS(x[i])\ >=\ c\ \ \ i\ =\ 0,\ 1,\ ...,\ N-\/1}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0.0\ otherwise}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ *\ N\_VInvTest}}
+\DoxyCodeLine{00214\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ z[i]\ =\ 1/x[i]\ with\ a\ test\ for\ }}
+\DoxyCodeLine{00215\ \textcolor{comment}{\ *\ \ \ x[i]\ ==\ 0.0\ before\ inverting\ x[i].}}
+\DoxyCodeLine{00216\ \textcolor{comment}{\ *\ \ \ This\ routine\ returns\ TRUE\ if\ all\ components\ of\ x\ are\ non-\/zero\ }}
+\DoxyCodeLine{00217\ \textcolor{comment}{\ *\ \ \ (successful\ inversion)\ and\ returns\ FALSE\ otherwise.}}
+\DoxyCodeLine{00218\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00219\ \textcolor{comment}{\ *\ N\_VConstrMask}}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ :\ }}
+\DoxyCodeLine{00221\ \textcolor{comment}{\ *\ \ \ \ \ \ \ m[i]\ =\ 1.0\ if\ constraint\ test\ fails\ for\ x[i]}}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ *\ \ \ \ \ \ \ m[i]\ =\ 0.0\ if\ constraint\ test\ passes\ for\ x[i]}}
+\DoxyCodeLine{00223\ \textcolor{comment}{\ *\ \ \ where\ the\ constraint\ tests\ are\ as\ follows:}}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ *\ \ \ \ \ \ If\ c[i]\ =\ +2.0,\ then\ x[i]\ must\ be\ >\ \ 0.0.}}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ *\ \ \ \ \ \ If\ c[i]\ =\ +1.0,\ then\ x[i]\ must\ be\ >=\ 0.0.}}
+\DoxyCodeLine{00226\ \textcolor{comment}{\ *\ \ \ \ \ \ If\ c[i]\ =\ -\/1.0,\ then\ x[i]\ must\ be\ <=\ 0.0.}}
+\DoxyCodeLine{00227\ \textcolor{comment}{\ *\ \ \ \ \ \ If\ c[i]\ =\ -\/2.0,\ then\ x[i]\ must\ be\ <\ \ 0.0.}}
+\DoxyCodeLine{00228\ \textcolor{comment}{\ *\ \ \ This\ routine\ returns\ a\ boolean\ FALSE\ if\ any\ element\ failed}}
+\DoxyCodeLine{00229\ \textcolor{comment}{\ *\ \ \ the\ constraint\ test,\ TRUE\ if\ all\ passed.\ It\ also\ sets\ a}}
+\DoxyCodeLine{00230\ \textcolor{comment}{\ *\ \ \ mask\ vector\ m,\ with\ elements\ equal\ to\ 1.0\ where\ the}}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ *\ \ \ corresponding\ constraint\ test\ failed,\ and\ equal\ to\ 0.0}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ \ \ where\ the\ constraint\ test\ passed.}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ \ \ This\ routine\ is\ specialized\ in\ that\ it\ is\ used\ only\ for}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ *\ \ \ constraint\ checking.}}
+\DoxyCodeLine{00235\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ *\ N\_VMinQuotient}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ *\ \ \ Performs\ the\ operation\ :\ }}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ *\ \ \ \ \ \ \ minq\ \ =\ min\ (\ num[i]/denom[i])\ over\ all\ i\ such\ that\ \ \ }}
+\DoxyCodeLine{00239\ \textcolor{comment}{\ *\ \ \ \ \ \ \ denom[i]\ !=\ 0.}}
+\DoxyCodeLine{00240\ \textcolor{comment}{\ *\ \ \ This\ routine\ returns\ the\ minimum\ of\ the\ quotients\ obtained}}
+\DoxyCodeLine{00241\ \textcolor{comment}{\ *\ \ \ by\ term-\/wise\ dividing\ num[i]\ by\ denom[i].\ A\ zero\ element}}
+\DoxyCodeLine{00242\ \textcolor{comment}{\ *\ \ \ in\ denom\ will\ be\ skipped.\ If\ no\ such\ quotients\ are\ found,}}
+\DoxyCodeLine{00243\ \textcolor{comment}{\ *\ \ \ then\ the\ large\ value\ BIG\_REAL\ is\ returned.}}
+\DoxyCodeLine{00244\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00245\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00246\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00247\ \textcolor{comment}{\ *\ The\ following\ table\ lists\ the\ vector\ functions\ used\ by}}
+\DoxyCodeLine{00248\ \textcolor{comment}{\ *\ different\ modules\ in\ SUNDIALS.\ The\ symbols\ in\ the\ table}}
+\DoxyCodeLine{00249\ \textcolor{comment}{\ *\ have\ the\ following\ meaning:}}
+\DoxyCodeLine{00250\ \textcolor{comment}{\ *\ S\ \ \ \ -\/\ \ called\ by\ the\ solver;}}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ *\ D\ \ \ \ -\/\ \ called\ by\ the\ dense\ linear\ solver\ module}}
+\DoxyCodeLine{00252\ \textcolor{comment}{\ *\ B\ \ \ \ -\/\ \ called\ by\ the\ band\ linear\ solver\ module}}
+\DoxyCodeLine{00253\ \textcolor{comment}{\ *\ Di\ \ \ -\/\ \ called\ by\ the\ diagonal\ linear\ solver\ module}}
+\DoxyCodeLine{00254\ \textcolor{comment}{\ *\ I\ \ \ \ -\/\ \ called\ by\ the\ iterative\ linear\ solver\ module}}
+\DoxyCodeLine{00255\ \textcolor{comment}{\ *\ BP\ \ \ -\/\ \ called\ by\ the\ band\ preconditioner\ module}}
+\DoxyCodeLine{00256\ \textcolor{comment}{\ *\ BBDP\ -\/\ \ called\ by\ the\ band-\/block\ diagonal\ preconditioner\ module}}
+\DoxyCodeLine{00257\ \textcolor{comment}{\ *\ F\ \ \ \ -\/\ \ called\ by\ the\ Fortran-\/to-\/C\ interface}}
+\DoxyCodeLine{00258\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00259\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00260\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MODULES\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00261\ \textcolor{comment}{\ *\ NVECTOR\ \ \ \ \ \ \ \ \ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00262\ \textcolor{comment}{\ *\ FUNCTIONS\ \ \ \ \ \ \ \ \ \ CVODE/CVODES\ \ \ \ \ \ \ \ \ \ IDA\ \ \ \ \ \ \ \ \ \ \ \ \ KINSOL\ \ \ \ }}
+\DoxyCodeLine{00263\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00264\ \textcolor{comment}{\ *\ N\_VClone\ \ \ \ \ \ \ \ \ \ \ S\ Di\ I\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ I\ BBDP\ \ \ \ \ \ \ \ S\ I\ BBDP}}
+\DoxyCodeLine{00265\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00266\ \textcolor{comment}{\ *\ N\_VCloneEmpty\ \ \ \ \ \ F\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ F\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ F}}
+\DoxyCodeLine{00267\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00268\ \textcolor{comment}{\ *\ N\_VDestroy\ \ \ \ \ \ \ \ \ S\ Di\ I\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ I\ BBDP\ \ \ \ \ \ \ \ S\ I\ BBDP}}
+\DoxyCodeLine{00269\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00270\ \textcolor{comment}{\ *\ N\_VSpace\ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00271\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ *\ N\_VGetArrayPointer\ D\ B\ BP\ BBDP\ F\ \ \ \ \ \ \ \ \ D\ B\ BBDP\ \ \ \ \ \ \ \ BBDP\ F\ \ \ \ \ }}
+\DoxyCodeLine{00273\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00274\ \textcolor{comment}{\ *\ N\_VSetArrayPointer\ D\ F\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ D\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ F}}
+\DoxyCodeLine{00275\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00276\ \textcolor{comment}{\ *\ N\_VLinearSum\ \ \ \ \ \ \ S\ D\ Di\ I\ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ D\ I\ \ \ \ \ \ \ \ \ \ \ S\ I\ \ \ \ \ \ \ }}
+\DoxyCodeLine{00277\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00278\ \textcolor{comment}{\ *\ N\_VConst\ \ \ \ \ \ \ \ \ \ \ S\ I\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ I\ \ \ \ \ \ \ \ \ \ \ \ \ I\ \ \ \ \ \ \ }}
+\DoxyCodeLine{00279\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00280\ \textcolor{comment}{\ *\ N\_VProd\ \ \ \ \ \ \ \ \ \ \ \ S\ Di\ I\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ I\ \ \ \ \ \ \ \ \ \ \ \ \ S\ I\ \ \ \ \ \ \ }}
+\DoxyCodeLine{00281\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00282\ \textcolor{comment}{\ *\ N\_VDiv\ \ \ \ \ \ \ \ \ \ \ \ \ S\ Di\ I\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ I\ \ \ \ \ \ \ \ \ \ \ \ \ S\ I}}
+\DoxyCodeLine{00283\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00284\ \textcolor{comment}{\ *\ N\_VScale\ \ \ \ \ \ \ \ \ \ \ S\ D\ B\ Di\ I\ BP\ BBDP\ \ \ \ S\ D\ B\ I\ BBDP\ \ \ \ S\ I\ BBDP\ \ }}
+\DoxyCodeLine{00285\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ *\ N\_VAbs\ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ *\ N\_VInv\ \ \ \ \ \ \ \ \ \ \ \ \ S\ Di\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00289\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00290\ \textcolor{comment}{\ *\ N\_VAddConst\ \ \ \ \ \ \ \ S\ Di\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00291\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00292\ \textcolor{comment}{\ *\ N\_VDotProd\ \ \ \ \ \ \ \ \ I\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ I\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ I\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00293\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ *\ N\_VMaxNorm\ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00295\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00296\ \textcolor{comment}{\ *\ N\_VWrmsNorm\ \ \ \ \ \ \ \ S\ D\ B\ I\ BP\ BBDP\ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00297\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00298\ \textcolor{comment}{\ *\ N\_VWrmsNormMask\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00299\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00300\ \textcolor{comment}{\ *\ N\_VMin\ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00301\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00302\ \textcolor{comment}{\ *\ N\_VWL2Norm\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ I\ \ \ \ \ \ \ }}
+\DoxyCodeLine{00303\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00304\ \textcolor{comment}{\ *\ N\_VL1Norm\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ I}}
+\DoxyCodeLine{00305\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00306\ \textcolor{comment}{\ *\ N\_VCompare\ \ \ \ \ \ \ \ \ Di\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00307\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00308\ \textcolor{comment}{\ *\ N\_VInvTest\ \ \ \ \ \ \ \ \ Di\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00309\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00310\ \textcolor{comment}{\ *\ N\_VConstrMask\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00311\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00312\ \textcolor{comment}{\ *\ N\_VMinQuotient\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00313\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00314\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00315\ \ \ }
+\DoxyCodeLine{00316\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{sundials__nvector_8h_a7b59b159fc18c4da3383bda86453a063}{N\_VClone}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00317\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \mbox{\hyperlink{sundials__nvector_8h_a96f886068fd903a6b79dc492ea1eb970}{N\_VCloneEmpty}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00318\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a82729390d65c0f522bef60ef3a9fe437}{N\_VDestroy}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v);}
+\DoxyCodeLine{00319\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a4e2d8d1efde66f5b2355d76cd87ecbcd}{N\_VSpace}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *lrw,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *liw);}
+\DoxyCodeLine{00320\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{sundials__nvector_8h_ac84ad9011cf5e83d34622d671128a75e}{N\_VGetArrayPointer}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v);}
+\DoxyCodeLine{00321\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a8448b76ef1eaf4278cfb7040b21f795f}{N\_VSetArrayPointer}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *v\_data,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v);}
+\DoxyCodeLine{00322\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a85664141a78312ec58f4fe56e7311982}{N\_VLinearSum}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ a,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ b,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00323\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a710fcff35656c5ead6098074e1f6dda4}{N\_VConst}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00324\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_ae406c0f84b2ab262144235bc2721da39}{N\_VProd}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00325\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a3f39f17316a6e4fb856e9f9fcc530bef}{N\_VDiv}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00326\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a3f4411f978584de8f5050c93acd22d78}{N\_VScale}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00327\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a7ad8efe48f8b21b56bb55a4bfea47439}{N\_VAbs}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00328\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a1da3fb8de2255988e7d6af130ccd0d45}{N\_VInv}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00329\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a8504b19514fdebec03c152e80993ea47}{N\_VAddConst}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ b,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00330\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{sundials__nvector_8h_aaf3d8a78c274de5221d0ceb32e39be09}{N\_VDotProd}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ y);}
+\DoxyCodeLine{00331\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{sundials__nvector_8h_a67fb2de12571832c45676a567aae0128}{N\_VMaxNorm}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x);}
+\DoxyCodeLine{00332\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{sundials__nvector_8h_a076bd40ac07688915bbe5b0ec502c442}{N\_VWrmsNorm}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00333\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{sundials__nvector_8h_a8b646437756b51c481d10819033ccfaf}{N\_VWrmsNormMask}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00334\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{sundials__nvector_8h_a05576810e1a475653ffeb6761822b6c6}{N\_VMin}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x);}
+\DoxyCodeLine{00335\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{sundials__nvector_8h_a000c7c1d0f682a19892eba268d249ad5}{N\_VWL2Norm}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00336\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{sundials__nvector_8h_a5a831bfaa0c2307bf36cb973585d69a8}{N\_VL1Norm}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x);}
+\DoxyCodeLine{00337\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_ada0494787359cef46fceffc68f27f915}{N\_VCompare}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ c,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00338\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{sundials__nvector_8h_afa105c9d0627fb32ab83b9c83395b584}{N\_VInvTest}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00339\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{sundials__types_8h_a07b304fa671b5fb9ab94321327b48023}{booleantype}}\ \mbox{\hyperlink{sundials__nvector_8h_aeaf0584d63bcd1a48af83680c03d9a22}{N\_VConstrMask}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ c,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ x,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ m);}
+\DoxyCodeLine{00340\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ \mbox{\hyperlink{sundials__nvector_8h_a63a7446d67c96af5c8f0037c00ed56b0}{N\_VMinQuotient}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ num,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ denom);}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00343\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00344\ \textcolor{comment}{\ *\ Additional\ functions\ exported\ by\ NVECTOR\ module}}
+\DoxyCodeLine{00345\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00346\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00349\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00350\ \textcolor{comment}{\ *\ N\_VCloneEmptyVectorArray}}
+\DoxyCodeLine{00351\ \textcolor{comment}{\ *\ \ \ Creates\ (by\ cloning\ 'w')\ an\ array\ of\ 'count'\ empty\ N\_Vectors\ }}
+\DoxyCodeLine{00352\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00353\ \textcolor{comment}{\ *\ N\_VCloneVectorArray}}
+\DoxyCodeLine{00354\ \textcolor{comment}{\ *\ \ \ Creates\ (by\ cloning\ 'w')\ an\ array\ of\ 'count'\ N\_Vectors\ }}
+\DoxyCodeLine{00355\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00356\ \textcolor{comment}{\ *\ N\_VDestroyVectorArray}}
+\DoxyCodeLine{00357\ \textcolor{comment}{\ *\ \ \ Frees\ memory\ for\ an\ array\ of\ 'count'\ N\_Vectors\ that\ was}}
+\DoxyCodeLine{00358\ \textcolor{comment}{\ *\ \ \ created\ by\ a\ call\ to\ N\_VCloneVectorArray}}
+\DoxyCodeLine{00359\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00360\ \textcolor{comment}{\ *\ These\ functions\ are\ used\ by\ the\ SPGMR\ iterative\ linear\ solver\ }}
+\DoxyCodeLine{00361\ \textcolor{comment}{\ *\ module\ and\ by\ the\ CVODES\ and\ IDAS\ solvers.}}
+\DoxyCodeLine{00362\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00363\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *\mbox{\hyperlink{sundials__nvector_8h_ac42e32e8cc4ca61c8a5eff9285b2a6b8}{N\_VCloneEmptyVectorArray}}(\textcolor{keywordtype}{int}\ count,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00366\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *\mbox{\hyperlink{sundials__nvector_8h_a66a8bdca657e43a56588dcdde47b2f3c}{N\_VCloneVectorArray}}(\textcolor{keywordtype}{int}\ count,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ w);}
+\DoxyCodeLine{00367\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__nvector_8h_a23b5a004994c1dc23bd93cc88508463c}{N\_VDestroyVectorArray}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *vs,\ \textcolor{keywordtype}{int}\ count);}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00370\ \}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

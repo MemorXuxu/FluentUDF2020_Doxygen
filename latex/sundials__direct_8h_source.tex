@@ -1,0 +1,342 @@
+\doxysection{sundials\+\_\+direct.\+h}
+\hypertarget{sundials__direct_8h_source}{}\label{sundials__direct_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_direct.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_direct.h}}
+\mbox{\hyperlink{sundials__direct_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.6\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2010/12/22\ 22:18:49\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer:\ Radu\ Serban\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2006,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ This\ header\ file\ contains\ definitions\ and\ declarations\ for\ use\ by}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ generic\ direct\ linear\ solvers\ for\ Ax\ =\ b.\ It\ defines\ types\ for}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ dense\ and\ banded\ matrices\ and\ corresponding\ accessor\ macros.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#ifndef\ \_SUNDIALS\_DIRECT\_H}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ \_SUNDIALS\_DIRECT\_H}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__types_8h}{sundials/sundials\_types.h}}>}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ C\ O\ N\ S\ T\ A\ N\ T\ S}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ =================================================================}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ \ SUNDIALS\_DENSE:\ dense\ matrix}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ \ SUNDIALS\_BAND:\ \ banded\ matrix}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ SUNDIALS\_DENSE\ 1}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ SUNDIALS\_BAND\ \ 2}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ ==================================================================}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ Type\ definitions}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ ==================================================================}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ Type\ :\ DlsMat}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ The\ type\ DlsMat\ is\ defined\ to\ be\ a\ pointer\ to\ a\ structure}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ with\ various\ sizes,\ a\ data\ field,\ and\ an\ array\ of\ pointers\ to}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ the\ columns\ which\ defines\ a\ dense\ or\ band\ matrix\ for\ use\ in\ }}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ direct\ linear\ solvers.\ The\ M\ and\ N\ fields\ indicates\ the\ number\ }}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ of\ rows\ and\ columns,\ respectively.\ The\ data\ field\ is\ a\ one\ }}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ dimensional\ array\ used\ for\ component\ storage.\ The\ cols\ field\ }}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ stores\ the\ pointers\ in\ data\ for\ the\ beginning\ of\ each\ column.}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ For\ DENSE\ matrices,\ the\ relevant\ fields\ in\ DlsMat\ are:}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ \ \ \ type\ \ =\ SUNDIALS\_DENSE}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ \ \ \ M\ \ \ \ \ -\/\ number\ of\ rows}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ \ \ \ N\ \ \ \ \ -\/\ number\ of\ columns}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ \ \ \ ldim\ \ -\/\ leading\ dimension\ (ldim\ >=\ M)}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ \ \ \ data\ \ -\/\ pointer\ to\ a\ contiguous\ block\ of\ realtype\ variables}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ \ \ \ ldata\ -\/\ length\ of\ the\ data\ array\ =ldim*N}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *\ \ \ \ cols\ \ -\/\ array\ of\ pointers.\ cols[j]\ points\ to\ the\ first\ element\ }}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ of\ the\ j-\/th\ column\ of\ the\ matrix\ in\ the\ array\ data.}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *\ The\ elements\ of\ a\ dense\ matrix\ are\ stored\ columnwise\ (i.e\ columns\ }}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ are\ stored\ one\ on\ top\ of\ the\ other\ in\ memory).\ }}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *\ If\ A\ is\ of\ type\ DlsMat,\ then\ the\ (i,j)th\ element\ of\ A\ (with\ }}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ 0\ <=\ i\ <\ M\ and\ 0\ <=\ j\ <\ N)\ is\ given\ by\ (A-\/>data)[j*n+i].\ }}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ The\ DENSE\_COL\ and\ DENSE\_ELEM\ macros\ below\ allow\ a\ user\ to\ access\ }}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *\ efficiently\ individual\ matrix\ elements\ without\ writing\ out\ explicit\ }}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ *\ data\ structure\ references\ and\ without\ knowing\ too\ much\ about\ the\ }}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *\ underlying\ element\ storage.\ The\ only\ storage\ assumption\ needed\ is\ }}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *\ that\ elements\ are\ stored\ columnwise\ and\ that\ a\ pointer\ to\ the\ }}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ jth\ column\ of\ elements\ can\ be\ obtained\ via\ the\ DENSE\_COL\ macro.}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ For\ BAND\ matrices,\ the\ relevant\ fields\ in\ DlsMat\ are:}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ \ \ \ type\ \ =\ SUNDIALS\_BAND}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *\ \ \ \ M\ \ \ \ \ -\/\ number\ of\ rows}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ \ \ \ N\ \ \ \ \ -\/\ number\ of\ columns}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ \ \ \ mu\ \ \ \ -\/\ upper\ bandwidth,\ 0\ <=\ mu\ <=\ min(M,N)}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ \ \ \ ml\ \ \ \ -\/\ lower\ bandwidth,\ 0\ <=\ ml\ <=\ min(M,N)}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ \ \ \ s\_mu\ \ -\/\ storage\ upper\ bandwidth,\ mu\ <=\ s\_mu\ <=\ N-\/1.}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ The\ dgbtrf\ routine\ writes\ the\ LU\ factors\ into\ the\ storage\ }}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ for\ A.\ The\ upper\ triangular\ factor\ U,\ however,\ may\ have\ }}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ an\ upper\ bandwidth\ as\ big\ as\ MIN(N-\/1,mu+ml)\ because\ of\ }}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ partial\ pivoting.\ The\ s\_mu\ field\ holds\ the\ upper\ }}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ bandwidth\ allocated\ for\ A.}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ \ \ \ ldim\ \ -\/\ leading\ dimension\ (ldim\ >=\ s\_mu)}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ \ \ \ data\ \ -\/\ pointer\ to\ a\ contiguous\ block\ of\ realtype\ variables}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ \ \ \ ldata\ -\/\ length\ of\ the\ data\ array\ =ldim*(s\_mu+ml+1)}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ \ \ \ cols\ \ -\/\ array\ of\ pointers.\ cols[j]\ points\ to\ the\ first\ element\ }}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ of\ the\ j-\/th\ column\ of\ the\ matrix\ in\ the\ array\ data.}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *\ The\ BAND\_COL,\ BAND\_COL\_ELEM,\ and\ BAND\_ELEM\ macros\ below\ allow\ a\ }}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *\ user\ to\ access\ individual\ matrix\ elements\ without\ writing\ out\ }}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *\ explicit\ data\ structure\ references\ and\ without\ knowing\ too\ much\ }}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *\ about\ the\ underlying\ element\ storage.\ The\ only\ storage\ assumption\ }}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ *\ needed\ is\ that\ elements\ are\ stored\ columnwise\ and\ that\ a\ pointer\ }}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ *\ into\ the\ jth\ column\ of\ elements\ can\ be\ obtained\ via\ the\ BAND\_COL\ }}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ *\ macro.\ The\ BAND\_COL\_ELEM\ macro\ selects\ an\ element\ from\ a\ column}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ *\ which\ has\ already\ been\ isolated\ via\ BAND\_COL.\ The\ macro\ }}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *\ BAND\_COL\_ELEM\ allows\ the\ user\ to\ avoid\ the\ translation\ }}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *\ from\ the\ matrix\ location\ (i,j)\ to\ the\ index\ in\ the\ array\ returned\ }}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ by\ BAND\_COL\ at\ which\ the\ (i,j)th\ element\ is\ stored.\ }}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct___dls_mat}{\_DlsMat}}\ \{}
+\DoxyCodeLine{00115\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___dls_mat_ac765329451135abec74c45e1897abf26}{type}};}
+\DoxyCodeLine{00116\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___dls_mat_a83a1fabf7721f116c89d4c30660d2f17}{M}};}
+\DoxyCodeLine{00117\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___dls_mat_a0023425b805009a47daec2c087710540}{N}};}
+\DoxyCodeLine{00118\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___dls_mat_a84d71f02e9ad617d6b1d79f0b0e638ef}{ldim}};}
+\DoxyCodeLine{00119\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___dls_mat_a505420e364a291edd959e1d946229514}{mu}};}
+\DoxyCodeLine{00120\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___dls_mat_a1995dd912e1dfd3a96d31f67e4d1c9c3}{ml}};}
+\DoxyCodeLine{00121\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___dls_mat_ae712f9692d43419b78f3cef233fb19ed}{s\_mu}};}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{struct___dls_mat_a667f7cee6a7350572d0604136fcb13e5}{data}};}
+\DoxyCodeLine{00123\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct___dls_mat_a8f1635cba34a3c1d891e53e3a918bded}{ldata}};}
+\DoxyCodeLine{00124\ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **\mbox{\hyperlink{struct___dls_mat_a3199c3a216ef7175437a773351ea6291}{cols}};}
+\DoxyCodeLine{00125\ \}\ *\mbox{\hyperlink{sundials__direct_8h_ab480e63f395d64f94cd2ab609cbd26c6}{DlsMat}};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ ==================================================================}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ Data\ accessor\ macros}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ ==================================================================}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ *\ DENSE\_COL\ and\ DENSE\_ELEM}}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *\ DENSE\_COL(A,j)\ references\ the\ jth\ column\ of\ the\ M-\/by-\/N\ dense}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *\ matrix\ A,\ 0\ <=\ j\ <\ N.\ The\ type\ of\ the\ expression\ DENSE\_COL(A,j)\ }}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *\ is\ (realtype\ *).\ After\ the\ assignment\ in\ the\ usage\ above,\ col\_j\ }}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ may\ be\ treated\ as\ an\ array\ indexed\ from\ 0\ to\ M-\/1.\ The\ (i,j)-\/th\ }}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ element\ of\ A\ is\ thus\ referenced\ by\ col\_j[i].}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ DENSE\_ELEM(A,i,j)\ references\ the\ (i,j)th\ element\ of\ the\ dense\ }}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ M-\/by-\/N\ matrix\ A,\ 0\ <=\ i\ <\ M\ ;\ 0\ <=\ j\ <\ N.}}
+\DoxyCodeLine{00146\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ DENSE\_COL(A,j)\ ((A-\/>cols)[j])}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ DENSE\_ELEM(A,i,j)\ ((A-\/>cols)[j][i])}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00155\ \textcolor{comment}{\ *\ BAND\_COL,\ BAND\_COL\_ELEM,\ and\ BAND\_ELEM}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ \ }}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *\ BAND\_COL(A,j)\ references\ the\ diagonal\ element\ of\ the\ jth\ column\ }}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *\ of\ the\ N\ by\ N\ band\ matrix\ A,\ 0\ <=\ j\ <=\ N-\/1.\ The\ type\ of\ the\ }}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ *\ expression\ BAND\_COL(A,j)\ is\ realtype\ *.\ The\ pointer\ returned\ by\ }}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *\ the\ call\ BAND\_COL(A,j)\ can\ be\ treated\ as\ an\ array\ which\ is\ }}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ *\ indexed\ from\ -\/(A-\/>mu)\ to\ (A-\/>ml).}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ *\ BAND\_COL\_ELEM\ references\ the\ (i,j)th\ entry\ of\ the\ band\ matrix\ A\ }}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ *\ when\ used\ in\ conjunction\ with\ BAND\_COL.\ The\ index\ (i,j)\ should\ }}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ *\ satisfy\ j-\/(A-\/>mu)\ <=\ i\ <=\ j+(A-\/>ml).}}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ *\ BAND\_ELEM(A,i,j)\ references\ the\ (i,j)th\ element\ of\ the\ M-\/by-\/N\ }}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ *\ band\ matrix\ A,\ where\ 0\ <=\ i,j\ <=\ N-\/1.\ The\ location\ (i,j)\ should\ }}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ *\ further\ satisfy\ j-\/(A-\/>mu)\ <=\ i\ <=\ j+(A-\/>ml).\ }}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00174\ \ }
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ BAND\_COL(A,j)\ (((A-\/>cols)[j])+(A-\/>s\_mu))}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ BAND\_COL\_ELEM(col\_j,i,j)\ (col\_j[(i)-\/(j)])}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ BAND\_ELEM(A,i,j)\ ((A-\/>cols)[j][(i)-\/(j)+(A-\/>s\_mu)])}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ *\ ==================================================================}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ *\ Exported\ function\ prototypes\ (functions\ working\ on\ dlsMat)}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ *\ ==================================================================}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ *\ Function:\ NewDenseMat}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *\ NewDenseMat\ allocates\ memory\ for\ an\ M-\/by-\/N\ dense\ matrix\ and}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ *\ returns\ the\ storage\ allocated\ (type\ DlsMat).\ NewDenseMat}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ *\ returns\ NULL\ if\ the\ request\ for\ matrix\ storage\ cannot\ be}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ *\ satisfied.\ See\ the\ above\ documentation\ for\ the\ type\ DlsMat}}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ *\ for\ matrix\ storage\ details.}}
+\DoxyCodeLine{00194\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00195\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ \mbox{\hyperlink{sundials__direct_8h_a7693494abef46229ef5e24e5615876f8}{NewDenseMat}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ M,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}});}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ *\ Function:\ NewBandMat}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ *\ NewBandMat\ allocates\ memory\ for\ an\ M-\/by-\/N\ band\ matrix\ }}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ *\ with\ upper\ bandwidth\ mu,\ lower\ bandwidth\ ml,\ and\ storage\ upper}}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ *\ bandwidth\ smu.\ Pass\ smu\ as\ follows\ depending\ on\ whether\ A\ will\ }}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ *\ be\ LU\ factored:}}
+\DoxyCodeLine{00207\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00208\ \textcolor{comment}{\ *\ (1)\ Pass\ smu\ =\ mu\ if\ A\ will\ not\ be\ factored.}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *\ (2)\ Pass\ smu\ =\ MIN(N-\/1,mu+ml)\ if\ A\ will\ be\ factored.}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ *\ NewBandMat\ returns\ the\ storage\ allocated\ (type\ DlsMat)\ or}}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ *\ NULL\ if\ the\ request\ for\ matrix\ storage\ cannot\ be\ satisfied.}}
+\DoxyCodeLine{00214\ \textcolor{comment}{\ *\ See\ the\ documentation\ for\ the\ type\ DlsMat\ for\ matrix\ storage}}
+\DoxyCodeLine{00215\ \textcolor{comment}{\ *\ details.}}
+\DoxyCodeLine{00216\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00217\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ \mbox{\hyperlink{sundials__direct_8h_a4f060a6aa400d66a824b290f5bb5966d}{NewBandMat}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}},\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ mu,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ ml,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ smu);}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00223\ \textcolor{comment}{\ *\ Functions:\ DestroyMat}}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ *\ DestroyMat\ frees\ the\ memory\ allocated\ by\ NewDenseMat\ or\ NewBandMat}}
+\DoxyCodeLine{00226\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00227\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__direct_8h_a58455f92bee3b8af244dac64364dd09f}{DestroyMat}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A);}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ Function:\ NewIntArray}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00235\ \textcolor{comment}{\ *\ NewIntArray\ allocates\ memory\ an\ array\ of\ N\ int's\ and\ returns}}
+\DoxyCodeLine{00236\ \textcolor{comment}{\ *\ the\ pointer\ to\ the\ memory\ it\ allocates.\ If\ the\ request\ for}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ *\ memory\ storage\ cannot\ be\ satisfied,\ it\ returns\ NULL.}}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00239\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{sundials__direct_8h_ae7924cd6f66548ee102375340cefe371}{NewIntArray}}(\textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}});}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00244\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00245\ \textcolor{comment}{\ *\ Function:\ NewLintArray}}
+\DoxyCodeLine{00246\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00247\ \textcolor{comment}{\ *\ NewLintArray\ allocates\ memory\ an\ array\ of\ N\ long\ int's\ and\ returns}}
+\DoxyCodeLine{00248\ \textcolor{comment}{\ *\ the\ pointer\ to\ the\ memory\ it\ allocates.\ If\ the\ request\ for}}
+\DoxyCodeLine{00249\ \textcolor{comment}{\ *\ memory\ storage\ cannot\ be\ satisfied,\ it\ returns\ NULL.}}
+\DoxyCodeLine{00250\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00251\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{sundials__direct_8h_ad4f2ad4296eb5b56d9db7537bf872669}{NewLintArray}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}});}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00256\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00257\ \textcolor{comment}{\ *\ Function:\ NewRealArray}}
+\DoxyCodeLine{00258\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00259\ \textcolor{comment}{\ *\ NewRealArray\ allocates\ memory\ an\ array\ of\ N\ realtype\ and\ returns}}
+\DoxyCodeLine{00260\ \textcolor{comment}{\ *\ the\ pointer\ to\ the\ memory\ it\ allocates.\ If\ the\ request\ for}}
+\DoxyCodeLine{00261\ \textcolor{comment}{\ *\ memory\ storage\ cannot\ be\ satisfied,\ it\ returns\ NULL.}}
+\DoxyCodeLine{00262\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00263\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{sundials__direct_8h_ad4ea4cf6a7615343b0a61b6a9e85232d}{NewRealArray}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sg__pollut_8h_a2be6b2e3a94031359aa1b0cdef72fd9ea2c63acbe79d9f41ba6bb7766e9c37702}{N}});}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00268\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00269\ \textcolor{comment}{\ *\ Function:\ DestroyArray}}
+\DoxyCodeLine{00270\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00271\ \textcolor{comment}{\ *\ DestroyArray\ frees\ memory\ allocated\ by\ NewIntArray,\ NewLintArray,}}
+\DoxyCodeLine{00272\ \textcolor{comment}{\ *\ or\ NewRealArray.}}
+\DoxyCodeLine{00273\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00274\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__direct_8h_aabd638bb03238ed39e5f8a11f173930c}{DestroyArray}}(\textcolor{keywordtype}{void}\ *p);}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00279\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00280\ \textcolor{comment}{\ *\ Function\ :\ AddIdentity}}
+\DoxyCodeLine{00281\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00282\ \textcolor{comment}{\ *\ AddIdentity\ adds\ 1.0\ to\ the\ main\ diagonal\ (A\_ii,\ i=1,2,...,N-\/1)\ of}}
+\DoxyCodeLine{00283\ \textcolor{comment}{\ *\ the\ M-\/by-\/N\ matrix\ A\ (M>=\ N)\ and\ stores\ the\ result\ back\ in\ A.}}
+\DoxyCodeLine{00284\ \textcolor{comment}{\ *\ AddIdentity\ is\ typically\ used\ with\ square\ matrices.}}
+\DoxyCodeLine{00285\ \textcolor{comment}{\ *\ AddIdentity\ does\ not\ check\ for\ M\ >=\ N\ and\ therefore\ a\ segmentation}}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ *\ fault\ will\ occur\ if\ M\ <\ N!}}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__direct_8h_a3b19817792b8ba9465675f36833dc9bf}{AddIdentity}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A);}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00293\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ *\ Function\ :\ SetToZero}}
+\DoxyCodeLine{00295\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00296\ \textcolor{comment}{\ *\ SetToZero\ sets\ all\ the\ elements\ of\ the\ M-\/by-\/N\ matrix\ A\ to\ 0.0.}}
+\DoxyCodeLine{00297\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00298\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__direct_8h_a5c498ec52cebe02dab67ab01b4c696f9}{SetToZero}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A);}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00303\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00304\ \textcolor{comment}{\ *\ Functions:\ PrintMat}}
+\DoxyCodeLine{00305\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00306\ \textcolor{comment}{\ *\ This\ function\ prints\ the\ M-\/by-\/N\ (dense\ or\ band)\ matrix\ A\ to}}
+\DoxyCodeLine{00307\ \textcolor{comment}{\ *\ standard\ output\ as\ it\ would\ normally\ appear\ on\ paper.}}
+\DoxyCodeLine{00308\ \textcolor{comment}{\ *\ It\ is\ intended\ as\ debugging\ tools\ with\ small\ values\ of\ M\ and\ N.}}
+\DoxyCodeLine{00309\ \textcolor{comment}{\ *\ The\ elements\ are\ printed\ using\ the\ \%g/\%lg/\%Lg\ option.\ }}
+\DoxyCodeLine{00310\ \textcolor{comment}{\ *\ A\ blank\ line\ is\ printed\ before\ and\ after\ the\ matrix.}}
+\DoxyCodeLine{00311\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00312\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__direct_8h_ae37b1d59c0847d0b51f9ffc5b9778580}{PrintMat}}(\mbox{\hyperlink{struct___dls_mat}{DlsMat}}\ A);}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00318\ \textcolor{comment}{\ *\ ==================================================================}}
+\DoxyCodeLine{00319\ \textcolor{comment}{\ *\ Exported\ function\ prototypes\ (functions\ working\ on\ realtype**)}}
+\DoxyCodeLine{00320\ \textcolor{comment}{\ *\ ==================================================================}}
+\DoxyCodeLine{00321\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **\mbox{\hyperlink{sundials__direct_8h_a90501315faf1fd2af315fab85d8e1208}{newDenseMat}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ m,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00324\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **\mbox{\hyperlink{sundials__direct_8h_ab758a8ca3fb157ea1ca9de9fb7942b12}{newBandMat}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ smu,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ ml);}
+\DoxyCodeLine{00325\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__direct_8h_a59f15e07349ca6718042528b1b744516}{destroyMat}}(\mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **a);}
+\DoxyCodeLine{00326\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{sundials__direct_8h_ab374fda5d3cdeec54a479b695faba75b}{newIntArray}}(\textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00327\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{sundials__direct_8h_a8b318a6ec6cbb3b92051df7c216d2eae}{newLintArray}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00328\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *\mbox{\hyperlink{sundials__direct_8h_afc47314968cd7e3621d3a8a253762209}{newRealArray}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ m);}
+\DoxyCodeLine{00329\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sundials__direct_8h_a22707fbf5a61a7459fdfd764bf31074b}{destroyArray}}(\textcolor{keywordtype}{void}\ *v);}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00333\ \}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

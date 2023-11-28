@@ -1,0 +1,269 @@
+\doxysection{tghash.\+h}
+\hypertarget{tghash_8h_source}{}\label{tghash_8h_source}\index{fluent20.1.0/tgrid/src/tghash.h@{fluent20.1.0/tgrid/src/tghash.h}}
+\mbox{\hyperlink{tghash_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ MurmurHash3\ was\ written\ by\ Austin\ Appleby,\ and\ is\ placed\ in\ the\ public}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ domain.\ The\ author\ hereby\ disclaims\ copyright\ to\ this\ source\ code.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ \_\_\_\_TG\_MHASH\_H\_}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ \_\_\_\_TG\_MHASH\_H\_}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{environ_8h}{environ.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rmath_8h}{rmath.h}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rstring_8h}{rstring.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{handlers_8h}{handlers.h}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{hash_8h}{hash.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}tg\_entity.h"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tg__mpt_8h}{tg\_mpt.h}}"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ BIG\_CONSTANT(x)\ (x)}}
+\DoxyCodeLine{00026\ \textcolor{comment}{/*\ Other\ compilers*/}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#else\ \ \ }\textcolor{comment}{/*\ defined(\_MSC\_VER)*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ BIG\_CONSTANT(x)\ (x\#\#LLU)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !defined(\_MSC\_VER)*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ DEFAULT\_SEED\ \ 0xdeadbeef}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#ifndef\ TG\_MHASH\_DIAGNOSTIC}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ TG\_MHASH\_DIAGNOSTIC\ 0}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#ifndef\ MEM\_USEAGE}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ MEM\_USEAGE\ 0}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__ptr__ptr}{hash\_ptr\_ptr}}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__ptr__ptr_a63c909149861a67f11e5f07f7d8e2974}{n}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ size\ of\ table\ */}}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__ptr__ptr_a5fceca21a37c215251b2827b7e812a37}{max\_ne}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ when\ to\ resize\ */}}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__ptr__ptr_a0a7d43d894906d7e5b40d8ff87ef0ced}{ne}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no.\ of\ entries\ */}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ **\mbox{\hyperlink{structhash__ptr__ptr_a3980b653f697bb4bfb50c287d5a6e114}{keys}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ keys\ with\ len\ 1,\ 2,\ 3\ */}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ **\mbox{\hyperlink{structhash__ptr__ptr_af00cdd742d205932a8309628d39efd5e}{data}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ data\ */}}
+\DoxyCodeLine{00046\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__ptr__ptr_a44591dac6736e12b0af50222a2b065df}{init\_sz}};}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#if\ MEM\_USEAGE}}
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ max\_n;}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ max\_nu;}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#if\ TG\_MHASH\_DIAGNOSTIC}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \textcolor{keywordtype}{int}\ *nprobes;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \textcolor{keywordtype}{int}\ *collisions;}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__ptr__ptr}{hash\_ptr\_ptr}}\ \mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}};}
+\DoxyCodeLine{00057\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__ptr__ptr}{hash\_ptr\_ptr}}\ \mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}};}
+\DoxyCodeLine{00058\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__ptr__ptr}{hash\_ptr\_ptr}}\ \mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__ptr__int}{hash\_ptr\_int}}}
+\DoxyCodeLine{00061\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__ptr__int_a63c909149861a67f11e5f07f7d8e2974}{n}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ size\ of\ table\ */}}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__ptr__int_a5fceca21a37c215251b2827b7e812a37}{max\_ne}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ when\ to\ resize\ */}}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__ptr__int_a0a7d43d894906d7e5b40d8ff87ef0ced}{ne}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no.\ of\ entries\ */}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{void}\ **\mbox{\hyperlink{structhash__ptr__int_a3980b653f697bb4bfb50c287d5a6e114}{keys}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ keys\ with\ len\ 1,\ 2,\ 3\ */}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structhash__ptr__int_ac103627c1ad15cbec2f22d0abe6d54b6}{data}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ data\ */}}
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__ptr__int_a44591dac6736e12b0af50222a2b065df}{init\_sz}};}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#if\ MEM\_USEAGE}}
+\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ max\_n;}
+\DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ max\_nu;}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#if\ TG\_MHASH\_DIAGNOSTIC}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \textcolor{keywordtype}{int}\ *nprobes;}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \textcolor{keywordtype}{int}\ *collisions;}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00076\ \};}
+\DoxyCodeLine{00077\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__ptr__int}{hash\_ptr\_int}}\ \mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__index__ptr}{hash\_index\_ptr}}}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__index__ptr_a63c909149861a67f11e5f07f7d8e2974}{n}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ size\ of\ table\ */}}
+\DoxyCodeLine{00082\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__index__ptr_a5fceca21a37c215251b2827b7e812a37}{max\_ne}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ when\ to\ resize\ */}}
+\DoxyCodeLine{00083\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__index__ptr_a0a7d43d894906d7e5b40d8ff87ef0ced}{ne}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no.\ of\ entries\ */}}
+\DoxyCodeLine{00084\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ *\mbox{\hyperlink{structhash__index__ptr_a44497c5a594cbfc7be1a9eb63783995d}{keys}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ key\ len\ 1\ */}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ **\mbox{\hyperlink{structhash__index__ptr_af00cdd742d205932a8309628d39efd5e}{data}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ data\ */}}
+\DoxyCodeLine{00086\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__index__ptr_a44591dac6736e12b0af50222a2b065df}{init\_sz}};}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#if\ MEM\_USEAGE}}
+\DoxyCodeLine{00088\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ max\_n;}
+\DoxyCodeLine{00089\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ max\_nu;}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#if\ TG\_MHASH\_DIAGNOSTIC}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \textcolor{keywordtype}{int}\ *nprobes;}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \textcolor{keywordtype}{int}\ *collisions;}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00095\ \};}
+\DoxyCodeLine{00096\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__index__ptr}{hash\_index\_ptr}}\ \mbox{\hyperlink{structhash__index__ptr}{\_TG\_Mhash\_IndPtr\_1}};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__nptr__ptr}{hash\_nptr\_ptr}}}
+\DoxyCodeLine{00099\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__nptr__ptr_a63c909149861a67f11e5f07f7d8e2974}{n}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ size\ of\ table\ */}}
+\DoxyCodeLine{00101\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__nptr__ptr_a5fceca21a37c215251b2827b7e812a37}{max\_ne}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ when\ to\ resize\ */}}
+\DoxyCodeLine{00102\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__nptr__ptr_a0a7d43d894906d7e5b40d8ff87ef0ced}{ne}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no.\ of\ entries\ */}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structhash__nptr__ptr_af54e88426bb0991a292e59903f2fad55}{keys}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ keys\ with\ n\ len\ */}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structhash__nptr__ptr_a91a70b77df95bd8b0830b49a094c2acb}{data}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ data\ */}}
+\DoxyCodeLine{00105\ \ \ \ \ \mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ \mbox{\hyperlink{structhash__nptr__ptr_a44591dac6736e12b0af50222a2b065df}{init\_sz}};}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__nptr__ptr_ad6bc120bffc64dfc5230863a8ba96596}{data\_size}};}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__nptr__ptr_ae102c01788a1617aa7af9c5c25a92be5}{key\_size}};}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structhash__nptr__ptr_a1036f108384257f91c37222b33bf1031}{nkeys}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ len\ of\ key*/}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structhash__nptr__ptr_a694003fec99220f5a4a38407e8f77cd0}{nkey\_size}};}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structhash__nptr__ptr_acbf3c34e29fd6ee4175b36028573b08a}{free\_key}};}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structhash__nptr__ptr_aebddd8da70620ae8ab1640ecab3eec84}{removed\_key}};}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#if\ TG\_MHASH\_DIAGNOSTIC}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \textcolor{keywordtype}{int}\ *nprobes;}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \textcolor{keywordtype}{int}\ *collisions;}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00116\ \};}
+\DoxyCodeLine{00117\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structhash__nptr__ptr}{hash\_nptr\_ptr}}\ \mbox{\hyperlink{structhash__nptr__ptr}{Mhash}};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmhash__iterator}{mhash\_iterator}}}
+\DoxyCodeLine{00120\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structmhash__iterator_ae46bd26d7133dfe98f8cec7c5ac5c7a1}{i}};}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}}[2];}
+\DoxyCodeLine{00123\ \};}
+\DoxyCodeLine{00124\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmhash__iterator}{mhash\_iterator}}\ \mbox{\hyperlink{structmhash__iterator}{Mhash\_Iterator}};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{tghash_8h_af11255b930eccc91ecea4f3f81f29a98}{M1\_Hash\_Callback}})(\textcolor{keywordtype}{void}\ *,\textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00129\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{comment}{/*\ Hash\ with\ 1\ ptrs\ as\ key\ and\ 1\ ptr\ as\ data\ */}}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tghash_8h_ad4695000ae004bfd3a1b9190db6992b3}{M1\_Hash\_Init1}}(\mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ n,\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{tghash_8h_a269b5ee0de3ba9f7f5b0d75b79fa77d6}{M1\_Hash\_Get1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ **data);}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tghash_8h_aa05b73c311b04949c23ca07f6546905f}{M1\_Hash\_Get\_Pointer}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key);}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{tghash_8h_a87936846e14d33d27d0f94f1db0b6139}{M1\_Hash\_Find}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key);}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_ac2c8deb79e386c8b387450d7289bc88b}{M1\_Hash\_Put1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}},\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tghash_8h_a4f0902411aca88703316ab887dcfcb4a}{M1\_Hash\_Remove1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_aa6cd9e9368ce84e5d7c79942d30b8590}{M1\_Hash\_Update1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}},}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \ \mbox{\hyperlink{tghash_8h_a7fc2deb5db866073262f86075f108efb}{M1\_Hash\_Update\_Existing}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}});}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a75875fc6956e2bc19133bdd51ef1a78f}{M1\_Hash\_Clear}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht);}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a4a4128549f2ff086a34d14410f72a804}{M1\_Hash\_Reset}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht);}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_ad4366720671023756b188980d8c2ed59}{M1\_Hash\_Free}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ **ht);}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a074b0d6d2f494a51d7ce0d3c5d2ef3ea}{M1\_Hash\_Free\_With\_Data}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ **ht,\ \mbox{\hyperlink{tghash_8h_af11255b930eccc91ecea4f3f81f29a98}{M1\_Hash\_Callback}}\ hcb);}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{tghash_8h_a45dee89ad44b71184bb383a3d0ece571}{M1\_Hash\_Memory\_Usage}}(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht);}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{comment}{/*\ Hash\ with\ 2\ ptrs\ as\ key\ and\ 1\ ptr\ as\ data\ */}}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tghash_8h_a42b698676c5bea9651aca0408bdd21f1}{M2\_Hash\_Init1}}(\mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ n,\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tghash_8h_a7483f77efcd9776eee67bf533798ce0b}{M2\_Hash\_Get}}(\mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key);}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a028b9ffaa0d148787b36ea4cc1b9857e}{M2\_Hash\_Put1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}},\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tghash_8h_a9b2ed3a320706c75753e6eef1677b9a5}{M2\_Hash\_Remove1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_ac0104c58d081bb646e70c56731b3aa1c}{M2\_Hash\_Update1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}},\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tghash_8h_a76b0d1238bce320893bd089806dff744}{M2\_Hash\_Update\_Existing}}(\mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}});}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a70a73f0135b24464bb5392b3f4dce84b}{M2\_Hash\_Clear}}(\mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}}\ *ht);}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a96b09cc41edcb0d98098c032276392e2}{M2\_Hash\_Free}}(\mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}}\ **ht);}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{float}\ \ \mbox{\hyperlink{tghash_8h_a03a3a423619407a14206d7d806a3d81f}{M2\_Hash\_Memory\_Usage}}(\mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}}\ *ht);}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{comment}{/*\ Hash\ with\ 3\ ptrs\ as\ key\ and\ 1\ ptr\ as\ data\ */}}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tghash_8h_a479b711880c9bfa27a879c3744ab2cd5}{M3\_Hash\_Init1}}(\mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ n,\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tghash_8h_a0087df4e615097706465af08e093764f}{M3\_Hash\_Get}}(\mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key);}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_af8e8529f2a0a68934b3aa72b43c75c26}{M3\_Hash\_Put1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}},\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tghash_8h_a52ff12b87b731144c38611bb10528f61}{M3\_Hash\_Remove1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a596dc74f07974cceff94fbafe87e06c9}{M3\_Hash\_Update1}}(\mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}},\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tghash_8h_a770e28c1238e6c1cb51778d5a2fab933}{M3\_Hash\_Update\_Existing}}(\mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}});}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_ad11cbc2a7bc33cdd17e5f715cf7aaa1c}{M3\_Hash\_Clear}}(\mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}}\ *ht);}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a33857bc4e4d4d4face519d744445d170}{M3\_Hash\_Free}}(\mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}}\ **ht);}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a65332d9b90e0c97b36658ecc6dcab848}{M3\_Hash\_Memory\_Usage}}(\mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}}\ *ht);}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{comment}{/*\ Hash\ with\ n\ ptrs\ as\ key\ and\ n\ ptr\ as\ data\ */}}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tghash_8h_a24eead516a9d05110bdc8b644339e721}{M\_Hash\_Init1}}(\mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ n,\textcolor{keywordtype}{size\_t}\ dsz,}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ nkeys,\ \textcolor{keywordtype}{size\_t}\ ksz,\ }
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{tghash_8h_a982c330a00003affe6f705f07ae49a0f}{M\_Hash\_Find}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key);}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{tghash_8h_aee03625b8019a465383ac9ee29a6a803}{M\_Hash\_Get\_Data}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\textcolor{keywordtype}{void}\ *k,\textcolor{keywordtype}{void}\ *d);}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_abe31f6f9832ba64109b3450e7cc3e407}{M\_Hash\_Put1}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}},\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tghash_8h_ac7d7e0eea41730eb4a1b9e4e39ad692b}{M\_Hash\_Remove1}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a94947f4999a1d0b3a0704777c1be00a4}{M\_Hash\_Update1}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}},\ }
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tghash_8h_a3fd51d881e9b1369af98d39c09f143b3}{M\_Hash\_Update\_Existing}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structmhash__iterator_a72dfa6087f5d210f2d8dc84dc630c1f2}{e}});}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_ab0caaf0493681603504e1ea11a81d27c}{M\_Hash\_Clear}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht);}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a7d7ff2fda2bafcebda4bbd07178491b1}{M\_Hash\_Free}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ **ht);}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{float}\ \ \mbox{\hyperlink{tghash_8h_a615c66343ce89047ae7a9a2f2cee5a51}{M\_Hash\_Memory\_Usage}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht);}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{comment}{/*\ Hash\ with\ 1\ ptrs\ as\ key\ and\ 1\ int\ as\ data\ */}}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tghash_8h_ab232a9c3f29c6c32e445b4de9625e3fe}{M1i\_Hash\_Init1}}(\mbox{\hyperlink{src_2mesh_2entity_8h_a478161f63235b9b53c470b4ba5b59f28}{tgindex}}\ n,\ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{tghash_8h_a48fff634da30ad45abf723cc4fcdfdb9}{M1i\_Hash\_Get}}(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ *ht,\ }
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{int}\ *data);}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{tghash_8h_a092778fcef5b6b03dece3c5e6e3541c9}{M1i\_Hash\_Find}}(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key);}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a7d349cf1751402525b07bcf3b884919a}{M1i\_Hash\_Put1}}(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ *ht,\ }
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{int}\ val,\ }
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tghash_8h_af03dc57238bc6244bc9a91896b82baf7}{M1i\_Hash\_Remove1}}(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ *ht,\ \textcolor{keywordtype}{void}\ *key,}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a8bee83c8fcf3262c908aad8f87ff1f09}{M1i\_Hash\_Update1}}(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ *ht,}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{int}\ val,\ }
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__mpt_8h_ad48d216269fc13f691e59c9107430374}{DEBUG\_DECL}});}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{tghash_8h_abcb8ec8d48b8b1c97453efc8e2d718d1}{M1i\_Hash\_Update\_Existing}}(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ *ht,}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *key,\ \textcolor{keywordtype}{int}\ val);}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_afd218d309fbe874e9893485ff235ef74}{M1i\_Hash\_Clear}}(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ *ht);}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{tghash_8h_a4235c33f82171b1401cc5bb7e446b319}{M1i\_Hash\_Free}}(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ **ht);}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{float}\ \ \mbox{\hyperlink{tghash_8h_a0218efe5c81f41e76b2cf6d66a4ddf4b}{M1i\_Hash\_Memory\_Usage}}(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ *ht,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{dbgmsg_8h_a98858dd5dea59756cfe716f0168de035}{msg}});}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#if\ TG\_MHASH\_DIAGNOSTIC}}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ M1\_Hash\_Statistics(\mbox{\hyperlink{structhash__ptr__ptr}{M1\_Hash}}\ *ht);}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ M2\_Hash\_Statistics(\mbox{\hyperlink{structhash__ptr__ptr}{M2\_Hash}}\ *ht);}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ M3\_Hash\_Statistics(\mbox{\hyperlink{structhash__ptr__ptr}{M3\_Hash}}\ *ht);}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ M\_Hash\_Statistics(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht);}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \ M1i\_Hash\_Statistics(\mbox{\hyperlink{structhash__ptr__int}{M1i\_Hash}}\ *ht);}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tghash_8h_a8a85670486d96ffe7274a7c1457af5f9}{M\_Hash\_Begin}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\mbox{\hyperlink{structmhash__iterator}{Mhash\_Iterator}}\ *it);\ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tghash_8h_a56586a36c126fd73e694029321de3093}{M\_Hash\_End}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\ \mbox{\hyperlink{structmhash__iterator}{Mhash\_Iterator}}\ *it);}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tghash_8h_a630f36f79ac6c3d013b6b5d0a09c1143}{M\_Hash\_Iterator\_Data}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\ \mbox{\hyperlink{structmhash__iterator}{Mhash\_Iterator}}\ *it,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tghash_8h_a98ae015ed4c60dc2b7c761b0e603bfc9}{M\_Hash\_Iterator\_Key}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\ \mbox{\hyperlink{structmhash__iterator}{Mhash\_Iterator}}\ *it,\ \textcolor{keywordtype}{void}\ *key);}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tghash_8h_ad7f670fae60cce7aa4b01a28d552d100}{M\_Hash\_Increment}}(\mbox{\hyperlink{structhash__nptr__ptr}{Mhash}}\ *ht,\ \mbox{\hyperlink{structmhash__iterator}{Mhash\_Iterator}}\ *it);}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00218\ \}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ M1\_Hash\_Init(n)\ M1\_Hash\_Init1(n,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ M2\_Hash\_Init(n)\ M2\_Hash\_Init1(n,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ M3\_Hash\_Init(n)\ M3\_Hash\_Init1(n,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ M1i\_Hash\_Init(n)\ \(\backslash\)}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\ \ \ \ M1i\_Hash\_Init1(n,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ M1\_Hash\_Get(ht,\ key,\ e)\ M1\_Hash\_Get1(ht,\ key,\ (void**)e)\ }}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#define\ M1\_Hash\_Put(ht,\ key,e)\(\backslash\)}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{M1\_Hash\_Put1(ht,\ key,\ e,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ M2\_Hash\_Put(ht,\ key,e)\(\backslash\)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{M2\_Hash\_Put1(ht,\ key,\ e,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ M3\_Hash\_Put(ht,\ key,e)\(\backslash\)}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{M3\_Hash\_Put1(ht,\ key,\ e,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ M1i\_Hash\_Put(ht,\ key,e)\(\backslash\)}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{M1i\_Hash\_Put1(ht,\ key,\ e,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ M1\_Hash\_Remove(ht,\ key)\(\backslash\)}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{M1\_Hash\_Remove1(ht,\ key,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ M2\_Hash\_Remove(ht,\ key)\(\backslash\)}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{M2\_Hash\_Remove1(ht,\ key,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ M3\_Hash\_Remove(ht,\ key)\(\backslash\)}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{M3\_Hash\_Remove1(ht,\ key\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ M1i\_Hash\_Remove(ht,\ key)\(\backslash\)}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{M1i\_Hash\_Remove1(ht,\ key,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ M1\_Hash\_Update(ht,\ key,e)\(\backslash\)}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{M1\_Hash\_Update1(ht,\ key,\ e,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ M2\_Hash\_Update(ht,\ key,e)\(\backslash\)}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{M2\_Hash\_Update1(ht,\ key,\ e,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ M3\_Hash\_Update(ht,\ key,e)\(\backslash\)}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{M3\_Hash\_Update1(ht,\ key,\ e,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ M1i\_Hash\_Update(ht,\ key,e)\(\backslash\)}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{M1i\_Hash\_Update1(ht,\ key,\ e,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ M\_Hash\_Init(n0,\ dsz,nkeys,ksz)\ \(\backslash\)}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\ \ \ \ M\_Hash\_Init1(n0,dsz,\ nkeys,ksz,DEBUG\_INFO)\ }}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ M\_Hash\_Put(ht,\ key,e)\ M\_Hash\_Put1(ht,\ key,\ e,\ DEBUG\_INFO)\ }}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ M\_Hash\_Remove(ht,\ key)\ M\_Hash\_Remove1(ht,\ key,DEBUG\_INFO)\ }}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#define\ M\_Hash\_Update(ht,\ key,e)\ M\_Hash\_Update1(ht,\ key,\ e,DEBUG\_INFO)\ }}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\_TG\_MHASH\_H\_*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00263\ }
+
+\end{DoxyCode}

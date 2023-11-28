@@ -1,0 +1,216 @@
+\doxysection{Arrayterator Class Reference}
+\hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator}{}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator}\index{Arrayterator@{Arrayterator}}
+Inheritance diagram for Arrayterator\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a262404cad0ef26d46b980ea9fa9e257e}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, \mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a335628f2e9085305224b4f9cc6e95ed5}{var}}, \mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_adb2535ae035c17f812efa2e91ae9f9a9}{buf\+\_\+size}}=None)
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_abf4a75d66a2d79adb80aadc1f506400d}{\+\_\+\+\_\+getattr\+\_\+\+\_\+}} (self, attr)
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a4a3d091289c5d4a7ed11e07ab4886155}{\+\_\+\+\_\+getitem\+\_\+\+\_\+}} (self, index)
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a89373316e996d4b88061f4de09a31563}{\+\_\+\+\_\+array\+\_\+\+\_\+}} (self)
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_acadc7f34e7b01f6c540af892244c112e}{flat}} (self)
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a7a596cec507a98f0d155b6847f5cfb39}{shape}} (self)
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a3d1374cfb30c05eeeb049c2197b5a824}{\+\_\+\+\_\+iter\+\_\+\+\_\+}} (self)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a335628f2e9085305224b4f9cc6e95ed5}{var}}
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_adb2535ae035c17f812efa2e91ae9f9a9}{buf\+\_\+size}}
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a550769bbd4e7537ff90a656f5b0c23b2}{start}}
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a2d6abedce0377a7a23305ce566382d23}{stop}}
+\item 
+\mbox{\hyperlink{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_ae5f3bfeb7e3cb5c8bc769d5504ebeeae}{step}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Buffered iterator for big arrays.
+
+`Arrayterator` creates a buffered iterator for reading big arrays in small
+contiguous blocks. The class is useful for objects stored in the
+file system. It allows iteration over the object *without* reading
+everything in memory; instead, small blocks are read and iterated over.
+
+`Arrayterator` can be used with any object that supports multidimensional
+slices. This includes NumPy arrays, but also variables from
+Scientific.IO.NetCDF or pynetcdf for example.
+
+Parameters
+----------
+var : array_like
+    The object to iterate over.
+buf_size : int, optional
+    The buffer size. If `buf_size` is supplied, the maximum amount of
+    data that will be read into memory is `buf_size` elements.
+    Default is None, which will read as many element as possible
+    into memory.
+
+Attributes
+----------
+var
+buf_size
+start
+stop
+step
+shape
+flat
+
+See Also
+--------
+ndenumerate : Multidimensional array iterator.
+flatiter : Flat array iterator.
+memmap : Create a memory-map to an array stored in a binary file on disk.
+
+Notes
+-----
+The algorithm works by first finding a "running dimension", along which
+the blocks will be extracted. Given an array of dimensions
+``(d1, d2, ..., dn)``, e.g. if `buf_size` is smaller than ``d1``, the
+first dimension will be used. If, on the other hand,
+``d1 < buf_size < d1*d2`` the second dimension will be used, and so on.
+Blocks are extracted along this dimension, and when the last block is
+returned the process continues from the next dimension, until all
+elements have been read.
+
+Examples
+--------
+>>> a = np.arange(3 * 4 * 5 * 6).reshape(3, 4, 5, 6)
+>>> a_itor = np.lib.Arrayterator(a, 2)
+>>> a_itor.shape
+(3, 4, 5, 6)
+
+Now we can iterate over ``a_itor``, and it will return arrays of size
+two. Since `buf_size` was smaller than any dimension, the first
+dimension will be iterated over first:
+
+>>> for subarr in a_itor:
+...     if not subarr.all():
+...         print(subarr, subarr.shape)
+...
+[[[[0 1]]]] (1, 1, 1, 2)\end{DoxyVerb}
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a262404cad0ef26d46b980ea9fa9e257e}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a262404cad0ef26d46b980ea9fa9e257e} 
+\index{Arrayterator@{Arrayterator}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{var,  }\item[{}]{buf\+\_\+size = {\ttfamily None} }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a89373316e996d4b88061f4de09a31563}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a89373316e996d4b88061f4de09a31563} 
+\index{Arrayterator@{Arrayterator}!\_\_array\_\_@{\_\_array\_\_}}
+\index{\_\_array\_\_@{\_\_array\_\_}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{\_\_array\_\_()}{\_\_array\_\_()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+array\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Return corresponding data.\end{DoxyVerb}
+ \Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_abf4a75d66a2d79adb80aadc1f506400d}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_abf4a75d66a2d79adb80aadc1f506400d} 
+\index{Arrayterator@{Arrayterator}!\_\_getattr\_\_@{\_\_getattr\_\_}}
+\index{\_\_getattr\_\_@{\_\_getattr\_\_}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{\_\_getattr\_\_()}{\_\_getattr\_\_()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+getattr\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{attr }\end{DoxyParamCaption})}
+
+\Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a4a3d091289c5d4a7ed11e07ab4886155}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a4a3d091289c5d4a7ed11e07ab4886155} 
+\index{Arrayterator@{Arrayterator}!\_\_getitem\_\_@{\_\_getitem\_\_}}
+\index{\_\_getitem\_\_@{\_\_getitem\_\_}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{\_\_getitem\_\_()}{\_\_getitem\_\_()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+getitem\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{index }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Return a new arrayterator.\end{DoxyVerb}
+ \Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a3d1374cfb30c05eeeb049c2197b5a824}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a3d1374cfb30c05eeeb049c2197b5a824} 
+\index{Arrayterator@{Arrayterator}!\_\_iter\_\_@{\_\_iter\_\_}}
+\index{\_\_iter\_\_@{\_\_iter\_\_}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{\_\_iter\_\_()}{\_\_iter\_\_()}}
+{\footnotesize\ttfamily \+\_\+\+\_\+iter\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_acadc7f34e7b01f6c540af892244c112e}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_acadc7f34e7b01f6c540af892244c112e} 
+\index{Arrayterator@{Arrayterator}!flat@{flat}}
+\index{flat@{flat}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{flat()}{flat()}}
+{\footnotesize\ttfamily flat (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}A 1-D flat iterator for Arrayterator objects.
+
+This iterator returns elements of the array to be iterated over in
+`Arrayterator` one by one. It is similar to `flatiter`.
+
+See Also
+--------
+Arrayterator
+flatiter
+
+Examples
+--------
+>>> a = np.arange(3 * 4 * 5 * 6).reshape(3, 4, 5, 6)
+>>> a_itor = np.lib.Arrayterator(a, 2)
+
+>>> for subarr in a_itor.flat:
+...     if not subarr:
+...         print(subarr, type(subarr))
+...
+0 <type 'numpy.int32'>\end{DoxyVerb}
+ \Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a7a596cec507a98f0d155b6847f5cfb39}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a7a596cec507a98f0d155b6847f5cfb39} 
+\index{Arrayterator@{Arrayterator}!shape@{shape}}
+\index{shape@{shape}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{shape()}{shape()}}
+{\footnotesize\ttfamily shape (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}The shape of the array to be iterated over.
+
+For an example, see `Arrayterator`.\end{DoxyVerb}
+ 
+
+\doxysubsection{Field Documentation}
+\Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_adb2535ae035c17f812efa2e91ae9f9a9}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_adb2535ae035c17f812efa2e91ae9f9a9} 
+\index{Arrayterator@{Arrayterator}!buf\_size@{buf\_size}}
+\index{buf\_size@{buf\_size}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{buf\_size}{buf\_size}}
+{\footnotesize\ttfamily buf\+\_\+size}
+
+\Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a550769bbd4e7537ff90a656f5b0c23b2}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a550769bbd4e7537ff90a656f5b0c23b2} 
+\index{Arrayterator@{Arrayterator}!start@{start}}
+\index{start@{start}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{start}{start}}
+{\footnotesize\ttfamily start}
+
+\Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_ae5f3bfeb7e3cb5c8bc769d5504ebeeae}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_ae5f3bfeb7e3cb5c8bc769d5504ebeeae} 
+\index{Arrayterator@{Arrayterator}!step@{step}}
+\index{step@{step}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{step}{step}}
+{\footnotesize\ttfamily step}
+
+\Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a2d6abedce0377a7a23305ce566382d23}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a2d6abedce0377a7a23305ce566382d23} 
+\index{Arrayterator@{Arrayterator}!stop@{stop}}
+\index{stop@{stop}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{stop}{stop}}
+{\footnotesize\ttfamily stop}
+
+\Hypertarget{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a335628f2e9085305224b4f9cc6e95ed5}\label{classnumpy_1_1lib_1_1arrayterator_1_1_arrayterator_a335628f2e9085305224b4f9cc6e95ed5} 
+\index{Arrayterator@{Arrayterator}!var@{var}}
+\index{var@{var}!Arrayterator@{Arrayterator}}
+\doxysubsubsection{\texorpdfstring{var}{var}}
+{\footnotesize\ttfamily var}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+fluent20.\+1.\+0/cortex/pylib/nexus/numpy/lib/\mbox{\hyperlink{arrayterator_8py}{arrayterator.\+py}}\end{DoxyCompactItemize}

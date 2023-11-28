@@ -1,0 +1,200 @@
+\doxysection{su\+\_\+front.\+h}
+\hypertarget{su__front_8h_source}{}\label{su__front_8h_source}\index{fluent20.1.0/tgrid/src/su\_front.h@{fluent20.1.0/tgrid/src/su\_front.h}}
+\mbox{\hyperlink{su__front_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ SU\_FRONT\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ SU\_FRONT\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tgrid_2src_2entity_8h}{entity.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tg__geom_8h}{tg\_geom.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{heap_8h}{heap.h}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{meshsize_8h}{meshsize.h}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfront__struct}{front\_struct}}\ \mbox{\hyperlink{structfront__struct}{Front}};}
+\DoxyCodeLine{00015\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structloop__struct}{loop\_struct}}\ \mbox{\hyperlink{structedge__loop__struct}{Loop}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfront__struct}{front\_struct}}}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{structheap__struct}{Heap}}\ *\mbox{\hyperlink{structfront__struct_ac855d55fdc15543a7425831379af753c}{heap}};\ \ \textcolor{comment}{/*\ heap\ to\ handle\ edges\ priority*/}}
+\DoxyCodeLine{00020\ \ \ \ \ }
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}*\ \mbox{\hyperlink{structfront__struct_a70a7b95801a22295e21040dfb8014977}{front\_edges}};\ \textcolor{comment}{/*thread\ to\ host\ edges\ at\ front*/}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{structloop__struct}{Loop}}\ *\mbox{\hyperlink{structfront__struct_af8a13b4ba1b4615f0ac07e1df5ff15bd}{loops}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ first\ loop\ */}}
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{structloop__struct}{Loop}}\ *\mbox{\hyperlink{structfront__struct_a58796b6df18441368cee2deaa60bfec8}{tail}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ last\ loop\ */}}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{structloop__struct}{Loop}}\ *\mbox{\hyperlink{structfront__struct_a216e162d5e7961f7dcbcebb5d37e8f48}{curloop}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ loop\ to\ extract\ from\ */}}
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{structloop__struct}{Loop}}\ *\mbox{\hyperlink{structfront__struct_a093ea7937e46b3b317a2b10deadc2696}{insloop}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ loop\ to\ insert\ in\ */}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{structedge__struct}{Edge}}\ *\mbox{\hyperlink{structfront__struct_a8974c88885ca3b8437cc699c946ba508}{cursor}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ next\ edge\ in\ loop\ (to\ select\ next)\ */}}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{structedge__struct}{Edge}}\ *\mbox{\hyperlink{structfront__struct_a2cd5ba87531a6bc5dd75ce1b86d7d185}{insedge}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ edge\ to\ insert\ after\ */}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structfront__struct_ad3a4ddf5da69699b2fcfff228d2cff82}{tree}};}
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfront__struct_acd1c9cd12354c40e632774d6a04ad07a}{min\_elsz}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ min\ elsize\ in\ current\ loops\ (cur\ sweep)\ */}}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfront__struct_afbb89fe6eda86d9984a055fa8b9de158}{max\_elsz}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max\ elsz\ on\ boundary\ loops\ */}}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfront__struct_abca95566b8318dc478f78dc7f7463666}{average\_elsz}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ average\ elsz\ on\ initial\ front\ */}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfront__struct_a9f59b34b1f25fe00023291b678246bcc}{length}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ of\ edges\ in\ loops\ */}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfront__struct_aa000dece862abd8e370b807a5387f22a}{nsweep}};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfront__struct_adcdc95f37b7b7a28d1f3c3932cf1884d}{edge\_selection\_type}};}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfront__struct_a0096b775bdb24035b6c0ec136eca1d31}{initialize\_selection}};}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{structfront__struct_a45b5921f59c23318bde6f1ae80757d3e}{failed\_selection}};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{structlscale__struct}{Lscale}}\ *\mbox{\hyperlink{structfront__struct_ac9b9aefc4340c00a0b052b6749c29578}{front\_sizing}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structfront__struct_abe84df85fcfa72e8c4174012de4b0ca2}{loopmem}};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfront__struct_a51cb9d5911cdaa93e4e60698d6583c85}{memid}};}
+\DoxyCodeLine{00049\ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00052\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{su__front_8h_a2ed332df4696233768771e93d4081c3fa6645c5106786b9528607ba12f6707c51}{FAILED\_SELECTION}},}
+\DoxyCodeLine{00054\ \ \ \ \ \mbox{\hyperlink{su__front_8h_a2ed332df4696233768771e93d4081c3fa7e9acbaf203d4374142ce62e0b58204e}{ORDERED\_PRIORITY\_SELECTION}},}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{su__front_8h_a2ed332df4696233768771e93d4081c3faba0e70f442bc1223fa131cee7ffc0f5d}{UNORDERED\_PRIORITY\_SELECTION}},}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{su__front_8h_a2ed332df4696233768771e93d4081c3fa70ba9536338a9e9f9192c37287d6dd90}{SEQUENTIAL\_SELECTION}}}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{su__front_8h_abc70f58fc0d3458d5dd0706b8fa48e4e}{loop\_classification}}}
+\DoxyCodeLine{00060\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{su__front_8h_abc70f58fc0d3458d5dd0706b8fa48e4ea402d70a1aca0c7468472f1196dadc21f}{UNKNOWN\_AFT\_LOOP}},}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{su__front_8h_abc70f58fc0d3458d5dd0706b8fa48e4eae7460d836678c6aa41482f5b8677edd1}{OFFSET\_AFT\_LOOP}},}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{su__front_8h_abc70f58fc0d3458d5dd0706b8fa48e4eaff5c97d72a52b9b15c74a54bed668f8e}{OUTER\_AFT\_LOOP}},}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{su__front_8h_abc70f58fc0d3458d5dd0706b8fa48e4ea3e1f9c3f7b81419d874314ea4195ff1c}{INNER\_AFT\_LOOP}}}
+\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structloop__struct}{loop\_struct}}}
+\DoxyCodeLine{00068\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{structheap__struct}{Heap}}\ *\mbox{\hyperlink{structloop__struct_ac855d55fdc15543a7425831379af753c}{heap}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ heap\ list\ of\ edges\ (priority\ queue)\ */}}
+\DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *\mbox{\hyperlink{structloop__struct_a743989b66f3b52f1eda2a8498a93da0b}{thread}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ edge\ thread\ holding\ edges\ */}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structloop__struct_a3242ecea550cee7b463f4dd279e19ff5}{isweep}};}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structloop__struct_acf89354123c3eb6268db069c01d5787a}{iclassification}};}
+\DoxyCodeLine{00073\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structloop__struct_acd1c9cd12354c40e632774d6a04ad07a}{min\_elsz}};}
+\DoxyCodeLine{00074\ \ \ \ \ \mbox{\hyperlink{structloop__struct}{Loop}}\ *\mbox{\hyperlink{structloop__struct_ac71a48f1c59f3ac0ea37805320fecd6b}{next}};}
+\DoxyCodeLine{00075\ \ \ \ \ \mbox{\hyperlink{structloop__struct}{Loop}}\ *\mbox{\hyperlink{structloop__struct_a54b675a54f6fc3326ab3250fcc18109b}{prev}};}
+\DoxyCodeLine{00076\ \};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{comment}{/*front\ node\ storage*/}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfront__node__struct}{front\_node\_struct}}}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfront__node__struct_a692fb5d8b7fa28b21fb8ee1834e0613a}{lscale}};}
+\DoxyCodeLine{00082\ \ \ \ \ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{structfront__node__struct_adc5a33c24031c978eeae95cff8efea95}{list}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ edges\ at\ node\ */}}
+\DoxyCodeLine{00083\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfront__node__struct_a4c976eebd03f883347b272f92218d760}{radius}};}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structfront__node__struct_a3d38120e86be80076de5434d5156f2e9}{n\_faces}};\ \ \textcolor{comment}{/*\ number\ of\ faces\ linked\ with\ the\ node\ */}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structfront__node__struct_af7fc3094673cc0f3a0881d30a1563aa6}{n\_edges}};\ \ \textcolor{comment}{/*\ number\ of\ edges\ linked\ with\ the\ node\ */}}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ SV\_FV\_STORAGE(v,t)\ (\&FRONT\_NODE\_STRUCT(v))}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ FV\_LIST(v)\ ((v)-\/>list)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ FV\_LSCALE(v)((v)-\/>lscale)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ FV\_RADIUS(v)((v)-\/>radius)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ FV\_N\_FACES(v)((v)-\/>n\_faces)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ FV\_N\_EDGES(v)((v)-\/>n\_edges)}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ FRONT\_EDGES(v)\ FV\_LIST(SV\_FV\_STORAGE(v,ENTITY\_THREAD(v)))}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ FRONT\_LSCALE(v)\ FV\_LSCALE(SV\_FV\_STORAGE(v,ENTITY\_THREAD(v)))}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ FRONT\_RADIUS(v)\ FV\_RADIUS(SV\_FV\_STORAGE(v,ENTITY\_THREAD(v)))}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ FRONT\_N\_FACES(v)\ FV\_N\_FACES(SV\_FV\_STORAGE(v,ENTITY\_THREAD(v)))}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ FRONT\_N\_EDGES(v)\ FV\_N\_EDGES(SV\_FV\_STORAGE(v,ENTITY\_THREAD(v)))}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{comment}{/*when\ a\ node\ is\ \ manifold\ must\ be\ locked:\ can\ not\ create\ any\ other\ triangle\ with\ this\ node*/}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ FRONT\_NODE\_IS\_MANIFOLD(v)\ ((FRONT\_N\_FACES(v)\ ==\ FRONT\_N\_EDGES(v))\ \&\&\(\backslash\)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (FRONT\_N\_EDGES(v)\ !=\ 0))}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{comment}{/*front\ edge\ storage*/}}
+\DoxyCodeLine{00107\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfront__edge__struct}{front\_edge\_struct}}}
+\DoxyCodeLine{00108\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfront__edge__struct_accc88ea9b0fec7b292d375d63465f933}{normal}}[3];}
+\DoxyCodeLine{00110\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfront__edge__struct_afdc39e33969e57a0457f991a551de125}{priority}};}
+\DoxyCodeLine{00111\ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{structfront__edge__struct_a8b5f1d548d816f235db50e47b45cb5f1}{angle}}[2];\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ min\ angle\ with\ edge\ */}}
+\DoxyCodeLine{00112\ \ \ \ \ \mbox{\hyperlink{structedge__struct}{Edge}}\ *\mbox{\hyperlink{structfront__edge__struct_a335a31e7f4391a1764c76bd02d4064a5}{edge}}[2];}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfront__edge__struct_a750b5d744c39a06bfb13e6eb010e35d0}{index}};}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfront__edge__struct_a2e0c451bdb326fc276979768c86734d4}{attempt}};}
+\DoxyCodeLine{00115\ \ \ \ \ \mbox{\hyperlink{structheap__struct}{Heap}}\ *\mbox{\hyperlink{structfront__edge__struct_ac855d55fdc15543a7425831379af753c}{heap}};}
+\DoxyCodeLine{00116\ \};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ FE\_NORMAL(e)((e)-\/>normal)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ FE\_PRIORITY(e)((e)-\/>priority)}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ FE\_ANGLE(e,i)((e)-\/>angle[i])}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ FE\_EDGE(e,i)((e)-\/>edge[i])}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ FE\_INDEX(e)((e)-\/>index)}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ FE\_HEAP(e)((e)-\/>heap)}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ FE\_ATTEMPT(e)((e)-\/>attempt)}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ SV\_FE\_STORAGE(v)\ \ \ (\&FRONT\_EDGE\_STRUCT(v))}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ EDGE\_NORMAL(e)\ \ \ \ \ FE\_NORMAL(SV\_FE\_STORAGE(e))}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ EDGE\_PRIORITY(e)\ \ \ FE\_PRIORITY(SV\_FE\_STORAGE(e))}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ EDGE\_ANGLE(e,i)\ \ \ \ FE\_ANGLE(SV\_FE\_STORAGE(e),i)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ EDGE\_EDGE(e,i)\ \ \ \ \ FE\_EDGE(SV\_FE\_STORAGE(e),i)}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ EDGE\_HEAP\_INDEX(e)\ FE\_INDEX(SV\_FE\_STORAGE(e))}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ EDGE\_HEAP(e)\ \ \ \ \ \ \ FE\_HEAP(SV\_FE\_STORAGE(e))}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ EDGE\_ATTEMPT(e)\ FE\_ATTEMPT(SV\_FE\_STORAGE(e))}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ MAX\_FRONT\_EDGE\_ATTEMPTS\ 5}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ MAX\_TRIANGLES\_PER\_NODE\ 250}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{comment}{/*\ how\ much\ should\ we\ delay\ priority\ for\ a\ front\ failure?\ */}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ FRONT\_FAILURE\_PRIORITY\_DELAY\ 3}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00147\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00148\ \{}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_ad49e1ef15a041b742ed59de2ec988a39}{\_TG\_Init\_Front\_Node}}(\mbox{\hyperlink{struct__tg__node__struct}{Node}}*);}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_a17b4271556153ec2b1c0a7a00f049a9c}{\_TG\_Init\_Front\_Node\_Storage}}(\mbox{\hyperlink{structthread__struct}{Thread}}*);}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{su__front_8h_a18f19e6300e0ee910f4d07901ef79d18}{\_TG\_Range\_Search\_In\_Front}}(\mbox{\hyperlink{structfront__struct}{Front}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ [],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}},\ \mbox{\hyperlink{structentity__struct}{Entity}}\ *[],}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_ad11a3642e78f9d7f11e517701b25a06d}{\_TG\_Restore\_Initial\_Front}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structfront__struct}{Front}}\ *\mbox{\hyperlink{su__front_8h_a57f0cf60148f2a0af07f7cf7284d8e08}{\_TG\_Create\_Front}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structsurface__struct}{Surf}}\ *,\ \mbox{\hyperlink{structlscale__struct}{Lscale}}\ *);}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_a8605e69466f308c0ddf2ff4d71a3711a}{\_TG\_Free\_Front}}(\mbox{\hyperlink{structfront__struct}{Front}}\ *);}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structfront__struct}{Front}}\ *\mbox{\hyperlink{su__front_8h_ab3c8993f3d2993944cde19eb65bd8434}{\_TG\_Create\_Poly\_Front}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_ad2c70dcd54240be1e1ec1a7f1c24d81f}{\_TG\_Setup\_Poly\_Front}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\mbox{\hyperlink{structfront__struct}{Front}}\ *,\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ []);}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_aa3fd36943318e9ae1f27f5c01c14e5c1}{\_TG\_Create\_Front\_Lscale}}(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{structsurface__struct}{Surf}}\ *,\ \mbox{\hyperlink{structfront__struct}{Front}}\ *,\ \mbox{\hyperlink{structlscale__struct}{Lscale}}\ *);}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_a5eab010e3bb3eb4e29e19f38f44668b1}{\_TG\_Free\_Front\_Lscale}}(\mbox{\hyperlink{structlscale__struct}{Lscale}}\ *);}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_a6798e81fafe885d74a5378f3e4dbbdf5}{\_TG\_Front\_Edge\_Node\_Normal}}\ (\mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ []);}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_a2550cb730521cc7928ba27534290adb7}{\_TG\_Order\_Front\_At\_Node}}\ (\mbox{\hyperlink{struct__tg__node__struct}{Node}}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{su__front_8h_afb6bc9eedb9bc22da8c03d26afb48fc5}{\_TG\_Front\_Edge\_Angle}}(\mbox{\hyperlink{structsurface__struct}{Surf}}*,\mbox{\hyperlink{structedge__struct}{Edge}}*,\mbox{\hyperlink{structedge__struct}{Edge}}*);}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{comment}{/*extern\ TG\_EXPORT\ real\ \_TG\_Front\_Edge\_Angle\_Using\_Connectivity(Surf*,Edge*,Edge*);*/}}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{su__front_8h_acc43548888bb9336ea13826dd8d3df62}{\_TG\_Front\_Neighbor\_Angle}}(\mbox{\hyperlink{structedge__struct}{Edge}}*,\textcolor{keywordtype}{int},\mbox{\hyperlink{structedge__struct}{Edge}}**,\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}*);}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ \mbox{\hyperlink{su__front_8h_aed9a9b5861cac379ee5e22553d451f85}{\_TG\_Front\_Edge\_Priority}}(\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{su__front_8h_a8d9446cdee1fee0a0c40e7e61d92df5c}{\_TG\_Front\_Edge\_Heap\_Position}}(\textcolor{keywordtype}{void}*,\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{su__front_8h_ad75f342c83a728507c07436b3532d612}{\_TG\_Front\_Edge\_Is\_In\_Heap}}(\textcolor{keywordtype}{void}\ *e);}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structedge__loop__struct}{Loop}}\ *\mbox{\hyperlink{su__front_8h_a3fd65947feff5eb892acf0a4eb839704}{\_TG\_First\_Loop}}(\mbox{\hyperlink{structfront__struct}{Front}}\ *);}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structedge__loop__struct}{Loop}}\ *\mbox{\hyperlink{su__front_8h_a8171fa8da8a38a39b3a38ba6e54e1802}{\_TG\_Get\_Loop}}(\textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{su__front_8h_a561a060b6241b57ef105e5df86b7785c}{\_TG\_Loop\_Index}}(\mbox{\hyperlink{structedge__loop__struct}{Loop}}\ *lp);}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structedge__loop__struct}{Loop}}\ *\mbox{\hyperlink{su__front_8h_ae9edb3dd327f396c57641b1cbe26ab80}{\_TG\_Get\_Next\_Loop}}(\mbox{\hyperlink{structedge__loop__struct}{Loop}}\ *);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{su__front_8h_ae19b65fa55c0040833893501a1369110}{\_TG\_Get\_Front\_Edge\_Tree}}(\mbox{\hyperlink{structfront__struct}{Front}}\ *);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00188\ \}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SU\_FRONT\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ }
+
+\end{DoxyCode}

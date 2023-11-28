@@ -1,0 +1,200 @@
+\doxysection{sg\+\_\+s2s.\+h}
+\hypertarget{sg__s2s_8h_source}{}\label{sg__s2s_8h_source}\index{fluent20.1.0/src/ht/sg\_s2s.h@{fluent20.1.0/src/ht/sg\_s2s.h}}
+\mbox{\hyperlink{sg__s2s_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*....................................................*/}}
+\DoxyCodeLine{00006\ \textcolor{comment}{/*.........Atul\ Kumar\ Verma\ :\ Sept\ 2000\ ..............*/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{/*....................................................*/}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_SG\_S2S\_H}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ \_FLUENT\_SG\_S2S\_H}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}sg\_s2s\_data.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#if\ RP\_S2S}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{/*\ Define\ constants,\ macros\ and\ prototypes\ for\ s2s\ radiation\ */}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ S\_GLOB\_J(i)\ s2s\_glob[i].radiosity}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ S\_GLOB\_T(i)\ s2s\_glob[i].temperature}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ S\_GLOB\_E(i)\ s2s\_glob[i].emissivity}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ S\_GLOB\_ID(i)\ s2s\_glob[i].sglob\_ids}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ S\_GLOB\_GID(i)\ s2s\_glob[i].gid}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ S\_GLOB\_VF(i,j)\ s2s\_glob[i].viewfactors[j]}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ S\_GLOB\_QRAD(i)\ s2s\_glob[i].qrad}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ S\_GLOB\_RADSUM(i)\ s2s\_glob[i].radsum}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ S\_GLOB\_RADFLAG(i)\ s2s\_glob[i].radflag}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ S\_GLOB\_THREAD\ O\_F\_THREAD}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ F\_S2S\_RADSUM(f,t)\ F\_STORAGE\_R(f,t,SV\_S2S\_RADSUM)}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ S2S\_BOUNDARY\_THREAD\_P(t)\ (Is\_Bndry\_Thread(t))\ }\textcolor{comment}{/*\ \&\&\ !SLIDING\_INTERFACE\_THREAD\_P(t))*/}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ DEBUG\_S2S\ 0}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }surface\_s2s\_glob\_struct}
+\DoxyCodeLine{00034\ \{}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ radiosity;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ radiosity\ */}}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ temperature;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ surface\ glob\ temperature\ */}}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ emissivity;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ surface\ glob\ emissivity\ */}}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ qrad;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Net\ radiation\ from\ the\ surface\ */}}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ radsum;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ SUM\ (F(i,j)\ *\ J(j))\ */}}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ radflag;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ used\ in\ sg\_temp.c\ */}}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ area;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ surface\ glob\ area\ */}}
+\DoxyCodeLine{00042\ \ \ \textcolor{keywordtype}{int}\ \ sglob\_ids;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ glob\ ids\ \ \ \ */}}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *thread;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ thread\ to\ which\ the\ faces\ belong\ */}}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{structobjp__struct}{Objp}}\ \ *f\_list;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ link\ list\ of\ faces\ in\ the\ glob\ */}}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *viewfactors;\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ view\ factors\ for\ the\ glob\ */}}
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{int}\ gid;}
+\DoxyCodeLine{00047\ \}\ Surface\_S2s\_Glob;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }cluster\_struct}
+\DoxyCodeLine{00050\ \{}
+\DoxyCodeLine{00051\ \ \ \textcolor{keywordtype}{int}\ nnodes;}
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordtype}{int}\ *nodeids;}
+\DoxyCodeLine{00053\ \}\ Cluster;}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }S2s\_Grp}
+\DoxyCodeLine{00056\ \{}
+\DoxyCodeLine{00057\ \ \ \textcolor{keywordtype}{int}\ nFaces;}
+\DoxyCodeLine{00058\ \ \ \textcolor{keywordtype}{int}\ id;}
+\DoxyCodeLine{00059\ \ \ \textcolor{keyword}{struct\ }S2s\_Grp\ *next;}
+\DoxyCodeLine{00060\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ plane[3];}
+\DoxyCodeLine{00061\ \}}
+\DoxyCodeLine{00062\ S2s\_Grp;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }S2s\_str}
+\DoxyCodeLine{00065\ \{}
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{int}\ n\_sglobs;}
+\DoxyCodeLine{00067\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ converged;}
+\DoxyCodeLine{00068\ \ \ FILE\ *fp;}
+\DoxyCodeLine{00069\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary;\ \textcolor{comment}{/*\ binary\ file\ */}}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ double\_data;\ \ \textcolor{comment}{/*\ double\ precision\ reals\ in\ file\ */}}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ residual;}
+\DoxyCodeLine{00072\ \ \ \textcolor{keywordtype}{int}\ viewfactors\_read;}
+\DoxyCodeLine{00073\ \ \ \textcolor{keywordtype}{int}\ viewfactors\_done;}
+\DoxyCodeLine{00074\ \ \ \textcolor{keywordtype}{int}\ globs\_s2s\_done;}
+\DoxyCodeLine{00075\ \}}
+\DoxyCodeLine{00076\ S2s;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }S2s\_Face}
+\DoxyCodeLine{00079\ \{}
+\DoxyCodeLine{00080\ \ \ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ \mbox{\hyperlink{namespacenumpy_1_1f2py_1_1capi__maps_a633de4b0c14ca52ea2432a3c8a5c4c31}{f}};}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tface;}
+\DoxyCodeLine{00082\ \ \ \textcolor{keyword}{struct\ }S2s\_Face\ *next;}
+\DoxyCodeLine{00083\ \}}
+\DoxyCodeLine{00084\ S2s\_Face;}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ Surface\_S2s\_Glob\ *s2s\_glob;}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#if\ RP\_NODE}}
+\DoxyCodeLine{00089\ \textcolor{keywordtype}{void}\ Set\_F\_S\_Glob\_Id\_Offset(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{int}\ Get\_F\_S\_Glob\_Id\_Offset(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{void}\ Set\_Global\_F\_S\_Glob\_Id(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00092\ \textcolor{keywordtype}{void}\ Reset\_Global\_F\_S\_Glob\_Id(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_View\_Factors\_Read(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ status);}
+\DoxyCodeLine{00097\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_View\_Factors\_Done(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ status);}
+\DoxyCodeLine{00098\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Get\_View\_Factors\_Read(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00099\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Get\_View\_Factors\_Done(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00100\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Get\_Total\_S2s\_Globs(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00101\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_S2s\_Globs\_Done(\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ status);}
+\DoxyCodeLine{00102\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Get\_S2s\_Globs\_Done(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00103\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_S2s\_Globs\_Info(\textcolor{keywordtype}{int}\ *n\_sglobs);}
+\DoxyCodeLine{00104\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Check\_FPSC\_Val(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00105\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Group\_S2s\_Globs(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00106\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Read\_S2s\_Clusters(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fd);}
+\DoxyCodeLine{00107\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Read\_S2s\_Clusters\_and\_Viewfac(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fd);}
+\DoxyCodeLine{00108\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Update\_S2s\_Memory(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00109\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Solve\_S2s\_For\_Nita(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00110\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_Glob\_S2s\_Info(\textcolor{keywordtype}{int}\ *n\_s\_globs);}
+\DoxyCodeLine{00111\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_S2s\_Glob(\ \textcolor{keywordtype}{int}\ glob\_id,\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ **face\_list);}
+\DoxyCodeLine{00112\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Display\_S2s\_Globs(\textcolor{keywordtype}{int}\ typeGlob);}
+\DoxyCodeLine{00113\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Read\_Clusters\_From\_File(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fd);}
+\DoxyCodeLine{00114\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Read\_Clusters\_Vf\_From\_File(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fd);}
+\DoxyCodeLine{00115\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Delete\_All\_S2S\_Groups(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00116\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ Print\_Thread\_Clusters(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00117\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Print\_Zonewise\_Radiation(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00118\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Print\_Zonewise\_Radiation\_Gui(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ *id\_list1,\ \textcolor{keywordtype}{int}\ *id\_list2,\ \textcolor{keywordtype}{int}\ len1,\ \textcolor{keywordtype}{int}\ len2,\ \textcolor{keywordtype}{int}\ btstate,\ \textcolor{keywordtype}{char}\ **t\_from,\ \textcolor{keywordtype}{char}\ **t\_to,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode);}
+\DoxyCodeLine{00119\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Glob\_Elements(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00120\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_S2S\_Periodic\_Face\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fd);}
+\DoxyCodeLine{00121\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Write\_S2S\_Face\_Section\_Thread(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00123\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Write\_S2S\_Face\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00125\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Write\_S2S\_Node\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00127\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Write\_S2S\_Cluster\_Section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00129\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Write\_Glob\_View\_Factors(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FILE\ *fp,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary);}
+\DoxyCodeLine{00131\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Read\_Glob\_Rad\_Flux\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fp,}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ double\_data);}
+\DoxyCodeLine{00133\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_Glob\_Rad\_Flux\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fp,}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary);}
+\DoxyCodeLine{00135\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ CX\_Num\_S2s\_Globs(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00136\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ CX\_Get\_S2s\_Glob(\textcolor{keywordtype}{int}\ glob\_id,\ \textcolor{keywordtype}{int}\ *n\_elements,\ \textcolor{keywordtype}{int}\ *type,\ \mbox{\hyperlink{struct_c_x___face___def}{CX\_Face\_Def}}\ **bndry);}
+\DoxyCodeLine{00137\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ CX\_Delete\_All\_S2s\_Globs(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00138\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ CX\_S2s\_Glob\_Elements(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ split\_angle,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ bndry\_only);}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#if\ MPI\_IO}}
+\DoxyCodeLine{00140\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Read\_MPI\_Glob\_Rad\_Flux\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ fhandle,}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *headerbuf,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ double\_data);}
+\DoxyCodeLine{00142\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_MPI\_Glob\_Rad\_Flux\_Data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ fhandle);}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00144\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Compute\_View\_Factors(\textcolor{keywordtype}{int}\ isBinary,\ \textcolor{keywordtype}{char}\ *filename,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ file\_io,\ \textcolor{keywordtype}{int}\ *sub\_comm,\ S2S\_VF\_Calc\ *vf\_calc);}
+\DoxyCodeLine{00145\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Compute\_RT\_VF\_GPU(\textcolor{keywordtype}{int}\ isBinary,\ \textcolor{keywordtype}{char}\ *filename);}
+\DoxyCodeLine{00146\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Compute\_VF\_VF\_GPU(\textcolor{keywordtype}{int}\ isBinary,\ \textcolor{keywordtype}{int}\ cpucnt,\ \textcolor{keywordtype}{int}\ gpucnt,\ \textcolor{keywordtype}{int}\ gpucpurat,\ \textcolor{keywordtype}{char}\ *filename);}
+\DoxyCodeLine{00147\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Get\_Mixed\_Mode(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00148\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Compute\_Viewfac\_Mixed\_Mode(\textcolor{keywordtype}{int}\ *viewfacVars,\ \textcolor{keywordtype}{char}\ *path,\ \textcolor{keywordtype}{int}\ methodgpu);}
+\DoxyCodeLine{00149\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Read\_Glob\_View\_Factors(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fp);}
+\DoxyCodeLine{00150\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Read\_Glob\_View\_Factors\_CRF(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fp);}
+\DoxyCodeLine{00151\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Read\_View\_Factors\_HDF(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00152\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Free\_Glob\_View\_Factor\_Arrays(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00153\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Free\_Glob\_Radsum(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00154\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Init\_S2s\_Radiosity(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00155\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Count\_Boundary\_Faces(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00156\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Count\_Boundary\_Faces\_Poly(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00157\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ Count\_Boundary\_Nodes(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00158\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobjp__struct}{Objp}}\ *insert\_s2s(\mbox{\hyperlink{structobjp__struct}{Objp}}\ *head\_list,\ \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\_t}}\ f,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00159\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Check\_Glob\_Id\_Bound(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ all);}
+\DoxyCodeLine{00160\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ S2s\_Calc\_Fpsc(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00161\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *Dist\_Calc(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00162\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Cluster\_To\_Cluster(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00163\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Model\_Initialize\_s2s(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00164\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Write\_S2S\_Face\_Section\_Cluster(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ all);}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#if\ !PARALLEL}}
+\DoxyCodeLine{00166\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Label\_S2S\_Nodes(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00167\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Label\_S2S\_Nodes\_Clust(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#\ if\ RP\_NODE}}
+\DoxyCodeLine{00170\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Map\_Boundary\_Nodes(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00171\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Map\_Boundary\_Nodes\_Clust(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00172\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Count\_Rad\_Faces\_Clusters\_Par(\mbox{\hyperlink{structthread__struct}{Thread}}\ *thread,\ \textcolor{keywordtype}{int}\ *rad\_clusters,\ \textcolor{keywordtype}{int}\ *rad\_faces);}
+\DoxyCodeLine{00173\ \textcolor{keywordtype}{int}\ local\_boundary\_vertices(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#if\ RP\_SHELL\ \&\&\ RP\_3D}}
+\DoxyCodeLine{00177\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Remove\_Shell\_Threads\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00178\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Restore\_Shell\_Threads\ (\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_SHELL\ \&\&\ RP\_3D\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#if\ PARALLEL}}
+\DoxyCodeLine{00182\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Coupled\_SI\_Exists\_P(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00183\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ is\_s2s\_interface\_clean(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00184\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \ fill\_s2s\_data(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary);}
+\DoxyCodeLine{00185\ \textcolor{keywordtype}{int}\ fill\_s2s\_vars(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ s2s\_global\_master,\ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary);}
+\DoxyCodeLine{00186\ \textcolor{keywordtype}{int}\ fill\_s2s\_face\_section\_parallel(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ all,\ \textcolor{keywordtype}{int}\ s2s\_global\_master,\ \textcolor{keywordtype}{int}\ s2s\_global\_master\_rank);}
+\DoxyCodeLine{00187\ \textcolor{keywordtype}{int}\ *get\_global\_master\_rank\_s2s(\textcolor{keywordtype}{int}\ *s2s\_global\_master,\ \textcolor{keywordtype}{int}\ *s2s\_global\_master\_rank);}
+\DoxyCodeLine{00188\ \textcolor{keywordtype}{int}\ fill\_s2s\_node\_section(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ all,\ \textcolor{keywordtype}{int}\ s2s\_global\_master,\ \textcolor{keywordtype}{int}\ s2s\_global\_master\_rank,\ \textcolor{keywordtype}{int}\ lnverts,\ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary);}
+\DoxyCodeLine{00189\ \textcolor{keywordtype}{int}\ fill\_s2s\_face\_section\_f2f(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ all,\ \textcolor{keywordtype}{int}\ s2s\_global\_master,\ \textcolor{keywordtype}{int}\ s2s\_global\_master\_rank,\ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary);}
+\DoxyCodeLine{00190\ \textcolor{keywordtype}{int}\ fill\_s2s\_face\_section\_cluster(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ all,\ \textcolor{keywordtype}{int}\ s2s\_global\_master,\ \textcolor{keywordtype}{int}\ s2s\_global\_master\_rank,\ FILE\ *fd,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ binary);}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ RP\_S2S\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_FLUENT\_SG\_S2S\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00194\ }
+
+\end{DoxyCode}

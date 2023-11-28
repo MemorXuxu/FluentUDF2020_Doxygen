@@ -1,0 +1,177 @@
+\doxysection{tg\+\_\+list.\+h}
+\hypertarget{tg__list_8h_source}{}\label{tg__list_8h_source}\index{fluent20.1.0/tgrid/src/tg\_list.h@{fluent20.1.0/tgrid/src/tg\_list.h}}
+\mbox{\hyperlink{tg__list_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ \ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ List\ structs,\ defines}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ TG\_LIST\_H}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ TG\_LIST\_H}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{std_8h}{std.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{comment}{/*\ pointer\ list\ */}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{/*\ to\ activate\ list\ debug\ using\ (\%tg-\/debug-\/list\ '("{}list\_debug.txt"{}\ 0\ 0))\ \ */}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ LL\_LIST\_DEBUG\ 0}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ L\_NIL\ \ \ \ \ \ \ ((List\ *)NULL)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ L\_EMPTYP(l)\ ((l)\ ==\ L\_NIL)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ L\_UNIT\_LENGTH\_P(l)\ (!L\_EMPTYP(l)\ \&\&\ L\_EMPTYP(L\_CDR(l)))}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ L\_NOT\_EMPTYP(l)\ !NULLP(l)}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ L\_CAR(l)\ \ \ \ ((l)-\/>u.s)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ L\_CAR\_SAFE(l)\ \ \ (L\_NOT\_EMPTYP(l)?L\_CAR(l):NULL)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ L\_CDR(l)\ \ \ \ ((l)-\/>next)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ L\_CDR\_SAFE(l)\ \ \ (L\_NOT\_EMPTYP(l)?L\_CDR(l):L\_NIL)}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ L\_SET\_CAR(l,c)\ \ ((l)-\/>u.s\ =\ c)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ L\_SET\_CDR(l,n)\ \ ((l)-\/>next\ =\ n)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#\ define\ L\_CONS(h,t)\ LL\_Construct\_List((void\ *)h,t,\_\_FILE\_\_,\_\_LINE\_\_)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ L\_PUSH(e,s)\ (s\ =\ L\_CONS(e,s))}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ L\_PUSH\_UNQ(e,l)\ \ \ \ (!L\_MEMQ(e,l)\ ?\ L\_PUSH(e,l):L\_NIL)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ L\_POP(s)\ \ \ \ LL\_Pop\_Cons\_Cell(\&s)}}
+\DoxyCodeLine{00032\ \textcolor{comment}{/*\ L\_DELCAR\ deletes\ car\ of\ list,\ returns\ cdr\ */}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ L\_DELCAR(l)\ LL\_Free\_Cons\_Cell(l)}}
+\DoxyCodeLine{00034\ \textcolor{comment}{/*\ L\_DELCDR\ replaces\ cdr\ with\ cdr\ of\ cdr\ */}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ L\_DELCDR(l)\ L\_SET\_CDR(l,\ L\_DELCAR(L\_CDR(l)))}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ L\_DELQ(e,l)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\ \ \ \ (L\_NOT\_EMPTYP(l)\&\&LL\_Delete\_Element\_From\_List((void\ *)e,\&(l)))}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ L\_FREELIST(l)\ \ \ (l\ =\ LL\_Free\_List(l))}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ L\_RESETMEMORY()\ \ \ \ \ LL\_Delete\_Cell\_Blocks()}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ L\_FREE\_UNUSED()\ \ \ \ \ LL\_Delete\_Unused\_Cell\_Blocks()}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ L\_LAST(l)\ \ \ LL\_Last\_Element\_Of\_List(l)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ L\_APPEND(l1,l2)\ LL\_Append\_Lists(l1,l2)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ L\_COPY(l1)\ \ \ \ \ \ LL\_Copy\_List(l1)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ L\_LENGTH(l)\ LL\_Length\_Of\_List(l)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ L\_REVERSE(l)\ \ \ \ (l\ =\ LL\_Reverse\_List(l))}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ L\_MAPCAR(op,l)\ \ LL\_Map\_Operation\_To\_List(op,l)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ L\_ITHMEM(e,l)\ \ \ LL\_Member\_Index((void\ *)e,l)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ L\_MEMQ(e,l)\ (LL\_Member\_Index((void\ *)e,l)\ >=\ 0)}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ ForEach(type,c,ls,list)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ \ for\ (ls=list,\ c=(type)L\_CAR\_SAFE(list);\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ !L\_EMPTYP(ls);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ ls=L\_CDR(ls),\ c=(type)L\_CAR\_SAFE(ls))}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{/*\ This\ version\ can\ handle\ deletion\ of\ the\ current\ object\ (c)\ from\ the\ list}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ while\ inside\ the\ loop.}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ SafeForEach(type,c,ls,list)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \ for\ (ls=list,\ c=(type)L\_CAR\_SAFE(list);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ !L\_EMPTYP(ls)\ \&\&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ (!L\_EMPTYP(ls=L\_CDR\_SAFE(ls))\ ||\ L\_EMPTYP(ls));\ \(\backslash\)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ c=(type)L\_CAR\_SAFE(ls))}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{comment}{/*\ integer\ list\ */}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ L\_ICAR(l)\ ((l)-\/>u.i)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ L\_ICAR\_SAFE(l)\ (L\_NOT\_EMPTYP(l)?L\_ICAR(l):-\/1)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ L\_SET\_ICAR(l,c)\ ((l)-\/>u.s\ =\ NULL,\ (l)-\/>u.i\ =\ c)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ L\_ICONS(h,t)\ LL\_Construct\_Int\_List(h,t,\_\_FILE\_\_,\_\_LINE\_\_)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ L\_IPOP(s)\ \ \ \ LL\_Pop\_Cons\_Int\_Cell(\&s)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ L\_IPUSH(e,s)\ (s\ =\ L\_ICONS(e,s))}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ L\_IDELQ(e,l)\ (L\_NOT\_EMPTYP(l)\&\&LL\_Delete\_Element\_From\_Int\_List(e,\&(l)))}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ L\_IMEMQ(e,l)\ (LL\_Int\_Member\_Index(e,l)\ >=\ 0)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ L\_IPUSH\_UNQ(e,l)\ (!L\_IMEMQ(e,l)\ ?\ L\_IPUSH(e,l):L\_NIL)\ }}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ ForEachInt(type,c,ls,list)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\ \ \ \ for\ (ls=list;\ ls?c=(type)L\_ICAR(ls),1:0;\ ls=L\_CDR(ls))}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{comment}{/*\ unsigned\ int\ list\ */}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ L\_UICAR(l)\ ((l)-\/>u.ui)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ L\_UICAR\_SAFE(l)\ (L\_NOT\_EMPTYP(l)?L\_UICAR(l):UINT\_MAX)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ L\_SET\_UICAR(l,c)\ ((l)-\/>u.ui\ =\ c)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ L\_UICONS(h,\ t)\ LL\_Construct\_Unsigned\_Int\_List(h,t,\_\_FILE\_\_,\_\_LINE\_\_)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ L\_UIPOP(s)\ \ \ \ \ LL\_Pop\_Cons\_Unsigned\_Int\_Cell(\&s)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ L\_UIPUSH(e,s)\ \ (s\ =\ L\_UICONS(e,s))}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{comment}{/*\ function\ list\ */}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{tg__list_8h_aba3bf38e8544fc6d58eefca001dce931}{voidfn}})();}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ VOIDFN(fn)\ ((voidfn)fn)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ L\_FCAR(l)\ ((l)-\/>u.f)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ L\_FCAR\_SAFE(l)\ (L\_NOT\_EMPTYP(l)?L\_FCAR(l):NULL)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ L\_SET\_FCAR(l,c)\ ((l)-\/>u.f\ =\ c)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ L\_FCONS(h,t)\ LL\_Construct\_Func\_List(h,t,\_\_FILE\_\_,\_\_LINE\_\_)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ L\_FPOP(s)\ \ \ \ LL\_Pop\_Cons\_Func\_Cell(\&s)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ L\_FPUSH(e,s)\ (s\ =\ L\_FCONS(e,s))}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ L\_FPUSH\_UNQ(e,l)\ \ \ \ (!L\_FMEMQ(e,l)\ ?\ L\_FPUSH(e,l):L\_NIL)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ L\_FDELQ(e,l)\ (L\_NOT\_EMPTYP(l)\&\&LL\_Delete\_Element\_From\_Func\_List(e,\&(l)))}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ L\_FMEMQ(e,l)\ (LL\_Func\_Member\_Index(e,l)\ >=\ 0)}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ ForEachFunc(type,c,ls,list)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\ \ \ \ for\ (ls=list;\ ls?c=(type)L\_FCAR(ls),1:0;\ ls=L\_CDR(ls))}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcons__cell}{cons\_cell}}\ \mbox{\hyperlink{structcons__cell}{List}};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcons__cell}{cons\_cell}}}
+\DoxyCodeLine{00109\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcons__cell}{cons\_cell}}\ *\mbox{\hyperlink{structcons__cell_aabefb6be2977cf156de3da84c213b672}{next}};}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00112\ \ \ \ \ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structcons__cell_a08522cf5c55b085c8cdda3f7accb2377}{s}};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structcons__cell_acb559820d9ca11295b4500f179ef6392}{i}};}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{structcons__cell_a1cf0ff5b30a433d2f416d0b08f0a55a9}{ui}};}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{tg__list_8h_aba3bf38e8544fc6d58eefca001dce931}{voidfn}}\ \mbox{\hyperlink{structcons__cell_aedf14c7aa3cbbdd708c5d727bbd18074}{f}};}
+\DoxyCodeLine{00117\ \ \ \ \ \}\mbox{\hyperlink{structcons__cell_a1cf8a2e8af68d4ca29e872cf3c13aa44}{u}};}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#if\ LL\_LIST\_DEBUG}}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{int}\ line,\ counter;}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{char}\ file[16];}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00122\ \};}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00126\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{00127\ \{}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__list_8h_afdf0b15721b3fa4c13bf398b8cd84850}{LL\_Init\_Cell\_Block}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__list_8h_a38c411cef813099319b9171ea00accae}{LL\_Free\_Cell\_Blocks}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__list_8h_a3b509fe2316aba11463328af10ac8638}{LL\_Delete\_Cell\_Blocks}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_ab198e9ee8d6992a2cc301cd8d62fb0b7}{LL\_Delete\_Unused\_Cell\_Blocks}}\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_aa267b6e7d66fb9147aee8d7c6741215e}{LL\_Free\_Cons\_Cell}}(\mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tg__list_8h_a5f50ed96618ebe24ce553572ec956d29}{LL\_Pop\_Cons\_Cell}}(\mbox{\hyperlink{structcons__cell}{List}}\ **);}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{tg__list_8h_a253710afab659ba92ead1b3f49a567b9}{LL\_Pop\_Last\_Cons\_Cell}}(\mbox{\hyperlink{structcons__cell}{List}}\ **);}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_a4dd3d2509e741a2393ab9486bb062502}{LL\_Construct\_List}}(\textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *,\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_adec729b457e40801e6b20a78e0de86ab}{\_TG\_Check\_Unfreed\_Lists}}(\textcolor{keywordtype}{char}\ *fname,\ \textcolor{keywordtype}{int}\ from\_counter,\ \textcolor{keywordtype}{int}\ individual);}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_a98bdd56fd2e9d0dc0c6778712eb81388}{LL\_Nth\_Element\_Of\_List}}(\textcolor{keywordtype}{int},\ \mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_ab6ca25cddcd78c23c19482d5e6241643}{LL\_Last\_Element\_Of\_List}}(\mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_a498ac266297bc3a78e6269a31ab86189}{LL\_Append\_Lists}}(\mbox{\hyperlink{structcons__cell}{List}}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_aece8d0564894ef3f0cd4cb7d9e827683}{LL\_Copy\_List}}(\mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_ac57f0a8bbbe7dda8fc50f37da3fd95af}{LL\_Reverse\_List}}(\mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_abde20b0220d948e73f4b9da6f708b5f4}{LL\_Length\_Of\_List}}(\mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_a6f0ad92422f62d899f694c0846bb4811}{LL\_Delete\_Element\_From\_List}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ **);}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_ae5451311eb5e614cd51af62c11d98396}{LL\_Free\_List}}(\mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_a1dc77929a287894e40a96b0ce0dfb120}{LL\_Map\_Operation\_To\_List}}(\textcolor{keywordtype}{void}\ *(*)(\textcolor{keywordtype}{void}\ *),\ \mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_a319a2d93dfe20fec3b37ca57f8f84673}{LL\_Member\_Index}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *,\ \mbox{\hyperlink{structcons__cell}{List}}\ *);}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_ac178d986647058b3b803ff9fcfb83402}{LL\_Construct\_Int\_List}}(\textcolor{keywordtype}{int}\ c,\ \mbox{\hyperlink{structcons__cell}{List}}\ *l,\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_acdd31b2a3998df5ff59f5c1c98a3134d}{LL\_Delete\_Element\_From\_Int\_List}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ e,\ \mbox{\hyperlink{structcons__cell}{List}}\ **ls);}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_a0996e06c31d68fddbf368297c2b4e4c0}{LL\_Int\_Member\_Index}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ e,\ \mbox{\hyperlink{structcons__cell}{List}}\ *l);}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_ab1b4afcbb87bbb3b2e1ae80da43dabfe}{LL\_Pop\_Cons\_Int\_Cell}}\ (\mbox{\hyperlink{structcons__cell}{List}}\ **ls);}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_a0bc1de6909075187aa92716c50030330}{LL\_Construct\_Unsigned\_Int\_List}}(\textcolor{keywordtype}{unsigned}\ c,\ \mbox{\hyperlink{structcons__cell}{List}}\ *l,\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{tg__list_8h_a56491ffce64769bdb0491d0c2d261dcd}{LL\_Pop\_Cons\_Unsigned\_Int\_Cell}}\ (\mbox{\hyperlink{structcons__cell}{List}}\ **ls);}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{structcons__cell}{List}}\ *\mbox{\hyperlink{tg__list_8h_a6c3172f61e7d9412ada8a2b65c227840}{LL\_Construct\_Func\_List}}(\mbox{\hyperlink{tg__list_8h_aba3bf38e8544fc6d58eefca001dce931}{voidfn}}\ c,\ \mbox{\hyperlink{structcons__cell}{List}}\ *l,\ \textcolor{keywordtype}{char}\ *,\ \textcolor{keywordtype}{int});}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_af9fc730b57140a20a5757e9b7d914aaf}{LL\_Delete\_Element\_From\_Func\_List}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{tg__list_8h_aba3bf38e8544fc6d58eefca001dce931}{voidfn}}\ e,\ \mbox{\hyperlink{structcons__cell}{List}}\ **ls);}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_a6f7cfd13b376e0634fc36d82f5811b61}{LL\_Func\_Member\_Index}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{tg__list_8h_aba3bf38e8544fc6d58eefca001dce931}{voidfn}}\ e,\ \mbox{\hyperlink{structcons__cell}{List}}\ *l);}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \mbox{\hyperlink{tg__list_8h_aba3bf38e8544fc6d58eefca001dce931}{voidfn}}\ \mbox{\hyperlink{tg__list_8h_ac79be95d8401a889cf0de9a4cb0662e3}{LL\_Pop\_Cons\_Func\_Cell}}\ (\mbox{\hyperlink{structcons__cell}{List}}\ **ls);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__list_8h_aef5ad505dc733073740f585ed942dc9b}{LL\_Stats}}\ (\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structcons__cell_a08522cf5c55b085c8cdda3f7accb2377}{s}});}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__list_8h_aa404d6d878f69e03868b51cb19bbe3be}{LL\_Get\_Number\_Of\_Allocated\_Cells}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{extern}\ \mbox{\hyperlink{std_8h_ada4671ff61b603ab9ae8b47aa1f397cd}{TG\_EXPORT}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{tg__list_8h_a2a2cde80f3ce49af81419f4f1a8f25cf}{TG\_Print\_List\_Memory}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00168\ \}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ TGList\_h\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

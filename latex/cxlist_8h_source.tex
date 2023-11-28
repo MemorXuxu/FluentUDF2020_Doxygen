@@ -1,0 +1,131 @@
+\doxysection{cxlist.\+h}
+\hypertarget{cxlist_8h_source}{}\label{cxlist_8h_source}\index{fluent20.1.0/cortex/src/cxlist.h@{fluent20.1.0/cortex/src/cxlist.h}}
+\mbox{\hyperlink{cxlist_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{/********************************************************************}}
+\DoxyCodeLine{00006\ \textcolor{comment}{}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ \ \ cxlist.h}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ \ \ Generic\ Linked\ List}}
+\DoxyCodeLine{00010\ \textcolor{comment}{}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ \ \ Written\ By:\ Paul\ Felix\ \ 4/10/91}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*********************************************************************/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{/*\ See\ documentation\ in\ cxlist.c!}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#if\ \ (\ (\ !\ defined\ (\ \_CXLIST\_H\ )\ )\ ||\ defined\ (\ CX\_LIST\_TYPE\_NAME\ )\ )}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#ifndef\ \ \ CX\_LIST\_TYPE\_NAME\ \ \ \ \ \ \ }\textcolor{comment}{/*\ "{}regular"{}\ mode\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#\ define\ \ CX\_LIST\_TYPE\_NAME\ \ List}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ define\ \ CX\_LIST\_DEFAULT\ \ \ \ List}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ define\ \_CXLIST\_H}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ ifdef\ \ OBJ}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ \ warning\ redefining\ OBJ\ because\ CX\_LIST\_TYPE\_NAME\ is\ not\ defined}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ \ undef\ OBJ}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#\ define\ OBJ\ char*}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#else\ \ \ }\textcolor{comment}{/*\ i.e.\ ifdef\ CX\_LIST\_TYPE\_NAME,\ i.e.\ "{}NON-\/regular"{}\ mode,\ a\ custom,\ non-\/pointer\ type\ for\ the\ payload:\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ ifndef\ OBJ}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ \ error\ must\ define\ OBJ\ along\ with\ CX\_LIST\_TYPE\_NAME}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cxmacros_8h}{cxmacros.h}}"{}}\ \ \ \textcolor{comment}{/*\ CATTWOARGS(...,\ ...)\ */}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cxbool_8h}{cxbool.h}}"{}}\ \ \ \ \ \textcolor{comment}{/*\ FALSE\ */}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{/*\ Will\ be\ undef'd\ below:\ */}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ CX\_LIST\_ADD\_PREFIX\_TO(funnam)\ \ CATTWOARGS(CX\_LIST\_TYPE\_NAME,\ funnam)}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#ifndef\ NULL}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#\ define\ NULL\ 0}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{/*\ Without\ the\ following,\ couldn't\ compile\ cxgui/CxPanelItem.hpp,\ included\ in\ cxqt/CxPanelItemQt.hpp..\ */}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#ifndef\ XMD\_H}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{cxlist_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}};}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#ifndef\ CX\_MALLOC}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ CX\_MALLOC\ CX\_Malloc}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ CX\_FREE(obj)\ \{if\ (obj)\ CX\_Free(obj);\ obj\ =\ NULL;\}}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(Callback))\ (\mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}},\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }CX\_LIST\_ADD\_PREFIX\_TO(element)}
+\DoxyCodeLine{00059\ \{}
+\DoxyCodeLine{00060\ \ \ \textcolor{keyword}{struct\ }CX\_LIST\_ADD\_PREFIX\_TO(element)*\ prev;}
+\DoxyCodeLine{00061\ \ \ \textcolor{keyword}{struct\ }CX\_LIST\_ADD\_PREFIX\_TO(element)*\ next;}
+\DoxyCodeLine{00062\ \ \ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structobj}{obj}};}
+\DoxyCodeLine{00063\ \}}
+\DoxyCodeLine{00064\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\_Element);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }CX\_LIST\_ADD\_PREFIX\_TO(cxlist)}
+\DoxyCodeLine{00068\ \{}
+\DoxyCodeLine{00069\ \ \ \textcolor{keyword}{struct\ }CX\_LIST\_ADD\_PREFIX\_TO(element)*\ first;}
+\DoxyCodeLine{00070\ \ \ \textcolor{keyword}{struct\ }CX\_LIST\_ADD\_PREFIX\_TO(element)*\ last;}
+\DoxyCodeLine{00071\ \ \ \textcolor{keyword}{struct\ }CX\_LIST\_ADD\_PREFIX\_TO(element)*\ current;}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \ \ \ \ \ \ \ \ \ \ \ nullobj;}
+\DoxyCodeLine{00073\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ size;}
+\DoxyCodeLine{00074\ \}}
+\DoxyCodeLine{00075\ \mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)\ ||\ defined(c\_plusplus)}}
+\DoxyCodeLine{00078\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a97f22a6ca8076e537b17bc72eaa04887}{Add}})\ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00082\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a0283baa96054f1b823bb053d31f5ef99}{AddFirst}})\ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00083\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_abb8397317cc486abf326e63824651653}{After}})\ \ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00084\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a0e3ff7bc014519abed62f9bc228b314b}{At}})\ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ int);}
+\DoxyCodeLine{00085\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a49317eae5a3485f6a41db65f452944c0}{Before}})\ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00086\ \mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ \ \ \ \ *\mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a0828b9a10cb85a0d2223421f7c2d1bb8}{Create}})\ \ \ \ \ \ \ (void);}
+\DoxyCodeLine{00087\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a45ec4b180f7f7c1a9c232bfddfac871c}{Current}})\ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00088\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a19310ac02cf2710ca6e08eaba7567f5a}{Delete}})\ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00089\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a47ab7761e99e8e4f2119e3240f4df2ef}{First}})\ \ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a7fc714cacd3830bece629648b15158e1}{ForEachDo}})\ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(Callback),\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a40b11b1d8f815338a7d297321b55ad0a}{ForEachDoRev}})\ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(Callback),\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00092\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a279523c981354403e78b59ec9b8e16dd}{FreeAll}})\ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00093\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_afd3f69e1c146306578d50804c937aaf6}{Includes}})\ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00094\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_aa4b760d22f8bd3f1171df1183b71d208}{InsertAfter}})\ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}},\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00095\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a91f73f0d2896913edd3aee6e22b6820c}{InsertAt}})\ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ int,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00096\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a828d69bb6f2ccf65f83f51c1dbf4c02c}{InsertBefore}})\ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}},\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00097\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a7f22e7d60f79d852b90e620f4d3da915}{IsEmpty}})\ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00098\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_ac13afa5c43b95312259247e18760afb3}{Last}})\ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00099\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_aa6e24afc6f78a493e5a114429455229d}{Next}})\ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00100\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_afa669c23e652c87fa7f5c94e7e6a996f}{Prev}})\ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00101\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_ad150a8355750799a949947a3790706ed}{PopFirst}})\ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00102\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_ab5bec6941c51e208b87a6a37c8e5afdf}{PopLast}})\ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00103\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_ab53796295c5e0a8e4072fbafdc850fff}{Remove}})\ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00104\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a133a31c0cbb7c58ba86afbf8c6bdba60}{RemoveAll}})\ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00105\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_a1686eae0bd13b71e38669170c89a6df7}{Rewind}})\ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00106\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_ae4cfce7e449e6d303a898075a500f537}{SetCurrent}})\ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00107\ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\mbox{\hyperlink{cxlist_8h_ada1e7617b4c0f8bad53039041b629df1}{Size}})\ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *);}
+\DoxyCodeLine{00108\ \mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(\_Element)\ *\mbox{\hyperlink{cxlist_8h_ab94379c3fde07f6803e1525fecd2e961}{CX\_LIST\_ADD\_PREFIX\_TO}}(FindElement)\ \ (\mbox{\hyperlink{cxlist_8h_aae6a0cfc53237632b2538851d61db133}{CX\_LIST\_TYPE\_NAME}}\ *,\ \mbox{\hyperlink{cxlist_8h_adbde5b9da0fc01ad88668b5f24c2c256}{OBJ}});}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)\ ||\ defined(c\_plusplus)}}
+\DoxyCodeLine{00111\ \}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#undef\ CX\_LIST\_ADD\_PREFIX\_TO}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#ifdef\ CX\_LIST\_DEFAULT}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#undef\ CX\_LIST\_TYPE\_NAME\ \ \ }\textcolor{comment}{/*\ Make\ sure\ this\ .h\ file\ isn't\ processed\ twice\ in\ "{}regular"{}\ mode.\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#ifndef\ \_INSIDE\_CXLIST\_C}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#undef\ \ \ CX\_LIST\_DEFAULT\ \ \ }\textcolor{comment}{/*\ No\ more\ need\ for\ this.\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_CXLIST\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00125\ }
+
+\end{DoxyCode}

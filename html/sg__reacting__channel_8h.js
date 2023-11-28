@@ -1,0 +1,25 @@
+var sg__reacting__channel_8h =
+[
+    [ "channel_group_struct", "structchannel__group__struct.html", "structchannel__group__struct" ],
+    [ "band_data", "structband__data.html", "structband__data" ],
+    [ "band_struct", "structband__struct.html", "structband__struct" ],
+    [ "channel_struct", "structchannel__struct.html", "structchannel__struct" ],
+    [ "Band_Data", "sg__reacting__channel_8h.html#a94c6a17f061faad92f60adbccf5f4ffd", null ],
+    [ "Channel_Band", "sg__reacting__channel_8h.html#a1624dfe35695a8025495522164481291", null ],
+    [ "Channel_Group", "sg__reacting__channel_8h.html#ad9f7789ce183e3048d3cc3189d152a5b", null ],
+    [ "Channel_Tube", "sg__reacting__channel_8h.html#aee260669d876bbc8f980b85ed143763d", null ],
+    [ "Free_All_Channel_Memory", "sg__reacting__channel_8h.html#a39f749c0032a7542b6792a1352028e1a", null ],
+    [ "Get_Reacting_Channel_Band_Variables", "sg__reacting__channel_8h.html#aa00ad2dd3ed816d6fb57869070001650", null ],
+    [ "Get_Reacting_Channel_Reports", "sg__reacting__channel_8h.html#a783a6a4979ae7f5a69ad652c2f4544bd", null ],
+    [ "Get_Reacting_Channel_Variables_Data", "sg__reacting__channel_8h.html#a0028ceb2dbf8e222c352861a09e18fe3", null ],
+    [ "Is_outer_flow_reacting", "sg__reacting__channel_8h.html#aca00666580e8859b9426bb9747a06785", null ],
+    [ "Pick_Reacting_Channel_Material", "sg__reacting__channel_8h.html#a69bd728ad90e24ae9c62c5e946df0931", null ],
+    [ "Read_Reacting_Channel_Data", "sg__reacting__channel_8h.html#a8c259b42c852e734be3749523d708160", null ],
+    [ "Set_Reacting_Channel_Variables", "sg__reacting__channel_8h.html#a1d1896bd7aed3811434aa85896a5f1b6", null ],
+    [ "Solve_Reacting_Channel", "sg__reacting__channel_8h.html#ae2fc0ce09fd81ab00f262a396433bc70", null ],
+    [ "Write_Reacting_Channel_Data", "sg__reacting__channel_8h.html#a446c2b2d2cbd53576b1204e31424b106", null ],
+    [ "channel_groups", "sg__reacting__channel_8h.html#ae09ecba24bbc71842b0cc627b885c6bb", null ],
+    [ "channel_tubes", "sg__reacting__channel_8h.html#a50441f674033c466b315d07dfc85a5ad", null ],
+    [ "N_channel_groups", "sg__reacting__channel_8h.html#ae3c8bfa433b6cda2f51d7658cc5b625c", null ],
+    [ "solve_reacting_channel", "sg__reacting__channel_8h.html#a5bc944deb480e32a5ce7d465b12ab5e0", null ]
+];

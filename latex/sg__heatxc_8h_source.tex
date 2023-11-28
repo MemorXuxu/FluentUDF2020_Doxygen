@@ -1,0 +1,278 @@
+\doxysection{sg\+\_\+heatxc.\+h}
+\hypertarget{sg__heatxc_8h_source}{}\label{sg__heatxc_8h_source}\index{fluent20.1.0/src/ht/sg\_heatxc.h@{fluent20.1.0/src/ht/sg\_heatxc.h}}
+\mbox{\hyperlink{sg__heatxc_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_FLUENT\_SG\_HEATXC\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_FLUENT\_SG\_HEATXC\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ RP\_3D}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ Declaration\ of\ structures\ */}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }heat\_ex\_group\ HXG;}
+\DoxyCodeLine{00012\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }heat\_ex\_bank\ HX\_BANK;}
+\DoxyCodeLine{00013\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }hxc\_macro\_struct\ HXC\_Macro;}
+\DoxyCodeLine{00014\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }macro\_cell\_struct\ MCell;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ HEAT\_MAXNAMELEN\ 50}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ MAX\_TABLE\_ROW\ 20}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ MAX\_TABLE\_COL\ 20}}
+\DoxyCodeLine{00019\ \textcolor{comment}{/*\ Define\ all\ structures\ */}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{/*\ There\ can\ be\ multiple\ series\ of\ heat\ exchanger\ groups.\ "{}next"{}\ and}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ "{}previous"{}\ are\ pointers\ to\ the\ heat\ exchanger\ group\ in\ same\ series}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ whereas\ "{}Nseries"{}\ is\ pointer\ to\ the\ next\ series\ heat\ exchanger\ group\ */}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00026\ \{}
+\DoxyCodeLine{00027\ \ \ INPUT\_CONSTANT\ =\ 0,}
+\DoxyCodeLine{00028\ \ \ INPUT\_POLYNOMIAL,}
+\DoxyCodeLine{00029\ \ \ INPUT\_UDF}
+\DoxyCodeLine{00030\ \}\ Input\_type;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }pinput}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ Input\_type\ type;\ \ \textcolor{comment}{/*\ constant,\ polynomial\ or\ udf\ */}}
+\DoxyCodeLine{00035\ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00036\ \ \ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{structpolynomial__struct}{Polynomial}}\ *pl;}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{dbgmsg_8h_a5f5a64ef503db0fc824df8320929b126}{real}}\ (*pudf)(\mbox{\hyperlink{dbgmsg_8h_a5f5a64ef503db0fc824df8320929b126}{real}});}
+\DoxyCodeLine{00039\ \ \ \}\ input;}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ xoutval;}
+\DoxyCodeLine{00041\ \}\ Pinput;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }heat\_rej\_table}
+\DoxyCodeLine{00044\ \{}
+\DoxyCodeLine{00045\ \ \ \textcolor{keywordtype}{int}\ ng;}
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{int}\ nc;}
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Thot,\ Tcold;}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ gas\_flow\_rate[\mbox{\hyperlink{dual__cell_8h_af6bed68a2950da19e49afd74f4909d74}{MAX\_TABLE\_ROW}}];\ \textcolor{comment}{/*\ size\ ng\ */}}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cool\_flow\_rate[\mbox{\hyperlink{dual__cell_8h_a8747da6907eb82c80ea0adf4f08d7aaa}{MAX\_TABLE\_COL}}];\ \textcolor{comment}{/*\ size\ nc\ */}}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ heat\_rej[\mbox{\hyperlink{dual__cell_8h_af6bed68a2950da19e49afd74f4909d74}{MAX\_TABLE\_ROW}}][\mbox{\hyperlink{dual__cell_8h_a8747da6907eb82c80ea0adf4f08d7aaa}{MAX\_TABLE\_COL}}];\ \textcolor{comment}{/*\ size\ ng*nc\ */}}
+\DoxyCodeLine{00051\ \}\ HRTable;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }hxc\_geom\_struct}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ height,\ width;}
+\DoxyCodeLine{00056\ \ \ \textcolor{keywordtype}{int}\ nrow,\ ncol,\ npasses;}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dir\_2[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}],\ dir\_3[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}],\ origin[\mbox{\hyperlink{global_8h_a602f03ea97a3b54cc96145eb3c44bc53}{ND\_ND}}];}
+\DoxyCodeLine{00058\ \}\ HxcGeom;}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ RESET\_TABLE(t)\ \ memset((void\ *)t,\ 0,\ sizeof(HRTable))}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ RESET\_INPUT(v)\ memset((void\ *)\&v,\ 0,\ sizeof(Pinput))}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{struct\ }heat\_ex\_group}
+\DoxyCodeLine{00065\ \{}
+\DoxyCodeLine{00066\ \ \ HXG\ *previous;}
+\DoxyCodeLine{00067\ \ \ HXG\ *next;}
+\DoxyCodeLine{00068\ \ \ HXG\ *Nseries;}
+\DoxyCodeLine{00069\ \ \ HXG\ *Pseries;}
+\DoxyCodeLine{00070\ \ \ HX\_BANK\ *first;}
+\DoxyCodeLine{00071\ \ \ \textcolor{keywordtype}{char}\ Name[HEAT\_MAXNAMELEN];}
+\DoxyCodeLine{00072\ \ \ \textcolor{keywordtype}{int}\ G\_ID;}
+\DoxyCodeLine{00073\ \ \ \textcolor{keywordtype}{int}\ Num\_of\_hxcs;}
+\DoxyCodeLine{00074\ \ \ Pinput\ Cool\_Flow\_Rate;\ \textcolor{comment}{/*\ Should\ always\ be\ positive\ */}}
+\DoxyCodeLine{00075\ \ \ Pinput\ Cool\_Inlet\_Temperature;\ \textcolor{comment}{/*\ if\ first\ HXG\ then\ provided\ by\ user\ else\ */}}
+\DoxyCodeLine{00076\ \ \ Pinput\ Cool\_Inlet\_Pressure;\ \ \ \ \textcolor{comment}{/*\ by\ previous\ HXG\ */}}
+\DoxyCodeLine{00077\ \ \ Pinput\ Cool\_Inlet\_Quality;}
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Cool\_Inlet\_Enthalpy;\ \ \textcolor{comment}{/*\ calculated\ from\ Cool\_Inlet\_Temperature\ */}}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Cool\_Press\_Drop;}
+\DoxyCodeLine{00080\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Cool\_Exit\_Enthalpy;\ \textcolor{comment}{/*\ Averaged\ Enthalpy\ \ over\ all\ the\ heat-\/xc}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ *\ in\ parallel\ */}}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Aux\_Stream;}
+\DoxyCodeLine{00083\ \ \ Pinput\ Aux\_mf\_Rate;\ \textcolor{comment}{/*\ May\ be\ \ positive\ or\ \ negetive\ */}}
+\DoxyCodeLine{00084\ \ \ Pinput\ Aux\_Enthalpy;}
+\DoxyCodeLine{00085\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ON;}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{struct\ }heat\_ex\_bank}
+\DoxyCodeLine{00090\ \{}
+\DoxyCodeLine{00091\ \ \ HX\_BANK\ *next;}
+\DoxyCodeLine{00092\ \ \ HXG\ *parent;}
+\DoxyCodeLine{00093\ \ \ HXC\_Macro\ *Macro;}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t;}
+\DoxyCodeLine{00095\ \ \ \textcolor{keywordtype}{int}\ Num\_macros;\ \textcolor{comment}{/*\ total\ number\ of\ macros\ in\ a\ bank\ */}}
+\DoxyCodeLine{00096\ \ \ \textcolor{keywordtype}{int}\ Num\_cols\_per\_pass;\ \textcolor{comment}{/*\ number\ of\ macros\ per\ pass\ in\ a\ row\ */}}
+\DoxyCodeLine{00097\ \ \ \textcolor{keywordtype}{int}\ Num\_rows\_per\_pass;\ \textcolor{comment}{/*\ number\ of\ macros\ per\ pass\ in\ a\ column\ */}}
+\DoxyCodeLine{00098\ \ \ \textcolor{keywordtype}{int}\ Num\_of\_Eff;}
+\DoxyCodeLine{00099\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *Eff\_Vel;\ \textcolor{comment}{/*for\ ntu\ model\ read\ this\ as\ gas\ flow\ rate*/}}
+\DoxyCodeLine{00100\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *Eff\_Eff;\ \textcolor{comment}{/*for\ ntu\ model\ read\ this\ as\ ntu\ values*/}}
+\DoxyCodeLine{00101\ \ \ Pinput\ Q\_Rej;}
+\DoxyCodeLine{00102\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ CP;}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Mdot;\ \ \ \ \textcolor{comment}{/*\ Flow\ rate\ of\ coolant\ */}}
+\DoxyCodeLine{00104\ \ \ \mbox{\hyperlink{dbgmsg_8h_a5f5a64ef503db0fc824df8320929b126}{real}}\ (*prop)(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}},\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ int);}
+\DoxyCodeLine{00105\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Farea;\ \ \ \textcolor{comment}{/*\ Total\ frontal\ area\ of\ the\ bank\ */}}
+\DoxyCodeLine{00106\ \ \ HRTable\ *table;\ \textcolor{comment}{/*\ table\ containing\ the\ heat\ rejection\ for\ various\ mass}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flow\ rates\ of\ gas\ and\ coolant\ */}}
+\DoxyCodeLine{00108\ \ \ HxcGeom\ geom;}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ntu\_method;}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ ON;}
+\DoxyCodeLine{00111\ \};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{struct\ }hxc\_macro\_struct}
+\DoxyCodeLine{00114\ \{}
+\DoxyCodeLine{00115\ \ \ MCell\ *C\_List;\ \ \textcolor{comment}{/*\ linked\ list\ of\ all\ the\ cells\ in\ this\ macro\ */}}
+\DoxyCodeLine{00116\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ H\_Inlet;\ \ \ \textcolor{comment}{/*\ inlet\ enthalpy\ of\ the\ coolant\ */}}
+\DoxyCodeLine{00117\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Tin\_g;\ \ \ \ \ \textcolor{comment}{/*\ inlet\ temperature\ of\ the\ gas\ */}}
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Pavg;}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Face\_Area;}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Volume;}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Mdot\_c;\ \ \ \textcolor{comment}{/*\ Mass\ flow\ rate\ of\ the\ coolant\ */}}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Mdot\_g;\ \ \ \textcolor{comment}{/*\ Mass\ flow\ rate\ of\ gas\ */}}
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Q\_Sum;}
+\DoxyCodeLine{00124\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ MdotCP;\ \ \ \textcolor{comment}{/*\ heat\ capacity\ rate\ for\ gas*/}}
+\DoxyCodeLine{00125\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Eff\_Ave;}
+\DoxyCodeLine{00126\ \};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{keyword}{struct\ }macro\_cell\_struct}
+\DoxyCodeLine{00130\ \{}
+\DoxyCodeLine{00131\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcell__and__thread__struct}{cell\_and\_thread\_struct}}\ c;}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ asReal;}
+\DoxyCodeLine{00133\ \ \ \textcolor{keyword}{struct\ }macro\_cell\_struct\ *next;}
+\DoxyCodeLine{00134\ \};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{comment}{/*\ Define\ prototypes\ for\ heat\ exchanger\ model\ */}}
+\DoxyCodeLine{00140\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Reset\_HXG\_Memory(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00141\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ HX\_BANK\ *Lookup\_HX\_Bank(\textcolor{keywordtype}{int}\ tid);}
+\DoxyCodeLine{00142\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_Inlet\_Enthalpy(\textcolor{keywordtype}{int}\ tid,\ \textcolor{keywordtype}{int}\ count,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ enth\_list[]);}
+\DoxyCodeLine{00143\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_Inlet\_Enthalpy(\textcolor{keywordtype}{int}\ tid,\ \textcolor{keywordtype}{int}\ *count,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ enth\_list[]);}
+\DoxyCodeLine{00144\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_HXC\_Eff(\textcolor{keywordtype}{int}\ tid,\ \textcolor{keywordtype}{int}\ num\_of\_points,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ vel[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ eff[]);}
+\DoxyCodeLine{00145\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_gas\_cool\_table(\textcolor{keywordtype}{int}\ tid,\ \textcolor{keywordtype}{int}\ gas\_points,\ \textcolor{keywordtype}{int}\ cool\_points,}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ thot,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ tcold,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ gas\_fr[],}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cool\_fr[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ q[]);}
+\DoxyCodeLine{00148\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Get\_Temp(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ enth,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ press,\ HX\_BANK\ *bnk);}
+\DoxyCodeLine{00149\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Get\_Enthalpy(\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ temp,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ press,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ qual,\ HX\_BANK\ *bnk);}
+\DoxyCodeLine{00150\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_HXC\_Coolant(HX\_BANK\ *bnk,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ hin,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ qrej,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cp,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ mdot);}
+\DoxyCodeLine{00151\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ HXG\ *Get\_HXG(\textcolor{keywordtype}{int}\ hid);}
+\DoxyCodeLine{00152\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Init\_HXG(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *dm,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{int}\ nbanks,}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ uphxid,\ \mbox{\hyperlink{structobj}{Pointer}}\ mdot,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cp,\ \mbox{\hyperlink{structobj}{Pointer}}\ qrej,\ \mbox{\hyperlink{structobj}{Pointer}}\ tin,\ \mbox{\hyperlink{structobj}{Pointer}}\ pin,}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ qual,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ del\_p,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ aux,\ \mbox{\hyperlink{structobj}{Pointer}}\ amdot,\ \mbox{\hyperlink{structobj}{Pointer}}\ at,}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ aq,\ \mbox{\hyperlink{structobj}{Pointer}}\ input);}
+\DoxyCodeLine{00156\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Change\_HXG\_Memory(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ uphid,\ \textcolor{keywordtype}{int}\ Num\_of\_Threads,\ \textcolor{keywordtype}{int}\ th\_ids[]);}
+\DoxyCodeLine{00158\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Allocate\_HXG\_Memory(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ uphid,\ \textcolor{keywordtype}{int}\ Num\_of\_Threads,\ \textcolor{keywordtype}{int}\ th\_ids[]);}
+\DoxyCodeLine{00160\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Ishxc(\mbox{\hyperlink{structthread__struct}{Thread}}\ *t);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_HXG\_Enthalpy(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00164\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Init\_HXC\_Model(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *d,\ HX\_BANK\ *bnk,\ \textcolor{keywordtype}{int}\ nrow,\ \textcolor{keywordtype}{int}\ ncol,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ width,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ height,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ depth,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cen[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dir\_2[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ dir\_3[],}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ tin,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ pin,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ qual,\ \mbox{\hyperlink{structobj}{Pointer}}\ q\_rej,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ cp,}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ mdot,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fcn,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ flow\_dir[],\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ \textcolor{keyword}{override},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});}
+\DoxyCodeLine{00169\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ HXC\_Draw\_Macro(HX\_BANK\ *b,\ \textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00170\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ HXC\_Source\_Term(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain);}
+\DoxyCodeLine{00171\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ HXC\_Source(HX\_BANK\ *bnk,\ \textcolor{keywordtype}{int}\ opt);}
+\DoxyCodeLine{00172\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_HXC\_Dimension(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *domain,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *t,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *h,}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *w,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *d,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ r[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ g[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ b[],\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ c[]);}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_HXC\_Info(\textcolor{keywordtype}{int}\ tid,\ \textcolor{keywordtype}{int}\ opt,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ res[]);}
+\DoxyCodeLine{00177\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Write\_Macro\_Report(\textcolor{keywordtype}{int}\ tid,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *zname);}
+\DoxyCodeLine{00178\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Set\_HXC\_Status(\textcolor{keywordtype}{int}\ tid,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ status);}
+\DoxyCodeLine{00179\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ HXC\_Macro\ *Get\_Macro(HX\_BANK\ *bnk,\ \textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00180\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Report\_Connectivity(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00181\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Delete\_HXG(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Get\_Ntu\_Array(\textcolor{keywordtype}{int}\ tid,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ ntu[],\ \textcolor{keywordtype}{int}\ *np,\ \textcolor{keywordtype}{int}\ *na);}
+\DoxyCodeLine{00186\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Report\_Macro\_Model(\textcolor{keywordtype}{int}\ tid,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *type,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *zone,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *val);}
+\DoxyCodeLine{00187\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Get\_Aux\_Mdot(\textcolor{keywordtype}{int}\ tid,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *mdot);}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{comment}{/*\ this\ is\ needed\ for\ user\ defined\ functions\ */}}
+\DoxyCodeLine{00191\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{dbgmsg_8h_a5f5a64ef503db0fc824df8320929b126}{real}}\ (*HXC\_Cell\_Source)(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *,\ int);}
+\DoxyCodeLine{00192\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ Default\_HXC\_Cell\_Source(\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\_t}}\ c,\ \mbox{\hyperlink{structthread__struct}{Thread}}\ *tc,\ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *por,\ \textcolor{keywordtype}{int}\ m\_index);}
+\DoxyCodeLine{00193\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Ismmhxc(\mbox{\hyperlink{structthread__struct}{Thread}}\ *);}
+\DoxyCodeLine{00194\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Restore\_Macro\_Model\_Connectivity(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{comment}{/*\ define\ macros\ */}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#define\ loop\_macro(i,mc,mc0)\ for(i\ =\ 0,\ mc\ =\ mc0;\ mc\ !=\ NULL;\ mc\ =\ mc-\/>next,\ ++i)}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ loop\_hxg(g,\ g0)\ for(\ g\ =\ g0;\ g\ !=\ NULL;\ g\ =\ (g-\/>next\ ?\ g-\/>next\ :\ g-\/>Nseries))}}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#define\ FIRST(p)\ \ \ \ \ \ \ \ (p)-\/>first\ \ \ \ \ \ }\textcolor{comment}{/*\ first\ child's\ pointer\ \ \ \ \ \ \ \ \ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#define\ NEXT(p)\ \ \ \ \ \ \ \ \ (p)-\/>next}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ PREV(p)\ \ \ \ \ \ \ \ \ (p)-\/>previous}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#define\ NSERIES(g)\ \ \ \ \ \ (g)-\/>Nseries}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#define\ PSERIES(g)\ \ \ \ \ \ (g)-\/>Pseries}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ HXG\_BANK(g)\ \ \ \ \ FIRST(g)}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ HXG\_NAME(g)\ \ \ \ \ (g)-\/>Name}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ HXG\_ID(g)\ \ \ \ \ \ \ (g)-\/>G\_ID}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ HXG\_NBANKS(g)\ \ \ (g)-\/>Num\_of\_hxcs}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ HXG\_CFR(g)\ \ \ \ \ \ (g)-\/>Cool\_Flow\_Rate}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ HXG\_CIE(g)\ \ \ \ \ \ (g)-\/>Cool\_Inlet\_Enthalpy}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#define\ HXG\_CIT(g)\ \ \ \ \ \ (g)-\/>Cool\_Inlet\_Temperature}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ HXG\_CIP(g)\ \ \ \ \ \ (g)-\/>Cool\_Inlet\_Pressure}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ HXG\_CIX(g)\ \ \ \ \ \ (g)-\/>Cool\_Inlet\_Quality}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ HXG\_CPD(g)\ \ \ \ \ \ (g)-\/>Cool\_Press\_Drop}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ HXG\_CEE(g)\ \ \ \ \ \ (g)-\/>Cool\_Exit\_Enthalpy}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ HXG\_AS\_ON(g)\ \ \ \ (g)-\/>Aux\_Stream}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ HXG\_AS\_MFR(g)\ \ \ (g)-\/>Aux\_mf\_Rate}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ HXG\_AS\_ENTH(g)\ \ (g)-\/>Aux\_Enthalpy}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ HXG\_ON(g)\ \ \ \ \ \ \ (g)-\/>ON}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ HXG(b)\ \ \ \ \ \ \ \ \ \ (b)-\/>parent}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ HXC\_MACRO(b)\ \ \ \ (b)-\/>Macro}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ HXC\_THREAD(b)\ \ \ (b)-\/>t}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ HXC\_NMACROS(b)\ \ (b)-\/>Num\_macros}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ HXC\_COLSPP(b)\ \ \ (b)-\/>Num\_cols\_per\_pass}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#define\ HXC\_ROWSPP(b)\ \ \ (b)-\/>Num\_rows\_per\_pass}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ HXC\_NEFF(b)\ \ \ \ \ (b)-\/>Num\_of\_Eff}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ HXC\_EFF(b)\ \ \ \ \ \ (b)-\/>Eff}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ HXC\_EVEL(b)\ \ \ \ \ (b)-\/>Eff\_Vel}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ HXC\_EEFF(b)\ \ \ \ \ (b)-\/>Eff\_Eff}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#define\ HXC\_QREJ(b)\ \ \ \ \ (b)-\/>Q\_Rej}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ HXC\_CP(b)\ \ \ \ \ \ \ (b)-\/>CP}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ HXC\_PROP(b)\ \ \ \ \ (b)-\/>prop}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ HXC\_MDOT(b)\ \ \ \ \ (b)-\/>Mdot}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ HXC\_FAREA(b)\ \ \ \ (b)-\/>Farea}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#define\ HXC\_TABLE(b)\ \ \ \ (b)-\/>table}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ HXC\_TNGFR(b)\ \ \ \ (b)-\/>table-\/>ng}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#define\ HXC\_TNCFR(b)\ \ \ \ (b)-\/>table-\/>nc}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ HXC\_TGFR(b)\ \ \ \ \ (b)-\/>table-\/>gas\_flow\_rate}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ HXC\_TCFR(b)\ \ \ \ \ (b)-\/>table-\/>cool\_flow\_rate}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ HXC\_THR(b)\ \ \ \ \ \ (b)-\/>table-\/>heat\_rej}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ HXC\_TTHOT(b)\ \ \ \ (b)-\/>table-\/>Thot}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ HXC\_TTCOLD(b)\ \ \ (b)-\/>table-\/>Tcold}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ HXC\_ON(b)\ \ \ \ \ \ \ (b)-\/>ON}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ MACRO\_CLIST(b,m)\ \ \ \ \ \ (b)-\/>Macro[m].C\_List}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ MACRO\_HINLET(b,m)\ \ \ \ \ (b)-\/>Macro[m].H\_Inlet}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ MACRO\_TING(b,m)\ \ \ \ \ \ \ (b)-\/>Macro[m].Tin\_g}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ MACRO\_PAVG(b,m)\ \ \ \ \ \ \ (b)-\/>Macro[m].Pavg}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ MACRO\_FACE\_AREA(b,m)\ \ (b)-\/>Macro[m].Face\_Area}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ MACRO\_VOLUME(b,m)\ \ \ \ \ (b)-\/>Macro[m].Volume}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ MACRO\_MDOTC(b,m)\ \ \ \ \ \ (b)-\/>Macro[m].Mdot\_c}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ MACRO\_MDOTG(b,m)\ \ \ \ \ \ (b)-\/>Macro[m].Mdot\_g}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ MACRO\_QSUM(b,m)\ \ \ \ \ \ \ (b)-\/>Macro[m].Q\_Sum}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ MACRO\_MDOTCP(b,m)\ \ \ \ \ (b)-\/>Macro[m].MdotCP}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ MACRO\_EFF\_AVE(b,m)\ \ \ \ (b)-\/>Macro[m].Eff\_Ave}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ M\_CELL(o)\ \ \ \ \ \ \ \ (o)-\/>c.c}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ M\_CELL\_THREAD(o)\ (o)-\/>c.t}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ M\_CELL\_Q(o)\ \ \ \ \ \ (o)-\/>asReal}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{comment}{/*\ global\ variable\ declaration\ */}}
+\DoxyCodeLine{00268\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ Num\_of\_HXG;}
+\DoxyCodeLine{00269\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ HXG\ *Root\_HXG;}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ if\ RP\_3D\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

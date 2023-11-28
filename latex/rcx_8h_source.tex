@@ -1,0 +1,512 @@
+\doxysection{rcx.\+h}
+\hypertarget{rcx_8h_source}{}\label{rcx_8h_source}\index{fluent20.1.0/cortex/src/rcx.h@{fluent20.1.0/cortex/src/rcx.h}}
+\mbox{\hyperlink{rcx_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_Rcx\_h}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_Rcx\_h}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ CX\_PROGRAM}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{seem_8h}{seem.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cxfields_8h}{cxfields.h}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{/*\ An\ arbitrary\ port\ for\ the\ portmapper\ (decimal\ 805306487)\ */}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ CX\_PROGRAM\ 0x30000077}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ CX\_VERSION\ 1}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{/*\ An\ arbitrary\ port\ for\ the\ portmapper\ */}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ SV\_PROGRAM\ 0x30000097}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ SV\_VERSION\ 1}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{/*\ RCX\ data\ structures\ */}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ define\ CX\_XDR\ XDR}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ define\ CX\_XPRT\ SVCXPRT}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ define\ CX\_SVC\_REQ\ struct\ svc\_req\ *}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#\ define\ CX\_CLIENT\ CLIENT}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{/*\ RPC\ argument\ data\ structures.\ */}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\ Maximum\ length\ of\ a\ string\ argument\ (including\ the\ terminal\ '\(\backslash\)0').\ */}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ HOOPS\_STRING\_LENGTH\ 256}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ CORTEX\_STRING\_LENGTH\ HOOPS\_STRING\_LENGTH}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{/*\ Maximum\ length\ of\ lists\ of\ floats\ and\ ints.\ */}}
+\DoxyCodeLine{00035\ \textcolor{comment}{/*\ \ \#define\ HOOPS\_FLOATS\_LENGTH\ 2040\ \ (dt\ -\/\ Nov\ 10,\ 1998)\ */}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ HOOPS\_FLOATS\_LENGTH\ 20400}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ HOOPS\_INTS\_LENGTH\ 1020}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ HOOPS\_LONGS\_LENGTH\ 1020}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ HOOPS\_BYTES\_LENGTH\ 81920}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ CORTEX\_FLOATS\_LENGTH\ HOOPS\_FLOATS\_LENGTH}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#if\ \_AIX}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#ifndef\ TCP\_MAX\_REQUEST\_SIZE}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ TCP\_MAX\_REQUEST\_SIZE\ 8388608}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ BREAK\_RPC\_MSGS\ 1}}
+\DoxyCodeLine{00047\ \textcolor{comment}{/*\ keep\ the\ size\ less\ than\ max\ allowed\ \ 31/32(=\ 0.96875).}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ \ \ This\ number\ is\ arbitrary\ just\ to\ make\ sure}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ \ \ the\ resulting\ numbers\ are\ integers\ less\ than\ one}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ \ \ but\ close\ to\ one.*/}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ MAX\_FLT\_RPC\_LEN\ 0.96875*TCP\_MAX\_REQUEST\_SIZE/sizeof(float)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ MAX\_INT\_RPC\_LEN\ 0.96875*TCP\_MAX\_REQUEST\_SIZE/sizeof(int)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ MAX\_LONG\_RPC\_LEN\ 0.96875*TCP\_MAX\_REQUEST\_SIZE/sizeof(long)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ BREAK\_RPC\_MSGS\ 0}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{comment}{/*\ Variable\ length\ list\ of\ floats\ */}}
+\DoxyCodeLine{00060\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfloat__list}{float\_list}}}
+\DoxyCodeLine{00061\ \{}
+\DoxyCodeLine{00062\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structfloat__list_ab64c58141e78e6560c4ee83a8d3e17be}{f}};}
+\DoxyCodeLine{00063\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structfloat__list_a7d46b74409bd32b539089ef4721ea544}{n}};}
+\DoxyCodeLine{00064\ \}\ \mbox{\hyperlink{structfloat__list}{float\_list}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{comment}{/*\ A\ re-\/numbered\ float\ list:\ */}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structrfloat__list}{rfloat\_list}}}
+\DoxyCodeLine{00068\ \{}
+\DoxyCodeLine{00069\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structrfloat__list_ab64c58141e78e6560c4ee83a8d3e17be}{f}};}
+\DoxyCodeLine{00070\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structrfloat__list_a7d46b74409bd32b539089ef4721ea544}{n}};}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#if\ WIN64}}
+\DoxyCodeLine{00072\ \ \ LONG\_PTR\ \mbox{\hyperlink{structrfloat__list_a166d56cfd4c4c4d27db0bd3cd0fe81d9}{k}};}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00074\ \ \ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{structrfloat__list_a166d56cfd4c4c4d27db0bd3cd0fe81d9}{k}};}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00076\ \}\ \mbox{\hyperlink{structrfloat__list}{rfloat\_list}};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdouble__list}{double\_list}}}
+\DoxyCodeLine{00079\ \{}
+\DoxyCodeLine{00080\ \ \ \textcolor{keywordtype}{double}\ *\mbox{\hyperlink{structdouble__list_ae6261d15419eb591b3f65c5f8cd7b8cb}{d}};}
+\DoxyCodeLine{00081\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdouble__list_a7d46b74409bd32b539089ef4721ea544}{n}};}
+\DoxyCodeLine{00082\ \}\ \mbox{\hyperlink{structdouble__list}{double\_list}};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structxy__float__array}{xy\_float\_array}}}
+\DoxyCodeLine{00085\ \{}
+\DoxyCodeLine{00086\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structxy__float__array_a7d46b74409bd32b539089ef4721ea544}{n}};}
+\DoxyCodeLine{00087\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structxy__float__array_a51262fa06c263b0dfd25c45b80656f24}{x}};}
+\DoxyCodeLine{00088\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structxy__float__array_a68c65955a7303fbed706a45a00f9487b}{y}};}
+\DoxyCodeLine{00089\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structxy__float__array_a3e4cb2b702a5e750bdddfdc8b732c980}{active}};}
+\DoxyCodeLine{00090\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structxy__float__array_a05d4f61e166fca20c63e6952378ef824}{nactive}};}
+\DoxyCodeLine{00091\ \}\ \mbox{\hyperlink{structxy__float__array}{xy\_float\_array}};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structint__list}{int\_list}}}
+\DoxyCodeLine{00094\ \{}
+\DoxyCodeLine{00095\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structint__list_a9384343c8d6a756c1d78cdc73d351b8e}{i}};}
+\DoxyCodeLine{00096\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structint__list_a7d46b74409bd32b539089ef4721ea544}{n}};}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#if\ BREAK\_RPC\_MSGS}}
+\DoxyCodeLine{00098\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ n\_total;}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00100\ \}\ \mbox{\hyperlink{rcx_8h_a1248cf1bf7088338a44db4a6740b9a02}{int\_list}};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structstring}{string}}}
+\DoxyCodeLine{00103\ \{}
+\DoxyCodeLine{00104\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structstring_ab51cd24d34f6509eafb5e059f4c7d10e}{s}};}
+\DoxyCodeLine{00105\ \}\ \mbox{\hyperlink{structstring}{string}};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structstring__list}{string\_list}}}
+\DoxyCodeLine{00108\ \{}
+\DoxyCodeLine{00109\ \ \ \textcolor{keywordtype}{char}\ **\mbox{\hyperlink{structstring__list_a4ed3f91cfab18ed8dc0db666f4e5bdbc}{s}};}
+\DoxyCodeLine{00110\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structstring__list_a7d46b74409bd32b539089ef4721ea544}{n}};}
+\DoxyCodeLine{00111\ \}\ \mbox{\hyperlink{structstring__list}{string\_list}};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{comment}{/*\ for\ CX\_Start\_Draw\_Grid\ rpc\ */}}
+\DoxyCodeLine{00114\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structint2__str2}{int2\_str2}}}
+\DoxyCodeLine{00115\ \{}
+\DoxyCodeLine{00116\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structint2__str2_acb559820d9ca11295b4500f179ef6392}{i}},\ \mbox{\hyperlink{structint2__str2_a37d972ae0b47b9099e30983131d31916}{j}};}
+\DoxyCodeLine{00117\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structint2__str2_ab51cd24d34f6509eafb5e059f4c7d10e}{s}},\ *\mbox{\hyperlink{structint2__str2_a81dec0ddaa952009b117d65f191b4d52}{t}};}
+\DoxyCodeLine{00118\ \}\ \mbox{\hyperlink{structint2__str2}{int2\_str2}};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{comment}{/*\ Lots\ of\ HOOPS\ calls\ take\ exactly\ two\ strings.\ */}}
+\DoxyCodeLine{00121\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtwo__strings}{two\_strings}}}
+\DoxyCodeLine{00122\ \{}
+\DoxyCodeLine{00123\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structtwo__strings_a62945777219298fae14ecad4c6dd87f7}{s1}},\ *\mbox{\hyperlink{structtwo__strings_a9362ef4e71c40cb148531453ef0fea1f}{s2}};}
+\DoxyCodeLine{00124\ \}\ \mbox{\hyperlink{structtwo__strings}{two\_strings}};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structstring__int}{string\_int}}}
+\DoxyCodeLine{00127\ \{}
+\DoxyCodeLine{00128\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structstring__int_ab51cd24d34f6509eafb5e059f4c7d10e}{s}};}
+\DoxyCodeLine{00129\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structstring__int_acb559820d9ca11295b4500f179ef6392}{i}};}
+\DoxyCodeLine{00130\ \}\ \mbox{\hyperlink{structstring__int}{string\_int}};}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{comment}{/*\ Shell\ data\ structure.\ */}}
+\DoxyCodeLine{00133\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structshell}{shell}}}
+\DoxyCodeLine{00134\ \{}
+\DoxyCodeLine{00135\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structshell_a67b3bde25c933874d93fd30f06b55f65}{np}},\ \mbox{\hyperlink{structshell_a0c2a9be53b76320df968fc9d71398ce3}{nf}},\ \mbox{\hyperlink{structshell_a12ab5fbd98ecd6d742cc506965d50dfe}{nk}};}
+\DoxyCodeLine{00136\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structshell_abc467a070a9d8b095a140cf68c017fce}{points}};}
+\DoxyCodeLine{00137\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structshell_a952633aac593ee8d692314906f5bdb42}{faces}};}
+\DoxyCodeLine{00138\ \ \ \textcolor{keywordtype}{long}\ *\mbox{\hyperlink{structshell_acff2eb3307dc582578a42475651b519f}{indices}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ cxindex\ */}}
+\DoxyCodeLine{00139\ \ \ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{structshell_a166d56cfd4c4c4d27db0bd3cd0fe81d9}{k}};}
+\DoxyCodeLine{00140\ \}\ \mbox{\hyperlink{structshell}{shell}};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{comment}{/*\ tgrid\ shell\ data\ structure.\ */}}
+\DoxyCodeLine{00143\ \textcolor{comment}{/*\ used\ to\ account\ for\ (USE\_INT64)\ and\ cxindex\ that\ are}}
+\DoxyCodeLine{00144\ \textcolor{comment}{\ *\ not\ used\ in\ cortex\ currently,\ once\ USE\_INT64\ and\ cxindex\ are\ available\ the}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ *\ indices\ can\ be\ set\ cxindex\ */}}
+\DoxyCodeLine{00146\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structshell__xfer}{shell\_xfer}}}
+\DoxyCodeLine{00147\ \{}
+\DoxyCodeLine{00148\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structshell__xfer_a750b5d744c39a06bfb13e6eb010e35d0}{index}},\ \mbox{\hyperlink{structshell__xfer_ac85d5511fdb8d162a7278bfb440ae420}{order}};}
+\DoxyCodeLine{00149\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structshell__xfer_a67b3bde25c933874d93fd30f06b55f65}{np}},\ \mbox{\hyperlink{structshell__xfer_acb8adb72694694de5220cb1bb6a7ff53}{nfl}},\ \mbox{\hyperlink{structshell__xfer_a0c2a9be53b76320df968fc9d71398ce3}{nf}};}
+\DoxyCodeLine{00150\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structshell__xfer_abc467a070a9d8b095a140cf68c017fce}{points}};}
+\DoxyCodeLine{00151\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structshell__xfer_a4dff30f2d2b141866e0123570bb6a4e3}{facets}};}
+\DoxyCodeLine{00152\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structshell__xfer_aeaa21af1d2140d30202f570b0262060c}{indices}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ cxindex\ (int\ for\ rinsert,\ long\ for\ rlinsert\ */}}
+\DoxyCodeLine{00153\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structshell__xfer_a2d47d4eedf96a3edb932ad0b45271e8a}{flags}};}
+\DoxyCodeLine{00154\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structshell__xfer_a4aae22ef13d77df6d79fd3fed8418da8}{fsize}};}
+\DoxyCodeLine{00155\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structshell__xfer_a7b27160e422437e06da5812e60024be4}{fskew}};}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#if\ BREAK\_RPC\_MSGS}}
+\DoxyCodeLine{00157\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ np\_total,\ nfl\_total,\ nf\_total;}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00159\ \}\ \mbox{\hyperlink{structshell__xfer}{shell\_xfer}};}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structshell__multi__xfer}{shell\_multi\_xfer}}}
+\DoxyCodeLine{00162\ \{}
+\DoxyCodeLine{00163\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structshell__multi__xfer_a09b9d0a78498a73bcb2f345e9769106e}{nshells}};}
+\DoxyCodeLine{00164\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structshell__multi__xfer_aadb8a3203dfa284bfb5d821049c7b68c}{ntotalp}},\ \mbox{\hyperlink{structshell__multi__xfer_ade66cfb10b921e1b0cbaf9f10d67c0b2}{ntotalfl}},\ \mbox{\hyperlink{structshell__multi__xfer_a266934d9d449e2a741d3add58499fb37}{ntotalf}};}
+\DoxyCodeLine{00165\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structshell__multi__xfer_a95e9e0f8a692321b83a2e0ce2789c485}{index}},\ *\mbox{\hyperlink{structshell__multi__xfer_af575529837486133af79683852331458}{order}};}
+\DoxyCodeLine{00166\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structshell__multi__xfer_a5768b6b1d4e415d2bb767a87ed0491a4}{np}},\ *\mbox{\hyperlink{structshell__multi__xfer_ad9bdd841bca155af0babef7c989a7b49}{nfl}},\ *\mbox{\hyperlink{structshell__multi__xfer_ae48c6c9e8b3ac6969ba30d6c1e57ad9f}{nf}};}
+\DoxyCodeLine{00167\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structshell__multi__xfer_abc467a070a9d8b095a140cf68c017fce}{points}};}
+\DoxyCodeLine{00168\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structshell__multi__xfer_a4dff30f2d2b141866e0123570bb6a4e3}{facets}};}
+\DoxyCodeLine{00169\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structshell__multi__xfer_aeaa21af1d2140d30202f570b0262060c}{indices}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ cxindex\ (int\ for\ rinsert,\ long\ for\ rlinsert\ */}}
+\DoxyCodeLine{00170\ \ \ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{structshell__multi__xfer_a2d47d4eedf96a3edb932ad0b45271e8a}{flags}};}
+\DoxyCodeLine{00171\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structshell__multi__xfer_a4aae22ef13d77df6d79fd3fed8418da8}{fsize}};}
+\DoxyCodeLine{00172\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structshell__multi__xfer_a7b27160e422437e06da5812e60024be4}{fskew}};}
+\DoxyCodeLine{00173\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structshell__multi__xfer_a5502034b4e453167e0d66df7174f6b75}{seg}};}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#if\ BREAK\_RPC\_MSGS}}
+\DoxyCodeLine{00175\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ np\_total,\ nfl\_total,\ nf\_total;}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00177\ \}\ \mbox{\hyperlink{structshell__multi__xfer}{shell\_multi\_xfer}};}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{comment}{/*Cylinder\ data\ structure\ */}}
+\DoxyCodeLine{00180\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcylinder__str}{cylinder\_str}}}
+\DoxyCodeLine{00181\ \{}
+\DoxyCodeLine{00182\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structcylinder__str_abc467a070a9d8b095a140cf68c017fce}{points}};}
+\DoxyCodeLine{00183\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structcylinder__str_a928495140935d9d6ce0a100550473140}{np}};}
+\DoxyCodeLine{00184\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structcylinder__str_a4788d82c901b9367dd5c0daff8a7616b}{r}};}
+\DoxyCodeLine{00185\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structcylinder__str_ab51cd24d34f6509eafb5e059f4c7d10e}{s}};}
+\DoxyCodeLine{00186\ \}\ \mbox{\hyperlink{structcylinder__str}{cylinder\_str}};}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structsurface__xfer}{surface\_xfer}}}
+\DoxyCodeLine{00190\ \{}
+\DoxyCodeLine{00191\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsurface__xfer_a750b5d744c39a06bfb13e6eb010e35d0}{index}},\ \mbox{\hyperlink{structsurface__xfer_aad2c7f0437a34192dce5896d84b6a786}{nf}},\ \mbox{\hyperlink{structsurface__xfer_a70b5e28b5bc3d1b63a7435c5fe50b837}{dim}};}
+\DoxyCodeLine{00192\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structsurface__xfer_a67b3bde25c933874d93fd30f06b55f65}{np}},\ \mbox{\hyperlink{structsurface__xfer_acb8adb72694694de5220cb1bb6a7ff53}{nfl}};}
+\DoxyCodeLine{00193\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structsurface__xfer_abc467a070a9d8b095a140cf68c017fce}{points}};}
+\DoxyCodeLine{00194\ \ \ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{structsurface__xfer_a4dff30f2d2b141866e0123570bb6a4e3}{facets}};}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#if\ BREAK\_RPC\_MSGS}}
+\DoxyCodeLine{00196\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ np\_total,\ nfl\_total;}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00198\ \}\ \mbox{\hyperlink{structsurface__xfer}{surface\_xfer}};}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpoint__str}{point\_str}}}
+\DoxyCodeLine{00202\ \{}
+\DoxyCodeLine{00203\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structpoint__str_ad0da36b2558901e21e7a30f6c227a45e}{x}},\ \mbox{\hyperlink{structpoint__str_aa4f0d3eebc3c443f9be81bf48561a217}{y}},\ \mbox{\hyperlink{structpoint__str_af73583b1e980b0aa03f9884812e9fd4d}{z}};}
+\DoxyCodeLine{00204\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structpoint__str_ab51cd24d34f6509eafb5e059f4c7d10e}{s}};}
+\DoxyCodeLine{00205\ \}\ \mbox{\hyperlink{structpoint__str}{point\_str}};}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{comment}{/*\ pathline\ xfer\ data\ structure\ -\/\ GM\ */}}
+\DoxyCodeLine{00208\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structpath__xfer}{path\_xfer}}}
+\DoxyCodeLine{00209\ \{}
+\DoxyCodeLine{00210\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structpath__xfer_a97798c8f0c55fc16f04189235fb6650a}{size\_p}},\ \mbox{\hyperlink{structpath__xfer_a53d97a309bac87dd577a6d34e13500ce}{size\_sc}},\ \mbox{\hyperlink{structpath__xfer_ae2d8f21000752ddfe3910b9f88adbc94}{size\_i}};}
+\DoxyCodeLine{00211\ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ *\mbox{\hyperlink{structpath__xfer_abc467a070a9d8b095a140cf68c017fce}{points}};}
+\DoxyCodeLine{00212\ \ \ \textcolor{keywordtype}{float}\ *\mbox{\hyperlink{structpath__xfer_a8e57706914ce55912bbcee0146c5a1a2}{scalars}};}
+\DoxyCodeLine{00213\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{structpath__xfer_aaf06fd06b08cd4a08221af1ca9363fd1}{path\_ints}};}
+\DoxyCodeLine{00214\ \}\ \mbox{\hyperlink{structpath__xfer}{path\_xfer}};}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structcamera__by__volume}{camera\_by\_volume}}}
+\DoxyCodeLine{00217\ \{}
+\DoxyCodeLine{00218\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structcamera__by__volume_aaa1ebe818ec1c763a776cc580551f3e6}{p}};}
+\DoxyCodeLine{00219\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structcamera__by__volume_a3c9556645d92e863376a4063a3ad7001}{x0}},\ \mbox{\hyperlink{structcamera__by__volume_a3389d8b95846602e8f94cc15f41e48e9}{x1}},\ \mbox{\hyperlink{structcamera__by__volume_adf19b8ba42d497d3093c3a51b1a32cca}{y0}},\ \mbox{\hyperlink{structcamera__by__volume_a9fe80bf4738047a31d7c162807ed85f0}{y1}};}
+\DoxyCodeLine{00220\ \}\ \mbox{\hyperlink{structcamera__by__volume}{camera\_by\_volume}};}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \textcolor{comment}{/*\ Image\ data.\ \ (dt)\ */}}
+\DoxyCodeLine{00224\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structimage__data}{image\_data}}}
+\DoxyCodeLine{00225\ \{}
+\DoxyCodeLine{00226\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structimage__data_ad0da36b2558901e21e7a30f6c227a45e}{x}},\ \mbox{\hyperlink{structimage__data_aa4f0d3eebc3c443f9be81bf48561a217}{y}},\ \mbox{\hyperlink{structimage__data_af73583b1e980b0aa03f9884812e9fd4d}{z}};}
+\DoxyCodeLine{00227\ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structimage__data_a5407a229a5e1a319d75fb29542c83eae}{format}};}
+\DoxyCodeLine{00228\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structimage__data_a2474a5474cbff19523a51eb1de01cda4}{width}},\ \mbox{\hyperlink{structimage__data_ad12fc34ce789bce6c8a05d8a17138534}{height}};}
+\DoxyCodeLine{00229\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structimage__data_ac24cea2bfcc927fd29bc74d1086707d8}{data}};}
+\DoxyCodeLine{00230\ \}\ \mbox{\hyperlink{structimage__data}{image\_data}};}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \textcolor{comment}{/*\ \ RCX\ data\ (de)serialization\ protocol\ functions.\ Hide\ the\ underlying}}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ \ XDR\ procedures\ to\ allow\ us\ to\ bypass\ them\ if\ desired.}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_void\ \ xdr\_void}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_u\_char\ \ xdr\_u\_char}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_short\ xdr\_short}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_int\ xdr\_int}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_u\_int\ \ \ xdr\_u\_int}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_enum\ \ xdr\_enum}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_long\ \ xdr\_long}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_fixnum\ \ xdr\_long}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_float\ xdr\_float}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_double\ \ xdr\_double}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_flonum\ \ xdr\_double}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#if\ \_\_alpha}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_array(x,a,n,l,s,p)\ \ xdr\_array(x,a,n,l,s,(xdrproc\_t)p)}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_array\ xdr\_array}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_string\ \ xdr\_string}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#\ define\ cx\_xdr\_bytes\ \ \ xdr\_bytes}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a2016c5233b776d699056c58916782436}{xdr\_hoops\_floats}}\ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structfloat__list}{float\_list}}\ *);}
+\DoxyCodeLine{00256\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_ab559ea247290eb2a5668fb6db916c770}{xdr\_hoops\_doubles}}\ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structdouble__list}{double\_list}}\ *);}
+\DoxyCodeLine{00257\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a9d8a01e950915963a96c254557021b53}{xdr\_hoops\_rfloats}}\ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structrfloat__list}{rfloat\_list}}\ *);}
+\DoxyCodeLine{00258\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_affd7b71a08d43130b765733c955c977c}{xdr\_hoops\_ints}}\ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structint__list}{int\_list}}\ *);}
+\DoxyCodeLine{00259\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a8b92771c126aae066dc4d318a3983dc6}{xdr\_hoops\_string}}\ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \textcolor{keywordtype}{char}\ **);}
+\DoxyCodeLine{00260\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a320e426309e8db5bb21683bfce8c6bf0}{xdr\_hoops\_string\_int}}\ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structstring__int}{string\_int}}\ *);}
+\DoxyCodeLine{00261\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_afc516f003419d997b3f7649cee133ea5}{xdr\_hoops\_2strings}}\ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structtwo__strings}{two\_strings}}\ *);}
+\DoxyCodeLine{00262\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_abf9dcc181e3ec8b4348b756cbd7787f4}{xdr\_hoops\_shell}}\ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structshell}{shell}}\ *);}
+\DoxyCodeLine{00263\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_ab7dbc0303def799caf68164f3c7b0822}{xdr\_hoops\_lshell}}\ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structshell}{shell}}\ *);}
+\DoxyCodeLine{00264\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a7edb50e5e893c0d1009229a6c2d6b2e5}{xdr\_hoops\_rshell}}\ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structshell}{shell}}\ *);}
+\DoxyCodeLine{00265\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a23fd24297a2382c018dd8ebcb6ddb3e8}{xdr\_hoops\_point\_str}}\ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structpoint__str}{point\_str}}\ *);}
+\DoxyCodeLine{00266\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_af0c5b8e41c728e678da826c9dd9d0327}{xdr\_hoops\_cambyvol}}\ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structcamera__by__volume}{camera\_by\_volume}}\ *);}
+\DoxyCodeLine{00267\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a1c80beb584009d9edac690fa45924e3f}{xdr\_hoops\_image}}\ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structimage__data}{image\_data}}\ *);}
+\DoxyCodeLine{00268\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_ac74b2b38518b298aabec87db089d18b6}{xdr\_hoops\_cylinder\_str}}\ \ \ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structcylinder__str}{cylinder\_str}}\ *);}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_ad1ada7014a893156bec7a45866c93d0f}{xdr\_cortex\_floats}}\ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structfloat__list}{float\_list}}\ *);}
+\DoxyCodeLine{00271\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_afcbe8ad2d5d06f8a83c8fa978e00c759}{xdr\_cortex\_doubles}}(\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structdouble__list}{double\_list}}\ *);}
+\DoxyCodeLine{00272\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a311e3b4ab38e8d7ce6207dadeb431ec9}{xdr\_cortex\_xyfloats}}\ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structxy__float__array}{xy\_float\_array}}\ *);}
+\DoxyCodeLine{00273\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a836c7174c1443e1a5f29b0be2222deaf}{xdr\_cortex\_int2\_str2}}\ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structint2__str2}{int2\_str2}}\ *);}
+\DoxyCodeLine{00274\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a56681224ba788f400090022f65ca90b6}{xdr\_cortex\_surface\_xfer}}\ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structsurface__xfer}{surface\_xfer}}\ *);}
+\DoxyCodeLine{00275\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a7489fc9b57f326eec4875d087e2a482e}{xdr\_rshell\_xfer}}(\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *xdrs,\ \mbox{\hyperlink{structshell__xfer}{shell\_xfer}}\ *s);}
+\DoxyCodeLine{00276\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a6cdf4d03309b9266feca0a721b7c4549}{xdr\_rshell\_multi\_xfer}}(\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *xdrs,\ \mbox{\hyperlink{structshell__multi__xfer}{shell\_multi\_xfer}}\ *s);}
+\DoxyCodeLine{00277\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a01a2e9831b750efff23f97c76c9c5866}{xdr\_rlshell\_xfer}}(\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *xdrs,\ \mbox{\hyperlink{structshell__xfer}{shell\_xfer}}\ *s);}
+\DoxyCodeLine{00278\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a1d254808ed5ef83673f882f07535ef18}{xdr\_rlshell\_multi\_xfer}}(\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *xdrs,\ \mbox{\hyperlink{structshell__multi__xfer}{shell\_multi\_xfer}}\ *s);}
+\DoxyCodeLine{00279\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_aa914e40de6cdb64bfb1ec973dd70ad2d}{xdr\_cortex\_surface\_data}}\ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *xdrs,\ \mbox{\hyperlink{structsurface__data}{surface\_data}}\ *s);}
+\DoxyCodeLine{00280\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a6149d5bb998e8e9683879868c7b8d53a}{xdr\_cortex\_surface\_data\_list}}(\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *xdrs,\ \mbox{\hyperlink{structsurface__data__list}{surface\_data\_list}}\ *sdl);}
+\DoxyCodeLine{00281\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a1f6e6372b8614c909f7d4dcfec28d7ea}{xdr\_cortex\_vector}}(\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *xdrs,\ \mbox{\hyperlink{structvec}{vec}}\ *v);}
+\DoxyCodeLine{00282\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_ac6cd5cca6bb75c76c8ab67d601b43ea6}{xdr\_cortex\_vector\_data}}\ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *xdrs,\ \mbox{\hyperlink{structvector__data}{vector\_data}}\ *vd);}
+\DoxyCodeLine{00283\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a63a6c88bc7fda363341ac16fa196594e}{xdr\_cortex\_vector\_data\_list}}(\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *xdrs,\ \mbox{\hyperlink{structvector__data__list}{vector\_data\_list}}\ *vdl);}
+\DoxyCodeLine{00284\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a755c4813241803f74f1a269c6bc0fd7a}{xdr\_cortex\_path\_xfer}}\ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structpath__xfer}{path\_xfer}}\ *);}
+\DoxyCodeLine{00285\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a88b40d6b45c543bdd4762f73e80b9bc6}{xdr\_cortex\_wrap\_string}}\ \ \ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \textcolor{keywordtype}{char}\ **\ );}
+\DoxyCodeLine{00286\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a5c1626f7d3e3dffda95176fcebd29530}{xdr\_cortex\_string}}\ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \textcolor{keywordtype}{string}\ *);}
+\DoxyCodeLine{00287\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a0fdd78d4e6aef803252c849249a4c84a}{xdr\_cortex\_string\_list}}\ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structstring__list}{string\_list}}\ *);}
+\DoxyCodeLine{00288\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a41b70bd011da359bb6f76cd63a87d69f}{xdr\_cortex\_string\_int}}\ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structstring__int}{string\_int}}\ *);}
+\DoxyCodeLine{00289\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_ad1d37b580d9510d3a80b272dd9838433}{xdr\_cortex\_encode\_pointer}}\ \ \ (XDR\ *,\ \mbox{\hyperlink{structobj}{Pointer}}\ *);}
+\DoxyCodeLine{00290\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a7e3fc7d48dcddd20e889009a74f72c70}{xdr\_cortex\_decode\_pointer}}\ \ \ (XDR\ *,\ \mbox{\hyperlink{structobj}{Pointer}}\ *);}
+\DoxyCodeLine{00291\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{rcx_8h_a46afb0e0595525de304e5c5699d59af1}{xdr\_int\_array\_xfer}}\ \ \ \ (\mbox{\hyperlink{rcx_8h_a8caf49faf2474e7628c6ac2e173eab86}{CX\_XDR}}\ *,\ \mbox{\hyperlink{structint__list}{int\_list}}\ *);}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \textcolor{comment}{/*\ RHOOPS/RCX\ procedure\ mappings.\ */}}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69}{rcx\_request}}}
+\DoxyCodeLine{00296\ \{}
+\DoxyCodeLine{00297\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7608ac832186cb8999f41c240025924f}{HR\_DEFINE\_COLOR\_NAME}}\ =\ 1,\ \textcolor{comment}{/*\ Leave\ space\ for\ the\ NULLPROC\ */}}
+\DoxyCodeLine{00298\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac8f2b2a07741a31fa12af14694e76101}{HR\_SET\_COLOR}},}
+\DoxyCodeLine{00299\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aa3bf202700184cea123ae4d60bcb7b7b}{HR\_SET\_COLOR\_BY\_INDEX}},}
+\DoxyCodeLine{00300\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a2ddbf762eef20400618b994d4be8cb49}{HR\_SET\_HEURISTICS}},}
+\DoxyCodeLine{00301\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a02251075c823ba719709d46d31fc4f85}{HR\_SET\_MARKER\_SYMBOL}},}
+\DoxyCodeLine{00302\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a82e34867227fdda605ca9b125d6909e8}{HR\_SET\_USER\_OPTIONS}},}
+\DoxyCodeLine{00303\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7c1523a31be7c54cc65437532b590e50}{HR\_SET\_VISIBILITY}},}
+\DoxyCodeLine{00304\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a754d0288fa17fc340d6d2b679c6d56d2}{HR\_FLUSH\_CONTENTS}},}
+\DoxyCodeLine{00305\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69acf83ca6619466cdd2e61ededd2b93335}{HR\_INSERT\_MARKER}},}
+\DoxyCodeLine{00306\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a571cfe0427524cbe0bf895099039cd7b}{HR\_RINSERT\_MARKER}},}
+\DoxyCodeLine{00307\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69acfe970be872a5069923bcd612d79a80b}{HR\_INSERT\_POLYGON}},}
+\DoxyCodeLine{00308\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a0c406eed45e68e780cd0692d8939853f}{HR\_RINSERT\_POLYGON}},}
+\DoxyCodeLine{00309\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ae8b70e8d328a3eff44926fb5f37d1e3a}{HR\_INSERT\_POLYLINE}},}
+\DoxyCodeLine{00310\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a1df1f3704ef935a4711922e0fd55da1d}{HR\_RINSERT\_POLYLINE}},}
+\DoxyCodeLine{00311\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aeb1117c54886a90e878b2f74adeb47e8}{HR\_INITIALIZE\_SHELL}},}
+\DoxyCodeLine{00312\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a839ee5bee427f629256993deb98be7d6}{HR\_INSERT\_SHELL}},}
+\DoxyCodeLine{00313\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac096ee51dac27c36271117aadb7c9a94}{HR\_RINSERT\_SHELL}},}
+\DoxyCodeLine{00314\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a43468c38e21ac66960e5814bcd4255d7}{HR\_CLOSE\_SEGMENT}},}
+\DoxyCodeLine{00315\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7f6690fce4d5379a2d61983f0aec9c6c}{HR\_INCLUDE\_SEGMENT}},}
+\DoxyCodeLine{00316\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69adf80077897b648954a25f23c1364a87a}{HR\_OPEN\_SEGMENT}},}
+\DoxyCodeLine{00317\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac8a940968644a87fe71ea60b388619b3}{HR\_DELETE\_SEGMENT}},}
+\DoxyCodeLine{00318\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ad91856640c9f8be0f2d0a1b3ba57e1fd}{HR\_UPDATE\_DISPLAY}},}
+\DoxyCodeLine{00319\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a87856b1a5c2338fb0a6400ac331133a5}{HR\_STYLE\_SEGMENT}},}
+\DoxyCodeLine{00320\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a82f2841c6a1fc1c22e44c2f5be54be45}{HR\_SET\_MARKER\_SIZE}},}
+\DoxyCodeLine{00321\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aa99a939d9efe66d5d08b3d5e865ee14a}{HR\_SET\_TEXT\_ALIGNMENT}},}
+\DoxyCodeLine{00322\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69adba2482cfa8e4895826e018c1bf1a2ad}{HR\_SET\_TEXT\_FONT}},}
+\DoxyCodeLine{00323\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a5b2063386fdbd24c508175342ce34b2a}{HR\_INSERT\_CIRCLE}},}
+\DoxyCodeLine{00324\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a773e44c95996351d08735d3015b2e94c}{HR\_INSERT\_TEXT}},}
+\DoxyCodeLine{00325\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a25d12e740fb4dbd367e2119321fe44f2}{HR\_SET\_CAMERA\_BY\_VOLUME}},}
+\DoxyCodeLine{00326\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ab199bc37918c72344cc77d4a9aa2b4d8}{HR\_INSERT\_MESH}},}
+\DoxyCodeLine{00327\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a6be7da9ed1fba6edf06d16bc1a7fcb45}{HR\_RINSERT\_MESH}},}
+\DoxyCodeLine{00328\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac1bdca73eedc4f90febdbbaad5c0a26e}{HR\_INSERT\_IMAGE}},}
+\DoxyCodeLine{00329\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69adb9d843d01d357b4460257718e02ced4}{HR\_TRANSLATE\_OBJECT}},}
+\DoxyCodeLine{00330\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac024f3386a22fe0c3bec89e71b6e1e47}{HR\_ROTATE\_OBJECT}},}
+\DoxyCodeLine{00331\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a4627628bad80e9122261cf92366cf07e}{HR\_SET\_LINE\_WEIGHT}},}
+\DoxyCodeLine{00332\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ad549a9541fc132a8a8436ce3be5085bb}{HR\_SET\_LINE\_PATTERN}},}
+\DoxyCodeLine{00333\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69acd541d4ab686070ee6ab8e9f5945fd1c}{HR\_INSERT\_CYLINDER}},}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ace3149b4a413f6fc22f957a4e6e32130}{MIN\_RCX\_REQUEST}}\ =\ 4000,\ \textcolor{comment}{/*\ Leave\ space\ for\ more\ HR\_\ procs\ */}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ae23139ba00a30d9e0afa3b913d7ab541}{RCX\_COLOR\_BY\_VALUE}},}
+\DoxyCodeLine{00338\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69afe3c19de3e1a1083511fec665ada6c64}{RCX\_PERIODIC}},}
+\DoxyCodeLine{00339\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a524e2e7984a6709696e997e6195b95fd}{RCX\_SYMMETRY}},}
+\DoxyCodeLine{00340\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a9d5e66da8cae713dc843d963ae66a716}{RCX\_SET\_CONTOUR\_OPTIONS}},}
+\DoxyCodeLine{00341\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aff6abc7d2867d16c72bd0bd245574ec9}{RCX\_CONTOUR\_TRIANGLES}},}
+\DoxyCodeLine{00342\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69abfaffd3b6f70889bc33db298402e049e}{RCX\_CONTOUR\_LINES}},}
+\DoxyCodeLine{00343\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69adff7e6a1eb774f555cb9980175eaa129}{RCX\_CONTOUR\_POLYS}},}
+\DoxyCodeLine{00344\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a8bb1728d7bc855e456f4a6e339d38092}{RCX\_VECTORS}},}
+\DoxyCodeLine{00345\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a45188e1fac55eb41570852756a0b6a48}{RCX\_SET\_COLOR}},}
+\DoxyCodeLine{00346\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a822d48603ce5a6f71aedd0df1d499156}{RCX\_COLOR\_SEGMENTS}},}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a355289bfecf51690645dd55722d6cce7}{RCX\_SET\_VIS\_NAME}},}
+\DoxyCodeLine{00349\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a281a2f643a8bbaf7164a817d3355d2e1}{RCX\_INSERT\_PATHLINE}},}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ad21ae8bbbf858d431c0bec8ee83f7268}{RCX\_DEFINE\_SURFACE}},}
+\DoxyCodeLine{00352\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69abc0db79bf3dead542568cdbabf40115f}{RCX\_DESTROY\_SURFACE}},}
+\DoxyCodeLine{00353\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac0db9eee095514b77fbe6483c30379ca}{RCX\_APPEND\_SURFACE}},}
+\DoxyCodeLine{00354\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ab62ae2b3310436bee95a9ec12c05439a}{RCX\_CONTOUR\_SURFACE}},}
+\DoxyCodeLine{00355\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a0340e2c96e7fe7c718aa3d383acb09c1}{RCX\_PROFILE\_SURFACE}},}
+\DoxyCodeLine{00356\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a04ab3838f0567abecc9a7947fafebfe1}{RCX\_DISPLAY\_SURFACE}},}
+\DoxyCodeLine{00357\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a296c73471babc0381b36ac224b337e42}{RCX\_DESTROY\_SURFACE\_ALL}},}
+\DoxyCodeLine{00358\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aad1acab964b07f604b0175d979c0b592}{RCX\_SUSPEND\_ALL\_SURFACES}},}
+\DoxyCodeLine{00359\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7e0282d4bc6706541ab3bc6d1f80f4bd}{RCX\_INIT\_DEFINE\_SURFACE}},}
+\DoxyCodeLine{00360\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aac8b4e492fd0d035f6e8a02b7ff66c0a}{RCX\_FILL\_FIELD\_DATA}},}
+\DoxyCodeLine{00361\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a027ac9892a53dc8e3bdb4e6a746769ac}{RCX\_FILL\_VECTOR\_DATA}},}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a4caf7698be1899523cfebe4099e8265e}{RCX\_START\_DRAW\_GRID}},}
+\DoxyCodeLine{00364\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a096083820b5c33bb9e1467421cdbc104}{RCX\_END\_DRAW\_GRID}},}
+\DoxyCodeLine{00365\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a4d5cc4fbcd38b5bb13015a03cd510302}{RCX\_INSERT\_LINE}},}
+\DoxyCodeLine{00366\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a21cd44e7355f7b4f1666118ad9066498}{RCX\_INSERT\_TRIANGLE}},}
+\DoxyCodeLine{00367\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a55cd34faaecc946dc304341c41bef149}{RCX\_INSERT\_TETRA}},}
+\DoxyCodeLine{00368\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69afd98745bcee533ea5197414d54be44c0}{RCX\_INSERT\_QUAD}},}
+\DoxyCodeLine{00369\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69afad2b4b9c86dae40998a2a9bafd01afa}{RCX\_INSERT\_HEX}},}
+\DoxyCodeLine{00370\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7aa987ac80e67d6a2519f97c41e88308}{RCX\_RINSERT\_LINE}},}
+\DoxyCodeLine{00371\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69adc2d44c566ac9acf6517b6d383637542}{RCX\_RINSERT\_POLYLINE}},}
+\DoxyCodeLine{00372\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a549057486ae2ed127dc48bfe06d12ad4}{RCX\_RINSERT\_TRIANGLE}},}
+\DoxyCodeLine{00373\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a69f2207e0f71bbf68f07bd5555f23d0e}{RCX\_RINSERT\_TETRA}},}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac488c414a5ce7cac5361c66ff7b2fe65}{RCX\_INIT\_LICENSE}},}
+\DoxyCodeLine{00376\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a89b9c21bd9d2f4a964098b394256b3cd}{RCX\_CHECKOUT\_LICENSE}},}
+\DoxyCodeLine{00377\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a30b9afbc771fd70266eedc2ff4d2e472}{RCX\_CHECKOUT\_N\_LICENSES}},}
+\DoxyCodeLine{00378\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a8f4c941cde6854fa981ee9737cca290c}{RCX\_CHECKOUT\_N\_NEUTRAL\_LICENSES}},}
+\DoxyCodeLine{00379\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69adf8e6c08c2669c1d6c22f81eb3c71041}{RCX\_CHECK\_FEATURE\_MATCH}},}
+\DoxyCodeLine{00380\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a11decda6bf6b0f63465190fc60d14c93}{RCX\_FREE\_LICENSE}},}
+\DoxyCodeLine{00381\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ad1d0b01c8370bce78cf07e9710f57974}{RCX\_PRINT\_LICENSE\_USAGE}},}
+\DoxyCodeLine{00382\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69af9ccb297fd292558e27d3d9ab3b9931d}{RCX\_ANSYS\_AVAIL}},}
+\DoxyCodeLine{00383\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ad40e8528a9e6bbffb0892815fd5c6a7a}{RCX\_IS\_EDUCATIONALONLY}},}
+\DoxyCodeLine{00384\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69abb49f03e7b42515fd9c581c1b7834d88}{RCX\_IS\_EDUCATIONALONLYLOGO}},}
+\DoxyCodeLine{00385\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a76e4cd6d217dc8367c191aa9187dd07c}{RCX\_IS\_POSTONLY}},}
+\DoxyCodeLine{00386\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a5756eaa11d920b7f9325dae06f8ed4db}{RCX\_IS\_MESHING}},}
+\DoxyCodeLine{00387\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a5bb7cdde3ba0edd9a6a9d4d879f2e5e4}{RCX\_CHECK\_LICENSE\_CONNECTION}},}
+\DoxyCodeLine{00388\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aad95fd4db4374d1409bb6a883ad1e55d}{RCX\_GET\_LICENSE\_TIMEOUT}},}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aa58660a9b39b3e412702642517b0122c}{RCX\_GET\_INTERRUPT\_COUNT}},}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aac7868680cd6a09d8ed98961dc075bc9}{RCX\_CLIENT\_LS}},}
+\DoxyCodeLine{00393\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69add52ff6c9a736583da5a4549f9257fc1}{RCX\_SERVER\_VERSION}},}
+\DoxyCodeLine{00394\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a20fcbbad37216f5a595d552fe3f9d858}{RCX\_COMMAND\_PORT}},}
+\DoxyCodeLine{00395\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aaa844047146ca5cf298c1985e7ccaa10}{RCX\_GET\_CLIENT\_ID}},}
+\DoxyCodeLine{00396\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aa1595449b3e45b1e50f070d1948f0d7e}{RCX\_SET\_CLIENT\_ID}},}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a984e716c0da7b9c99adc1910d9c1b995}{RCX\_START\_FILL\_ARRAY}},}
+\DoxyCodeLine{00399\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a9b5365ad7e31cc61db8ff5bc309ad443}{RCX\_FILL\_ARRAY}},}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a5e0f5a57b06c206f826906b3070c654b}{RCX\_START\_ACTIVE\_ARRAY}},}
+\DoxyCodeLine{00402\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69afc4270ec5dac467239b51e921cd17d2f}{RCX\_FILL\_ACTIVE\_ARRAY}},}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac33e1bd804d4ea9abddaae440c66cb58}{RCX\_INSERT\_PYR}},}
+\DoxyCodeLine{00405\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ad6b25d12554307cedc34e98dc94f5053}{RCX\_INSERT\_WEDGE}},}
+\DoxyCodeLine{00406\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a4b65ce3bd6b9b8b776f87d9f0ff9b6ee}{RCX\_INSERT\_POLYHEDRON}},}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a3293b46ab4328446dab2d6053f594212}{RCX\_START\_GRID}},}
+\DoxyCodeLine{00409\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69af6fd4bdc64fc021997887847555e1550}{RCX\_ADD\_GRID\_PTS}},}
+\DoxyCodeLine{00410\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ade1bc638d7c52bbd010deac59eacec76}{RCX\_REUSE\_GRID\_PTS}},}
+\DoxyCodeLine{00411\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a009dd0a2ea5022deee092fa553f80381}{RCX\_ADD\_GRID\_FACETS}},}
+\DoxyCodeLine{00412\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a16ca4d5e2a4ce3b2ed234e6cedc34ac2}{RCX\_END\_GRID}},}
+\DoxyCodeLine{00413\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ab8361c6cde71be982db96974f7966503}{RCX\_DELETE\_GRID}},}
+\DoxyCodeLine{00414\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a2de2856b0cc6c173c666b5817cf0fcb6}{RCX\_DISPLAY\_GRID}},}
+\DoxyCodeLine{00415\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a49e77577c83d1438f573ea34253b0900}{RCX\_OPEN\_GRID}},}
+\DoxyCodeLine{00416\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aaafaab5f0bc572cb7d8da1e416f5a248}{RCX\_SET\_GRID\_ATTR}},}
+\DoxyCodeLine{00417\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aa5b51dece4355bb73c5083d99af495d3}{RCX\_SET\_GRID\_ELEM}},}
+\DoxyCodeLine{00418\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a16a5d2e408ff707795f2634fd31bb819}{RCX\_CLOSE\_GRID\_ATTR}},}
+\DoxyCodeLine{00419\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a8deafa0276d87a9d440a24b0744870a4}{RCX\_DELETE\_ALL\_GRIDS}},}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a324e95412e32c9f1178c990c1ce847c4}{RCX\_SET\_SV\_RPC\_PORT}},}
+\DoxyCodeLine{00422\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a83c5a77f151e0e65094d1a7f49b03372}{RCX\_SEND}},}
+\DoxyCodeLine{00423\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a764411bc6e1c3b6e02790ad34a13bc60}{RCX\_SET\_SOLVER\_RESULT}},}
+\DoxyCodeLine{00424\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a16e70d9901be9a2269184504e626fdfa}{RCX\_KILL\_SOLVER}},}
+\DoxyCodeLine{00425\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a85e82aeefd9f87c05d5ee884760f8b0f}{RCX\_GET\_RPC\_STREAM\_P}},}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69afa0d10c030703fb1bac3aef5e4b1bf9c}{RCX\_RINSERT\_QUAD}},}
+\DoxyCodeLine{00428\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a5ebf5c4c2add45502917cbbf598b991d}{RCX\_RINSERT\_HEX}},}
+\DoxyCodeLine{00429\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a72e0fbd741434d9ff8e5288a9e49e799}{RCX\_RINSERT\_PYR}},}
+\DoxyCodeLine{00430\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aca881e3bcb76f51c38c0ef58632dad19}{RCX\_RINSERT\_WEDGE}},}
+\DoxyCodeLine{00431\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a341ed7eea7d69ef0b60f4f448682b9da}{RCX\_RINSERT\_POLYGON}},}
+\DoxyCodeLine{00432\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ad288ed1367fccd74fe23afd41ee8d8b1}{RCX\_RINSERT\_POLYHEDRON}},}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a908ac200d58b0a064612c0460bae9e2e}{RCX\_RLINSERT\_LINE}},}
+\DoxyCodeLine{00435\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a2d5f04e17e70ceaf911aa2ef7bd75ab4}{RCX\_RLINSERT\_POLYLINE}},}
+\DoxyCodeLine{00436\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aa62dbc4929b2c8f82719518e6a0e02e4}{RCX\_RLINSERT\_TRIANGLE}},}
+\DoxyCodeLine{00437\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69afbdb55d7e672b713ef6b29bfba5748e9}{RCX\_RLINSERT\_TETRA}},}
+\DoxyCodeLine{00438\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a8b98f0c94e88f7c8b1b133618cb33f3a}{RCX\_RLINSERT\_QUAD}},}
+\DoxyCodeLine{00439\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a52d528836c5c5063d9b56be672ad820b}{RCX\_RLINSERT\_HEX}},}
+\DoxyCodeLine{00440\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a2bbd304ec7673acdd26e51373105ad18}{RCX\_RLINSERT\_PYR}},}
+\DoxyCodeLine{00441\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a960b9762d69d11430c6e667ee5ad7824}{RCX\_RLINSERT\_WEDGE}},}
+\DoxyCodeLine{00442\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a6a0566061fbc4e9d8bd863f25b9ee87d}{RCX\_RLINSERT\_POLYGON}},}
+\DoxyCodeLine{00443\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a6761663ff97d310b1443536bf37c1514}{RCX\_RLINSERT\_POLYHEDRON}},}
+\DoxyCodeLine{00444\ }
+\DoxyCodeLine{00445\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a76f237bcbb9bc533fb0743565425b858}{RCX\_CALL\_VI}},}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00447\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7d2022776854d69a645b54473dd145e4}{RCX\_LICENSE\_FEATURE}},}
+\DoxyCodeLine{00448\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a51237084cef57df1b2b1758a73f83ac7}{RCX\_LICENSE\_KEY}},}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a5d638e5f534e0b1c319657dd8fdfad79}{RCX\_START\_XY\_PLOT\_DATA}},}
+\DoxyCodeLine{00451\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a0555b513d29bcddb0abddae52d4d2af6}{RCX\_XY\_PLOT\_DATA}},}
+\DoxyCodeLine{00452\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69afeb70a2491dcbfbfabdfb90df91c912e}{RCX\_UPDATE\_GRAPHICS}},}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a9ef64f91c6d1b7d19b7cb1df88a420c7}{RCX\_CHECK\_FEATURE\_VALID}},}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a65a962f29686671dbb0aae7661d35c43}{RCX\_REPORT\_HOST\_PROCESS\_STATUS}},}
+\DoxyCodeLine{00457\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a8dd65fbfb52e23d11cf964c18a4db0f4}{RCX\_START\_MONITOR\_THREAD}},}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00459\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aa11c5cfff4e5e38930f98d804bb92eaa}{RCX\_INIT\_RINSERT\_SHELL}},}
+\DoxyCodeLine{00460\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a122ba6278ad6e3a00174882bcb5bffbc}{RCX\_RINSERT\_SHELL}},}
+\DoxyCodeLine{00461\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a32e00218f90921b25c084ff7557b1fd6}{RCX\_RLINSERT\_SHELL}},}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00463\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a4ec7a6ff3ef44c3406b3641b747bb32f}{RCX\_INIT\_RINSERT\_MULTI\_SHELL}},}
+\DoxyCodeLine{00464\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69af7611611c3eea47661ff544056589dee}{RCX\_RINSERT\_MULTI\_SHELL}},}
+\DoxyCodeLine{00465\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a0d19d997872aa7fed2acb9c1520436a9}{RCX\_RLINSERT\_MULTI\_SHELL}},}
+\DoxyCodeLine{00466\ }
+\DoxyCodeLine{00467\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac048fb28ec6b512cc599ca216c3ecfd8}{RCX\_SERVER\_UPDATE\_ELEMENT\_COUNT}},}
+\DoxyCodeLine{00468\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a06399c6571902545a40716cc960df98e}{RCX\_SERVER\_UPDATE\_NODE\_COUNT}},}
+\DoxyCodeLine{00469\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7cd99dbbe35319598e128847eacee814}{RCX\_SERVER\_UPDATE\_ELEMENT\_TYPES}},}
+\DoxyCodeLine{00470\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ab048c8b28b0e11cf37a665fc7169ddd1}{RCX\_SERVER\_UPDATE\_ELEMENT\_IDS}},}
+\DoxyCodeLine{00471\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ae58185282e41a04380995fa2e94d026a}{RCX\_SERVER\_UPDATE\_ELEMENT\_C0\_IDS}},}
+\DoxyCodeLine{00472\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a566b4682faaca674faee6226458b2e8c}{RCX\_SERVER\_UPDATE\_ELEMENT\_C1\_IDS}},}
+\DoxyCodeLine{00473\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a837f63adcbb4f1c7d524a69d79215a95}{RCX\_SERVER\_UPDATE\_ELEMENT\_NODE\_COUNTS}},}
+\DoxyCodeLine{00474\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aeb9005e898e0c1e443647dbbd5480f32}{RCX\_SERVER\_UPDATE\_ELEMENT\_NODE\_IDS}},}
+\DoxyCodeLine{00475\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a28dbbd1019f82c4b56ca40939f42d6fb}{RCX\_SERVER\_UPDATE\_NODE\_IDS}},}
+\DoxyCodeLine{00476\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a51ee1d721e93de34fc0aae2e1cecbdde}{RCX\_SERVER\_UPDATE\_NODE\_COORDS}},}
+\DoxyCodeLine{00477\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a4fd298a4e3c2224548674b57deb0fd1a}{RCX\_SERVER\_UPDATE\_NODE\_DATA}},}
+\DoxyCodeLine{00478\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aacdc98c68d0fcbd240ce9ded3496dd48}{RCX\_SERVER\_GET\_NODE\_DATA}},}
+\DoxyCodeLine{00479\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a1e396ae429c23959cba93a732913af5c}{RCX\_SC\_GET\_STATUS}},}
+\DoxyCodeLine{00480\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ac672fed9d627dd76316943e6f7bf52d2}{RCX\_SC\_SET\_ERR\_MSG}},}
+\DoxyCodeLine{00481\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ad14a47c92856629a6c85e06398d653d5}{RCX\_SC\_GET\_NEW\_MESHFILTER\_ID}},}
+\DoxyCodeLine{00482\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a3ac8c1ec94296cf5081ca0d5d94bd394}{RCX\_SC\_APPLY\_MESHFILTER\_STATUS}},}
+\DoxyCodeLine{00483\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a78fd15a2d2f277f358ace59b179c4174}{RCX\_SC\_APPLY\_REGIONFILTER\_STATUS}},}
+\DoxyCodeLine{00484\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a9b08ecab9bc382eacf82785568f33421}{RCX\_SC\_GET\_REGIONS}},}
+\DoxyCodeLine{00485\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a8a21d4c93546a42ee00a0226c6975c33}{RCX\_SC\_GET\_REGIONS\_START}},}
+\DoxyCodeLine{00486\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a4722adce9e8f255e1d6dce2d43733a57}{RCX\_SC\_GET\_TOPOL\_DIM}},}
+\DoxyCodeLine{00487\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a4fedbb12222e8e7738569ad67efb4430}{RCX\_SC\_GET\_NEW\_RESULTFILTER\_ID}},}
+\DoxyCodeLine{00488\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a4f8d7ad801b11aad88b15cfaaca006de}{RCX\_SC\_APPLY\_RESULTFILTER\_STATUS}},}
+\DoxyCodeLine{00489\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a5fdc3a63dd9a8619a10204512013037e}{RCX\_SC\_GET\_RESULTID\_START}},}
+\DoxyCodeLine{00490\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a265484a546d9664292561d84850e143e}{RCX\_SC\_GET\_RESULT\_TID\_START}},}
+\DoxyCodeLine{00491\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7bfd4968a8d6e72492e8b4ad1f064911}{RCX\_SC\_GET\_RESULT\_TID}},}
+\DoxyCodeLine{00492\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7a6522e80f3bc22ff7e8d01cd349dd1b}{RCX\_SC\_GET\_RESULTID}},}
+\DoxyCodeLine{00493\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a34f62719df7d7f3fceb4b1f1e5724ac2}{RCX\_SERVER\_UPDATE\_MESH\_BUFFER\_SIZE}},}
+\DoxyCodeLine{00494\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a5ad4cf57bdb1b4309fd03628778c600a}{RCX\_MESSAGE}},}
+\DoxyCodeLine{00495\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69afe691bd632a59f2792db5b6c3a5092f6}{RCX\_WARNING\_MESSAGE}},}
+\DoxyCodeLine{00496\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a7deaec6b7bfd9aaf0dfcf7bfeccbaad0}{RCX\_APIPINITIALIZE}},}
+\DoxyCodeLine{00497\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69aeaccdf7474aab5a229d557bcf60cb7ab}{RCX\_APIPFINALIZE}},}
+\DoxyCodeLine{00498\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69ace2b77032bee9e2790929394e332e18d}{RCX\_APIPPOSTSTRING}},}
+\DoxyCodeLine{00499\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a631cf42123a9fac53e4b9a29a5158280}{RCX\_APIPPOPASNEEDED}},}
+\DoxyCodeLine{00500\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a3027146f4287c8edf63279e548fbf949}{RCX\_APIPENABLED}},}
+\DoxyCodeLine{00501\ \ \ \mbox{\hyperlink{rcx_8h_ab8928cc132cf9773f509385ed849dd69a1374b07d24847e42d1936e5a7e9df377}{RCX\_LAST}}\ \ \ \ \ \ \textcolor{comment}{/*\ Don't\ put\ anything\ after\ this\ one\ */}}
+\DoxyCodeLine{00502\ \};}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ CX\_PROGRAM\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_Rcx\_h\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

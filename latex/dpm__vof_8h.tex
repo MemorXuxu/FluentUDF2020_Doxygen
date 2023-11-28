@@ -1,0 +1,546 @@
+\doxysection{fluent20.1.0/src/dpm/dpm\+\_\+vof.h File Reference}
+\hypertarget{dpm__vof_8h}{}\label{dpm__vof_8h}\index{fluent20.1.0/src/dpm/dpm\_vof.h@{fluent20.1.0/src/dpm/dpm\_vof.h}}
+{\ttfamily \#include "{}global.\+h"{}}\newline
+{\ttfamily \#include "{}mem.\+h"{}}\newline
+{\ttfamily \#include "{}prop.\+h"{}}\newline
+{\ttfamily \#include "{}profile.\+h"{}}\newline
+{\ttfamily \#include "{}slide.\+h"{}}\newline
+{\ttfamily \#include "{}threads.\+h"{}}\newline
+{\ttfamily \#include "{}dpm.\+h"{}}\newline
+{\ttfamily \#include "{}dpm\+\_\+types.\+h"{}}\newline
+{\ttfamily \#include "{}dpm\+\_\+dist.\+h"{}}\newline
+{\ttfamily \#include "{}flowf.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structdpm__vof__and__postproc__struct}{dpm\+\_\+vof\+\_\+and\+\_\+postproc\+\_\+struct}}
+\item 
+struct \mbox{\hyperlink{structddpm__exchange__coeffs__struct}{ddpm\+\_\+exchange\+\_\+coeffs\+\_\+struct}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}~1
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_aa5404beda2aa9b6368c21c5b3f8ff74d}{DPM\+\_\+\+VECTOR\+\_\+\+DIM}}~3
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a1cc34538633e3aad98f530b902025ef8}{DPM\+\_\+\+VOF\+\_\+\+DIM}}~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a65e54b1db92eb3a006b6f0a6887ebe1d}{DPM\+\_\+\+WT\+\_\+\+DIM}}~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_aaaf3649dae2a8bd8f68e15a6c0ddf71d}{DPM\+\_\+\+VEL\+\_\+\+DIM}}~\mbox{\hyperlink{dpm__vof_8h_aa5404beda2aa9b6368c21c5b3f8ff74d}{DPM\+\_\+\+VECTOR\+\_\+\+DIM}}
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_aeb698b17df83e4c083e04f9a12113d81}{DPM\+\_\+\+DIAM\+\_\+\+DIM}}~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a61d335c78c1cf1e316fdec259f50b84b}{DPM\+\_\+\+RHO\+\_\+\+DIM}}~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a6a16367f1f2f19ef69bcc897d5593d79}{DPM\+\_\+\+TEMP\+\_\+\+DIM}}~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a4e87828d17d265db2197123aa5ffa001}{DPM\+\_\+\+K\+\_\+\+DIM}}~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a5cdbd8812e43b4f26d096276b58ebbd1}{DPM\+\_\+\+HC\+\_\+\+DIM}}~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_ad65533c84670d87f069bf950d3aa28ab}{DPM\+\_\+\+NEG\+\_\+\+BIG}}~-\/1.e+20
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a3f9f059b18a082d446d63a01b147387f}{DPM\+\_\+\+BIG}}~1.e+20
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a8801af29df9b57a51d9c16a59749e4a6}{C\+\_\+\+SOLVE\+\_\+\+EULERIAN\+\_\+\+BIT\+\_\+\+SET}}(c,  t)~\mbox{\hyperlink{mem_8h_af524ce692fd1a52856d77ad374c10f2a}{C\+\_\+\+STORAGE\+\_\+\+BIT\+\_\+\+SET}}(c,t,\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40af1075c205193b771ef9bc178eab609d8}{SV\+\_\+\+DPM\+\_\+\+SOLVE\+\_\+\+EULERIAN}})
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_af12a83dcf8050608afd0aca27d0a4e8a}{C\+\_\+\+SOLVE\+\_\+\+EULERIAN\+\_\+\+BIT\+\_\+\+CLEAR}}(c,  t)~\mbox{\hyperlink{mem_8h_a9f452d2c2f92bf268d2389cdaf36883c}{C\+\_\+\+STORAGE\+\_\+\+BIT\+\_\+\+CLEAR}}(c,t,\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40af1075c205193b771ef9bc178eab609d8}{SV\+\_\+\+DPM\+\_\+\+SOLVE\+\_\+\+EULERIAN}})
+\item 
+\#define \mbox{\hyperlink{dpm__vof_8h_a2001e095b2f8f743bf9580c52e1b5e0e}{C\+\_\+\+SOLVE\+\_\+\+EULERIAN\+\_\+\+BIT}}(c,  t)~\mbox{\hyperlink{mem_8h_a0865af8eba859cda59b56ea2264171fe}{C\+\_\+\+STORAGE\+\_\+\+BIT\+\_\+\+GET}}(c,t,\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40af1075c205193b771ef9bc178eab609d8}{SV\+\_\+\+DPM\+\_\+\+SOLVE\+\_\+\+EULERIAN}})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6}{call\+\_\+spec\+\_\+e}} \mbox{\hyperlink{dpm__vof_8h_a2eedca762eb66a8a65bcb43a65c76cd8}{DPM\+\_\+\+Vof\+\_\+\+Call\+\_\+\+Spec}}
+\item 
+typedef struct \mbox{\hyperlink{structdpm__vof__and__postproc__struct}{dpm\+\_\+vof\+\_\+and\+\_\+postproc\+\_\+struct}} \mbox{\hyperlink{dpm__vof_8h_aa524f6d134d4035aafde2a6c6de23123}{DPM\+\_\+\+Vof\+\_\+and\+\_\+\+Postproc\+\_\+s}}
+\item 
+typedef struct \mbox{\hyperlink{structddpm__exchange__coeffs__struct}{ddpm\+\_\+exchange\+\_\+coeffs\+\_\+struct}} \mbox{\hyperlink{dpm__vof_8h_a779c861b7f26735b5bf0a0b67fcacb2d}{DDPM\+\_\+\+Exchange\+\_\+\+Coeffs\+\_\+s}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6}{call\+\_\+spec\+\_\+e}} \{ \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a4483e5e02e10044bd491daf0c077ddbe}{INSIDE\+\_\+\+TRACKING}}
+, \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a871c061006ba6100aad615aecb57fed1}{AFTER\+\_\+\+AVERAGING}}
+, \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a21780f42999717ed24c0442ffd5b54bb}{CALL\+\_\+\+SPEC\+\_\+\+MAX}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_aa46d127314f8cd119bc8b24d7043610e}{Setup\+\_\+\+DPM\+\_\+\+Vof}} (\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a3df84ed90ca889e0c8dc154f2af86ebf}{Setup\+\_\+\+Exchange\+\_\+\+Coefficients}} (\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a6adeb2ceac548ee986adf77f0780cadb}{Setup\+\_\+\+DDPM\+\_\+\+Velocity\+\_\+\+Correction}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_ae1502335910093b00b5a7860a7f985a0}{Setup\+\_\+\+DPM\+\_\+\+Vof\+\_\+\+Distributions\+\_\+on\+\_\+\+Nodes}} (\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a1f691218f443c4058d250989cca2075d}{Setup\+\_\+\+Exchange\+\_\+\+Coefficients\+\_\+on\+\_\+\+Nodes}} (\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a2f9370e7a2fe0ba3b3fe67b58bc14056}{Setup\+\_\+\+VOF\+\_\+\+Shared\+\_\+\+Classification}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a79f664367b1251a24a54b52d96f81810}{Distribute\+\_\+\+Exchange\+\_\+\+Coefficients\+\_\+from\+\_\+\+Nodes\+\_\+to\+\_\+\+Cells}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_aeee79abb282ccc8b7ad315eefe43825b}{Distribute\+\_\+\+DPM\+\_\+\+Vof\+\_\+\+Dist\+\_\+from\+\_\+\+Nodes\+\_\+to\+\_\+\+Cells}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_adbbb434fee66f274d3d0187d10f4b262}{DPM\+\_\+\+Fix\+\_\+\+SVar}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain, int eqn, \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} sv\+\_\+v, \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} sv\+\_\+ap, int amg\+\_\+id)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_ae6e1b9f1ecde0b23c38012f9b4db68e1}{DPM\+\_\+\+Fix\+\_\+\+SVar\+\_\+\+On\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}thread, int eqn, \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} sv\+\_\+v, \mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}} sv\+\_\+ap, int amg\+\_\+id)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a9e3158d70b17df56c5116c7266630c08}{DPM\+\_\+\+Correct\+\_\+\+Coupled\+\_\+\+AP\+\_\+\+Coefficient}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_af40fc011862e66adf120b1fb4b1c1309}{Fill\+\_\+\+Discrete\+\_\+\+Phase\+\_\+\+Diameter}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}pt)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a386b6789f1f04a0af2673785d8e52c6f}{Fill\+\_\+\+Discrete\+\_\+\+Phase\+\_\+\+Slip\+\_\+\+Velocity}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, int dis\+Phase)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_a2fe172e71cdade5c6a738e996f88bd57}{DPM\+\_\+\+Unlimited\+\_\+\+Vof}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{dpm__vof_8h_a2eedca762eb66a8a65bcb43a65c76cd8}{DPM\+\_\+\+Vof\+\_\+\+Call\+\_\+\+Spec}} call\+\_\+spec)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_ae0c65d81b6569ab9ac346cd355101ad1}{DPM\+\_\+\+Averaged\+\_\+\+Density}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_a694b6a307fe1a65ea431d2a5009d897d}{DPM\+\_\+\+Averaged\+\_\+\+Drag}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}ti, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}tj, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, int i, int j, \mbox{\hyperlink{prop_8h_a52d74dc0ca3ed9bc4fe6162fb534794b}{Phase\+\_\+\+Pair}} \texorpdfstring{$\ast$}{*}phase\+\_\+pair)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a3e9c09faf9abf6837c1905d9e69652f5}{DPM\+\_\+\+Dist\+\_\+\+Velocity}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} v\mbox{[}\mbox{\hyperlink{global_8h_a62b3ec2a68923796798c087f3b72db55}{ND\+\_\+3}}\mbox{]})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_a777ac1190eb0ee34f2f11a46a5bf99d6}{DPM\+\_\+\+Momentum\+\_\+\+AP}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_a049f8d5ee412186f2ede21ee6405fff7}{DPM\+\_\+\+Averaged\+\_\+\+Heat\+\_\+\+Coeff}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}ti, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}tj)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_af8a9a0b4a550513443da1348c773b27f}{DPM\+\_\+\+Averaged\+\_\+\+Granular\+\_\+\+Temperature}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}d)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_ab5122c0bf9f0aee97253944dcc61e3f2}{DDPM\+\_\+\+Specific\+\_\+\+Heat}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_ae4deab04ca2ad48a3f0e5d076fc1d8ff}{DDPM\+\_\+\+Enthalpy}} (\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}} c, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a5e11f8de5e0db7a1e5f648daec1a4287}{DDPM\+\_\+\+Boundary\+\_\+\+Velocity}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} V\mbox{[}\mbox{\hyperlink{dpm__vof_8h_aaaf3649dae2a8bd8f68e15a6c0ddf71d}{DPM\+\_\+\+VEL\+\_\+\+DIM}}\mbox{]}, \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}} f, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_ab20557bcac7aa0f1b5d4282c6771e829}{DDPM\+\_\+\+Boundary\+\_\+\+Vof}} (\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}} f, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_a7a5e1826d069cbba50a1e1db666b20fd}{DDPM\+\_\+\+Boundary\+\_\+\+Temp}} (\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}} f, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_ad65fc9b468c77b1fca23968f1a6aeac7}{DDPM\+\_\+\+Boundary\+\_\+\+Rho}} (\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}} f, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a05b5a1477850d61fcab6de6014c95fc3}{DDPM\+\_\+\+Calc\+\_\+\+Flow\+\_\+\+Dir}} (\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}e\+\_\+n, \mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}} f, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_ac0646eeaab7386214447a718e86bf47a}{DDPM\+\_\+\+Inflow\+\_\+\+Flux}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a7691cfffc1ac1ddcac1a65d3b20965a9}{DDPM\+\_\+\+Flux\+\_\+\+Reset}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_aa45637a7ea3aa05887df472fd40a35d6}{DDPM\+\_\+\+Flux\+\_\+\+Report}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}thread, \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} integral\mbox{[}$\,$\mbox{]})
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{dpm__vof_8h_a860324b531be3874141c423bf010443a}{Is\+\_\+\+Inflow\+\_\+\+Boundary\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{dpm__vof_8h_ada12072d3ebab7d0622d61bab83c2726}{Is\+\_\+\+Outflow\+\_\+\+Boundary\+\_\+\+Thread}} (\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a6b1fac27743051d0df26d75eb1ef3d87}{Add\+\_\+\+To\+\_\+\+DDPM\+\_\+\+Flux\+\_\+\+Report}} (\mbox{\hyperlink{dpm__types_8h_a419752e94ab2bfd0963e1765386a4128}{Tracked\+\_\+\+Particle}} \texorpdfstring{$\ast$}{*}tp, \mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}t, \mbox{\hyperlink{dpm__dist_8h_a0c9db32cb836cc66a9227f538ec1a2a3}{Accum\+\_\+\+Cmd\+\_\+\+Spec}} accum\+\_\+cmd)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a3c4e9fe13c4f5121505a07b6fbdfb6d4}{Limit\+\_\+\+Dense\+\_\+\+DPM\+\_\+\+Properties}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a2ae6da50ae61f65f00c5ef169e4c017d}{Init\+\_\+\+Solve\+\_\+\+Eulerian\+\_\+\+Flag}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_ac38a92abfa0b8c01da1cc95afab584a4}{Free\+\_\+\+Solve\+\_\+\+Eulerian\+\_\+\+Flag}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void \mbox{\hyperlink{dpm__vof_8h_a817615e985afa910d93764e7119467af}{Update\+\_\+\+Solve\+\_\+\+Eulerian\+\_\+\+Flag}} (\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}domain)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} \mbox{\hyperlink{dpm__vof_8h_ae9476a861fbb288a9dfe6c212a09d3c7}{Hybrid\+\_\+\+Phase\+\_\+\+Domains\+\_\+\+Present}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{dpm__vof_8h_aa524f6d134d4035aafde2a6c6de23123}{DPM\+\_\+\+Vof\+\_\+and\+\_\+\+Postproc\+\_\+s}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{dpm__vof_8h_aa5f456080956cb4cf7eaad3a1baaa0db}{Get\+\_\+\+DPM\+\_\+\+Postproc\+\_\+\+Struct}} (void)
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{dpm__vof_8h_a779c861b7f26735b5bf0a0b67fcacb2d}{DDPM\+\_\+\+Exchange\+\_\+\+Coeffs\+\_\+s}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{dpm__vof_8h_a3443bc2710f0e695243ef1b9c9e23d1b}{Get\+\_\+\+DDPM\+\_\+\+Exchange\+\_\+\+Struct}} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \mbox{\hyperlink{dpm__vof_8h_a8a1098e35882daee1dd7364e913ca9d7}{injected\+\_\+ddpm\+\_\+granular\+\_\+mass\+\_\+for\+\_\+time\+\_\+step}} \mbox{[}\mbox{\hyperlink{materials_8h_a3462e5221d1b5cb21828c854fcfac556}{MAX\+\_\+\+PHASES}}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{dpm__vof_8h_a2001e095b2f8f743bf9580c52e1b5e0e}\label{dpm__vof_8h_a2001e095b2f8f743bf9580c52e1b5e0e} 
+\index{dpm\_vof.h@{dpm\_vof.h}!C\_SOLVE\_EULERIAN\_BIT@{C\_SOLVE\_EULERIAN\_BIT}}
+\index{C\_SOLVE\_EULERIAN\_BIT@{C\_SOLVE\_EULERIAN\_BIT}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{C\_SOLVE\_EULERIAN\_BIT}{C\_SOLVE\_EULERIAN\_BIT}}
+{\footnotesize\ttfamily \#define C\+\_\+\+SOLVE\+\_\+\+EULERIAN\+\_\+\+BIT(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{mem_8h_a0865af8eba859cda59b56ea2264171fe}{C\+\_\+\+STORAGE\+\_\+\+BIT\+\_\+\+GET}}(c,t,\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40af1075c205193b771ef9bc178eab609d8}{SV\+\_\+\+DPM\+\_\+\+SOLVE\+\_\+\+EULERIAN}})}
+
+\Hypertarget{dpm__vof_8h_af12a83dcf8050608afd0aca27d0a4e8a}\label{dpm__vof_8h_af12a83dcf8050608afd0aca27d0a4e8a} 
+\index{dpm\_vof.h@{dpm\_vof.h}!C\_SOLVE\_EULERIAN\_BIT\_CLEAR@{C\_SOLVE\_EULERIAN\_BIT\_CLEAR}}
+\index{C\_SOLVE\_EULERIAN\_BIT\_CLEAR@{C\_SOLVE\_EULERIAN\_BIT\_CLEAR}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{C\_SOLVE\_EULERIAN\_BIT\_CLEAR}{C\_SOLVE\_EULERIAN\_BIT\_CLEAR}}
+{\footnotesize\ttfamily \#define C\+\_\+\+SOLVE\+\_\+\+EULERIAN\+\_\+\+BIT\+\_\+\+CLEAR(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{mem_8h_a9f452d2c2f92bf268d2389cdaf36883c}{C\+\_\+\+STORAGE\+\_\+\+BIT\+\_\+\+CLEAR}}(c,t,\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40af1075c205193b771ef9bc178eab609d8}{SV\+\_\+\+DPM\+\_\+\+SOLVE\+\_\+\+EULERIAN}})}
+
+\Hypertarget{dpm__vof_8h_a8801af29df9b57a51d9c16a59749e4a6}\label{dpm__vof_8h_a8801af29df9b57a51d9c16a59749e4a6} 
+\index{dpm\_vof.h@{dpm\_vof.h}!C\_SOLVE\_EULERIAN\_BIT\_SET@{C\_SOLVE\_EULERIAN\_BIT\_SET}}
+\index{C\_SOLVE\_EULERIAN\_BIT\_SET@{C\_SOLVE\_EULERIAN\_BIT\_SET}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{C\_SOLVE\_EULERIAN\_BIT\_SET}{C\_SOLVE\_EULERIAN\_BIT\_SET}}
+{\footnotesize\ttfamily \#define C\+\_\+\+SOLVE\+\_\+\+EULERIAN\+\_\+\+BIT\+\_\+\+SET(\begin{DoxyParamCaption}\item[{}]{c,  }\item[{}]{t }\end{DoxyParamCaption})~\mbox{\hyperlink{mem_8h_af524ce692fd1a52856d77ad374c10f2a}{C\+\_\+\+STORAGE\+\_\+\+BIT\+\_\+\+SET}}(c,t,\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40af1075c205193b771ef9bc178eab609d8}{SV\+\_\+\+DPM\+\_\+\+SOLVE\+\_\+\+EULERIAN}})}
+
+\Hypertarget{dpm__vof_8h_a3f9f059b18a082d446d63a01b147387f}\label{dpm__vof_8h_a3f9f059b18a082d446d63a01b147387f} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_BIG@{DPM\_BIG}}
+\index{DPM\_BIG@{DPM\_BIG}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_BIG}{DPM\_BIG}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+BIG~1.e+20}
+
+\Hypertarget{dpm__vof_8h_aeb698b17df83e4c083e04f9a12113d81}\label{dpm__vof_8h_aeb698b17df83e4c083e04f9a12113d81} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_DIAM\_DIM@{DPM\_DIAM\_DIM}}
+\index{DPM\_DIAM\_DIM@{DPM\_DIAM\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_DIAM\_DIM}{DPM\_DIAM\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+DIAM\+\_\+\+DIM~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}}
+
+\Hypertarget{dpm__vof_8h_a5cdbd8812e43b4f26d096276b58ebbd1}\label{dpm__vof_8h_a5cdbd8812e43b4f26d096276b58ebbd1} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_HC\_DIM@{DPM\_HC\_DIM}}
+\index{DPM\_HC\_DIM@{DPM\_HC\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_HC\_DIM}{DPM\_HC\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+HC\+\_\+\+DIM~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}}
+
+\Hypertarget{dpm__vof_8h_a4e87828d17d265db2197123aa5ffa001}\label{dpm__vof_8h_a4e87828d17d265db2197123aa5ffa001} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_K\_DIM@{DPM\_K\_DIM}}
+\index{DPM\_K\_DIM@{DPM\_K\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_K\_DIM}{DPM\_K\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+K\+\_\+\+DIM~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}}
+
+\Hypertarget{dpm__vof_8h_ad65533c84670d87f069bf950d3aa28ab}\label{dpm__vof_8h_ad65533c84670d87f069bf950d3aa28ab} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_NEG\_BIG@{DPM\_NEG\_BIG}}
+\index{DPM\_NEG\_BIG@{DPM\_NEG\_BIG}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_NEG\_BIG}{DPM\_NEG\_BIG}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+NEG\+\_\+\+BIG~-\/1.e+20}
+
+\Hypertarget{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}\label{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_REAL\_DIM@{DPM\_REAL\_DIM}}
+\index{DPM\_REAL\_DIM@{DPM\_REAL\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_REAL\_DIM}{DPM\_REAL\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+REAL\+\_\+\+DIM~1}
+
+\Hypertarget{dpm__vof_8h_a61d335c78c1cf1e316fdec259f50b84b}\label{dpm__vof_8h_a61d335c78c1cf1e316fdec259f50b84b} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_RHO\_DIM@{DPM\_RHO\_DIM}}
+\index{DPM\_RHO\_DIM@{DPM\_RHO\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_RHO\_DIM}{DPM\_RHO\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+RHO\+\_\+\+DIM~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}}
+
+\Hypertarget{dpm__vof_8h_a6a16367f1f2f19ef69bcc897d5593d79}\label{dpm__vof_8h_a6a16367f1f2f19ef69bcc897d5593d79} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_TEMP\_DIM@{DPM\_TEMP\_DIM}}
+\index{DPM\_TEMP\_DIM@{DPM\_TEMP\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_TEMP\_DIM}{DPM\_TEMP\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+TEMP\+\_\+\+DIM~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}}
+
+\Hypertarget{dpm__vof_8h_aa5404beda2aa9b6368c21c5b3f8ff74d}\label{dpm__vof_8h_aa5404beda2aa9b6368c21c5b3f8ff74d} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_VECTOR\_DIM@{DPM\_VECTOR\_DIM}}
+\index{DPM\_VECTOR\_DIM@{DPM\_VECTOR\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_VECTOR\_DIM}{DPM\_VECTOR\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+VECTOR\+\_\+\+DIM~3}
+
+\Hypertarget{dpm__vof_8h_aaaf3649dae2a8bd8f68e15a6c0ddf71d}\label{dpm__vof_8h_aaaf3649dae2a8bd8f68e15a6c0ddf71d} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_VEL\_DIM@{DPM\_VEL\_DIM}}
+\index{DPM\_VEL\_DIM@{DPM\_VEL\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_VEL\_DIM}{DPM\_VEL\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+VEL\+\_\+\+DIM~\mbox{\hyperlink{dpm__vof_8h_aa5404beda2aa9b6368c21c5b3f8ff74d}{DPM\+\_\+\+VECTOR\+\_\+\+DIM}}}
+
+\Hypertarget{dpm__vof_8h_a1cc34538633e3aad98f530b902025ef8}\label{dpm__vof_8h_a1cc34538633e3aad98f530b902025ef8} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_VOF\_DIM@{DPM\_VOF\_DIM}}
+\index{DPM\_VOF\_DIM@{DPM\_VOF\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_VOF\_DIM}{DPM\_VOF\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+VOF\+\_\+\+DIM~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}}
+
+\Hypertarget{dpm__vof_8h_a65e54b1db92eb3a006b6f0a6887ebe1d}\label{dpm__vof_8h_a65e54b1db92eb3a006b6f0a6887ebe1d} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_WT\_DIM@{DPM\_WT\_DIM}}
+\index{DPM\_WT\_DIM@{DPM\_WT\_DIM}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_WT\_DIM}{DPM\_WT\_DIM}}
+{\footnotesize\ttfamily \#define DPM\+\_\+\+WT\+\_\+\+DIM~\mbox{\hyperlink{dpm__vof_8h_a6bcdaf9755e677b9c0bddeecc81d69a8}{DPM\+\_\+\+REAL\+\_\+\+DIM}}}
+
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{dpm__vof_8h_a779c861b7f26735b5bf0a0b67fcacb2d}\label{dpm__vof_8h_a779c861b7f26735b5bf0a0b67fcacb2d} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Exchange\_Coeffs\_s@{DDPM\_Exchange\_Coeffs\_s}}
+\index{DDPM\_Exchange\_Coeffs\_s@{DDPM\_Exchange\_Coeffs\_s}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Exchange\_Coeffs\_s}{DDPM\_Exchange\_Coeffs\_s}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structddpm__exchange__coeffs__struct}{ddpm\+\_\+exchange\+\_\+coeffs\+\_\+struct}} \mbox{\hyperlink{dpm__vof_8h_a779c861b7f26735b5bf0a0b67fcacb2d}{DDPM\+\_\+\+Exchange\+\_\+\+Coeffs\+\_\+s}}}
+
+\Hypertarget{dpm__vof_8h_aa524f6d134d4035aafde2a6c6de23123}\label{dpm__vof_8h_aa524f6d134d4035aafde2a6c6de23123} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Vof\_and\_Postproc\_s@{DPM\_Vof\_and\_Postproc\_s}}
+\index{DPM\_Vof\_and\_Postproc\_s@{DPM\_Vof\_and\_Postproc\_s}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Vof\_and\_Postproc\_s}{DPM\_Vof\_and\_Postproc\_s}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structdpm__vof__and__postproc__struct}{dpm\+\_\+vof\+\_\+and\+\_\+postproc\+\_\+struct}} \mbox{\hyperlink{dpm__vof_8h_aa524f6d134d4035aafde2a6c6de23123}{DPM\+\_\+\+Vof\+\_\+and\+\_\+\+Postproc\+\_\+s}}}
+
+\Hypertarget{dpm__vof_8h_a2eedca762eb66a8a65bcb43a65c76cd8}\label{dpm__vof_8h_a2eedca762eb66a8a65bcb43a65c76cd8} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Vof\_Call\_Spec@{DPM\_Vof\_Call\_Spec}}
+\index{DPM\_Vof\_Call\_Spec@{DPM\_Vof\_Call\_Spec}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Vof\_Call\_Spec}{DPM\_Vof\_Call\_Spec}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6}{call\+\_\+spec\+\_\+e}} \mbox{\hyperlink{dpm__vof_8h_a2eedca762eb66a8a65bcb43a65c76cd8}{DPM\+\_\+\+Vof\+\_\+\+Call\+\_\+\+Spec}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6}\label{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6} 
+\index{dpm\_vof.h@{dpm\_vof.h}!call\_spec\_e@{call\_spec\_e}}
+\index{call\_spec\_e@{call\_spec\_e}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{call\_spec\_e}{call\_spec\_e}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6}{call\+\_\+spec\+\_\+e}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INSIDE\_TRACKING@{INSIDE\_TRACKING}!dpm\_vof.h@{dpm\_vof.h}}\index{dpm\_vof.h@{dpm\_vof.h}!INSIDE\_TRACKING@{INSIDE\_TRACKING}}}\Hypertarget{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a4483e5e02e10044bd491daf0c077ddbe}\label{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a4483e5e02e10044bd491daf0c077ddbe} 
+INSIDE\+\_\+\+TRACKING&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AFTER\_AVERAGING@{AFTER\_AVERAGING}!dpm\_vof.h@{dpm\_vof.h}}\index{dpm\_vof.h@{dpm\_vof.h}!AFTER\_AVERAGING@{AFTER\_AVERAGING}}}\Hypertarget{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a871c061006ba6100aad615aecb57fed1}\label{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a871c061006ba6100aad615aecb57fed1} 
+AFTER\+\_\+\+AVERAGING&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CALL\_SPEC\_MAX@{CALL\_SPEC\_MAX}!dpm\_vof.h@{dpm\_vof.h}}\index{dpm\_vof.h@{dpm\_vof.h}!CALL\_SPEC\_MAX@{CALL\_SPEC\_MAX}}}\Hypertarget{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a21780f42999717ed24c0442ffd5b54bb}\label{dpm__vof_8h_af45c8259e46ef53db46c7900fb5588f6a21780f42999717ed24c0442ffd5b54bb} 
+CALL\+\_\+\+SPEC\+\_\+\+MAX&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{dpm__vof_8h_a6b1fac27743051d0df26d75eb1ef3d87}\label{dpm__vof_8h_a6b1fac27743051d0df26d75eb1ef3d87} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Add\_To\_DDPM\_Flux\_Report@{Add\_To\_DDPM\_Flux\_Report}}
+\index{Add\_To\_DDPM\_Flux\_Report@{Add\_To\_DDPM\_Flux\_Report}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Add\_To\_DDPM\_Flux\_Report()}{Add\_To\_DDPM\_Flux\_Report()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Add\+\_\+\+To\+\_\+\+DDPM\+\_\+\+Flux\+\_\+\+Report (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{dpm__types_8h_a419752e94ab2bfd0963e1765386a4128}{Tracked\+\_\+\+Particle}} \texorpdfstring{$\ast$}{*}}]{tp,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{\mbox{\hyperlink{dpm__dist_8h_a0c9db32cb836cc66a9227f538ec1a2a3}{Accum\+\_\+\+Cmd\+\_\+\+Spec}}}]{accum\+\_\+cmd }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ad65fc9b468c77b1fca23968f1a6aeac7}\label{dpm__vof_8h_ad65fc9b468c77b1fca23968f1a6aeac7} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Boundary\_Rho@{DDPM\_Boundary\_Rho}}
+\index{DDPM\_Boundary\_Rho@{DDPM\_Boundary\_Rho}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Boundary\_Rho()}{DDPM\_Boundary\_Rho()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DDPM\+\_\+\+Boundary\+\_\+\+Rho (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}}}]{f,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a7a5e1826d069cbba50a1e1db666b20fd}\label{dpm__vof_8h_a7a5e1826d069cbba50a1e1db666b20fd} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Boundary\_Temp@{DDPM\_Boundary\_Temp}}
+\index{DDPM\_Boundary\_Temp@{DDPM\_Boundary\_Temp}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Boundary\_Temp()}{DDPM\_Boundary\_Temp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DDPM\+\_\+\+Boundary\+\_\+\+Temp (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}}}]{f,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a5e11f8de5e0db7a1e5f648daec1a4287}\label{dpm__vof_8h_a5e11f8de5e0db7a1e5f648daec1a4287} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Boundary\_Velocity@{DDPM\_Boundary\_Velocity}}
+\index{DDPM\_Boundary\_Velocity@{DDPM\_Boundary\_Velocity}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Boundary\_Velocity()}{DDPM\_Boundary\_Velocity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void DDPM\+\_\+\+Boundary\+\_\+\+Velocity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{V\mbox{[}\+DPM\+\_\+\+VEL\+\_\+\+DIM\mbox{]},  }\item[{\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}}}]{f,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ab20557bcac7aa0f1b5d4282c6771e829}\label{dpm__vof_8h_ab20557bcac7aa0f1b5d4282c6771e829} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Boundary\_Vof@{DDPM\_Boundary\_Vof}}
+\index{DDPM\_Boundary\_Vof@{DDPM\_Boundary\_Vof}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Boundary\_Vof()}{DDPM\_Boundary\_Vof()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DDPM\+\_\+\+Boundary\+\_\+\+Vof (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}}}]{f,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a05b5a1477850d61fcab6de6014c95fc3}\label{dpm__vof_8h_a05b5a1477850d61fcab6de6014c95fc3} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Calc\_Flow\_Dir@{DDPM\_Calc\_Flow\_Dir}}
+\index{DDPM\_Calc\_Flow\_Dir@{DDPM\_Calc\_Flow\_Dir}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Calc\_Flow\_Dir()}{DDPM\_Calc\_Flow\_Dir()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void DDPM\+\_\+\+Calc\+\_\+\+Flow\+\_\+\+Dir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} \texorpdfstring{$\ast$}{*}}]{e\+\_\+n,  }\item[{\mbox{\hyperlink{mem__grid_8h_a30572c00ed7d43e82160220e79bc367f}{face\+\_\+t}}}]{f,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ae4deab04ca2ad48a3f0e5d076fc1d8ff}\label{dpm__vof_8h_ae4deab04ca2ad48a3f0e5d076fc1d8ff} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Enthalpy@{DDPM\_Enthalpy}}
+\index{DDPM\_Enthalpy@{DDPM\_Enthalpy}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Enthalpy()}{DDPM\_Enthalpy()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DDPM\+\_\+\+Enthalpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_aa45637a7ea3aa05887df472fd40a35d6}\label{dpm__vof_8h_aa45637a7ea3aa05887df472fd40a35d6} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Flux\_Report@{DDPM\_Flux\_Report}}
+\index{DDPM\_Flux\_Report@{DDPM\_Flux\_Report}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Flux\_Report()}{DDPM\_Flux\_Report()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void DDPM\+\_\+\+Flux\+\_\+\+Report (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{thread,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{integral\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a7691cfffc1ac1ddcac1a65d3b20965a9}\label{dpm__vof_8h_a7691cfffc1ac1ddcac1a65d3b20965a9} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Flux\_Reset@{DDPM\_Flux\_Reset}}
+\index{DDPM\_Flux\_Reset@{DDPM\_Flux\_Reset}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Flux\_Reset()}{DDPM\_Flux\_Reset()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void DDPM\+\_\+\+Flux\+\_\+\+Reset (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ac0646eeaab7386214447a718e86bf47a}\label{dpm__vof_8h_ac0646eeaab7386214447a718e86bf47a} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Inflow\_Flux@{DDPM\_Inflow\_Flux}}
+\index{DDPM\_Inflow\_Flux@{DDPM\_Inflow\_Flux}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Inflow\_Flux()}{DDPM\_Inflow\_Flux()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DDPM\+\_\+\+Inflow\+\_\+\+Flux (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{domain }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ab5122c0bf9f0aee97253944dcc61e3f2}\label{dpm__vof_8h_ab5122c0bf9f0aee97253944dcc61e3f2} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DDPM\_Specific\_Heat@{DDPM\_Specific\_Heat}}
+\index{DDPM\_Specific\_Heat@{DDPM\_Specific\_Heat}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DDPM\_Specific\_Heat()}{DDPM\_Specific\_Heat()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DDPM\+\_\+\+Specific\+\_\+\+Heat (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_aeee79abb282ccc8b7ad315eefe43825b}\label{dpm__vof_8h_aeee79abb282ccc8b7ad315eefe43825b} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Distribute\_DPM\_Vof\_Dist\_from\_Nodes\_to\_Cells@{Distribute\_DPM\_Vof\_Dist\_from\_Nodes\_to\_Cells}}
+\index{Distribute\_DPM\_Vof\_Dist\_from\_Nodes\_to\_Cells@{Distribute\_DPM\_Vof\_Dist\_from\_Nodes\_to\_Cells}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Distribute\_DPM\_Vof\_Dist\_from\_Nodes\_to\_Cells()}{Distribute\_DPM\_Vof\_Dist\_from\_Nodes\_to\_Cells()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Distribute\+\_\+\+DPM\+\_\+\+Vof\+\_\+\+Dist\+\_\+from\+\_\+\+Nodes\+\_\+to\+\_\+\+Cells (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a79f664367b1251a24a54b52d96f81810}\label{dpm__vof_8h_a79f664367b1251a24a54b52d96f81810} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Distribute\_Exchange\_Coefficients\_from\_Nodes\_to\_Cells@{Distribute\_Exchange\_Coefficients\_from\_Nodes\_to\_Cells}}
+\index{Distribute\_Exchange\_Coefficients\_from\_Nodes\_to\_Cells@{Distribute\_Exchange\_Coefficients\_from\_Nodes\_to\_Cells}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Distribute\_Exchange\_Coefficients\_from\_Nodes\_to\_Cells()}{Distribute\_Exchange\_Coefficients\_from\_Nodes\_to\_Cells()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Distribute\+\_\+\+Exchange\+\_\+\+Coefficients\+\_\+from\+\_\+\+Nodes\+\_\+to\+\_\+\+Cells (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ae0c65d81b6569ab9ac346cd355101ad1}\label{dpm__vof_8h_ae0c65d81b6569ab9ac346cd355101ad1} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Averaged\_Density@{DPM\_Averaged\_Density}}
+\index{DPM\_Averaged\_Density@{DPM\_Averaged\_Density}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Averaged\_Density()}{DPM\_Averaged\_Density()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DPM\+\_\+\+Averaged\+\_\+\+Density (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a694b6a307fe1a65ea431d2a5009d897d}\label{dpm__vof_8h_a694b6a307fe1a65ea431d2a5009d897d} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Averaged\_Drag@{DPM\_Averaged\_Drag}}
+\index{DPM\_Averaged\_Drag@{DPM\_Averaged\_Drag}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Averaged\_Drag()}{DPM\_Averaged\_Drag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DPM\+\_\+\+Averaged\+\_\+\+Drag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ti,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{tj,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{int}]{i,  }\item[{int}]{j,  }\item[{\mbox{\hyperlink{prop_8h_a52d74dc0ca3ed9bc4fe6162fb534794b}{Phase\+\_\+\+Pair}} \texorpdfstring{$\ast$}{*}}]{phase\+\_\+pair }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_af8a9a0b4a550513443da1348c773b27f}\label{dpm__vof_8h_af8a9a0b4a550513443da1348c773b27f} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Averaged\_Granular\_Temperature@{DPM\_Averaged\_Granular\_Temperature}}
+\index{DPM\_Averaged\_Granular\_Temperature@{DPM\_Averaged\_Granular\_Temperature}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Averaged\_Granular\_Temperature()}{DPM\_Averaged\_Granular\_Temperature()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void DPM\+\_\+\+Averaged\+\_\+\+Granular\+\_\+\+Temperature (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{d }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a049f8d5ee412186f2ede21ee6405fff7}\label{dpm__vof_8h_a049f8d5ee412186f2ede21ee6405fff7} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Averaged\_Heat\_Coeff@{DPM\_Averaged\_Heat\_Coeff}}
+\index{DPM\_Averaged\_Heat\_Coeff@{DPM\_Averaged\_Heat\_Coeff}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Averaged\_Heat\_Coeff()}{DPM\_Averaged\_Heat\_Coeff()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DPM\+\_\+\+Averaged\+\_\+\+Heat\+\_\+\+Coeff (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{ti,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{tj }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a9e3158d70b17df56c5116c7266630c08}\label{dpm__vof_8h_a9e3158d70b17df56c5116c7266630c08} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Correct\_Coupled\_AP\_Coefficient@{DPM\_Correct\_Coupled\_AP\_Coefficient}}
+\index{DPM\_Correct\_Coupled\_AP\_Coefficient@{DPM\_Correct\_Coupled\_AP\_Coefficient}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Correct\_Coupled\_AP\_Coefficient()}{DPM\_Correct\_Coupled\_AP\_Coefficient()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void DPM\+\_\+\+Correct\+\_\+\+Coupled\+\_\+\+AP\+\_\+\+Coefficient (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{domain }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a3e9c09faf9abf6837c1905d9e69652f5}\label{dpm__vof_8h_a3e9c09faf9abf6837c1905d9e69652f5} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Dist\_Velocity@{DPM\_Dist\_Velocity}}
+\index{DPM\_Dist\_Velocity@{DPM\_Dist\_Velocity}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Dist\_Velocity()}{DPM\_Dist\_Velocity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void DPM\+\_\+\+Dist\+\_\+\+Velocity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{\mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}}]{v\mbox{[}\+ND\+\_\+3\mbox{]} }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_adbbb434fee66f274d3d0187d10f4b262}\label{dpm__vof_8h_adbbb434fee66f274d3d0187d10f4b262} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Fix\_SVar@{DPM\_Fix\_SVar}}
+\index{DPM\_Fix\_SVar@{DPM\_Fix\_SVar}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Fix\_SVar()}{DPM\_Fix\_SVar()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void DPM\+\_\+\+Fix\+\_\+\+SVar (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{domain,  }\item[{int}]{eqn,  }\item[{\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}}]{sv\+\_\+v,  }\item[{\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}}]{sv\+\_\+ap,  }\item[{int}]{amg\+\_\+id }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ae6e1b9f1ecde0b23c38012f9b4db68e1}\label{dpm__vof_8h_ae6e1b9f1ecde0b23c38012f9b4db68e1} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Fix\_SVar\_On\_Thread@{DPM\_Fix\_SVar\_On\_Thread}}
+\index{DPM\_Fix\_SVar\_On\_Thread@{DPM\_Fix\_SVar\_On\_Thread}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Fix\_SVar\_On\_Thread()}{DPM\_Fix\_SVar\_On\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void DPM\+\_\+\+Fix\+\_\+\+SVar\+\_\+\+On\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{thread,  }\item[{int}]{eqn,  }\item[{\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}}]{sv\+\_\+v,  }\item[{\mbox{\hyperlink{src_2storage_2storage_8h_a0406e806fa46e45c40e1972d2bc89e40}{Svar}}}]{sv\+\_\+ap,  }\item[{int}]{amg\+\_\+id }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a777ac1190eb0ee34f2f11a46a5bf99d6}\label{dpm__vof_8h_a777ac1190eb0ee34f2f11a46a5bf99d6} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Momentum\_AP@{DPM\_Momentum\_AP}}
+\index{DPM\_Momentum\_AP@{DPM\_Momentum\_AP}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Momentum\_AP()}{DPM\_Momentum\_AP()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DPM\+\_\+\+Momentum\+\_\+\+AP (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a2fe172e71cdade5c6a738e996f88bd57}\label{dpm__vof_8h_a2fe172e71cdade5c6a738e996f88bd57} 
+\index{dpm\_vof.h@{dpm\_vof.h}!DPM\_Unlimited\_Vof@{DPM\_Unlimited\_Vof}}
+\index{DPM\_Unlimited\_Vof@{DPM\_Unlimited\_Vof}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{DPM\_Unlimited\_Vof()}{DPM\_Unlimited\_Vof()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} DPM\+\_\+\+Unlimited\+\_\+\+Vof (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem__grid_8h_a903c276277d5a0b18deab97e67fe5ce1}{cell\+\_\+t}}}]{c,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{\mbox{\hyperlink{dpm__vof_8h_a2eedca762eb66a8a65bcb43a65c76cd8}{DPM\+\_\+\+Vof\+\_\+\+Call\+\_\+\+Spec}}}]{call\+\_\+spec }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_af40fc011862e66adf120b1fb4b1c1309}\label{dpm__vof_8h_af40fc011862e66adf120b1fb4b1c1309} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Fill\_Discrete\_Phase\_Diameter@{Fill\_Discrete\_Phase\_Diameter}}
+\index{Fill\_Discrete\_Phase\_Diameter@{Fill\_Discrete\_Phase\_Diameter}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Fill\_Discrete\_Phase\_Diameter()}{Fill\_Discrete\_Phase\_Diameter()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Fill\+\_\+\+Discrete\+\_\+\+Phase\+\_\+\+Diameter (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{pt }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a386b6789f1f04a0af2673785d8e52c6f}\label{dpm__vof_8h_a386b6789f1f04a0af2673785d8e52c6f} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Fill\_Discrete\_Phase\_Slip\_Velocity@{Fill\_Discrete\_Phase\_Slip\_Velocity}}
+\index{Fill\_Discrete\_Phase\_Slip\_Velocity@{Fill\_Discrete\_Phase\_Slip\_Velocity}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Fill\_Discrete\_Phase\_Slip\_Velocity()}{Fill\_Discrete\_Phase\_Slip\_Velocity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Fill\+\_\+\+Discrete\+\_\+\+Phase\+\_\+\+Slip\+\_\+\+Velocity (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{domain,  }\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t,  }\item[{int}]{dis\+Phase }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ac38a92abfa0b8c01da1cc95afab584a4}\label{dpm__vof_8h_ac38a92abfa0b8c01da1cc95afab584a4} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Free\_Solve\_Eulerian\_Flag@{Free\_Solve\_Eulerian\_Flag}}
+\index{Free\_Solve\_Eulerian\_Flag@{Free\_Solve\_Eulerian\_Flag}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Free\_Solve\_Eulerian\_Flag()}{Free\_Solve\_Eulerian\_Flag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Free\+\_\+\+Solve\+\_\+\+Eulerian\+\_\+\+Flag (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a3443bc2710f0e695243ef1b9c9e23d1b}\label{dpm__vof_8h_a3443bc2710f0e695243ef1b9c9e23d1b} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Get\_DDPM\_Exchange\_Struct@{Get\_DDPM\_Exchange\_Struct}}
+\index{Get\_DDPM\_Exchange\_Struct@{Get\_DDPM\_Exchange\_Struct}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Get\_DDPM\_Exchange\_Struct()}{Get\_DDPM\_Exchange\_Struct()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{dpm__vof_8h_a779c861b7f26735b5bf0a0b67fcacb2d}{DDPM\+\_\+\+Exchange\+\_\+\+Coeffs\+\_\+s}} \texorpdfstring{$\ast$}{*} Get\+\_\+\+DDPM\+\_\+\+Exchange\+\_\+\+Struct (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_aa5f456080956cb4cf7eaad3a1baaa0db}\label{dpm__vof_8h_aa5f456080956cb4cf7eaad3a1baaa0db} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Get\_DPM\_Postproc\_Struct@{Get\_DPM\_Postproc\_Struct}}
+\index{Get\_DPM\_Postproc\_Struct@{Get\_DPM\_Postproc\_Struct}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Get\_DPM\_Postproc\_Struct()}{Get\_DPM\_Postproc\_Struct()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{dpm__vof_8h_aa524f6d134d4035aafde2a6c6de23123}{DPM\+\_\+\+Vof\+\_\+and\+\_\+\+Postproc\+\_\+s}} \texorpdfstring{$\ast$}{*} Get\+\_\+\+DPM\+\_\+\+Postproc\+\_\+\+Struct (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ae9476a861fbb288a9dfe6c212a09d3c7}\label{dpm__vof_8h_ae9476a861fbb288a9dfe6c212a09d3c7} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Hybrid\_Phase\_Domains\_Present@{Hybrid\_Phase\_Domains\_Present}}
+\index{Hybrid\_Phase\_Domains\_Present@{Hybrid\_Phase\_Domains\_Present}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Hybrid\_Phase\_Domains\_Present()}{Hybrid\_Phase\_Domains\_Present()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} Hybrid\+\_\+\+Phase\+\_\+\+Domains\+\_\+\+Present (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a2ae6da50ae61f65f00c5ef169e4c017d}\label{dpm__vof_8h_a2ae6da50ae61f65f00c5ef169e4c017d} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Init\_Solve\_Eulerian\_Flag@{Init\_Solve\_Eulerian\_Flag}}
+\index{Init\_Solve\_Eulerian\_Flag@{Init\_Solve\_Eulerian\_Flag}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Init\_Solve\_Eulerian\_Flag()}{Init\_Solve\_Eulerian\_Flag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Init\+\_\+\+Solve\+\_\+\+Eulerian\+\_\+\+Flag (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a860324b531be3874141c423bf010443a}\label{dpm__vof_8h_a860324b531be3874141c423bf010443a} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Is\_Inflow\_Boundary\_Thread@{Is\_Inflow\_Boundary\_Thread}}
+\index{Is\_Inflow\_Boundary\_Thread@{Is\_Inflow\_Boundary\_Thread}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Is\_Inflow\_Boundary\_Thread()}{Is\_Inflow\_Boundary\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} Is\+\_\+\+Inflow\+\_\+\+Boundary\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ada12072d3ebab7d0622d61bab83c2726}\label{dpm__vof_8h_ada12072d3ebab7d0622d61bab83c2726} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Is\_Outflow\_Boundary\_Thread@{Is\_Outflow\_Boundary\_Thread}}
+\index{Is\_Outflow\_Boundary\_Thread@{Is\_Outflow\_Boundary\_Thread}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Is\_Outflow\_Boundary\_Thread()}{Is\_Outflow\_Boundary\_Thread()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}} Is\+\_\+\+Outflow\+\_\+\+Boundary\+\_\+\+Thread (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{src_2mesh_2entity_8h_a2363ceb87b89a2a7619b8c564c4d6165}{Thread}} \texorpdfstring{$\ast$}{*}}]{t }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a3c4e9fe13c4f5121505a07b6fbdfb6d4}\label{dpm__vof_8h_a3c4e9fe13c4f5121505a07b6fbdfb6d4} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Limit\_Dense\_DPM\_Properties@{Limit\_Dense\_DPM\_Properties}}
+\index{Limit\_Dense\_DPM\_Properties@{Limit\_Dense\_DPM\_Properties}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Limit\_Dense\_DPM\_Properties()}{Limit\_Dense\_DPM\_Properties()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Limit\+\_\+\+Dense\+\_\+\+DPM\+\_\+\+Properties (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{domain }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a6adeb2ceac548ee986adf77f0780cadb}\label{dpm__vof_8h_a6adeb2ceac548ee986adf77f0780cadb} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Setup\_DDPM\_Velocity\_Correction@{Setup\_DDPM\_Velocity\_Correction}}
+\index{Setup\_DDPM\_Velocity\_Correction@{Setup\_DDPM\_Velocity\_Correction}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Setup\_DDPM\_Velocity\_Correction()}{Setup\_DDPM\_Velocity\_Correction()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Setup\+\_\+\+DDPM\+\_\+\+Velocity\+\_\+\+Correction (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_aa46d127314f8cd119bc8b24d7043610e}\label{dpm__vof_8h_aa46d127314f8cd119bc8b24d7043610e} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Setup\_DPM\_Vof@{Setup\_DPM\_Vof}}
+\index{Setup\_DPM\_Vof@{Setup\_DPM\_Vof}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Setup\_DPM\_Vof()}{Setup\_DPM\_Vof()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Setup\+\_\+\+DPM\+\_\+\+Vof (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_ae1502335910093b00b5a7860a7f985a0}\label{dpm__vof_8h_ae1502335910093b00b5a7860a7f985a0} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Setup\_DPM\_Vof\_Distributions\_on\_Nodes@{Setup\_DPM\_Vof\_Distributions\_on\_Nodes}}
+\index{Setup\_DPM\_Vof\_Distributions\_on\_Nodes@{Setup\_DPM\_Vof\_Distributions\_on\_Nodes}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Setup\_DPM\_Vof\_Distributions\_on\_Nodes()}{Setup\_DPM\_Vof\_Distributions\_on\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Setup\+\_\+\+DPM\+\_\+\+Vof\+\_\+\+Distributions\+\_\+on\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a3df84ed90ca889e0c8dc154f2af86ebf}\label{dpm__vof_8h_a3df84ed90ca889e0c8dc154f2af86ebf} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Setup\_Exchange\_Coefficients@{Setup\_Exchange\_Coefficients}}
+\index{Setup\_Exchange\_Coefficients@{Setup\_Exchange\_Coefficients}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Setup\_Exchange\_Coefficients()}{Setup\_Exchange\_Coefficients()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Setup\+\_\+\+Exchange\+\_\+\+Coefficients (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a1f691218f443c4058d250989cca2075d}\label{dpm__vof_8h_a1f691218f443c4058d250989cca2075d} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Setup\_Exchange\_Coefficients\_on\_Nodes@{Setup\_Exchange\_Coefficients\_on\_Nodes}}
+\index{Setup\_Exchange\_Coefficients\_on\_Nodes@{Setup\_Exchange\_Coefficients\_on\_Nodes}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Setup\_Exchange\_Coefficients\_on\_Nodes()}{Setup\_Exchange\_Coefficients\_on\_Nodes()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Setup\+\_\+\+Exchange\+\_\+\+Coefficients\+\_\+on\+\_\+\+Nodes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a2f9370e7a2fe0ba3b3fe67b58bc14056}\label{dpm__vof_8h_a2f9370e7a2fe0ba3b3fe67b58bc14056} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Setup\_VOF\_Shared\_Classification@{Setup\_VOF\_Shared\_Classification}}
+\index{Setup\_VOF\_Shared\_Classification@{Setup\_VOF\_Shared\_Classification}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Setup\_VOF\_Shared\_Classification()}{Setup\_VOF\_Shared\_Classification()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Setup\+\_\+\+VOF\+\_\+\+Shared\+\_\+\+Classification (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\Hypertarget{dpm__vof_8h_a817615e985afa910d93764e7119467af}\label{dpm__vof_8h_a817615e985afa910d93764e7119467af} 
+\index{dpm\_vof.h@{dpm\_vof.h}!Update\_Solve\_Eulerian\_Flag@{Update\_Solve\_Eulerian\_Flag}}
+\index{Update\_Solve\_Eulerian\_Flag@{Update\_Solve\_Eulerian\_Flag}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{Update\_Solve\_Eulerian\_Flag()}{Update\_Solve\_Eulerian\_Flag()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} void Update\+\_\+\+Solve\+\_\+\+Eulerian\+\_\+\+Flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{mem_8h_aadd0af29b20d69421646265d01d89227}{Domain}} \texorpdfstring{$\ast$}{*}}]{domain }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{dpm__vof_8h_a8a1098e35882daee1dd7364e913ca9d7}\label{dpm__vof_8h_a8a1098e35882daee1dd7364e913ca9d7} 
+\index{dpm\_vof.h@{dpm\_vof.h}!injected\_ddpm\_granular\_mass\_for\_time\_step@{injected\_ddpm\_granular\_mass\_for\_time\_step}}
+\index{injected\_ddpm\_granular\_mass\_for\_time\_step@{injected\_ddpm\_granular\_mass\_for\_time\_step}!dpm\_vof.h@{dpm\_vof.h}}
+\doxysubsubsection{\texorpdfstring{injected\_ddpm\_granular\_mass\_for\_time\_step}{injected\_ddpm\_granular\_mass\_for\_time\_step}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\+\_\+\+EXPORT}} \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}} injected\+\_\+ddpm\+\_\+granular\+\_\+mass\+\_\+for\+\_\+time\+\_\+step\mbox{[}\mbox{\hyperlink{materials_8h_a3462e5221d1b5cb21828c854fcfac556}{MAX\+\_\+\+PHASES}}\mbox{]}}
+

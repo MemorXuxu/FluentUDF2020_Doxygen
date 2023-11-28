@@ -1,0 +1,353 @@
+\doxysection{visual\+\_\+kinematics.\+h}
+\hypertarget{visual__kinematics_8h_source}{}\label{visual__kinematics_8h_source}\index{fluent20.1.0/src/dx/visual\_kinematics.h@{fluent20.1.0/src/dx/visual\_kinematics.h}}
+\mbox{\hyperlink{visual__kinematics_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ \_VISUAL\_KINEMATICS\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ \_VISUAL\_KINEMATICS\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dll_8h}{dll.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#if\ SEEM}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#if\ VKI\_LIB}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}vdm/vdm.h"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ VIS\_THERMAL\ 0}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ MAX\_SCALAR\_VKI\ 5}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ MAX\_SCALAR\_VKI\_STRUCTURAL\ 3}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ MAX\_SCALAR\_VKI\_THERMAL\ 3}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ MAX\_SCALAR\_VKI\_RESULTS\ 38}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ MAX\_FSI\_SETS\ 50}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{/*\ CGNS\ library\ can\ write\ bc-\/name\ of\ atmost\ 32\ characters.\ */}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ MAX\_LENGTH\_CGNS\_BCNAME\ 32}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ Vreal\ Vdouble}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ Vreal\ Vfloat}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ VIEW\_FLAG(flags,ind)\ (((flags)\ >>\ ((ind)-\/1))\ \&\ 1)}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ VALID\_POLY\_FACE\_THREAD(thread)\ (BOUNDARY\_FACE\_THREAD\_P\ (thread)\ \&\&\ !SHELL\_FACE\_THREAD\_P\ (thread)\&\&\(\backslash\)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !SLIDING\_INTERFACE\_THREAD\_P\ (thread)\ \&\&\ !SLIDING\_BOUNDARY\_THREAD\_P\ (thread))}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ Export\_File\_Type}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \ \ ABAQUS\ =\ 1,}
+\DoxyCodeLine{00037\ \ \ NASTRAN,}
+\DoxyCodeLine{00038\ \ \ SDRC\_UNIVERSAL,}
+\DoxyCodeLine{00039\ \ \ PATRAN,}
+\DoxyCodeLine{00040\ \ \ ANSYS,}
+\DoxyCodeLine{00041\ \ \ TECPLOT,}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#if\ DEBUG\_VKI}}
+\DoxyCodeLine{00043\ \ \ CGNS,}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{chemkin_8h_a592aba11ab30da4dbf57e9736c8387a1a26741459537a01adc304c787cdd3243e}{NATIVE}}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00046\ \ \ CGNS}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00048\ \}\ Export\_File\_Type\_t;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }Loads\_For\_Export}
+\DoxyCodeLine{00051\ \{}
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordtype}{char}\ *var\_name;\ \textcolor{comment}{/*\ variable\ name*/}}
+\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*load\_func)(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{seem_8h_add6656cd05b5c4631a94620cb7781317}{Pointer}},\ \mbox{\hyperlink{seem_8h_add6656cd05b5c4631a94620cb7781317}{Pointer}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});\ \textcolor{comment}{/*\ loading\ function\ */}}
+\DoxyCodeLine{00054\ \}\ Loads\_For\_Export\_t;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }FSI\_Loads\_For\_Export}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00058\ \ \ \textcolor{keywordtype}{char}\ *var\_name;\ \textcolor{comment}{/*\ variable\ name*/}}
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*load\_func)(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *);\ \textcolor{comment}{/*\ loading\ function\ */}}
+\DoxyCodeLine{00060\ \}\ Fsi\_Loads\_For\_Export\_t;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }Results\_For\_Export}
+\DoxyCodeLine{00063\ \{}
+\DoxyCodeLine{00064\ \ \ \textcolor{keywordtype}{char}\ *fluent\_var\_name;\ \textcolor{comment}{/*\ Fluent\ variable\ name*/}}
+\DoxyCodeLine{00065\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*load\_func)(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \mbox{\hyperlink{seem_8h_add6656cd05b5c4631a94620cb7781317}{Pointer}},\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}});\ \textcolor{comment}{/*\ loading\ function\ */}}
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{int}\ result\_no;}
+\DoxyCodeLine{00067\ \ \ \textcolor{keywordtype}{int}\ qualifier;}
+\DoxyCodeLine{00068\ \}\ Results\_For\_Export\_t;}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#if\ !RP\_NODE}}
+\DoxyCodeLine{00071\ \textcolor{comment}{/*redefined\ in\ fl\_api.h\ ...\ changes\ should\ be\ synchronised*/}}
+\DoxyCodeLine{00072\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }Vki\_Import\_Object}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \ \ \textcolor{keywordtype}{int}\ nnodes;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*number\ of\ nodes\ in\ fem\ mesh*/}}
+\DoxyCodeLine{00075\ \ \ \textcolor{keywordtype}{int}\ nelems;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*number\ of\ elements\ in\ fem\ mesh*/}}
+\DoxyCodeLine{00076\ \ \ Vfloat\ extent[2][3];\ \ \ \textcolor{comment}{/*max-\/min\ values\ of\ vertices*/}}
+\DoxyCodeLine{00077\ \ \ \textcolor{keywordtype}{int}\ num;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ node\ sets*/}}
+\DoxyCodeLine{00078\ \ \ \textcolor{keywordtype}{int}\ fnum;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ face\ sets*/}}
+\DoxyCodeLine{00079\ \ \ \textcolor{keywordtype}{int}\ elnum;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ element\ sets*/}}
+\DoxyCodeLine{00080\ \ \ \textcolor{keywordtype}{int}\ file\_type;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ input\ file\ type\ */}}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ volume\_mesh;}
+\DoxyCodeLine{00082\ \ \ \textcolor{keywordtype}{int}\ setlist[MAX\_FSI\_SETS];\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ hash\ key\ corresponding\ to\ node\ sets\ */}}
+\DoxyCodeLine{00083\ \ \ \textcolor{keywordtype}{int}\ fsetlist[MAX\_FSI\_SETS];\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ hash\ key\ corresponding\ to\ face\ sets\ */}}
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{int}\ elsetlist[MAX\_FSI\_SETS];\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ hash\ key\ corresponding\ to\ element\ sets\ */}}
+\DoxyCodeLine{00085\ \ \ \textcolor{keywordtype}{char}\ filename[256];\ \ \ \ \ \textcolor{comment}{/*\ input\ file\ name\ */}}
+\DoxyCodeLine{00086\ \ \ \textcolor{keywordtype}{void}\ *input\_fp;}
+\DoxyCodeLine{00087\ \ \ vis\_Model\ *model;}
+\DoxyCodeLine{00088\ \ \ vis\_Connect\ *connect;}
+\DoxyCodeLine{00089\ \ \ vis\_GridFun\ *gf;}
+\DoxyCodeLine{00090\ \ \ vdm\_DataFun\ *datafun;}
+\DoxyCodeLine{00091\ \ \ vdm\_LMan\ \ *lman;}
+\DoxyCodeLine{00092\ \ \ vis\_Group\ *grp\_src,\ *grp\_dst;}
+\DoxyCodeLine{00093\ \ \ vis\_LCase\ *lcase;}
+\DoxyCodeLine{00094\ \ \ vis\_RCase\ *rcase;}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ case\_read;\ \ \ \ \textcolor{comment}{/*\ already\ case\ held\ in\ vki\ library\ */}}
+\DoxyCodeLine{00096\ \ \ Vchar\ *setname[MAX\_FSI\_SETS];\ \ \ \ \ \textcolor{comment}{/*\ node\ set\ name\ */}}
+\DoxyCodeLine{00097\ \ \ Vchar\ *fsetname[MAX\_FSI\_SETS];\ \ \textcolor{comment}{/*\ face\ set\ name\ */}}
+\DoxyCodeLine{00098\ \ \ Vchar\ *elsetname[MAX\_FSI\_SETS];\ \ \ \textcolor{comment}{/*\ element\ set\ name\ */}}
+\DoxyCodeLine{00099\ \ \ \textcolor{keywordtype}{double}\ fsi\_length\_factor;}
+\DoxyCodeLine{00100\ \}\ Vki\_Object\_t;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }Vki\_Import\_Fns}
+\DoxyCodeLine{00103\ \{}
+\DoxyCodeLine{00104\ \ \ vdm\_DataFun\ *(*vdm\_DataFunBegin\_)\ (\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{void}\ *(*vdm\_LibBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00106\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_InitDataFun\_)\ (\textcolor{keywordtype}{void}\ *,\ vdm\_DataFun\ *);}
+\DoxyCodeLine{00107\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_PLOT3DLibSetGridType\_)\ (\textcolor{keywordtype}{void}\ *,\ Vint,\ Vint,\ Vint);}
+\DoxyCodeLine{00108\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_DataFunSetConvention\_)\ (vdm\_DataFun\ *,\ Vint);}
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_DataFunOpen\_)\ (vdm\_DataFun\ *,\ Vint,\ Vchar\ *,\ Vint);}
+\DoxyCodeLine{00110\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_DataFunNumDomains\_)\ (vdm\_DataFun\ *,\ Vchar\ *,\ Vint,\ Vint\ *);}
+\DoxyCodeLine{00111\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_ABALibUpgradeOdb\_)(\textcolor{keywordtype}{void}\ *,\ Vchar\ *,\ Vchar\ *);}
+\DoxyCodeLine{00112\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_ABALibGetInteger\_)\ (\textcolor{keywordtype}{void}\ *,\ Vint,\ Vint\ *);}
+\DoxyCodeLine{00113\ \ \ \textcolor{comment}{/*\ void\ (*vdm\_DataFunGetNumEntities\_)\ (vdm\_DataFun\ *,\ Vint,\ Vint\ *);*/}}
+\DoxyCodeLine{00114\ \ \ Vint\ (*vdm\_DataFunError\_)\ (vdm\_DataFun\ *);}
+\DoxyCodeLine{00115\ \ \ vis\_Model\ *(*vis\_ModelBegin\_)\ (\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00116\ \ \ vdm\_LMan\ *(*vdm\_LManBegin\_)\ (\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00117\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_LManSetObject\_)\ (vdm\_LMan\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_LManLoadModel\_)\ (vdm\_LMan\ *,\ vis\_Model\ *);}
+\DoxyCodeLine{00119\ \ \ Vint\ (*vdm\_LManError\_)\ (vdm\_LMan\ *);}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ModelSetObject\_)(vis\_Model\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00121\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ModelDelete\_)(vis\_Model\ *);}
+\DoxyCodeLine{00122\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_LManSetParami\_)(vdm\_LMan\ *,\ Vint,\ Vint);}
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_DataFunClose\_)\ (vdm\_DataFun\ *);}
+\DoxyCodeLine{00124\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_DataFunEnd\_)\ (vdm\_DataFun\ *);}
+\DoxyCodeLine{00125\ \ \ \textcolor{keywordtype}{void}\ *(*vdm\_LibEnd\_)\ (\textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00126\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_LManEnd\_)\ (vdm\_LMan\ *);}
+\DoxyCodeLine{00127\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*convert\_2d\_)(vis\_Model\ *model);}
+\DoxyCodeLine{00128\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*mod\_partid\_elemset\_)(vis\_Model\ *model);}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*add\_inter\_nodeset\_)(vis\_Model\ *model);}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*process\_ensight\_)(vis\_Model\ *model);}
+\DoxyCodeLine{00131\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*process\_tgrid\_)(vis\_Model\ *model);}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*process\_shelltointer\_)(vis\_Model\ *model);}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*ignore\_periodic1d\_)(vis\_Model\ *model);}
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*add\_inter\_elementset\_)(vis\_Model\ *model);}
+\DoxyCodeLine{00135\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*process\_contacttoshell\_)(vis\_Model\ *model);}
+\DoxyCodeLine{00136\ \ \ int\ (*get\_model\_)(Vki\_Object\_t\ *,\ Vint,\ Vint,\ Vint);}
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*free\_memory\_)(Vki\_Object\_t\ *);}
+\DoxyCodeLine{00138\ \}\ Vki\_Import\_Fn\_t;}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }Vki\_Fsi\_Fns}
+\DoxyCodeLine{00141\ \{}
+\DoxyCodeLine{00142\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectCoords\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint\ [],\ Vfloat\ [][3]);}
+\DoxyCodeLine{00143\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectCoordsdv\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint\ [],\ Vdouble\ [][3]);}
+\DoxyCodeLine{00144\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectEdgeGroup\_)(vis\_Connect\ *,\ Vint,\ vis\_Group\ *,\ vis\_Group\ *);}
+\DoxyCodeLine{00145\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectElemAssoc\_)(vis\_Connect\ *,\ Vint,\ Vint,\ Vint\ [],\ Vint\ []);}
+\DoxyCodeLine{00146\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectSetElemAssoc\_)(vis\_Connect\ *,\ Vint,\ Vint,\ Vint);}
+\DoxyCodeLine{00147\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectElemNode\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint\ *,\ Vint\ []);}
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectElemNum\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint,\ Vint\ *);}
+\DoxyCodeLine{00149\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectElemCorn\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint,\ Vint,\ Vint\ *,\ Vint\ []);}
+\DoxyCodeLine{00150\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectExtent\_)(vis\_Connect\ *,\ vis\_Group\ *,\ Vfloat\ [2][3]);}
+\DoxyCodeLine{00151\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectFaceGroup\_)(vis\_Connect\ *,\ Vint,\ vis\_Group\ *,\ vis\_Group\ *);}
+\DoxyCodeLine{00152\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectGridFun\_)(vis\_Connect\ *,\ vis\_GridFun\ *);}
+\DoxyCodeLine{00153\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectNumber\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint\ *);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectKernel\_)\ (vis\_Connect\ *,\ Vint);}
+\DoxyCodeLine{00156\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectNodeElem\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint\ *,\ Vint\ []);}
+\DoxyCodeLine{00157\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectNumElemNode\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint\ *);}
+\DoxyCodeLine{00158\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectNumNodeElem\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint\ *);}
+\DoxyCodeLine{00159\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectSizeElemdv\_)(vis\_Connect\ *,\ Vint,\ Vint,\ Vint,\ Vdouble\ *);}
+\DoxyCodeLine{00160\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectNodeAdj\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint\ [],\ Vint\ *,\ Vint\ []);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ vis\_GridFun\ *(*vis\_GridFunBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00164\ \ \ vis\_Group\ *(*vis\_GroupBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00165\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupBoolean\_)(vis\_Group\ *,\ Vint,\ vis\_Group\ *);}
+\DoxyCodeLine{00166\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupClear\_)(vis\_Group\ *);}
+\DoxyCodeLine{00167\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupCopy\_)(vis\_Group\ *,\ vis\_Group\ *);}
+\DoxyCodeLine{00168\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupCount\_)(\textcolor{keyword}{const}\ vis\_Group\ *,\ Vint\ *,\ Vint\ *);}
+\DoxyCodeLine{00169\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupDef\_)(vis\_Group\ *,\ Vint,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00170\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupIdTran\_)(vis\_Group\ *,\ vis\_IdTran\ *);}
+\DoxyCodeLine{00171\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupInitIndex\_)(vis\_Group\ *);}
+\DoxyCodeLine{00172\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupNextIndex\_)(vis\_Group\ *,\ Vint\ *,\ Vint\ *);}
+\DoxyCodeLine{00173\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupSetIndex\_)(vis\_Group\ *,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00174\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GroupEnd\_)(vis\_Group\ *);}
+\DoxyCodeLine{00175\ \ \ vis\_IdTran\ *(*vis\_IdTranBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00176\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_IdTranDef\_)(vis\_IdTran\ *,\ Vint\ );}
+\DoxyCodeLine{00177\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_IdTranEnd\_)(vis\_IdTran\ *);}
+\DoxyCodeLine{00178\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_IdTranGetId\_)(\textcolor{keyword}{const}\ vis\_IdTran\ *,\ Vint,\ Vint\ *);}
+\DoxyCodeLine{00179\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_IdTranInq\_)(\textcolor{keyword}{const}\ vis\_IdTran\ *,\ Vint\ *);}
+\DoxyCodeLine{00180\ \ \ vis\_LCase\ *(*vis\_LCaseBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00181\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_LCaseSetConc\_)(vis\_LCase\ *,\ Vint,\ Vint,\ Vreal\ [3]);}
+\DoxyCodeLine{00182\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_LCaseConc\_)(vis\_LCase\ *,\ Vint,\ Vint,\ Vreal\ [3]);}
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_LCaseSetDist\_)(vis\_LCase\ *,\ Vint,\ Vint,\ Vint,\ Vint,\ Vreal\ []);}
+\DoxyCodeLine{00184\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_LCaseSetObject\_)(vis\_LCase\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00185\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ModelGetHashTable\_)(vis\_Model\ *,\ Vint,\ vsy\_HashTable\ **);}
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ModelSetHashTable\_)(vis\_Model\ *,\ Vint,\ vsy\_HashTable\ *);}
+\DoxyCodeLine{00187\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ModelSetObject\_)(vis\_Model\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00188\ \ \ vis\_RCase\ *(*vis\_RCaseBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00189\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RCaseSetSPC\_)(vis\_RCase\ *,\ Vint,\ Vint,\ Vint,\ Vreal\ [],\ Vint\ );}
+\DoxyCodeLine{00190\ \ \ vis\_SProp\ *(*vis\_SPropBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00191\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_SPropDef\_)(vis\_SProp\ *,\ Vint\ );}
+\DoxyCodeLine{00192\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_SPropSetValued\_)(vis\_SProp\ *,\ Vint,\ Vdouble\ );}
+\DoxyCodeLine{00193\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_SPropSetValuei\_)(vis\_SProp\ *,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00194\ \ \ vis\_EProp\ *(*vis\_EPropBegin\_)\ (\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00195\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_EPropDef\_)(vis\_EProp\ *,\ Vint);}
+\DoxyCodeLine{00196\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_EPropInq\_)(vis\_EProp\ *,\ Vint);}
+\DoxyCodeLine{00197\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_EPropSetValued\_)(vis\_EProp\ *,\ Vint,\ Vdouble\ );}
+\DoxyCodeLine{00198\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_EPropSetValuei\_)(vis\_EProp\ *,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00199\ \ \ vis\_MProp\ *(*vis\_MPropBegin\_)\ (\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00200\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_MPropDef\_)(vis\_MProp\ *,\ Vint);}
+\DoxyCodeLine{00201\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_MPropSetValued\_)(vis\_MProp\ *,\ Vint,\ Vdouble\ );}
+\DoxyCodeLine{00202\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_MPropSetValuei\_)(vis\_MProp\ *,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ModelWrite\_)(vis\_Model\ *,\ Vint,\ Vchar\ *);}
+\DoxyCodeLine{00204\ \ \ vsy\_HashTable\ *(*vsy\_HashTableBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00205\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vsy\_HashTableInsert\_)(vsy\_HashTable\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00206\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vsy\_HashTableLookup\_)(\textcolor{keyword}{const}\ vsy\_HashTable\ *,\ Vint,\ Vobject\ **);}
+\DoxyCodeLine{00207\ \ \ vsy\_List\ *(*vsy\_ListBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00208\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vsy\_ListInsert\_)(vsy\_List\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00209\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ModelSetList\_)(vis\_Model\ *,\ Vint,\ vsy\_List\ *);}
+\DoxyCodeLine{00210\ \}\ Vki\_Fsi\_Fns\_t;}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }Vki\_Export\_Fns}
+\DoxyCodeLine{00213\ \{}
+\DoxyCodeLine{00214\ \ \ vdm\_DataFun\ *(*vdm\_DataFunBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00215\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_DataFunEnd\_)(vdm\_DataFun\ *);}
+\DoxyCodeLine{00216\ \ \ vdm\_LMan\ *(*vdm\_LManBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00217\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_LManEnd\_)(vdm\_LMan\ *);}
+\DoxyCodeLine{00218\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vdm\_LManSetObject\_)(vdm\_LMan\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00219\ \ \ vis\_Connect\ *(*vis\_ConnectBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00220\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectPre\_)(vis\_Connect\ *,\ Vint);}
+\DoxyCodeLine{00221\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectDef\_)(vis\_Connect\ *,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00222\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectElemNum\_)(\textcolor{keyword}{const}\ vis\_Connect\ *,\ Vint,\ Vint,\ Vint\ *);}
+\DoxyCodeLine{00223\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectEnd\_)(vis\_Connect\ *);}
+\DoxyCodeLine{00224\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectGridFun\_)(vis\_Connect\ *,\ vis\_GridFun\ *);}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00226\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectSetCoords\_)(vis\_Connect\ *,\ Vint,\ Vdouble\ [3]);}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00228\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectSetCoords\_)(vis\_Connect\ *,\ Vint,\ Vfloat\ [3]);}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00230\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectSetElemAssoc\_)(vis\_Connect\ *,\ Vint,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00231\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectSetElemNode\_)(vis\_Connect\ *,\ Vint,\ Vint\ []);}
+\DoxyCodeLine{00232\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectSetNodeAssoc\_)(vis\_Connect\ *,\ Vint,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00233\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectSetPartName\_)(vis\_Connect\ *,\ Vint,\ Vchar\ *);}
+\DoxyCodeLine{00234\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ConnectSetTopology\_)(vis\_Connect\ *,\ Vint,\ Vint,\ Vint,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00235\ \ \ vis\_EProp\ *(*vis\_EPropBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00236\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_EPropDef\_)(vis\_EProp\ *,\ Vint\ );}
+\DoxyCodeLine{00237\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_EPropSetValuef\_)(vis\_EProp\ *,\ Vint,\ Vfloat\ );}
+\DoxyCodeLine{00238\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_EPropSetValuei\_)(vis\_EProp\ *,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00239\ \ \ vis\_GridFun\ *(*vis\_GridFunBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00240\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_GridFunEnd\_)(vis\_GridFun\ *);}
+\DoxyCodeLine{00241\ \ \ vis\_IdTran\ *(*vis\_IdTranBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00242\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_IdTranEnd\_)(vis\_IdTran\ *);}
+\DoxyCodeLine{00243\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_IdTranIndex\_)(vis\_IdTran\ *,\ Vint,\ Vint\ *);}
+\DoxyCodeLine{00244\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_IdTranIndices\_)(vis\_IdTran\ *,\ Vint,\ Vint\ [],\ Vint\ []);}
+\DoxyCodeLine{00245\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_IdTranSetId\_)(vis\_IdTran\ *,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00246\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_IdTranSetName\_)(vis\_IdTran\ *,\ Vchar\ *);}
+\DoxyCodeLine{00247\ \ \ vis\_LCase\ *(*vis\_LCaseBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00249\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_LCaseSetConc\_)(vis\_LCase\ *,\ Vint,\ Vint,\ Vdouble\ [3]);}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00251\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_LCaseSetConc\_)(vis\_LCase\ *,\ Vint,\ Vint,\ Vfloat\ [3]);}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00254\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_LCaseSetDist\_)(vis\_LCase\ *,\ Vint,\ Vint,\ Vint,\ Vint,\ Vdouble\ []);}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00256\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_LCaseSetDist\_)(vis\_LCase\ *,\ Vint,\ Vint,\ Vint,\ Vint,\ Vfloat\ []);}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00258\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_LCaseSetObject\_)(vis\_LCase\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00259\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ModelEnd\_)(vis\_Model\ *);}
+\DoxyCodeLine{00260\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_ModelPrint\_)(vis\_Model\ *);}
+\DoxyCodeLine{00261\ \ \ vis\_MProp\ *(*vis\_MPropBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00262\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_MPropDef\_)(vis\_MProp\ *,\ Vint\ );}
+\DoxyCodeLine{00263\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_MPropSetValued\_)(vis\_MProp\ *,\ Vint,\ Vdouble\ );}
+\DoxyCodeLine{00264\ \ \ vis\_RCase\ *(*vis\_RCaseBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00266\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RCaseSetSPC\_)(vis\_RCase\ *,\ Vint,\ Vint,\ Vint,\ Vdouble\ [],\ Vint);}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00268\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RCaseSetSPC\_)(vis\_RCase\ *,\ Vint,\ Vint,\ Vint,\ Vfloat\ [],\ Vint\ );}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00270\ \ \ vis\_RProp\ *(*vis\_RPropBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00271\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RPropDef\_)(vis\_RProp\ *,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00272\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RPropEnd\_)(vis\_RProp\ *);}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{00274\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RPropSetCAux\_)(vis\_RProp\ *,\ Vchar\ *);}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00276\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RPropSetQual\_)(vis\_RProp\ *,\ Vint,\ Vint\ [],\ Vchar\ *);}
+\DoxyCodeLine{00277\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RPropSetIds\_)(vis\_RProp\ *,\ Vint\ id1,\ Vint\ id2,\ Vint\ id3);}
+\DoxyCodeLine{00278\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RPropSetType\_)(vis\_RProp\ *,\ Vint\ );}
+\DoxyCodeLine{00279\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_RPropSetValued\_)(vis\_RProp\ *,\ Vint,\ Vdouble);}
+\DoxyCodeLine{00280\ \ \ vis\_SProp\ *(*vis\_SPropBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00281\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_SPropDef\_)(vis\_SProp\ *,\ Vint\ );}
+\DoxyCodeLine{00282\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_SPropSetValued\_)(vis\_SProp\ *,\ Vint,\ Vdouble\ );}
+\DoxyCodeLine{00283\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_SPropSetValuei\_)(vis\_SProp\ *,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00284\ \ \ vis\_State\ *(*vis\_StateBegin\_)(\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}});}
+\DoxyCodeLine{00285\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_StateDef\_)(vis\_State\ *,\ Vint,\ Vint,\ Vint,\ Vint\ );}
+\DoxyCodeLine{00286\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_StateEnd\_)(vis\_State\ *);}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#if\ RP\_DOUBLE}}
+\DoxyCodeLine{00288\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_StateSetData\_)(vis\_State\ *,\ Vint,\ Vdouble\ []);}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00290\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_StateSetData\_)(vis\_State\ *,\ Vint,\ Vfloat\ []);}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00292\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vis\_StateSetObject\_)(vis\_State\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00293\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vsy\_HashTableEnd\_)(vsy\_HashTable\ *);}
+\DoxyCodeLine{00294\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vsy\_HashTableForEach\_)(vsy\_HashTable\ *,\ Vfunc1\ *);}
+\DoxyCodeLine{00295\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vsy\_HashTableInsert\_)(vsy\_HashTable\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00296\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vsy\_ListEnd\_)(vsy\_List\ *);}
+\DoxyCodeLine{00297\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vsy\_ListForEach\_)(vsy\_List\ *,\ Vfunc1\ *);}
+\DoxyCodeLine{00298\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vsy\_ListInsert\_)(vsy\_List\ *,\ Vint,\ Vobject\ *);}
+\DoxyCodeLine{00299\ \}\ vki\_export\_fns\_t;}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }Vki\_Error\_Handler}
+\DoxyCodeLine{00302\ \{}
+\DoxyCodeLine{00303\ \ \ \mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*vut\_ErrorSetHandler\_)\ (\mbox{\hyperlink{namespacenumpy_1_1core_1_1numerictypes_a24a422a4521e65314dd56d6ad4f090c8}{void}}\ (*)\ (\textcolor{keyword}{const}\ Vchar\ *,\ Vint,\ \textcolor{keyword}{const}\ Vchar\ *));}
+\DoxyCodeLine{00304\ \ \ Vchar\ *(*vut\_ErrorString\_)\ (Vint);}
+\DoxyCodeLine{00305\ \}\ Vki\_Error;}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ *libvki;}
+\DoxyCodeLine{00308\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ Vki\_Object\_t\ *vki\_model;}
+\DoxyCodeLine{00309\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ Vki\_Import\_Fn\_t\ *vki\_import\_fns;}
+\DoxyCodeLine{00310\ \textcolor{keyword}{extern}\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ Vki\_Error\ *vki\_error\_fns;}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#define\ VALID\_LOAD\_FACE(ft)\ (((BOUNDARY\_FACE\_THREAD\_P(ft))\&\&(THREAD\_TYPE(ft)\ ==\ THREAD\_F\_WALL)\(\backslash\)}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ (!SHELL\_FACE\_THREAD\_P(ft))\ \&\&\ ((LENGTH\_FACE(ft))!=0)\&\&\(\backslash\)}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (!SLIDING\_INTERFACE\_THREAD\_P(ft))\&\&(!SHADOW\_FACE\_THREAD\_P(ft)))\(\backslash\)}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||(SHADOW\_FACE\_THREAD\_P(ft)\&\&(MAJOR\_FACE\_THREAD\_P(ft)))\(\backslash\)}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||(PERIODIC\_FACE\_THREAD\_P(ft)))}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#define\ MAJOR\_THREAD(t)\ (NNULLP(t)\ \&\&\ MAJOR\_FACE\_THREAD\_P(t)\ \&\&\ NNULLP(THREAD\_SHADOW(t)))}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#define\ VALID\_EXPORT\_FACE(thread,\ merge\_shadow)\ ((THREAD\_TYPE(thread)\ !=\ THREAD\_F\_INTERIOR)\&\&\(\backslash\)}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (NULLP(THREAD\_SHADOW(thread))||\(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (MAJOR\_THREAD(thread)\ \ \&\&\ merge\_shadow)||\(\backslash\)}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (NNULLP(THREAD\_SHADOW(thread))\ \&\&\ !merge\_shadow))\&\&\(\backslash\)}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (!((NULLP(THREAD\_T1(thread)))\ \&\&\ SHELL\_CELL\_THREAD\_P(THREAD\_T0(thread))))\&\&\(\backslash\)}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (!SLIDING\_INTERFACE\_THREAD\_P(thread)))}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Write\_Model\_Object(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ Export\_File\_Type\_t,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ );}
+\DoxyCodeLine{00328\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ Import\_Visual\_Kinematics(\mbox{\hyperlink{structdomain__struct}{Domain}}\ **,\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ );}
+\DoxyCodeLine{00329\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{structobj}{Pointer}}\ Import\_Fem\_Mesh(\mbox{\hyperlink{structdomain__struct}{Domain}}\ *,\ \textcolor{keywordtype}{int},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00330\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Delete\_Fem\_Mesh(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00331\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Display\_Fem\_Threads(\mbox{\hyperlink{structobj}{Pointer}},\ \mbox{\hyperlink{structobj}{Pointer}});}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#if\ !RP\_NODE}}
+\DoxyCodeLine{00333\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ load\_model(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00334\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ init\_model(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00335\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ user\_ErrorHandler(\textcolor{keyword}{const}\ Vchar\ *,\ Vint,\ \textcolor{keyword}{const}\ Vchar\ *);}
+\DoxyCodeLine{00336\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Init\_Import\_API(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00337\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ Init\_Error\_API(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Free\_Import\_API(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00340\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ Free\_Error\_API(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00341\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ delete\_model(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00343\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \mbox{\hyperlink{cxbool_8h_a751e9dab98f070a06b0c3f51ebfb48e3}{cxboolean}}\ VKI\_Open\_Library(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00344\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{void}\ VKI\_Close\_Library(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

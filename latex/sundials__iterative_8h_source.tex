@@ -1,0 +1,248 @@
+\doxysection{sundials\+\_\+iterative.\+h}
+\hypertarget{sundials__iterative_8h_source}{}\label{sundials__iterative_8h_source}\index{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_iterative.h@{fluent20.1.0/addons/msmdbatt/sundials/ida-\/2.7.0/include/sundials/sundials\_iterative.h}}
+\mbox{\hyperlink{sundials__iterative_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \$Revision:\ 1.2\ \$}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \$Date:\ 2006/11/29\ 00:05:07\ \$}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Programmer(s):\ Scott\ D.\ Cohen\ and\ Alan\ C.\ Hindmarsh\ @\ LLNL}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2002,\ The\ Regents\ of\ the\ University\ of\ California.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ Produced\ at\ the\ Lawrence\ Livermore\ National\ Laboratory.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ For\ details,\ see\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ This\ header\ file\ contains\ declarations\ intended\ for\ use\ by}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ generic\ iterative\ solvers\ of\ Ax\ =\ b.\ The\ enumeration\ gives}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ symbolic\ names\ for\ the\ type\ \ of\ preconditioning\ to\ be\ used.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ The\ function\ type\ declarations\ give\ the\ prototypes\ for\ the}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ functions\ to\ be\ called\ within\ an\ iterative\ linear\ solver,\ that}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ are\ responsible\ for}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ \ \ \ multiplying\ A\ by\ a\ given\ vector\ v\ (ATimesFn),\ and}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ \ \ \ solving\ the\ preconditioner\ equation\ Pz\ =\ r\ (PSolveFn).}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ \_ITERATIVE\_H}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ \_ITERATIVE\_H}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ \ }\textcolor{comment}{/*\ wrapper\ to\ enable\ C++\ usage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{sundials__nvector_8h}{sundials/sundials\_nvector.h}}>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ enum\ :\ types\ of\ preconditioning\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ PREC\_NONE\ \ :\ The\ iterative\ linear\ solver\ should\ not\ use\ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ preconditioning.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *\ PREC\_LEFT\ \ :\ The\ iterative\ linear\ solver\ uses\ preconditioning\ on\ \ \ \ }}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ left\ only.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ PREC\_RIGHT\ :\ The\ iterative\ linear\ solver\ uses\ preconditioning\ on\ \ \ \ }}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ right\ only.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ PREC\_BOTH\ \ :\ The\ iterative\ linear\ solver\ uses\ preconditioning\ on\ \ \ \ }}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ both\ the\ left\ and\ the\ right.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{enum}\ \{\ \mbox{\hyperlink{sundials__iterative_8h_a80155586fa275b28773c9b203f52cabaa2be887a6eb50f60bf0d6643d5986289c}{PREC\_NONE}},\ \mbox{\hyperlink{sundials__iterative_8h_a80155586fa275b28773c9b203f52cabaab72f0f85de203dafa8ef37da2710b38f}{PREC\_LEFT}},\ \mbox{\hyperlink{sundials__iterative_8h_a80155586fa275b28773c9b203f52cabaa43edcfb23276074e839f0304e2648ba6}{PREC\_RIGHT}},\ \mbox{\hyperlink{sundials__iterative_8h_a80155586fa275b28773c9b203f52cabaa847bebd5bfa0a6b721abe502cf9aa355}{PREC\_BOTH}}\ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ enum\ :\ types\ of\ Gram-\/Schmidt\ routines\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ MODIFIED\_GS\ \ :\ The\ iterative\ solver\ uses\ the\ modified\ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Gram-\/Schmidt\ routine\ ModifiedGS\ listed\ in\ this\ \ }}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ CLASSICAL\_GS\ :\ The\ iterative\ solver\ uses\ the\ classical\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Gram-\/Schmidt\ routine\ ClassicalGS\ listed\ in\ this\ }}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{enum}\ \{\ \mbox{\hyperlink{sundials__iterative_8h_a6b7b47dd702d9e331586d485013fd1eaa6de31033c3a0c6ad23bed0b2de573ae0}{MODIFIED\_GS}}\ =\ 1,\ \mbox{\hyperlink{sundials__iterative_8h_a6b7b47dd702d9e331586d485013fd1eaa868305235c67e81bf4872996bdb62dec}{CLASSICAL\_GS}}\ =\ 2\ \};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *\ Type:\ ATimesFn\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ An\ ATimesFn\ multiplies\ Av\ and\ stores\ the\ result\ in\ z.\ The\ \ \ \ \ \ }}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ caller\ is\ responsible\ for\ allocating\ memory\ for\ the\ z\ vector.\ \ }}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *\ The\ parameter\ A\_data\ is\ a\ pointer\ to\ any\ information\ about\ A\ \ \ }}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ *\ which\ the\ function\ needs\ in\ order\ to\ do\ its\ job.\ The\ vector\ v\ \ }}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *\ is\ unchanged.\ An\ ATimesFn\ returns\ 0\ if\ successful\ and\ a\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *\ non-\/zero\ value\ if\ unsuccessful.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{sundials__iterative_8h_ae6141362b5d76746240c633ccb13f8c2}{ATimesFn}})(\textcolor{keywordtype}{void}\ *A\_data,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ v,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ Type:\ PSolveFn\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ A\ PSolveFn\ solves\ the\ preconditioner\ equation\ Pz\ =\ r\ for\ the\ \ \ }}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ vector\ z.\ The\ caller\ is\ responsible\ for\ allocating\ memory\ for\ \ }}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ the\ z\ vector.\ The\ parameter\ P\_data\ is\ a\ pointer\ to\ any\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *\ information\ about\ P\ which\ the\ function\ needs\ in\ order\ to\ do\ \ \ \ }}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ its\ job.\ The\ parameter\ lr\ is\ input,\ and\ indicates\ whether\ P\ \ \ \ }}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ is\ to\ be\ taken\ as\ the\ left\ preconditioner\ or\ the\ right\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ preconditioner:\ lr\ =\ 1\ for\ left\ and\ lr\ =\ 2\ for\ right.\ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ If\ preconditioning\ is\ on\ one\ side\ only,\ lr\ can\ be\ ignored.\ \ \ \ \ }}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ The\ vector\ r\ is\ unchanged.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ A\ PSolveFn\ returns\ 0\ if\ successful\ and\ a\ non-\/zero\ value\ if\ \ \ \ \ }}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *\ unsuccessful.\ \ On\ a\ failure,\ a\ negative\ return\ value\ indicates\ }}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *\ an\ unrecoverable\ condition,\ while\ a\ positive\ value\ indicates\ \ \ }}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *\ a\ recoverable\ one,\ in\ which\ the\ calling\ routine\ may\ reattempt\ \ }}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *\ the\ solution\ after\ updating\ preconditioner\ data.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{typedef}\ int\ (*\mbox{\hyperlink{sundials__iterative_8h_aaa4b7052d94440eb63f74dd049b7d563}{PSolveFn}})(\textcolor{keywordtype}{void}\ *P\_data,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ r,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ z,\ \textcolor{keywordtype}{int}\ lr);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ Function:\ ModifiedGS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ ModifiedGS\ performs\ a\ modified\ Gram-\/Schmidt\ orthogonalization\ \ }}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ of\ the\ N\_Vector\ v[k]\ against\ the\ p\ unit\ N\_Vectors\ at\ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ v[k-\/1],\ v[k-\/2],\ ...,\ v[k-\/p].\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ v\ is\ an\ array\ of\ (k+1)\ N\_Vectors\ v[i],\ i=0,\ 1,\ ...,\ k.\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *\ v[k-\/1],\ v[k-\/2],\ ...,\ v[k-\/p]\ are\ assumed\ to\ have\ L2-\/norm\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ equal\ to\ 1.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ h\ is\ the\ output\ k\ by\ k\ Hessenberg\ matrix\ of\ inner\ products.\ \ \ \ }}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ This\ matrix\ must\ be\ allocated\ row-\/wise\ so\ that\ the\ (i,j)th\ \ \ \ \ }}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *\ entry\ is\ h[i][j].\ The\ inner\ products\ (v[i],v[k]),\ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ i=i0,\ i0+1,\ ...,\ k-\/1,\ are\ stored\ at\ h[i][k-\/1].\ Here\ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ i0=MAX(0,k-\/p).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ k\ is\ the\ index\ of\ the\ vector\ in\ the\ v\ array\ that\ needs\ to\ be\ \ \ }}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ orthogonalized\ against\ previous\ vectors\ in\ the\ v\ array.\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ p\ is\ the\ number\ of\ previous\ vectors\ in\ the\ v\ array\ against\ \ \ \ \ }}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ which\ v[k]\ is\ to\ be\ orthogonalized.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *\ new\_vk\_norm\ is\ a\ pointer\ to\ memory\ allocated\ by\ the\ caller\ to\ \ }}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *\ hold\ the\ Euclidean\ norm\ of\ the\ orthogonalized\ vector\ v[k].\ \ \ \ \ }}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ *\ If\ (k-\/p)\ <\ 0,\ then\ ModifiedGS\ uses\ p=k.\ The\ orthogonalized\ \ \ \ \ }}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ *\ v[k]\ is\ NOT\ normalized\ and\ is\ stored\ over\ the\ old\ v[k].\ Once\ \ \ }}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ *\ the\ orthogonalization\ has\ been\ performed,\ the\ Euclidean\ norm\ \ \ }}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *\ of\ v[k]\ is\ stored\ in\ (*new\_vk\_norm).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *\ ModifiedGS\ returns\ 0\ to\ indicate\ success.\ It\ cannot\ fail.\ \ \ \ \ \ }}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__iterative_8h_af86cf650daf08762354baeccbeb96636}{ModifiedGS}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *v,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **h,\ \textcolor{keywordtype}{int}\ k,\ \textcolor{keywordtype}{int}\ p,\ }
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *new\_vk\_norm);}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ Function:\ ClassicalGS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *\ ClassicalGS\ performs\ a\ classical\ Gram-\/Schmidt\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ *\ orthogonalization\ of\ the\ N\_Vector\ v[k]\ against\ the\ p\ unit\ \ \ \ \ \ }}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ *\ N\_Vectors\ at\ v[k-\/1],\ v[k-\/2],\ ...,\ v[k-\/p].\ The\ parameters\ v,\ h,\ }}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ *\ k,\ p,\ and\ new\_vk\_norm\ are\ as\ described\ in\ the\ documentation\ \ \ \ }}
+\DoxyCodeLine{00155\ \textcolor{comment}{\ *\ for\ ModifiedGS.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ *\ temp\ is\ an\ N\_Vector\ which\ can\ be\ used\ as\ workspace\ by\ the\ \ \ \ \ \ }}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ *\ ClassicalGS\ routine.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ *\ s\ is\ a\ length\ k\ array\ of\ realtype\ which\ can\ be\ used\ as\ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ *\ workspace\ by\ the\ ClassicalGS\ routine.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ *\ ClassicalGS\ returns\ 0\ to\ indicate\ success.\ It\ cannot\ fail.\ \ \ \ \ }}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__iterative_8h_a4426fea7cfbcd69b7f936cbcfce2ebba}{ClassicalGS}}(\mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ *v,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **h,\ \textcolor{keywordtype}{int}\ k,\ \textcolor{keywordtype}{int}\ p,\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *new\_vk\_norm,\ \mbox{\hyperlink{struct__generic___n___vector}{N\_Vector}}\ temp,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *s);}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ *\ Function:\ QRfact\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ *\ QRfact\ performs\ a\ QR\ factorization\ of\ the\ Hessenberg\ matrix\ H.\ }}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ *\ n\ is\ the\ problem\ size;\ the\ matrix\ H\ is\ (n+1)\ by\ n.\ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ *\ h\ is\ the\ (n+1)\ by\ n\ Hessenberg\ matrix\ H\ to\ be\ factored.\ It\ is\ \ }}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ *\ stored\ row-\/wise.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ *\ q\ is\ an\ array\ of\ length\ 2*n\ containing\ the\ Givens\ rotations\ \ \ \ }}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ *\ computed\ by\ this\ function.\ A\ Givens\ rotation\ has\ the\ form:\ \ \ \ \ }}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ *\ |\ c\ \ -\/s\ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ *\ |\ s\ \ \ c\ |.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ *\ The\ components\ of\ the\ Givens\ rotations\ are\ stored\ in\ q\ as\ \ \ \ \ \ }}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ *\ (c,\ s,\ c,\ s,\ ...,\ c,\ s).\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ *\ job\ is\ a\ control\ flag.\ If\ job==0,\ then\ a\ new\ QR\ factorization\ \ }}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ *\ is\ performed.\ If\ job!=0,\ then\ it\ is\ assumed\ that\ the\ first\ \ \ \ \ }}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ *\ n-\/1\ columns\ of\ h\ have\ already\ been\ factored\ and\ only\ the\ last\ \ }}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ *\ column\ needs\ to\ be\ updated.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ *\ QRfact\ returns\ 0\ if\ successful.\ If\ a\ zero\ is\ encountered\ on\ \ \ \ }}
+\DoxyCodeLine{00194\ \textcolor{comment}{\ *\ the\ diagonal\ of\ the\ triangular\ factor\ R,\ then\ QRfact\ returns\ \ \ }}
+\DoxyCodeLine{00195\ \textcolor{comment}{\ *\ the\ equation\ number\ of\ the\ zero\ entry,\ where\ the\ equations\ are\ }}
+\DoxyCodeLine{00196\ \textcolor{comment}{\ *\ numbered\ from\ 1,\ not\ 0.\ If\ QRsol\ is\ subsequently\ called\ in\ \ \ \ \ }}
+\DoxyCodeLine{00197\ \textcolor{comment}{\ *\ this\ situation,\ it\ will\ return\ an\ error\ because\ it\ could\ not\ \ \ }}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ *\ divide\ by\ the\ zero\ diagonal\ entry.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00200\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__iterative_8h_af69ef36f31188212ae07a03fe1ead607}{QRfact}}(\textcolor{keywordtype}{int}\ n,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **h,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *q,\ \textcolor{keywordtype}{int}\ job);}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00205\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00206\ \textcolor{comment}{\ *\ Function:\ QRsol\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00207\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00208\ \textcolor{comment}{\ *\ QRsol\ solves\ the\ linear\ least\ squares\ problem\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00210\ \textcolor{comment}{\ *\ min\ (b\ -\/\ H*x,\ b\ -\/\ H*x),\ x\ in\ R\string^n,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ *\ where\ H\ is\ a\ Hessenberg\ matrix,\ and\ b\ is\ in\ R\string^(n+1).\ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ *\ It\ uses\ the\ QR\ factors\ of\ H\ computed\ by\ QRfact.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00214\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00215\ \textcolor{comment}{\ *\ n\ is\ the\ problem\ size;\ the\ matrix\ H\ is\ (n+1)\ by\ n.\ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00216\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00217\ \textcolor{comment}{\ *\ h\ is\ a\ matrix\ (computed\ by\ QRfact)\ containing\ the\ upper\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00218\ \textcolor{comment}{\ *\ triangular\ factor\ R\ of\ the\ original\ Hessenberg\ matrix\ H.\ \ \ \ \ \ \ }}
+\DoxyCodeLine{00219\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00220\ \textcolor{comment}{\ *\ q\ is\ an\ array\ of\ length\ 2*n\ (computed\ by\ QRfact)\ containing\ \ \ \ }}
+\DoxyCodeLine{00221\ \textcolor{comment}{\ *\ the\ Givens\ rotations\ used\ to\ factor\ H.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00223\ \textcolor{comment}{\ *\ b\ is\ the\ (n+1)-\/vector\ appearing\ in\ the\ least\ squares\ problem\ \ \ }}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ *\ above.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00226\ \textcolor{comment}{\ *\ On\ return,\ b\ contains\ the\ solution\ x\ of\ the\ least\ squares\ \ \ \ \ \ }}
+\DoxyCodeLine{00227\ \textcolor{comment}{\ *\ problem,\ if\ QRsol\ was\ successful.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00228\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00229\ \textcolor{comment}{\ *\ QRsol\ returns\ a\ 0\ if\ successful.\ \ Otherwise,\ a\ zero\ was\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00230\ \textcolor{comment}{\ *\ encountered\ on\ the\ diagonal\ of\ the\ triangular\ factor\ R.\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ *\ In\ this\ case,\ QRsol\ returns\ the\ equation\ number\ (numbered\ \ \ \ \ \ }}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ *\ from\ 1,\ not\ 0)\ of\ the\ zero\ entry.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00233\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00234\ \textcolor{comment}{\ */}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \mbox{\hyperlink{sundials__config_8h_a102ae99bd08097f361783abba5b9f3d9}{SUNDIALS\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{sundials__iterative_8h_ae32399fcf4d75d54a2fde5107ec3362e}{QRsol}}(\textcolor{keywordtype}{int}\ n,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ **h,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *q,\ \mbox{\hyperlink{part_8h_a1bdce28051d6a53868f7ccbf5f2c14a3}{realtype}}\ *b);}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00239\ \}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

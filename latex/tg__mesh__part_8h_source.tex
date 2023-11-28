@@ -1,0 +1,151 @@
+\doxysection{tg\+\_\+mesh\+\_\+part.\+h}
+\hypertarget{tg__mesh__part_8h_source}{}\label{tg__mesh__part_8h_source}\index{fluent20.1.0/src/mesh/tg\_mesh\_part.h@{fluent20.1.0/src/mesh/tg\_mesh\_part.h}}
+\mbox{\hyperlink{tg__mesh__part_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ *\ Copyright\ 1987-\/2020\ ANSYS,\ Inc.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ TG\_MESH\_PART\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ TG\_MESH\_PART\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{global_8h}{global.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ Partitions\ a\ 2D/3D\ surface/volume\ mesh\ using}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ Geometric\ Recursive\ Inertial\ Bisection\ (RIB).}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ ARGUMENTS}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ =========}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ verbosity\ \ \ \ \ \ \ \ \ \ \ \ \ (IN)\ \ \ This\ specifies\ the\ verbosity\ of\ information}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ to\ be\ output\ during\ the\ execution\ of\ the}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ routine.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ verbosity:}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0\ \ No\ output.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 1\ \ Principal\ axes\ are\ printed.}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Separator\ Planes\ are\ printed.}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Times\ for\ Inertial\ matrix\ determination,}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Sorting\ partition\ arrays\ are\ printed.}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 2\ \ In\ addition,\ partition\ IDs\ are\ written\ to}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ file.}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 3\ \ (DO\ NOT\ USE\ for\ large\ problems)}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ In\ addition,\ coordinates,\ centroids,\ volumes}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ printed.}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ ndims\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IN)\ \ \ Number\ of\ dimensions\ representing\ the\ elements}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ of\ the\ mesh\ (currently\ 2\ and\ 3\ only\ supported).}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ p\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IN)\ \ \ The\ number\ of\ partitions\ to\ create.}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ nelements\ \ \ \ \ \ \ \ \ \ \ \ \ (IN)\ \ \ Number\ of\ vertices}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ faces}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ cells}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ centroids\ \ \ \ \ \ \ \ \ \ \ \ \ (IN)\ \ \ Coordinates\ of\ vertices}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ face\ centroids}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ cell\ centroids}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ *\ volumes\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IN)\ \ \ Areas\ of\ faces}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ volumes\ of\ cells.}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (NULL\ if\ coordinates\ of\ vertices}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ provided\ in\ centroids.)}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ partitionIDs\ \ \ \ \ \ \ \ \ \ (OUT)\ \ Each\ vertex/face/cell\ gets\ a\ partition\ ID.}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ separatorPlanePoints\ \ (OUT)}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ *\ separatorPlaneNormals\ (OUT)\ \ There\ will\ be\ 'p\ -\/\ 1'\ separator\ planes.}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Each\ plane\ will\ be\ defined\ by\ a\ normal}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vector\ (perpendicular\ to\ the\ plane)}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ and\ a\ known\ point\ on\ the\ plane.}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *\ A\ return\ code\ of\ 0\ means\ successful\ execution.}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ A\ negative\ return\ code\ means\ failure.}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ Further\ Details\ (Memory\ layout\ of\ inputs\ and\ outputs,\ etc)}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ ==========================================================}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ The\ sizes\ of\ the\ IN\ and\ OUT\ arrays\ are:}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ centroids\ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ nelements\ x\ ndims}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ volumes\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ nelements}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ *\ partitionIDs\ \ \ \ \ \ \ \ \ \ -\/\ nelements}}
+\DoxyCodeLine{00068\ \textcolor{comment}{\ *\ separatorPlanePoints\ \ -\/\ (p\ -\/\ 1)\ x\ ndims}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ *\ separatorPlaneNormals\ -\/\ (p\ -\/\ 1)\ x\ ndims}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ The\ caller\ must\ allocate\ the\ arrays\ above.}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ Centroids\ are\ stored\ as\ follows:}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ In\ 2D:}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ \ \ \ \ x1\ y1\ x2\ y2\ x3\ y3\ ...\ x\{nelements\}\ y\{nelements\}}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *\ In\ 3D:}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ *\ \ \ \ \ x1\ y1\ z1\ x2\ y2\ z3\ x3\ y3\ z3\ ...\ x\{nelements\}\ y\{nelements\}\ z\{nelements\}}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *\ Volumes\ are\ stored\ as\ follows:}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ \ \ \ \ V1\ V2\ ...\ V\{nelements\}}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ If\ areas\ of\ faces\ are\ supplied,\ then\ each\ element\ will\ be\ considered\ a\ cell}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *\ with\ volume\ =\ area.}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ Each\ element\ will\ have\ a\ partition\ ID.}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ Separator\ planes\ are\ stored\ as\ follows\ (where\ p1,\ p2,\ p3,\ ...\ p\{p\}\ \ are\ partitions).}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *\ There\ will\ be\ a\ plane\ separating\ two\ partitions,\ hence\ shown\ between\ two\ partitions:}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ p1\ \ \ \ \ \ \ \ \ \ p2\ \ \ \ \ \ \ \ \ \ \ p3\ \ \ \ \ \ \ \ \ \ p4\ \ \ \ ...\ \ \ \ p\{p\ -\/\ 1\}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\{p\}}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ In\ 2D:}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ spx1\ spy1\ \ \ \ spx2\ spy2\ \ \ spx3\ spy3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spx\{p-\/1\}\ spy\{p-\/1\}}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ *\ Separator\ plane\ points\ are\ \{spx1,\ spy1\},\ \{spx2,\ spy2\},\ ...}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ snx1\ sny1\ \ \ \ snx2\ sny2\ \ \ snx3\ sny3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ snx\{p-\/1\}\ sny\{p-\/1\}}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ *\ Separator\ plane\ normals\ are\ \{snx1,\ sny1\},\ \{snx2,\ sny2\},\ ...}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *\ In\ 3D:}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ spx1\ spy1\ spz1\ \ \ spx2\ spy2\ spz2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spx\{p-\/1\}\ spy\{p-\/1\}\ spz\{p-\/1\}}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *\ Separator\ plane\ points\ are\ \{spx1,\ spy1,\ spz1\},\ \{spx2,\ spy2,\ spz2\},\ ...}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ snx1\ sny1\ snz1\ \ \ snx2\ sny2\ snz2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ snx\{p-\/1\}\ sny\{p-\/1\}\ snz\{p-\/1\}}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *\ Separator\ plane\ normals\ are\ \{snx1,\ sny1,\ snz1\},\ \{snx2,\ sny2,\ snz2\},\ ...}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *\ Usage}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ *\ =====}}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ *\ For\ example,\ to\ partition\ in\ 2D\ (verbose\ mode),}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *\ unsigned\ short\ verbosity\ =\ 1;}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *\ unsigned\ short\ ndims\ =\ 2;}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ int\ p\ =\ 4;}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *\ cxindex\ nelements\ =\ 100000;}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ real*\ coordinates\ =\ (real*)malloc(sizeof(real)*nelements*ndims);}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ int*\ partitionIDs\ =\ (int*)malloc(sizeof(int)*nelements);}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ real*\ separatorPlanePoints\ =\ (real*)malloc(sizeof(real)*(p\ -\/\ 1)*ndims);}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ real*\ separatorPlaneNormals\ =\ (real*)malloc(sizeof(real)*(p\ -\/\ 1)*ndims);}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *\ //\ Fill\ coordinates...}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ int\ rc\ =\ Geometric\_Partition\_Mesh(}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ ndims,\ verbosity,\ p,\ nelements,\ coordinates,\ NULL,}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ partitionIDs,\ separatorPlanePoints,\ separatorPlaneNormals}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *\ );}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ //\ Check\ for\ call\ success\ or\ failure.}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ free(separatorPlaneNormals);}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ free(separatorPlanePoints);}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *\ free(partitionIDs);}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ free(coordinates);}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \mbox{\hyperlink{dll_8h_acd0ca54c9daf114298504bbca9d7966d}{FLUENT\_EXPORT}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tg__mesh__part_8h_a2261e6800cda204c555365b281477ab6}{Geometric\_Partition\_Mesh}}(}
+\DoxyCodeLine{00133\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ verbosity,}
+\DoxyCodeLine{00134\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ ndims,}
+\DoxyCodeLine{00135\ \ \ \textcolor{keywordtype}{int}\ p,}
+\DoxyCodeLine{00136\ \ \ \mbox{\hyperlink{itype_8h_a13eabd0c3f8793d16c2aa6372f3fc9ad}{cxindex}}\ nelements,}
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *centroids,}
+\DoxyCodeLine{00138\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *volumes,}
+\DoxyCodeLine{00139\ \ \ \textcolor{keywordtype}{int}\ *partitionIDs,}
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *separatorPlanePoints,}
+\DoxyCodeLine{00141\ \ \ \mbox{\hyperlink{global_8h_a031f8951175b43076c2084a6c2173410}{real}}\ *separatorPlaneNormals}
+\DoxyCodeLine{00142\ );}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00145\ }
+
+\end{DoxyCode}

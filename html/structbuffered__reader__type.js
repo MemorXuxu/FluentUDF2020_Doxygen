@@ -1,0 +1,27 @@
+var structbuffered__reader__type =
+[
+    [ "buf_start_1", "structbuffered__reader__type.html#a1f36e8e68399bdc39c1d4306ddd8f8e0", null ],
+    [ "buf_start_2", "structbuffered__reader__type.html#a6e3564b8e91d27d66d7d6d4ff8a1dfe9", null ],
+    [ "buffer1", "structbuffered__reader__type.html#ad6aa35f3344883c9a6555a285eda19e7", null ],
+    [ "buffer2", "structbuffered__reader__type.html#aa6f2ddb62f723288f1b8aaa4e7d8150f", null ],
+    [ "buffer_end", "structbuffered__reader__type.html#aa0e4010ba396692df994b5dc7b126221", null ],
+    [ "buffer_end_1", "structbuffered__reader__type.html#ac7f283993888ca9e15d822225233a2d3", null ],
+    [ "buffer_end_2", "structbuffered__reader__type.html#af4ef0f4386f5420384f542edbe5e0df9", null ],
+    [ "bytes_read_1", "structbuffered__reader__type.html#aa87204318331a51ff4c8d7d2a2f18c66", null ],
+    [ "bytes_read_2", "structbuffered__reader__type.html#a585ce3be7fec13653c83c12359d4f028", null ],
+    [ "current_buffer", "structbuffered__reader__type.html#aec4832c6a751a849c5d7d1f1e3f8f48c", null ],
+    [ "current_bytes", "structbuffered__reader__type.html#a8f30bf2783a11f122fd33c0c8ae8cb4a", null ],
+    [ "current_pos", "structbuffered__reader__type.html#aa7175bd1031b34d2ee730e984d116d5d", null ],
+    [ "data_valid", "structbuffered__reader__type.html#ab8e22afd6596020f94b95acffbf859db", null ],
+    [ "data_valid_1", "structbuffered__reader__type.html#a4c206ca352dd20c4299e784107c48aa8", null ],
+    [ "data_valid_2", "structbuffered__reader__type.html#adee1de60b3d08c31199732d56086c1a4", null ],
+    [ "global_data_limit", "structbuffered__reader__type.html#aa71186ed3426e4dc87e4d1f745c088ab", null ],
+    [ "global_offset", "structbuffered__reader__type.html#a4ddf54c7bbc907fcdbb56bb91075c532", null ],
+    [ "initial_file_offset", "structbuffered__reader__type.html#ab38dedae7912e95c099135a9b4948b9f", null ],
+    [ "size_buf", "structbuffered__reader__type.html#a0d60540c5a9ecfadcdaf02fc930d8de1", null ],
+    [ "stream", "structbuffered__reader__type.html#a867a8cb54d3231f2acbfaa44fb31d6c4", null ],
+    [ "thread_exit", "structbuffered__reader__type.html#a2d6bb43a0b0dd610af95851870c80947", null ],
+    [ "thread_running", "structbuffered__reader__type.html#adbf61a1af6f9211b197dc0d26eaa8c49", null ],
+    [ "window_scratch", "structbuffered__reader__type.html#a902c340852874403e25198a858f71c02", null ],
+    [ "window_size", "structbuffered__reader__type.html#a1c7df51cd44a9862d56e5a86a7382fe2", null ]
+];

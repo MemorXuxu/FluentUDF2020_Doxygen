@@ -1,0 +1,28 @@
+var dir_87dc15724e37b68023cccf0f63843c81 =
+[
+    [ "compat", "dir_5dc16d09bb382b23917831de8b8877fe.html", "dir_5dc16d09bb382b23917831de8b8877fe" ],
+    [ "core", "dir_8e8909a0184c917beee6d27ee02ed6b6.html", "dir_8e8909a0184c917beee6d27ee02ed6b6" ],
+    [ "distutils", "dir_b39aec3a3467f9e5e7ca1da8048a8de6.html", "dir_b39aec3a3467f9e5e7ca1da8048a8de6" ],
+    [ "doc", "dir_b569bd412f021d93759a277ff0a143e2.html", "dir_b569bd412f021d93759a277ff0a143e2" ],
+    [ "f2py", "dir_85392d281772b6432c214a0ba880894f.html", "dir_85392d281772b6432c214a0ba880894f" ],
+    [ "fft", "dir_9766d12d7b75dc166b1794a5581b1938.html", "dir_9766d12d7b75dc166b1794a5581b1938" ],
+    [ "lib", "dir_38f8eb51c77f77483516f3c506cbfd19.html", "dir_38f8eb51c77f77483516f3c506cbfd19" ],
+    [ "linalg", "dir_ded0a4c76842b0f81ae512b35172386b.html", "dir_ded0a4c76842b0f81ae512b35172386b" ],
+    [ "ma", "dir_a88bab66e08b644e5884a6a24daf42a1.html", "dir_a88bab66e08b644e5884a6a24daf42a1" ],
+    [ "matrixlib", "dir_963901eb2008be8c0139baad933d2bde.html", "dir_963901eb2008be8c0139baad933d2bde" ],
+    [ "polynomial", "dir_4fa71ed6bfa26bb8c9b5b480d7d462a6.html", "dir_4fa71ed6bfa26bb8c9b5b480d7d462a6" ],
+    [ "random", "dir_e75f2c29116df55b17f84c604166e472.html", "dir_e75f2c29116df55b17f84c604166e472" ],
+    [ "testing", "dir_d019121c4418c38ae1ece4bfee450b30.html", "dir_d019121c4418c38ae1ece4bfee450b30" ],
+    [ "__config__.py", "____config_____8py.html", "____config_____8py" ],
+    [ "__init__.py", "____init_____8py.html", "____init_____8py" ],
+    [ "_distributor_init.py", "__distributor__init_8py.html", null ],
+    [ "_globals.py", "__globals_8py.html", "__globals_8py" ],
+    [ "_import_tools.py", "__import__tools_8py.html", "__import__tools_8py" ],
+    [ "add_newdocs.py", "add__newdocs_8py.html", "add__newdocs_8py" ],
+    [ "conftest.py", "conftest_8py.html", "conftest_8py" ],
+    [ "ctypeslib.py", "ctypeslib_8py.html", "ctypeslib_8py" ],
+    [ "dual.py", "dual_8py.html", "dual_8py" ],
+    [ "matlib.py", "matlib_8py.html", "matlib_8py" ],
+    [ "setup.py", "setup_8py.html", "setup_8py" ],
+    [ "version.py", "version_8py.html", "version_8py" ]
+];
